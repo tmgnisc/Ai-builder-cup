@@ -6,6 +6,7 @@ import { AddToCartButton } from "@/components/store/AddToCartButton";
 import { AskPipButton } from "@/components/store/AskPipButton";
 import { CompareToggle } from "@/components/store/CompareToggle";
 import { ProductGallery } from "@/components/store/ProductGallery";
+import { ProductViewTracker } from "@/components/signals/ProductViewTracker";
 import { Badge, StockBadge } from "@/components/ui/Badge";
 import { getAllProducts, getProduct } from "@/lib/commerce/catalog";
 import { formatNPR, formatWarranty, specRows } from "@/lib/commerce/format";
@@ -30,6 +31,7 @@ export default async function ProductPage({ params }: Params) {
 
   return (
     <div className="mx-auto max-w-[1400px] px-4 pt-8 sm:px-6">
+      <ProductViewTracker productId={product.id} />
       <Link href="/#store" className="inline-flex items-center gap-1.5 rounded-full text-sm text-muted hover:text-text">
         <ArrowLeft className="size-4" aria-hidden /> Back to store
       </Link>

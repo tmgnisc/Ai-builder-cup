@@ -41,12 +41,13 @@ export function ProductGrid() {
     () => {
       if (motion.reduced || !gridRef.current) return;
       const cards = gridRef.current.querySelectorAll(CARD);
-      gsap.set(cards, { autoAlpha: 0, y: 48 });
+      // Opacity only (not visibility): hidden cards must stay keyboard-focusable. Focus scrolls them in, which reveals them.
+      gsap.set(cards, { opacity: 0, y: 48 });
       batchTriggers.current = ScrollTrigger.batch(cards, {
         start: "top 94%",
         once: true,
         onEnter: (batch) =>
-          gsap.to(batch, { autoAlpha: 1, y: 0, duration: 0.9, ease: "expo.out", stagger: 0.07, overwrite: true, clearProps: CLEAR }),
+          gsap.to(batch, { opacity: 1, y: 0, duration: 0.9, ease: "expo.out", stagger: 0.07, overwrite: true, clearProps: CLEAR }),
       });
     },
     { scope: gridRef },
@@ -72,7 +73,7 @@ export function ProductGrid() {
       nested: true,
       stagger: 0.015,
       onEnter: (els) =>
-        gsap.fromTo(els, { autoAlpha: 0, scale: 0.94 }, { autoAlpha: 1, scale: 1, duration: 0.5, ease: "expo.out", delay: 0.12, clearProps: CLEAR }),
+        gsap.fromTo(els, { opacity: 0, scale: 0.94 }, { opacity: 1, scale: 1, duration: 0.5, ease: "expo.out", delay: 0.12, clearProps: CLEAR }),
       onComplete: () => {
         gsap.set(cards, { clearProps: CLEAR });
         ScrollTrigger.refresh();

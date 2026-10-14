@@ -9,10 +9,12 @@ interface ScrambleTextProps {
   duration?: number;
   className?: string;
   chars?: string;
+  /** Skip the scramble (e.g. a live transcript that updates several times per second). */
+  instant?: boolean;
 }
 
 /** Text that scrambles into its new value whenever `text` changes. Used for Pip's state caption. */
-export function ScrambleText({ text, duration = 0.6, className, chars = "▪▫◆◇·:/\\_-" }: ScrambleTextProps) {
+export function ScrambleText({ text, duration = 0.6, className, chars = "▪▫◆◇·:/\\_-", instant = false }: ScrambleTextProps) {
   const ref = useRef<HTMLSpanElement>(null);
   const first = useRef(true);
 
@@ -20,7 +22,7 @@ export function ScrambleText({ text, duration = 0.6, className, chars = "▪▫�
     () => {
       const el = ref.current;
       if (!el) return;
-      if (first.current || motion.reduced) {
+      if (first.current || motion.reduced || instant) {
         first.current = false;
         el.textContent = text;
         return;

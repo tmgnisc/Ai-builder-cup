@@ -1,6 +1,6 @@
 "use client";
 
-import { ArrowUp, RotateCcw, Square, X } from "lucide-react";
+import { ArrowUp, Pause, Play, RotateCcw, Square, Volume2, VolumeX, X } from "lucide-react";
 import { useRouter } from "next/navigation";
 import { useEffect, useRef, useState } from "react";
 import { pipRuntime } from "@/components/companion/runtime";
@@ -9,8 +9,13 @@ import { cn } from "@/lib/cn";
 import { gsap, motion, useGSAP } from "@/lib/motion";
 import { registerNavigator, useChat } from "@/store/useChat";
 import { useCompanion } from "@/store/useCompanion";
+import { usePrefs } from "@/store/usePrefs";
+import { useSignals } from "@/store/useSignals";
+import { useVoice } from "@/store/useVoice";
 import { MessageList } from "./MessageList";
+import { MicButton } from "./MicButton";
 import { MiniPip } from "./MiniPip";
+import { PrivacyPopover } from "./PrivacyPopover";
 
 const EXAMPLES = ["A laptop under 1.2 lakh for coding", "Noise-cancelling headphones for flights", "What's in my cart?"];
 
@@ -27,6 +32,14 @@ export function ChatDock() {
   const stop = useChat((s) => s.stop);
   const reset = useChat((s) => s.reset);
   const caption = useCompanion((s) => s.caption);
+  const setPaused = useChat((s) => s.setPaused);
+  const paused = useSignals((s) => s.paused);
+  const muted = usePrefs((s) => s.voiceMuted);
+  const setMuted = usePrefs((s) => s.setVoiceMuted);
+  const listening = useVoice((s) => s.listening);
+  const interim = useVoice((s) => s.interim);
+  const voiceError = useVoice((s) => s.error);
+  const hush = useVoice((s) => s.hush);
   const router = useRouter();
   const panelRef = useRef<HTMLDivElement>(null);
   const inputRef = useRef<HTMLTextAreaElement>(null);
@@ -110,16 +123,39 @@ export function ChatDock() {
         <div className="min-w-0 flex-1">
           <p className="font-display text-sm font-semibold leading-tight">Pip</p>
           <p className="truncate text-[11px] text-muted">
-            <ScrambleText text={caption || (busy ? "Working…" : "Your shopping companion")} />
+            <ScrambleText text={paused ? "Paused · no suggestions" : caption || (busy ? "Working…" : "Your shopping companion")} />
           </p>
         </div>
         <button
           type="button"
+          onClick={() => {
+            if (!muted) hush();
+            setMuted(!muted);
+          }}
+          aria-pressed={muted}
+          aria-label={muted ? "Unmute Pip's voice" : "Mute Pip's voice (captions stay on)"}
+          title={muted ? "Unmute voice" : "Mute voice"}
+          className="grid size-8 place-items-center rounded-full text-muted hover:bg-surface-2 hover:text-text"
+        >
+          {muted ? <VolumeX className="size-4" /> : <Volume2 className="size-4" />}
+        </button>
+        <button
+          type="button"
+          onClick={() => setPaused(!paused)}
+          aria-pressed={paused}
+          aria-label={paused ? "Resume Pip" : "Pause Pip (stops suggestions)"}
+          title={paused ? "Resume Pip" : "Pause Pip"}
+          className={cn("grid size-8 place-items-center rounded-full hover:bg-surface-2 hover:text-text", paused ? "text-accent-text" : "text-muted")}
+        >
+          {paused ? <Play className="size-4" /> : <Pause className="size-4" />}
+        </button>
+        <PrivacyPopover />
+        <button
+          type="button"
           onClick={reset}
-          disabled={!messages.length}
-          aria-label="Start a new conversation"
-          title="New conversation"
-          className="grid size-8 place-items-center rounded-full text-muted hover:bg-surface-2 hover:text-text disabled:opacity-40"
+          aria-label="Reset memory: forget this chat and session signals"
+          title="Reset memory"
+          className="grid size-8 place-items-center rounded-full text-muted hover:bg-surface-2 hover:text-text"
         >
           <RotateCcw className="size-4" />
         </button>
@@ -153,7 +189,8 @@ export function ChatDock() {
             id="pip-input"
             ref={inputRef}
             rows={1}
-            value={draft}
+            value={listening ? interim : draft}
+            readOnly={listening}
             onChange={(e) => setDraft(e.target.value)}
             onKeyDown={(e) => {
               if (e.key === "Enter" && !e.shiftKey) {
@@ -161,10 +198,11 @@ export function ChatDock() {
                 submit();
               }
             }}
-            placeholder="Ask Pip…"
+            placeholder={listening ? "Listening…" : "Ask Pip, or tap the mic…"}
             maxLength={500}
             className="max-h-28 min-h-9 flex-1 resize-none bg-transparent py-2 text-[14px] placeholder:text-muted focus:outline-none"
           />
+          <MicButton />
           {busy ? (
             <button type="button" onClick={stop} aria-label="Stop" className="grid size-9 shrink-0 place-items-center rounded-full bg-surface-2 text-text hover:bg-danger/20">
               <Square className="size-3.5 fill-current" />
@@ -180,7 +218,13 @@ export function ChatDock() {
             </button>
           )}
         </div>
-        <p className="mt-1.5 px-1 text-[10px] text-muted">Pip can add to your cart but never checks out. You always confirm purchases.</p>
+        {voiceError ? (
+          <p role="alert" className="mt-1.5 px-1 text-[11px] text-danger">
+            {voiceError}
+          </p>
+        ) : (
+          <p className="mt-1.5 px-1 text-[10px] text-muted">Pip can add to your cart but never checks out. You always confirm purchases.</p>
+        )}
       </form>
     </section>
   );

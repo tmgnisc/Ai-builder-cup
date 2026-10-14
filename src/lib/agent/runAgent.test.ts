@@ -120,3 +120,33 @@ describe("other intents", () => {
     expect(r.text).toContain("Pokhara");
   });
 });
+
+describe("nudge follow-ups are understood by the agent", () => {
+  it("revisit → compares the product with similar in-stock ones", async () => {
+    const r = await turn("Compare the Swift Go 14 with similar ones", EMPTY_MEMORY, `n-${Math.random()}`);
+    expect(r.tools).toEqual(["search_products:true", "compare_products:true"]);
+    expect(r.memory.lastComparedIds[0]).toBe("acer-swift-go-14");
+    expect(r.memory.lastComparedIds.length).toBeGreaterThanOrEqual(2);
+  });
+
+  it("alternate → side-by-side of the two products", async () => {
+    const r = await turn("Compare the IdeaPad Slim 5 14 and the Swift Go 14", EMPTY_MEMORY, `n-${Math.random()}`);
+    expect(r.memory.lastComparedIds).toEqual(["lenovo-ideapad-slim-5-14", "acer-swift-go-14"]);
+  });
+
+  it.each(["Show me the best value laptops", "Show the top rated laptops", "laptops with the best battery life"])("price thrash option: %s", async (m) => {
+    const r = await turn(m, EMPTY_MEMORY, `n-${Math.random()}`);
+    expect(r.tools[0]).toBe("search_products:true");
+    expect(r.states).toContain("presenting");
+  });
+
+  it("removed → cheaper alternative", async () => {
+    const r = await turn("Find a cheaper alternative to the WH-1000XM5", EMPTY_MEMORY, `n-${Math.random()}`);
+    expect(r.tools).toEqual(["search_products:true"]);
+    const carousel = r.events.find((e) => e.type === "block" && e.block.kind === "product_carousel");
+    expect(carousel).toBeDefined();
+    const ids = carousel && carousel.type === "block" && carousel.block.kind === "product_carousel" ? carousel.block.productIds : [];
+    expect(ids.length).toBeGreaterThan(0);
+    expect(ids).not.toContain("sony-wh-1000xm5");
+  });
+});

@@ -272,6 +272,10 @@ export function parseQuery(text: string): ParsedQuery {
     needs.push("value");
     q.sort = "price-asc";
   }
+  if (has(t, /\b(top|best|highest) rated\b/)) {
+    q.sort = "rating";
+    prio("rating");
+  }
   if (q.maxPrice !== undefined) prio("price");
 
   if (category) q.category = category;

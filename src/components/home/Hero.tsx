@@ -1,7 +1,8 @@
 "use client";
 
-import { ArrowUp, Mic } from "lucide-react";
+import { ArrowUp } from "lucide-react";
 import { useRef, useState } from "react";
+import { MicButton } from "@/components/chat/MicButton";
 import { useChat } from "@/store/useChat";
 import { gsap, motion, SplitText, useGSAP } from "@/lib/motion";
 import { useMagnetic } from "@/lib/useMagnetic";
@@ -19,13 +20,11 @@ const EXAMPLES = [
 export function Hero() {
   const root = useRef<HTMLElement>(null);
   const sendRef = useRef<HTMLSpanElement>(null);
-  const micRef = useRef<HTMLSpanElement>(null);
   const inputRef = useRef<HTMLInputElement>(null);
   const [prompt, setPrompt] = useState("");
   const send = useChat((s) => s.send);
 
   useMagnetic(sendRef, 0.35);
-  useMagnetic(micRef, 0.35);
 
   useGSAP(
     () => {
@@ -124,15 +123,7 @@ export function Hero() {
               autoComplete="off"
               className="h-11 min-w-0 flex-1 bg-transparent text-[15px] placeholder:text-muted focus:outline-none"
             />
-            <span ref={micRef} className="inline-flex">
-              <button
-                type="button"
-                aria-label="Speak to Pip"
-                className="grid size-11 place-items-center rounded-full text-muted transition-colors hover:bg-surface-2 hover:text-text"
-              >
-                <Mic className="size-[18px]" />
-              </button>
-            </span>
+            <MicButton size={44} />
             <span ref={sendRef} className="inline-flex">
               <button
                 type="submit"

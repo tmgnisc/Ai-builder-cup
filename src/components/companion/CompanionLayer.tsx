@@ -218,7 +218,7 @@ export function CompanionLayer() {
       >
         <div className="glass flex items-center gap-2 whitespace-nowrap rounded-full px-3 py-1.5 text-xs font-medium">
           <span className="size-1.5 rounded-full shadow-[0_0_8px_var(--pip-color)]" style={{ background: color, ["--pip-color" as string]: color }} />
-          <ScrambleText text={caption || " "} />
+          <ScrambleText text={caption || " "} instant={caption.startsWith("“")} />
         </div>
       </div>
 

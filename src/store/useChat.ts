@@ -9,6 +9,8 @@ import { useCart } from "./useCart";
 import { useCatalogUI } from "./useCatalogUI";
 import { useCompanion } from "./useCompanion";
 import { useCompare } from "./useCompare";
+import { useSignals } from "./useSignals";
+import { useVoice } from "./useVoice";
 
 export interface TraceEntry {
   callId: string;
@@ -34,10 +36,13 @@ interface ChatState {
   memory: AgentMemory;
   setOpen: (open: boolean) => void;
   toggle: () => void;
-  send: (text: string) => Promise<void>;
+  /** `voice: true` marks a spoken turn: Pip reads its reply aloud (unless muted). */
+  send: (text: string, opts?: { voice?: boolean }) => Promise<void>;
   stop: () => void;
-  /** Clears the conversation and Pip's memory of it. */
+  /** "Reset memory": clears the conversation, Pip's agent memory and this session's shopping signals. */
   reset: () => void;
+  /** Pause Pip: sleeping, no proactive nudges. Sending a message resumes. */
+  setPaused: (paused: boolean) => void;
 }
 
 let controller: AbortController | null = null;
@@ -157,13 +162,29 @@ export const useChat = create<ChatState>()((set, get) => {
     reset: () => {
       controller?.abort();
       controller = null;
+      useVoice.getState().hush();
       set({ messages: [], memory: EMPTY_MEMORY, busy: false });
+      useSignals.getState().reset();
       useCatalogUI.getState().setHighlighted([]);
-      useCompanion.getState().dispatch({ type: "state_change", state: "idle", source: "agent" });
+      if (!useSignals.getState().paused) useCompanion.getState().dispatch({ type: "state_change", state: "idle", source: "agent" });
     },
-    send: async (raw) => {
+    setPaused: (paused) => {
+      useSignals.getState().setPaused(paused);
+      if (paused) {
+        controller?.abort();
+        controller = null;
+        useVoice.getState().hush();
+        useVoice.getState().stop();
+        set({ busy: false });
+      }
+      useCompanion.getState().dispatch({ type: "state_change", state: paused ? "sleeping" : "idle", source: "session" });
+    },
+    send: async (raw, opts = {}) => {
       const text = raw.trim();
       if (!text) return;
+      // Talking to Pip wakes it up.
+      if (useSignals.getState().paused) useSignals.getState().setPaused(false);
+      useVoice.getState().hush();
       controller?.abort();
       const ctrl = new AbortController();
       controller = ctrl;
@@ -205,6 +226,10 @@ export const useChat = create<ChatState>()((set, get) => {
         if (controller === ctrl) {
           controller = null;
           set({ busy: false });
+          if (opts.voice && !ctrl.signal.aborted) {
+            const reply = [...get().messages].reverse().find((m) => m.role === "assistant");
+            if (reply?.text) useVoice.getState().say(reply.text);
+          }
         }
       }
     },
