@@ -14,6 +14,7 @@ import { useBubble } from "@/store/useBubble";
 import { useCart } from "@/store/useCart";
 import { useCatalogUI } from "@/store/useCatalogUI";
 import { useChat } from "@/store/useChat";
+import { useFeedback } from "@/store/useFeedback";
 import { tourDone, useGuide } from "@/store/useGuide";
 import { usePipPosition } from "@/store/usePipPosition";
 import { useSignals } from "@/store/useSignals";
@@ -23,6 +24,25 @@ import { offerTour } from "./tour";
 const SKIP_TOPICS = new Set(["stage"]);
 
 const isMobile = () => window.innerWidth < 768;
+/** Idle decisions worth retrying while the user is still idle (the gate opens by itself). */
+const RETRY_IDLE = new Set(["cooldown", "after-dismiss", "bubble", "scrolling"]);
+
+/** "Something's confusing": Pip asks what's in the way, records it, then helps with it. */
+function askFeedback() {
+  useBubble.getState().show(
+    {
+      kind: "tip",
+      id: `feedback:${Date.now()}`,
+      source: "guide",
+      text: "What's getting in the way? A few words is enough. I'll help, and the store team sees it so they can fix it.",
+      onReply: (text) => {
+        useFeedback.getState().add(text);
+        return false; // still goes to the agent, so Pip answers it
+      },
+    },
+    { input: true },
+  );
+}
 
 function pageType(pathname: string): PageType {
   if (useCart.getState().drawerOpen) return "cart";
@@ -63,7 +83,7 @@ export function GuideLayer() {
 
   useEffect(() => {
     startAnchorRegistry();
-    const act = { last: performance.now(), interacted: false, idleFired: false, lastScroll: 0 };
+    const act = { last: performance.now(), interacted: false, idleStage: 0 as 0 | 1 | 2, idleTry: 0, lastScroll: 0 };
     const dwell = { id: null as string | null, since: 0, fired: false };
     const arrived = new Set<string>();
     const pendingScroll: AnchorInfo[] = [];
@@ -87,7 +107,7 @@ export function GuideLayer() {
     };
 
     const TRANSIENT = new Set(["typing", "scrolling", "bubble", "dragging", "modal"]);
-    const fire = (trigger: Trigger, attempt = 0) => {
+    const fire = (trigger: Trigger, attempt = 0): GuideDecision => {
       const store = useGuide.getState();
       const sig = useSignals.getState();
       const state = { ...store.state, quiet: sig.quiet, paused: sig.paused };
@@ -97,10 +117,11 @@ export function GuideLayer() {
       store.setLastDecision(`${trigger.kind}${"anchor" in trigger ? `:${trigger.anchor.id}` : ""} → ${"show" in d ? `show ${d.show.id}` : `blocked (${d.blocked})`}`);
       if (!("show" in d)) {
         if (trigger.kind === "route" && TRANSIENT.has(d.blocked) && attempt < 8) window.setTimeout(() => fire(trigger, attempt + 1), 1000);
-        return;
+        return d;
       }
       store.update((s) => afterShow(s, d, trigger, Date.now()));
       void speak(d);
+      return d;
     };
 
     const speak = async (d: Extract<GuideDecision, { show: unknown }>) => {
@@ -124,7 +145,7 @@ export function GuideLayer() {
           label: c.label,
           message: c.message,
           primary: i === 0 && !!c.message,
-          run: c.message ? undefined : () => useBubble.getState().close("user"),
+          run: c.action === "feedback" ? askFeedback : c.message ? undefined : () => useBubble.getState().close("user"),
         })),
         onClose: (reason) => {
           const r = afterClose(useGuide.getState().state, reason === "replaced" ? "engaged" : reason, Date.now());
@@ -141,7 +162,7 @@ export function GuideLayer() {
     const activity = () => {
       act.last = performance.now();
       act.interacted = true;
-      act.idleFired = false;
+      act.idleStage = 0;
     };
     const onMove = (e: PointerEvent) => {
       activity();
@@ -182,13 +203,22 @@ export function GuideLayer() {
         const a = getAnchors().find((x) => x.id === dwell.id);
         if (a) fire({ kind: "dwell", anchor: { id: a.id, topic: a.topic, productId: a.productId } });
       }
-      // Idle: once per stillness, and only after the user has interacted on this page.
+      // Idle, per stillness: first a tip about what the user is looking at, then (if they
+      // stay still) a check-in: "is something in your way?". With nothing to say about the
+      // element, or before they've touched the page, the check-in comes first. If a gate is
+      // only closed for now (cooldown, a bubble still up), keep trying while they stay still.
       const idleMs = isMobile() ? GUIDE_CONFIG.idleMsMobile : GUIDE_CONFIG.idleMs;
-      if (act.interacted && !act.idleFired && now - act.last >= idleMs) {
-        act.idleFired = true;
+      if (act.idleStage < 2 && now - act.last >= idleMs && now - act.idleTry >= 1000) {
+        act.idleTry = now;
         const p = pipRuntime.pointer;
-        const a = (!isMobile() && performance.now() - p.t < 60_000 ? anchorAt(p.x, p.y, 120) : null) ?? mostVisibleAnchor((x) => !SKIP_TOPICS.has(x.topic));
-        if (a && !SKIP_TOPICS.has(a.topic)) fire({ kind: "idle", anchor: { id: a.id, topic: a.topic, productId: a.productId } });
+        const a = act.interacted && act.idleStage === 0
+          ? ((!isMobile() && performance.now() - p.t < 60_000 ? anchorAt(p.x, p.y, 120) : null) ?? mostVisibleAnchor((x) => !SKIP_TOPICS.has(x.topic)))
+          : null;
+        let d: GuideDecision | null = a && !SKIP_TOPICS.has(a.topic) ? fire({ kind: "idle", anchor: { id: a.id, topic: a.topic, productId: a.productId } }) : null;
+        if (!d || (!("show" in d) && (d.blocked === "exhausted" || d.blocked === "nothing"))) d = fire({ kind: "checkin", page: pageType(window.location.pathname) });
+        const anchorTip = "show" in d && d.anchorId !== null;
+        if (anchorTip) act.idleStage = 1;
+        else if ("show" in d || !RETRY_IDLE.has(d.blocked)) act.idleStage = 2;
       }
       // Scroll arrival, once scrolling settles.
       if (pendingScroll.length && now - act.lastScroll > 600) {

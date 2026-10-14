@@ -1,5 +1,5 @@
 import type { Nudge } from "@/lib/signals/nudgeEngine";
-import { buildTip, INTROS, type PageType, type Tip, type TipCtx } from "./tips";
+import { buildTip, CHECKINS, INTROS, type PageType, type Tip, type TipCtx } from "./tips";
 
 /**
  * Proactive guide engine. Pure: the hook feeds it a trigger, the session state and the live
@@ -24,6 +24,8 @@ export const GUIDE_CONFIG = {
 
 export type Trigger =
   | { kind: "route"; page: PageType }
+  /** Idle with nothing element-specific left to say: "is something in your way?" */
+  | { kind: "checkin"; page: PageType }
   | { kind: "idle" | "dwell" | "scroll"; anchor: { id: string; topic: string; productId: string | null } }
   | { kind: "behaviour"; nudge: Nudge };
 
@@ -81,6 +83,10 @@ export function decide(trigger: Trigger, state: GuideState, gates: Gates, ctx: T
       if (state.introsSeen.includes(trigger.page)) return { blocked: "exhausted" };
       const tip = fresh(INTROS[trigger.page]?.({ ...ctx, seenTipIds: state.seenTipIds }) ?? null);
       return tip ? { show: tip, level: 0, anchorId: null, ladderKey: null, spotlight: false } : { blocked: "nothing" };
+    }
+    case "checkin": {
+      const tip = fresh(CHECKINS[trigger.page]?.(ctx) ?? null);
+      return tip ? { show: tip, level: 2, anchorId: null, ladderKey: null, spotlight: false } : { blocked: "exhausted" };
     }
     case "behaviour": {
       const n = trigger.nudge;

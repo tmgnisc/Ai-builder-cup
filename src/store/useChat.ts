@@ -12,6 +12,7 @@ import { PRICE_MAX, PRICE_MIN, useCatalogUI } from "./useCatalogUI";
 import { useCompanion } from "./useCompanion";
 import { useCompare } from "./useCompare";
 import { findAnchor, usePipPosition } from "./usePipPosition";
+import { useFeedback } from "./useFeedback";
 import { useGuide } from "./useGuide";
 import { useSignals } from "./useSignals";
 import { useVoice } from "./useVoice";
@@ -236,6 +237,7 @@ export const useChat = create<ChatState>()((set, get) => {
       set({ messages: [], memory: EMPTY_MEMORY, busy: false });
       useSignals.getState().reset();
       useGuide.getState().reset();
+      useFeedback.getState().reset();
       useCatalogUI.getState().setHighlighted([]);
       if (!useSignals.getState().paused) useCompanion.getState().dispatch({ type: "state_change", state: "idle", source: "agent" });
     },

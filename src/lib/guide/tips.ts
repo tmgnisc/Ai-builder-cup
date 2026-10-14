@@ -29,6 +29,8 @@ export interface TipChip {
   label: string;
   /** Sent to Pip as a user message. Without one, the chip just closes the bubble. */
   message?: string;
+  /** "feedback": asks the shopper what's in their way (recorded for the store team). */
+  action?: "feedback";
 }
 
 export interface Tip {
@@ -301,6 +303,51 @@ export const INTROS: Partial<Record<PageType, Builder>> = {
   checkout: () => ({ id: "intro:checkout", text: "Almost there. Review your order and confirm when you're ready. I never place orders myself." }),
   cart: (ctx) => ({ id: "intro:cart", text: ctx.cart.count ? `Here's your cart: ${formatNPR(ctx.cart.subtotal)} so far. Say “remove …” and I'll handle it.` : "Your cart is empty for now." }),
   merchant: () => ({ id: "intro:merchant", text: "This is the merchant view: how shoppers use me, what they ask, and where product info is missing." }),
+};
+
+const CONFUSING: TipChip = { label: "Something's confusing", action: "feedback" };
+const lakhs = (n: number) => (n >= 100_000 ? `${Math.round(n / 10_000) / 10} lakh` : formatNPR(n));
+
+/**
+ * Idle check-ins: when the shopper sits still and Pip has nothing element-specific left to
+ * say, it asks whether something is in the way. Once per page (per product / category).
+ */
+export const CHECKINS: Partial<Record<PageType, Builder>> = {
+  home: () => ({
+    id: "checkin:home",
+    text: "Taking a moment? Is anything making it hard to find what you're after?",
+    chips: [{ label: "Help me choose", message: "Show me laptops under 1.2 lakh for work" }, CONFUSING, { label: "Just browsing" }],
+  }),
+  category: (ctx) => {
+    if (!ctx.category) return null;
+    const noun = CAT_NOUN[ctx.category];
+    return {
+      id: `checkin:category:${ctx.category}`,
+      text: `Not sure which of these ${noun} fits? Tell me what's getting in the way.`,
+      chips: [{ label: "Narrow it down", message: `Show me ${noun} under ${lakhs(priceSpread(ctx.category).median)}` }, CONFUSING, { label: "Just browsing" }],
+    };
+  },
+  product: (ctx) => {
+    const p = ctx.product;
+    if (!p) return null;
+    const help: TipChip[] =
+      p.stock === 0
+        ? [{ label: "Find one in stock", message: `Find something similar to the ${p.name} that's in stock` }]
+        : [
+            { label: "Cheaper option", message: `Find a cheaper alternative to the ${p.name}` },
+            { label: "When would it arrive?", message: "When would it arrive in Kathmandu?" },
+          ];
+    return { id: `checkin:product:${p.id}`, text: `Anything stopping you from getting the **${p.name}**?`, chips: [...help, CONFUSING, { label: "Just looking" }] };
+  },
+  cart: (ctx) =>
+    ctx.cart.count
+      ? { id: "checkin:cart", text: "Anything holding you back? I can check delivery or look for a better price.", chips: [{ label: "Delivery time?", message: "When would my order arrive in Kathmandu?" }, CONFUSING, { label: "All good" }] }
+      : null,
+  checkout: () => ({
+    id: "checkin:checkout",
+    text: "Stuck on anything here? Tell me and I'll help.",
+    chips: [{ label: "Delivery cost?", message: "How much is delivery to Kathmandu?" }, CONFUSING, { label: "All good" }],
+  }),
 };
 
 export function buildTip(topic: string, level: 1 | 2, ctx: TipCtx): Tip | null {
