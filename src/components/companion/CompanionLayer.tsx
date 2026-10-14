@@ -5,6 +5,7 @@ import { usePathname } from "next/navigation";
 import { Component, useEffect, useRef, useState, type ReactNode } from "react";
 import { ScrambleText } from "@/components/ui/ScrambleText";
 import { gsap, motion, ScrollTrigger, useGSAP } from "@/lib/motion";
+import { useChat } from "@/store/useChat";
 import { useCompanion } from "@/store/useCompanion";
 import { pip, pipRuntime } from "./runtime";
 import { STATES } from "./states";
@@ -34,6 +35,8 @@ export function CompanionLayer() {
   const state = useCompanion((s) => s.state);
   const caption = useCompanion((s) => s.caption);
   const dispatch = useCompanion((s) => s.dispatch);
+  const chatOpen = useChat((s) => s.open);
+  const toggleChat = useChat((s) => s.toggle);
 
   const wrapRef = useRef<HTMLDivElement>(null);
   const glitchRef = useRef<HTMLDivElement>(null);
@@ -94,7 +97,8 @@ export function CompanionLayer() {
 
       const anchor = document.querySelector<HTMLElement>('[data-pip-anchor="hero"], [data-pip-anchor="stage"]');
       const anchorVisible = !!anchor && anchor.offsetWidth > 0 && anchor.getClientRects().length > 0;
-      const mode: Mode = anchorVisible ? (anchor.dataset.pipAnchor as Mode) : "dock";
+      // While chatting, Pip always sits in the dock next to the panel.
+      const mode: Mode = anchorVisible && !chatOpen ? (anchor.dataset.pipAnchor as Mode) : "dock";
 
       // Measure once per setup; the layout pass uses scroll offsets, not live rects (no forced reflow).
       const d = dock.getBoundingClientRect();
@@ -165,7 +169,7 @@ export function CompanionLayer() {
       gsap.ticker.add(layout);
       return () => gsap.ticker.remove(layout);
     },
-    { dependencies: [pathname, viewportKey], revertOnUpdate: true },
+    { dependencies: [pathname, viewportKey, chatOpen], revertOnUpdate: true },
   );
 
   const color = STATES[state].color;
@@ -195,8 +199,12 @@ export function CompanionLayer() {
         </div>
         <button
           type="button"
-          onClick={() => pip.react("hop-spin")}
-          aria-label="Talk to Pip"
+          onClick={() => {
+            pip.react("hop-spin");
+            toggleChat();
+          }}
+          aria-label={chatOpen ? "Close chat with Pip" : "Talk to Pip"}
+          aria-expanded={chatOpen}
           className="pointer-events-auto absolute rounded-full focus-visible:outline-offset-0"
           style={{ left: `${(1 - HIT) * 50}%`, top: `${(1 - HIT) * 50}%`, width: `${HIT * 100}%`, height: `${HIT * 100}%` }}
         />

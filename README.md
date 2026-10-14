@@ -27,6 +27,16 @@ For demos, use `pnpm build && pnpm start`: the in-memory cart lives in a single 
 - Add `?latency=0` to an API URL to disable latency.
 - Env overrides: `PERSONA_FAILURE_RATE`, `PERSONA_LATENCY_MIN_MS`, `PERSONA_LATENCY_MAX_MS`.
 
+## Agent
+
+`POST /api/agent` streams newline-delimited JSON `AgentEvent`s (see `src/lib/agent/types.ts`). The server is stateless: the client sends `{ message, memory, context }` each turn.
+
+- `runAgent.ts`: the runtime. It validates every tool call with zod, traces it, and **enforces verify-after-act**: after `add_to_cart`/`remove_from_cart` it always calls `get_cart` and reports whether the change is really there.
+- `mockAgent.ts`: the rule-based agent (understanding lives in `intent.ts`). It retries transient failures once, relaxes filters when nothing matches, and suggests in-budget, in-stock alternatives.
+- `geminiAgent.ts`: a stub with the same interface. Set `PERSONA_AGENT=gemini` + `GEMINI_API_KEY` once it's implemented. `toolDeclarations()` already emits JSON schemas.
+- There is no checkout tool. Pip can only open `/checkout`, where the user confirms.
+- `PERSONA_AGENT_PACE` (default 1) scales the demo pacing; set it to 0 for instant responses.
+
 ## Pip playground
 
 `/playground` (dev only; set `NEXT_PUBLIC_PLAYGROUND=1` to include it in a production build) shows Pip on a stage with:
@@ -42,6 +52,6 @@ Deep links: `/playground?state=thinking`, `/playground?cycle=1`.
 1. ✅ Scaffold, design system, catalog, mock commerce
 2. ✅ Pip (three.js orb, eyes, halo, 12 states, `/playground`)
 3. ✅ Store UI and GSAP choreography
-4. Agent loop and chat dock
+4. ✅ Agent loop and chat dock
 5. Voice and nudges
 6. Merchant dashboard and polish

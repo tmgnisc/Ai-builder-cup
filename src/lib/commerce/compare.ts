@@ -131,8 +131,10 @@ export interface CompareRow {
 export interface CompareResult {
   productIds: string[];
   rows: CompareRow[];
-  /** Advantages of each product over the best of the others, in priority order. */
+  /** Advantages of each product over the best of the others, in priority order ("140 g lighter"). */
   advantages: Record<string, string[]>;
+  /** Same advantages as predicates ("is 140 g lighter", "has 2 h more battery"). */
+  predicates: Record<string, string[]>;
   scores: Record<string, number>;
   /** Id of the better overall fit, or null when it's a genuine tie. */
   winnerId: string | null;
@@ -240,6 +242,7 @@ export function compareProducts(
     productIds: ids,
     rows,
     advantages: Object.fromEntries(ids.map((id) => [id, advantages[id].map((a) => a.text)])),
+    predicates: Object.fromEntries(ids.map((id) => [id, advantages[id].map((a) => a.predicate)])),
     scores,
     winnerId,
     verdict,

@@ -2,6 +2,7 @@
 
 import { Minus, Plus, ShoppingBag, Trash2 } from "lucide-react";
 import { useRef } from "react";
+import { cn } from "@/lib/cn";
 import { gsap, motion, useGSAP } from "@/lib/motion";
 import Link from "next/link";
 import { Sheet } from "@/components/ui/Sheet";
@@ -135,14 +136,14 @@ export function CartDrawer() {
               <Ticker value={cart?.subtotal ?? 0} />
             </span>
           </div>
-          <button
-            type="button"
-            disabled={lines.length === 0}
-            className={buttonClasses({ size: "lg", className: "mt-4 w-full" })}
-            title="Checkout arrives in a later phase"
+          <Link
+            href="/checkout"
+            onClick={() => setOpen(false)}
+            aria-disabled={lines.length === 0}
+            className={buttonClasses({ size: "lg", className: cn("mt-4 w-full", lines.length === 0 && "pointer-events-none opacity-45") })}
           >
             Review &amp; checkout
-          </button>
+          </Link>
           <p className="mt-2 text-center text-[11px] text-muted">You always confirm purchases yourself. Pip can&apos;t check out for you.</p>
         </div>
       </div>

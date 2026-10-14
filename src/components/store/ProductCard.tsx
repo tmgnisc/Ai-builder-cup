@@ -55,7 +55,7 @@ export function ProductCard({ product }: { product: Product }) {
         style={{ background: "radial-gradient(420px circle at var(--mx, 50%) var(--my, 50%), var(--spotlight), transparent 45%)" }}
       />
 
-      <div ref={imageRef} className="relative aspect-[4/3] overflow-hidden">
+      <div ref={imageRef} data-card-image className="relative aspect-[4/3] overflow-hidden">
         <ProductImage
           product={product}
           className={cn("transition-transform duration-700 ease-[var(--ease-out-expo)] group-hover:scale-[1.04]", out && "opacity-60 grayscale-[40%]")}

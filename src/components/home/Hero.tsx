@@ -2,7 +2,7 @@
 
 import { ArrowUp, Mic } from "lucide-react";
 import { useRef, useState } from "react";
-import { pip } from "@/components/companion/runtime";
+import { useChat } from "@/store/useChat";
 import { gsap, motion, SplitText, useGSAP } from "@/lib/motion";
 import { useMagnetic } from "@/lib/useMagnetic";
 
@@ -22,6 +22,7 @@ export function Hero() {
   const micRef = useRef<HTMLSpanElement>(null);
   const inputRef = useRef<HTMLInputElement>(null);
   const [prompt, setPrompt] = useState("");
+  const send = useChat((s) => s.send);
 
   useMagnetic(sendRef, 0.35);
   useMagnetic(micRef, 0.35);
@@ -86,8 +87,8 @@ export function Hero() {
       inputRef.current?.focus();
       return;
     }
-    // Phase 4 hands the prompt to the agent and opens the chat dock.
-    pip.react("hop");
+    void send(prompt);
+    setPrompt("");
   }
 
   return (

@@ -12,6 +12,7 @@ import { formatNPR } from "@/lib/commerce/format";
 import type { Product } from "@/lib/commerce/schemas";
 import { gsap, motion, useGSAP } from "@/lib/motion";
 import { useCart } from "@/store/useCart";
+import { useChat } from "@/store/useChat";
 import { useCompare } from "@/store/useCompare";
 import { ProductImage } from "./ProductImage";
 
@@ -27,6 +28,8 @@ export function CompareDrawer() {
   const context = useCompare((s) => s.context);
   const priorities = useCompare((s) => s.priorities);
   const tableRef = useRef<HTMLDivElement>(null);
+  // With the chat open, the drawer is non-modal and leaves room for the dock + Pip on desktop.
+  const chatOpen = useChat((s) => s.open);
 
   const products = useMemo(() => ids.map(getProduct).filter((p): p is Product => !!p), [ids]);
   const result = useMemo(
@@ -61,6 +64,8 @@ export function CompareDrawer() {
       open={open && !!result}
       onOpenChange={setOpen}
       side="bottom"
+      modal={!chatOpen}
+      className={chatOpen ? "md:right-[612px]" : undefined}
       title="Compare"
       description={context ? `For ${context}` : `${products.length} products side by side · values from the catalog`}
     >

@@ -33,6 +33,10 @@ export function setClientChaos(rate: number | null) {
   chaosRate = rate;
 }
 
+export function getChaosHeader(): string | null {
+  return chaosRate === null ? null : String(chaosRate);
+}
+
 async function request<S extends z.ZodType>(path: string, schema: S, init?: RequestInit): Promise<z.infer<S>> {
   const headers = new Headers(init?.headers);
   if (init?.body) headers.set("content-type", "application/json");
