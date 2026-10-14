@@ -1,6 +1,7 @@
 import Link from "next/link";
 import { CATEGORIES } from "@/lib/commerce/schemas";
 import { CartButton } from "./CartButton";
+import { PipHeaderControls } from "./PipHeaderControls";
 import { ThemeToggle } from "./ThemeToggle";
 
 export function Logo() {
@@ -46,6 +47,7 @@ export function Header() {
           >
             Merchant
           </Link>
+          <PipHeaderControls />
           <ThemeToggle />
           <CartButton />
         </div>

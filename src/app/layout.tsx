@@ -1,6 +1,6 @@
 import type { Metadata, Viewport } from "next";
 import { Inter, JetBrains_Mono, Unbounded } from "next/font/google";
-import { ChatDock } from "@/components/chat/ChatDock";
+import { BubbleLayer } from "@/components/bubble/BubbleLayer";
 import { NudgeLayer } from "@/components/signals/NudgeLayer";
 import { CompanionLayer } from "@/components/companion/CompanionLayer";
 import { ClientBootstrap } from "@/components/layout/ClientBootstrap";
@@ -42,7 +42,7 @@ export default function RootLayout({ children }: Readonly<{ children: React.Reac
         <Footer />
         {/* Persistent across navigations: template.tsx remounts children, never these. */}
         <CompanionLayer />
-        <ChatDock />
+        <BubbleLayer />
         <NudgeLayer />
         <CartDrawer />
         <CompareTray />

@@ -3,6 +3,7 @@
 import { useEffect } from "react";
 import { useCart } from "@/store/useCart";
 import { useCatalogUI } from "@/store/useCatalogUI";
+import { useBubble } from "@/store/useBubble";
 import { useChat } from "@/store/useChat";
 import { useCompare } from "@/store/useCompare";
 import { useSignals } from "@/store/useSignals";
@@ -29,8 +30,8 @@ export function useShoppingSignals() {
         dismissedTypes: s.dismissedTypes,
         lastNudgeAt: s.lastNudgeAt,
         lastTypingAt: s.lastTypingAt,
-        paused: s.paused,
-        busy: chat.open || chat.busy || s.active !== null,
+        paused: s.paused || s.quiet,
+        busy: chat.busy || useBubble.getState().content !== null || s.active !== null,
         category: useCatalogUI.getState().filters.category,
       });
       if (!decision) return;

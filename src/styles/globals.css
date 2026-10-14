@@ -251,3 +251,18 @@
     opacity: 0;
   }
 }
+
+/* ───────────────────────── Pip's speech bubble ───────────────────────── */
+
+.bubble-panel {
+  box-shadow:
+    inset 0 0 0 1px color-mix(in oklab, var(--pip-color, var(--accent)) 38%, var(--glass-border)),
+    0 0 28px -10px var(--pip-color, var(--accent)),
+    0 24px 60px -20px rgb(0 0 0 / 0.55);
+  transition: box-shadow 0.5s;
+}
+.bubble-tail {
+  z-index: -1;
+  background: var(--surface);
+  box-shadow: inset 0 0 0 1px color-mix(in oklab, var(--pip-color, var(--accent)) 38%, var(--glass-border));
+}

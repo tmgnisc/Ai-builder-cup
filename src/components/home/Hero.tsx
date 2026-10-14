@@ -88,6 +88,7 @@ export function Hero() {
     }
     void send(prompt);
     setPrompt("");
+    inputRef.current?.blur();
   }
 
   return (

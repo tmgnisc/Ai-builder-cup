@@ -6,7 +6,8 @@ import { Component, useEffect, useRef, useState, type ReactNode } from "react";
 import { ScrambleText } from "@/components/ui/ScrambleText";
 import { gsap } from "@/lib/motion";
 import { placeCenter } from "@/lib/guide/placement";
-import { useChat } from "@/store/useChat";
+import { openPipPrompt } from "@/components/bubble/BubbleLayer";
+import { useBubble } from "@/store/useBubble";
 import { useCompanion } from "@/store/useCompanion";
 import { findAnchor, usePipPosition } from "@/store/usePipPosition";
 import * as pilot from "./pilot";
@@ -31,8 +32,7 @@ export function CompanionLayer() {
   const state = useCompanion((s) => s.state);
   const caption = useCompanion((s) => s.caption);
   const dispatch = useCompanion((s) => s.dispatch);
-  const chatOpen = useChat((s) => s.open);
-  const toggleChat = useChat((s) => s.toggle);
+  const bubbleOpen = useBubble((s) => s.content !== null);
   const mode = usePipPosition((s) => s.mode);
 
   const wrapRef = useRef<HTMLDivElement>(null);
@@ -95,11 +95,10 @@ export function CompanionLayer() {
     return () => gsap.ticker.remove(tick);
   }, [base]);
 
-  // Where Pip goes when a page loads or the chat opens.
+  // Where Pip goes when a page loads.
   useEffect(() => {
     const pos = usePipPosition.getState();
     const id = window.requestAnimationFrame(() => {
-      if (chatOpen) return void pos.goHome();
       const stage = findAnchor("stage");
       if (stage) return void pos.flyToAnchor(stage, { size: Math.round(stage.getBoundingClientRect().width * pilot.ORB_FRACTION), place: placeCenter });
       const hero = findAnchor("hero");
@@ -109,7 +108,7 @@ export function CompanionLayer() {
       if (pilot.getMode() !== "parked") void pos.goHome();
     });
     return () => window.cancelAnimationFrame(id);
-  }, [pathname, chatOpen]);
+  }, [pathname]);
 
   // An anchor scrolled away: the hero hands Pip back home; others release Pip near the nearest side.
   useEffect(() => {
@@ -131,7 +130,7 @@ export function CompanionLayer() {
       window.clearTimeout(t);
       t = window.setTimeout(() => {
         const hero = findAnchor("hero");
-        if (window.scrollY < 80 && hero && pilot.getMode() === "free" && !useChat.getState().open) {
+        if (window.scrollY < 80 && hero && pilot.getMode() === "free") {
           void usePipPosition.getState().flyToAnchor(hero, { size: "hero", place: placeCenter });
         }
       }, 250);
@@ -182,7 +181,7 @@ export function CompanionLayer() {
     <>
       <div
         ref={wrapRef}
-        className="pointer-events-none fixed left-0 top-0 z-30 origin-top-left will-change-transform"
+        className="pointer-events-none fixed left-0 top-0 z-[55] origin-top-left will-change-transform"
         style={{ ["--pip-color" as string]: color, width: base, height: base, transform: "translate3d(-999px,-999px,0)" }}
       >
         <div
@@ -212,14 +211,15 @@ export function CompanionLayer() {
               return;
             }
             pip.react("hop-spin");
-            toggleChat();
+            if (useBubble.getState().content) useBubble.getState().close("user");
+            else openPipPrompt(pathname);
           }}
           onDoubleClick={() => {
-            if (useChat.getState().open) useChat.getState().setOpen(false);
+            useBubble.getState().close("user");
             void usePipPosition.getState().park();
           }}
-          aria-label={chatOpen ? "Close conversation with Pip" : "Talk to Pip"}
-          aria-expanded={chatOpen}
+          aria-label={bubbleOpen ? "Close Pip's bubble" : "Talk to Pip"}
+          aria-expanded={bubbleOpen}
           title="Click to talk · drag to move · double-click to park"
           className="pointer-events-auto absolute touch-none rounded-full focus-visible:outline-offset-0"
           style={{
@@ -235,8 +235,8 @@ export function CompanionLayer() {
       <div
         ref={captionRef}
         aria-hidden
-        className="pointer-events-none fixed left-0 top-0 z-30 transition-opacity duration-300 data-[compact=true]:hidden"
-        style={{ opacity: caption ? 1 : 0, transform: "translate3d(-999px,-999px,0)" }}
+        className="pointer-events-none fixed left-0 top-0 z-[55] transition-opacity duration-300 data-[compact=true]:hidden"
+        style={{ opacity: caption && !bubbleOpen ? 1 : 0, transform: "translate3d(-999px,-999px,0)" }}
       >
         <div className="glass flex items-center gap-2 whitespace-nowrap rounded-full px-3 py-1.5 text-xs font-medium">
           <span className="size-1.5 rounded-full shadow-[0_0_8px_var(--pip-color)]" style={{ background: color, ["--pip-color" as string]: color }} />

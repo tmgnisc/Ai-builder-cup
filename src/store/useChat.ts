@@ -5,6 +5,7 @@ import { pip } from "@/components/companion/runtime";
 import { streamAgent } from "@/lib/agent/client";
 import { EMPTY_MEMORY, type AgentEvent, type AgentMemory, type Block, type UIAction } from "@/lib/agent/types";
 import { flyToCart } from "@/lib/flyToCart";
+import { useBubble } from "./useBubble";
 import { useCart } from "./useCart";
 import { useCatalogUI } from "./useCatalogUI";
 import { useCompanion } from "./useCompanion";
@@ -30,12 +31,12 @@ export interface ChatMessage {
 }
 
 interface ChatState {
-  open: boolean;
   messages: ChatMessage[];
   busy: boolean;
   memory: AgentMemory;
-  setOpen: (open: boolean) => void;
-  toggle: () => void;
+  /** The History drawer (secondary view of the full conversation). */
+  historyOpen: boolean;
+  setHistoryOpen: (open: boolean) => void;
   /** `voice: true` marks a spoken turn: Pip reads its reply aloud (unless muted). */
   send: (text: string, opts?: { voice?: boolean }) => Promise<void>;
   stop: () => void;
@@ -49,7 +50,7 @@ let controller: AbortController | null = null;
 let navigate: ((to: string) => void) | null = null;
 let userSeq = 0;
 
-/** The chat dock registers the router so agent `navigate` actions use client-side routing. */
+/** The bubble layer registers the router so agent `navigate` actions use client-side routing. */
 export function registerNavigator(fn: ((to: string) => void) | null) {
   navigate = fn;
 }
@@ -59,14 +60,14 @@ function pageProductId(): string | null {
   return m?.[1] ?? null;
 }
 
-/** Element to fly into the cart: the chat carousel card if present, else the grid card image. */
+/** Element to fly into the cart: a mini card in Pip's bubble if present, else the grid card image. */
 function flySource(productId: string): Element | null {
   const chat = document.querySelectorAll(`[data-chat-product="${productId}"]`);
   if (chat.length) return chat[chat.length - 1];
   return document.querySelector(`[data-product-id="${productId}"] [data-card-image]`) ?? document.querySelector("[data-gallery-main]");
 }
 
-async function performUI(action: UIAction, chatOpen: boolean) {
+async function performUI(action: UIAction) {
   switch (action.type) {
     case "highlight": {
       useCatalogUI.getState().setHighlighted(action.productIds);
@@ -82,13 +83,12 @@ async function performUI(action: UIAction, chatOpen: boolean) {
       if (action.flyProductId) {
         useCart.setState({ lastAddedId: action.flyProductId });
         await flyToCart(flySource(action.flyProductId));
-        // With the chat open, the cart line already shows in the conversation; don't cover it.
-        if (!chatOpen) useCart.getState().peek();
+        useCart.getState().peek();
       }
       return;
     }
     case "open_cart":
-      if (!chatOpen) useCart.getState().setDrawerOpen(true);
+      useCart.getState().peek(3200);
       return;
     case "navigate":
       if (navigate) navigate(action.to);
@@ -108,6 +108,8 @@ export const useChat = create<ChatState>()((set, get) => {
         return;
       case "message_start":
         set((s) => ({ messages: [...s.messages, { id: ev.messageId, role: "assistant", text: "", blocks: [], trace: [], status: "streaming" }] }));
+        // Pip speaks through its bubble: every reply replaces whatever it was saying.
+        useBubble.getState().show({ kind: "agent", messageId: ev.messageId });
         return;
       case "text_delta":
         patch(ev.messageId, (m) => ({ ...m, text: m.text + ev.delta }));
@@ -129,7 +131,7 @@ export const useChat = create<ChatState>()((set, get) => {
         });
         return;
       case "ui":
-        await performUI(ev.action, get().open);
+        await performUI(ev.action);
         return;
       case "memory":
         set({ memory: ev.memory });
@@ -147,12 +149,11 @@ export const useChat = create<ChatState>()((set, get) => {
   }
 
   return {
-    open: false,
     messages: [],
     busy: false,
     memory: EMPTY_MEMORY,
-    setOpen: (open) => set({ open }),
-    toggle: () => set((s) => ({ open: !s.open })),
+    historyOpen: false,
+    setHistoryOpen: (historyOpen) => set({ historyOpen }),
     stop: () => {
       controller?.abort();
       controller = null;
@@ -190,7 +191,6 @@ export const useChat = create<ChatState>()((set, get) => {
       controller = ctrl;
 
       set((s) => ({
-        open: true,
         busy: true,
         messages: [...s.messages, { id: `user_${++userSeq}`, role: "user", text, blocks: [], trace: [], status: "done" }],
       }));
