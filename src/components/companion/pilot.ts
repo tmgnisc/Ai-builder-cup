@@ -63,7 +63,10 @@ const state = {
   vy: 0,
   lastT: 0,
   initialized: false,
+  /** When the anchor first went missing (anchors are released after a grace period). */
+  lostSince: 0,
 };
+const ANCHOR_GRACE_MS = 600;
 let flight: gsap.core.Tween | null = null;
 let sizeTween: gsap.core.Tween | null = null;
 let onAnchorLost: ((last: Point) => void) | null = null;
@@ -298,7 +301,13 @@ export function frame(now: number): Live {
       }
       case "anchored": {
         const t = anchorTarget();
+        if (!t && (state.lostSince === 0 || now - state.lostSince < ANCHOR_GRACE_MS)) {
+          // Briefly off screen (a drawer sliding in, a re-flow): hold position for a moment.
+          if (state.lostSince === 0) state.lostSince = now;
+          break;
+        }
         if (!t) {
+          state.lostSince = 0;
           const last = { x: live.x, y: live.y };
           state.mode = "free";
           state.anchorEl = null;
@@ -308,6 +317,7 @@ export function frame(now: number): Live {
           onAnchorLost?.(last);
           break;
         }
+        state.lostSince = 0;
         const c = clampToViewport(t, live.size);
         live.x += (c.x - live.x) * k(14);
         live.y += (c.y - live.y) * k(14);

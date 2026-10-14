@@ -155,6 +155,11 @@ class Handlers {
     }
   }
 
+  /** The store grid (product cards) is on screen only on the landing page. */
+  private onGrid(): boolean {
+    return this.req.context.path === "/";
+  }
+
   private chips(options: string[], question?: string) {
     this.io.block(this.msg, { kind: "clarify", id: `${this.msg}-chips`, options: options.slice(0, 4), question });
   }
@@ -249,6 +254,11 @@ class Handlers {
 
     io.state("presenting", top.length === 1 ? "This one fits" : `These ${top.length} fit ${q.maxPrice ? "your budget" : "the bill"}`);
     io.ui({ type: "highlight", productIds: top.map((p) => p.id) });
+    if (this.onGrid()) {
+      io.ui({ type: "set_filters", category: q.category ?? null, maxPrice: q.maxPrice });
+      io.ui({ type: "scroll_to", anchorId: `card:${top[0].id}` });
+      io.ui({ type: "move_to", anchorId: `card:${top[0].id}`, size: "presenting" });
+    }
     io.block(msg, { kind: "product_carousel", id: `${msg}-results`, productIds: top.map((p) => p.id), title: `${res.total} match${res.total === 1 ? "" : "es"}` });
     await io.pause(1100);
 
@@ -330,6 +340,7 @@ class Handlers {
     const context = needsLabel(memory.lastQuery);
     const caption = `Comparing ${joinList((priorities ?? ["battery", "weight"]).slice(0, 2).map((k) => KEY_LABEL[k]), "&")}…`;
     io.state("comparing", caption);
+    if (this.onGrid()) io.ui({ type: "move_to", between: [`card:${ids[0]}`, `card:${ids[1]}`] });
     await io.pause(500);
 
     const r = await io.call(msg, "compare_products", { productIds: ids, priorities, context });
@@ -341,6 +352,7 @@ class Handlers {
     memory.lastComparedIds = ids;
     memory.focusProductId = null;
     io.ui({ type: "open_compare", productIds: ids, context, priorities });
+    io.ui({ type: "move_to", anchorId: "compare-verdict" });
     io.block(msg, { kind: "comparison", id: `${msg}-cmp`, productIds: ids, verdict: r.output.verdict, winnerId: r.output.winnerId, context, priorities });
     await io.pause(900);
 
@@ -413,6 +425,11 @@ class Handlers {
     memory.suggestedId = alts[0].id;
     io.state("presenting", `${alts.length} alternative${alts.length === 1 ? "" : "s"}`);
     io.ui({ type: "highlight", productIds: alts.map((p) => p.id) });
+    if (this.onGrid()) {
+      io.ui({ type: "set_filters", category: base.category, maxPrice: undefined });
+      io.ui({ type: "scroll_to", anchorId: `card:${alts[0].id}` });
+      io.ui({ type: "move_to", anchorId: `card:${alts[0].id}`, size: "presenting" });
+    }
     io.block(msg, { kind: "product_carousel", id: `${msg}-similar`, productIds: alts.map((p) => p.id), title: cheaper ? "Cheaper picks" : "Similar picks" });
     await io.pause(900);
     io.state("speaking");
@@ -470,6 +487,8 @@ class Handlers {
     memory.focusProductId = p.id;
     const blockId = `${msg}-cart`;
     io.state("acting", `Adding ${name(p)} to cart…`);
+    const productAnchor = this.onGrid() ? `card:${p.id}` : this.req.context.pageProductId === p.id ? "add-to-cart" : null;
+    if (productAnchor) io.ui({ type: "move_to", anchorId: productAnchor });
     io.block(msg, { kind: "cart_action", id: blockId, action: "add", productId: p.id, status: "pending" });
 
     // Observe before acting: live stock.
@@ -499,9 +518,10 @@ class Handlers {
     }
 
     const line = r.verification.line!;
+    // Pip rides along with the item to the cart icon, and celebrates there.
+    io.ui({ type: "cart_updated", flyProductId: p.id });
     io.state("success", "Added & verified ✓");
     io.block(msg, { kind: "cart_action", id: blockId, action: "add", productId: p.id, status: "verified", line });
-    io.ui({ type: "cart_updated", flyProductId: p.id });
     await io.pause(600);
     await io.say(
       msg,
@@ -525,6 +545,7 @@ class Handlers {
       return;
     }
     memory.suggestedId = best.id;
+    if (this.onGrid()) io.ui({ type: "move_to", anchorId: `card:${best.id}` });
     const cmp = compareProducts([best, p]);
     const why = cmp.predicates[best.id]?.slice(0, 2) ?? [];
     io.block(msg, { kind: "product_carousel", id: `${msg}-alt`, productIds: [best.id], title: "Closest in stock" });
@@ -587,7 +608,8 @@ class Handlers {
       return;
     }
     io.state("speaking");
-    io.ui({ type: "open_cart" });
+    io.ui({ type: "move_to", anchorId: "cart-button" });
+    io.ui({ type: "open_drawer", name: "cart" });
     if (!cart.output.lines.length) {
       await io.say(msg, "Your cart is empty. Want me to find something?");
       this.chips(EXAMPLES);
@@ -648,11 +670,30 @@ class Handlers {
     }
     const p = r.output;
     memory.focusProductId = p.id;
+    if (this.req.context.pageProductId === p.id) {
+      const anchorId = TOPIC_ANCHOR[topic];
+      io.ui({ type: "move_to", anchorId });
+      io.ui({ type: "highlight", anchorId });
+    }
     io.state("speaking");
     await io.say(msg, answer(p, topic));
     this.chips(p.stock > 0 ? [`Add the ${name(p)}`, "Compare it with similar ones"] : ["Find something similar in stock"]);
   }
 }
+
+/** Product-page anchor that shows the fact a question is about. */
+const TOPIC_ANCHOR: Record<Topic, string> = {
+  battery: "spec:battery",
+  weight: "spec:weight",
+  ram: "spec:ram",
+  gaming: "spec:gpu",
+  warranty: "spec:warranty",
+  price: "price",
+  stock: "stock",
+  screen: "spec:screen",
+  storage: "spec:storage",
+  general: "gallery",
+};
 
 function answer(p: Product, topic: Topic): string {
   const s = p.specs;

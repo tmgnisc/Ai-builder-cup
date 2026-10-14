@@ -220,14 +220,19 @@ export function CompanionLayer() {
               return;
             }
             pip.react("hop-spin");
-            if (useBubble.getState().content) useBubble.getState().close("user");
-            else openPipPrompt(pathname);
+            // Clicking Pip always means "I want to talk": only an open prompt toggles closed.
+            const b = useBubble.getState();
+            if (b.content?.kind === "prompt") b.close("user");
+            else if (b.content?.kind === "agent") {
+              b.setInputOpen(true);
+              window.setTimeout(() => document.getElementById("pip-input")?.focus(), 60);
+            } else openPipPrompt(pathname);
           }}
           onDoubleClick={() => {
             useBubble.getState().close("user");
             void usePipPosition.getState().park();
           }}
-          aria-label={bubbleOpen ? "Close Pip's bubble" : "Talk to Pip"}
+          aria-label="Talk to Pip"
           aria-expanded={bubbleOpen}
           title="Click to talk · drag to move · double-click to park"
           className="pointer-events-auto absolute touch-none rounded-full focus-visible:outline-offset-0"

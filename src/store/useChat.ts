@@ -1,15 +1,17 @@
 "use client";
 
 import { create } from "zustand";
-import { pip } from "@/components/companion/runtime";
 import { streamAgent } from "@/lib/agent/client";
 import { EMPTY_MEMORY, type AgentEvent, type AgentMemory, type Block, type UIAction } from "@/lib/agent/types";
+import { useSpotlight } from "@/components/guide/Spotlight";
 import { flyToCart } from "@/lib/flyToCart";
+import { motion } from "@/lib/motion";
 import { useBubble } from "./useBubble";
 import { useCart } from "./useCart";
-import { useCatalogUI } from "./useCatalogUI";
+import { PRICE_MAX, PRICE_MIN, useCatalogUI } from "./useCatalogUI";
 import { useCompanion } from "./useCompanion";
 import { useCompare } from "./useCompare";
+import { findAnchor, usePipPosition } from "./usePipPosition";
 import { useGuide } from "./useGuide";
 import { useSignals } from "./useSignals";
 import { useVoice } from "./useVoice";
@@ -68,14 +70,82 @@ function flySource(productId: string): Element | null {
   return document.querySelector(`[data-product-id="${productId}"] [data-card-image]`) ?? document.querySelector("[data-gallery-main]");
 }
 
+const wait = (ms: number) => new Promise((r) => setTimeout(r, motion.reduced ? 0 : ms));
+
+/** Waits (up to `ms`) for an anchor to exist and sit on screen, e.g. inside a drawer that's sliding in. */
+async function settledAnchor(id: string, ms = 1200): Promise<Element | null> {
+  const until = performance.now() + ms;
+  for (;;) {
+    const el = findAnchor(id);
+    if (el) {
+      const r = el.getBoundingClientRect();
+      if (r.width > 0 && r.top >= 0 && r.bottom <= window.innerHeight + 4) {
+        await wait(60);
+        return el;
+      }
+    }
+    if (performance.now() > until) return el;
+    await new Promise((r) => setTimeout(r, 80));
+  }
+}
+
+/** Pip sits midway between two elements (e.g. the two cards it's comparing). */
+const placeBetween = (other: Element) => (el: Element, size: number) => {
+  const a = el.getBoundingClientRect();
+  const b = other.getBoundingClientRect();
+  if (a.width === 0 || b.width === 0) return null;
+  return { x: (a.left + a.right + b.left + b.right) / 4, y: Math.min(a.top, b.top) + Math.min(a.height, b.height) * 0.35 + size * 0.1 };
+};
+
 async function performUI(action: UIAction) {
+  const pos = usePipPosition.getState();
   switch (action.type) {
     case "highlight": {
-      useCatalogUI.getState().setHighlighted(action.productIds);
-      const first = document.querySelector(`[data-product-id="${action.productIds[0]}"]`);
-      if (first) pip.glanceAtElement(first, 1500);
+      if (action.productIds) useCatalogUI.getState().setHighlighted(action.productIds);
+      const el = action.anchorId ? await settledAnchor(action.anchorId, 800) : null;
+      if (el) useSpotlight.getState().show(el, { dim: true, ms: 2600 });
       return;
     }
+    case "move_to": {
+      if (action.between) {
+        const [a, b] = action.between.map(findAnchor);
+        if (a && b) await pos.flyToAnchor(a, { place: placeBetween(b), size: "anchored" });
+        else if (a) await pos.flyToAnchor(a);
+      } else if (action.anchorId) {
+        const el = await settledAnchor(action.anchorId);
+        if (el) await pos.flyToAnchor(el, { size: action.size === "presenting" ? "presenting" : "anchored" });
+      } else if (action.corner) {
+        await pos.park(action.corner);
+      } else if (action.x !== undefined && action.y !== undefined) {
+        await pos.flyToPoint({ x: action.x, y: action.y }, { size: action.size ?? "free" });
+      }
+      return;
+    }
+    case "scroll_to": {
+      const el = findAnchor(action.anchorId);
+      if (!el) return;
+      const r = el.getBoundingClientRect();
+      if (r.top < 80 || r.bottom > window.innerHeight - 40) {
+        el.scrollIntoView({ block: "center", behavior: motion.reduced ? "auto" : "smooth" });
+        await wait(700);
+      }
+      return;
+    }
+    case "set_filters": {
+      if (window.location.pathname !== "/") return;
+      const f = useCatalogUI.getState().filters;
+      const max = action.maxPrice ?? PRICE_MAX;
+      if (f.category === (action.category ?? null) && f.priceRange[1] >= max && f.priceRange[0] === PRICE_MIN && !f.brands.length) return;
+      useCatalogUI.getState().resetFilters({ category: action.category ?? null, priceRange: [PRICE_MIN, Math.min(PRICE_MAX, max)] });
+      window.history.replaceState(null, "", action.category ? `/?category=${action.category}#store` : "/#store");
+      await wait(450); // let the grid re-flow (Flip) before scrolling to a card
+      return;
+    }
+    case "open_drawer":
+      if (action.name === "cart") useCart.getState().peek(4500);
+      else if (action.name === "compare") useCompare.getState().setOpen(true);
+      else useChat.getState().setHistoryOpen(true);
+      return;
     case "open_compare":
       useCompare.getState().show(action.productIds, { context: action.context, priorities: action.priorities });
       return;
@@ -83,14 +153,12 @@ async function performUI(action: UIAction) {
       await useCart.getState().refresh();
       if (action.flyProductId) {
         useCart.setState({ lastAddedId: action.flyProductId });
-        await flyToCart(flySource(action.flyProductId));
+        // Pip flies to the cart icon alongside the item.
+        await Promise.all([flyToCart(flySource(action.flyProductId)), pos.flyToAnchor("cart-button", { size: "anchored" })]);
         useCart.getState().peek();
       }
       return;
     }
-    case "open_cart":
-      useCart.getState().peek(3200);
-      return;
     case "navigate":
       if (navigate) navigate(action.to);
       else window.location.assign(action.to);

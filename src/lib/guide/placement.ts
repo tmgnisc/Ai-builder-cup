@@ -74,8 +74,12 @@ function fits(p: Point, R: number): boolean {
 /** Pip's spot beside `anchor`, or null when the anchor is off screen. */
 export function placeBeside(anchor: Element, size: number): Point | null {
   const r = anchor.getBoundingClientRect();
-  if (r.width === 0 || r.bottom < HEADER_H || r.top > window.innerHeight || r.right < 0 || r.left > window.innerWidth) return null;
   const R = size / 2;
+  // Header controls (e.g. the cart icon): sit just below them.
+  if (r.width > 0 && r.top >= 0 && r.bottom <= HEADER_H + 4 && anchor.closest("header")) {
+    return { x: Math.min(Math.max(r.left + r.width / 2, MARGIN + R), window.innerWidth - MARGIN - R), y: HEADER_H + MARGIN + R };
+  }
+  if (r.width === 0 || r.bottom < HEADER_H || r.top > window.innerHeight || r.right < 0 || r.left > window.innerWidth) return null;
 
   const remembered = memo.get(anchor);
   if (remembered) {

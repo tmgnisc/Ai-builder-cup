@@ -150,3 +150,21 @@ describe("nudge follow-ups are understood by the agent", () => {
     expect(ids).not.toContain("sony-wh-1000xm5");
   });
 });
+
+describe("choreography (ui actions) on the store page", () => {
+  it("search makes the grid show results and moves Pip to the first card; add rides to the cart before the success hop", async () => {
+    const sid = `ch-${Math.random()}`;
+    const r = await turn("laptop under 1.2 lakh with good battery for docker", EMPTY_MEMORY, sid);
+    const ui = r.events.filter((e) => e.type === "ui").map((e) => (e.type === "ui" ? e.action.type : ""));
+    expect(ui).toEqual(["highlight", "set_filters", "scroll_to", "move_to"]);
+
+    const c = await turn("compare the first two", r.memory, sid);
+    const cui = c.events.filter((e) => e.type === "ui").map((e) => (e.type === "ui" ? e.action : null));
+    expect(cui[0]).toMatchObject({ type: "move_to", between: ["card:lenovo-ideapad-slim-5-14", "card:acer-swift-go-14"] });
+    expect(cui.map((a) => a?.type)).toEqual(["move_to", "open_compare", "move_to"]);
+
+    const a = await turn("add the lighter one", c.memory, sid);
+    const order = a.events.filter((e) => e.type === "ui" || e.type === "state_change").map((e) => (e.type === "ui" ? `ui:${e.action.type}` : `state:${(e as { state: string }).state}`));
+    expect(order).toEqual(["state:acting", "ui:move_to", "ui:cart_updated", "state:success"]);
+  });
+});

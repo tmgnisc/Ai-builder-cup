@@ -60,7 +60,22 @@ export type Block = z.infer<typeof BlockSchema>;
 // ── Side effects the UI should perform ──
 
 export const UIActionSchema = z.discriminatedUnion("type", [
-  z.object({ type: z.literal("highlight"), productIds: z.array(z.string()) }),
+  /** Grid "Pip's pick" badges (productIds) and/or a spotlight on one anchor. */
+  z.object({ type: z.literal("highlight"), productIds: z.array(z.string()).optional(), anchorId: z.string().optional() }),
+  /** Move Pip: beside an anchor, between two anchors, to a corner, or to a point. */
+  z.object({
+    type: z.literal("move_to"),
+    anchorId: z.string().optional(),
+    between: z.tuple([z.string(), z.string()]).optional(),
+    corner: z.enum(["tl", "tr", "bl", "br"]).optional(),
+    x: z.number().optional(),
+    y: z.number().optional(),
+    size: z.enum(["presenting", "anchored", "free"]).optional(),
+  }),
+  z.object({ type: z.literal("scroll_to"), anchorId: z.string() }),
+  /** Make the store grid show what Pip is talking about (category + budget). */
+  z.object({ type: z.literal("set_filters"), category: CategorySchema.nullable().optional(), maxPrice: z.number().optional() }),
+  z.object({ type: z.literal("open_drawer"), name: z.enum(["cart", "compare", "history"]) }),
   z.object({
     type: z.literal("open_compare"),
     productIds: z.array(z.string()),
@@ -69,7 +84,6 @@ export const UIActionSchema = z.discriminatedUnion("type", [
   }),
   /** Cart changed and was verified; `flyProductId` triggers the fly-to-cart animation. */
   z.object({ type: z.literal("cart_updated"), flyProductId: z.string().optional() }),
-  z.object({ type: z.literal("open_cart") }),
   /** Navigation is limited to known pages; purchase always requires the user on /checkout. */
   z.object({ type: z.literal("navigate"), to: z.enum(["/checkout", "/"]) }),
 ]);
