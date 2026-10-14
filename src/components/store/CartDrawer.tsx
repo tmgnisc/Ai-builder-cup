@@ -1,6 +1,8 @@
 "use client";
 
 import { Minus, Plus, ShoppingBag, Trash2 } from "lucide-react";
+import { useRef } from "react";
+import { gsap, motion, useGSAP } from "@/lib/motion";
 import Link from "next/link";
 import { Sheet } from "@/components/ui/Sheet";
 import { Ticker } from "@/components/ui/Ticker";
@@ -10,9 +12,16 @@ import { formatNPR } from "@/lib/commerce/format";
 import { useCart } from "@/store/useCart";
 import { ProductImage } from "./ProductImage";
 
-/** Phase 1: functional cart sheet. Phase 3 adds fly-to-cart, peek and richer motion. */
+/**
+ * Cart sheet. Opens modally from the header; after a verified add it "peeks" in non-modally
+ * for ~2.4 s (hover holds it, clicking it opens it fully) and flashes the added line.
+ */
 export function CartDrawer() {
   const open = useCart((s) => s.drawerOpen);
+  const peeking = useCart((s) => s.peeking);
+  const holdPeek = useCart((s) => s.holdPeek);
+  const lastAddedId = useCart((s) => s.lastAddedId);
+  const listRef = useRef<HTMLUListElement>(null);
   const setOpen = useCart((s) => s.setDrawerOpen);
   const cart = useCart((s) => s.cart);
   const error = useCart((s) => s.error);
@@ -22,10 +31,27 @@ export function CartDrawer() {
 
   const lines = cart?.lines ?? [];
 
+  useGSAP(
+    () => {
+      if (!lastAddedId || !(open || peeking)) return;
+      const row = listRef.current?.querySelector<HTMLElement>(`[data-line="${lastAddedId}"]`);
+      if (!row) return;
+      gsap.fromTo(
+        row,
+        { backgroundColor: "color-mix(in oklab, var(--accent) 22%, transparent)" },
+        { backgroundColor: "rgba(0,0,0,0)", duration: motion.dur(1.4), ease: "power2.out", clearProps: "backgroundColor" },
+      );
+    },
+    { dependencies: [lastAddedId, peeking, cart?.updatedAt] },
+  );
+
   return (
     <Sheet
-      open={open}
+      open={open || peeking}
+      modal={open}
       onOpenChange={setOpen}
+      onPanelPointerEnter={peeking ? holdPeek : undefined}
+      onPanelPointerDown={peeking ? () => setOpen(true) : undefined}
       title="Your cart"
       description={cart ? `${cart.itemCount} ${cart.itemCount === 1 ? "item" : "items"}` : "Loading…"}
     >
@@ -38,12 +64,12 @@ export function CartDrawer() {
             </div>
           </div>
         ) : (
-          <ul className="flex-1 divide-y divide-border px-5">
+          <ul ref={listRef} className="flex-1 divide-y divide-border px-3">
             {lines.map((line) => {
               const product = getProduct(line.productId);
               const busy = pending.includes(line.productId);
               return (
-                <li key={line.productId} className="flex gap-3 py-4" aria-busy={busy}>
+                <li key={line.productId} data-line={line.productId} className="flex gap-3 rounded-2xl px-2 py-4" aria-busy={busy}>
                   <div className="size-16 shrink-0 overflow-hidden rounded-xl">
                     {product && <ProductImage product={product} variant="cart" showInitials={false} />}
                   </div>
@@ -89,7 +115,7 @@ export function CartDrawer() {
                       </button>
                     </div>
                   </div>
-                  <p className="font-mono text-sm tabular">{formatNPR(line.lineTotal, { prefix: false })}</p>
+                  <Ticker value={line.lineTotal} className="text-sm" />
                 </li>
               );
             })}

@@ -16,6 +16,10 @@ interface SheetProps {
   /** Extra content placed in the header row, before the close button. */
   headerExtra?: ReactNode;
   className?: string;
+  /** Non-modal sheets have no overlay, no focus trap and don't block the page (used for the cart "peek"). */
+  modal?: boolean;
+  onPanelPointerEnter?: () => void;
+  onPanelPointerDown?: () => void;
   children: ReactNode;
 }
 
@@ -33,7 +37,19 @@ const noop = () => () => {};
  * Accessible side sheet: portal, modal dialog semantics, focus trap, Escape to close,
  * focus restore. Stays mounted (inert when closed) so open/close is a pure CSS transition.
  */
-export function Sheet({ open, onOpenChange, title, description, side = "right", headerExtra, className, children }: SheetProps) {
+export function Sheet({
+  open,
+  onOpenChange,
+  title,
+  description,
+  side = "right",
+  headerExtra,
+  className,
+  modal = true,
+  onPanelPointerEnter,
+  onPanelPointerDown,
+  children,
+}: SheetProps) {
   const mounted = useSyncExternalStore(noop, () => true, () => false);
   const panelRef = useRef<HTMLDivElement>(null);
   const restoreRef = useRef<HTMLElement | null>(null);
@@ -41,7 +57,7 @@ export function Sheet({ open, onOpenChange, title, description, side = "right", 
   const descId = useId();
 
   useEffect(() => {
-    if (!open) return;
+    if (!open || !modal) return;
     restoreRef.current = document.activeElement as HTMLElement | null;
     const panel = panelRef.current;
     const first = panel?.querySelector<HTMLElement>(FOCUSABLE);
@@ -71,29 +87,31 @@ export function Sheet({ open, onOpenChange, title, description, side = "right", 
       document.removeEventListener("keydown", onKey);
       restoreRef.current?.focus?.({ preventScroll: true });
     };
-  }, [open, onOpenChange]);
+  }, [open, modal, onOpenChange]);
 
   if (!mounted) return null;
 
   return createPortal(
-    <div className={cn("fixed inset-0 z-50", !open && "pointer-events-none")} inert={!open}>
+    <div className={cn("fixed inset-0 z-50", (!open || !modal) && "pointer-events-none")} inert={!open}>
       <div
         aria-hidden
         onClick={() => onOpenChange(false)}
         className={cn(
           "absolute inset-0 bg-overlay transition-opacity duration-300",
-          open ? "opacity-100" : "opacity-0",
+          open && modal ? "opacity-100" : "opacity-0",
         )}
       />
       <div
         ref={panelRef}
         role="dialog"
-        aria-modal="true"
+        aria-modal={modal}
+        onPointerEnter={onPanelPointerEnter}
+        onPointerDown={onPanelPointerDown}
         aria-labelledby={titleId}
         aria-describedby={description ? descId : undefined}
         tabIndex={-1}
         className={cn(
-          "glass absolute flex flex-col overflow-hidden rounded-[var(--radius-panel)] transition-transform duration-500 ease-[var(--ease-out-expo)] motion-reduce:transition-none",
+          "glass pointer-events-auto absolute flex flex-col overflow-hidden rounded-[var(--radius-panel)] transition-transform duration-500 ease-[var(--ease-out-expo)] motion-reduce:transition-none",
           PANEL[side].base,
           !open && PANEL[side].closed,
           className,

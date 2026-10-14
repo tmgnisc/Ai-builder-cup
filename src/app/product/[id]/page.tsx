@@ -3,7 +3,9 @@ import Link from "next/link";
 import { notFound } from "next/navigation";
 import { ArrowLeft, Star } from "lucide-react";
 import { AddToCartButton } from "@/components/store/AddToCartButton";
-import { ProductImage } from "@/components/store/ProductImage";
+import { AskPipButton } from "@/components/store/AskPipButton";
+import { CompareToggle } from "@/components/store/CompareToggle";
+import { ProductGallery } from "@/components/store/ProductGallery";
 import { Badge, StockBadge } from "@/components/ui/Badge";
 import { getAllProducts, getProduct } from "@/lib/commerce/catalog";
 import { formatNPR, formatWarranty, specRows } from "@/lib/commerce/format";
@@ -19,7 +21,7 @@ export async function generateMetadata({ params }: Params): Promise<Metadata> {
   return p ? { title: `${p.brand} ${p.name}`, description: p.blurb } : {};
 }
 
-/** Phase 1 product page. Phase 3 adds gallery motion, "Ask Pip" and the compare toggle. */
+/** Product detail: gallery, spec table, add to cart (fly-to-cart), compare toggle, "Ask Pip". */
 export default async function ProductPage({ params }: Params) {
   const product = getProduct((await params).id);
   if (!product) notFound();
@@ -33,11 +35,7 @@ export default async function ProductPage({ params }: Params) {
       </Link>
 
       <div className="mt-6 grid gap-10 lg:grid-cols-[1.15fr_1fr]">
-        <div className="self-start overflow-hidden rounded-[var(--radius-panel)] hairline lg:sticky lg:top-24">
-          <div className="aspect-[4/3]">
-            <ProductImage product={product} variant="hero" />
-          </div>
-        </div>
+        <ProductGallery product={product} />
 
         <div>
           <div className="flex flex-wrap items-center gap-2">
@@ -60,8 +58,10 @@ export default async function ProductPage({ params }: Params) {
           <p className="mt-8 font-mono text-4xl font-semibold tracking-tight tabular">{formatNPR(product.price)}</p>
           <p className="mt-1 text-xs text-muted">Inclusive of VAT · {formatWarranty(product.specs.warrantyMonths)} warranty</p>
 
-          <div className="mt-6">
+          <div className="mt-6 flex flex-wrap items-start gap-3">
             <AddToCartButton productId={product.id} disabled={product.stock === 0} />
+            <CompareToggle productId={product.id} productName={`${product.brand} ${product.name}`} variant="pill" />
+            <AskPipButton productName={product.name} />
           </div>
 
           <section aria-labelledby="specs-heading" className="mt-10">

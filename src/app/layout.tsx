@@ -6,6 +6,8 @@ import { Footer } from "@/components/layout/Footer";
 import { Header } from "@/components/layout/Header";
 import { ThemeScript } from "@/components/layout/ThemeScript";
 import { CartDrawer } from "@/components/store/CartDrawer";
+import { CompareDrawer } from "@/components/store/CompareDrawer";
+import { CompareTray } from "@/components/store/CompareTray";
 import "@/styles/globals.css";
 
 const display = Unbounded({ subsets: ["latin"], variable: "--font-unbounded", display: "swap" });
@@ -39,6 +41,8 @@ export default function RootLayout({ children }: Readonly<{ children: React.Reac
         {/* Persistent across navigations: template.tsx remounts children, never these. */}
         <CompanionLayer />
         <CartDrawer />
+        <CompareTray />
+        <CompareDrawer />
         <ClientBootstrap />
         <div aria-hidden className="grain" />
       </body>

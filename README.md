@@ -41,7 +41,7 @@ Deep links: `/playground?state=thinking`, `/playground?cycle=1`.
 
 1. ✅ Scaffold, design system, catalog, mock commerce
 2. ✅ Pip (three.js orb, eyes, halo, 12 states, `/playground`)
-3. Store UI and GSAP choreography
+3. ✅ Store UI and GSAP choreography
 4. Agent loop and chat dock
 5. Voice and nudges
 6. Merchant dashboard and polish

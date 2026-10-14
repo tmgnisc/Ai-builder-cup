@@ -17,15 +17,24 @@ interface ProductImageProps {
   /** Distinguishes multiple renders of the same product on one page (gradient ids). */
   variant?: string;
   showInitials?: boolean;
+  /** Gallery angle: same art, different framing and light. */
+  view?: "front" | "angle" | "detail";
 }
+
+const VIEW: Record<NonNullable<ProductImageProps["view"]>, { glyph: string; glow: [number, number] }> = {
+  front: { glyph: "translate(50 50) scale(0.62) translate(-50 -50)", glow: [70, 22] },
+  angle: { glyph: "translate(50 52) rotate(-14) skewX(-10) scale(0.66) translate(-50 -50)", glow: [24, 18] },
+  detail: { glyph: "translate(60 58) scale(1.25) translate(-50 -50)", glow: [82, 80] },
+};
 
 /**
  * Generated placeholder art: brand-palette gradient, soft glow, category glyph and initials.
  * The SVG uses "meet" with an over-sized background so the glyph is never cropped at any aspect ratio.
  */
-export function ProductImage({ product, className, variant = "card", showInitials = true }: ProductImageProps) {
+export function ProductImage({ product, className, variant = "card", showInitials = true, view = "front" }: ProductImageProps) {
   const [a, b] = product.palette;
-  const id = `pi-${product.id}-${variant}`;
+  const id = `pi-${product.id}-${variant}-${view}`;
+  const v = VIEW[view];
   return (
     <div
       role="img"
@@ -35,7 +44,7 @@ export function ProductImage({ product, className, variant = "card", showInitial
     >
       <svg viewBox="0 0 100 100" preserveAspectRatio="xMidYMid meet" className="absolute inset-0 size-full" aria-hidden>
         <defs>
-          <radialGradient id={`${id}-glow`} cx="70" cy="22" r="80" gradientUnits="userSpaceOnUse">
+          <radialGradient id={`${id}-glow`} cx={v.glow[0]} cy={v.glow[1]} r="80" gradientUnits="userSpaceOnUse">
             <stop offset="0" stopColor={a} stopOpacity="0.85" />
             <stop offset="0.55" stopColor={a} stopOpacity="0.12" />
             <stop offset="1" stopColor={a} stopOpacity="0" />
@@ -44,7 +53,7 @@ export function ProductImage({ product, className, variant = "card", showInitial
         <rect x="-100" y="-100" width="300" height="300" fill={`url(#${id}-glow)`} />
         <path
           d={GLYPH[product.category]}
-          transform="translate(50 50) scale(0.62) translate(-50 -50)"
+          transform={v.glyph}
           fill="none"
           stroke="white"
           strokeOpacity="0.6"

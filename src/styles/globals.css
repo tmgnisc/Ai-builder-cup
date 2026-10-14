@@ -181,3 +181,73 @@
     scroll-behavior: auto !important;
   }
 }
+
+/* ───────────────────────── Dual range slider thumbs ───────────────────────── */
+
+.range-thumb::-webkit-slider-runnable-track {
+  background: transparent;
+}
+.range-thumb::-webkit-slider-thumb {
+  pointer-events: auto;
+  -webkit-appearance: none;
+  appearance: none;
+  width: 18px;
+  height: 18px;
+  border-radius: 9999px;
+  background: var(--text);
+  border: 3px solid var(--bg);
+  box-shadow: 0 0 0 1px var(--border-strong);
+  cursor: grab;
+}
+.range-thumb::-moz-range-thumb {
+  pointer-events: auto;
+  width: 12px;
+  height: 12px;
+  border-radius: 9999px;
+  background: var(--text);
+  border: 3px solid var(--bg);
+  box-shadow: 0 0 0 1px var(--border-strong);
+  cursor: grab;
+}
+.range-thumb:focus-visible {
+  outline: none;
+}
+.range-thumb:focus-visible::-webkit-slider-thumb {
+  outline: 2px solid var(--accent-text);
+  outline-offset: 2px;
+}
+.range-thumb:focus-visible::-moz-range-thumb {
+  outline: 2px solid var(--accent-text);
+  outline-offset: 2px;
+}
+
+/* ───────────────────────── SplitText reveal guard ─────────────────────────
+   With JS, split targets stay hidden until GSAP has split them (no flash of the
+   unsplit headline). If JS never runs, the fallback animation reveals them anyway. */
+
+.js [data-split]:not([data-split-ready]) {
+  visibility: hidden;
+  animation: split-fallback 0s 2.5s forwards;
+}
+@keyframes split-fallback {
+  to {
+    visibility: visible;
+  }
+}
+
+/* Typing caret for the hero example chips */
+.caret::after {
+  content: "";
+  display: inline-block;
+  width: 1px;
+  height: 1em;
+  margin-left: 2px;
+  vertical-align: -0.15em;
+  background: currentColor;
+  animation: caret-blink 1s steps(1) infinite;
+}
+@keyframes caret-blink {
+  50% {
+    opacity: 0;
+  }
+}

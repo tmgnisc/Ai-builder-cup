@@ -5,23 +5,24 @@ import { useState } from "react";
 import { MagneticButton } from "@/components/ui/MagneticButton";
 import { useCart } from "@/store/useCart";
 
-export function AddToCartButton({ productId, disabled }: { productId: string; disabled?: boolean }) {
-  const add = useCart((s) => s.add);
+/** Product-page add button: verified add, then fly the gallery image into the cart. */
+export function AddToCartButton({ productId, disabled, sourceSelector = "[data-gallery-main]" }: { productId: string; disabled?: boolean; sourceSelector?: string }) {
+  const addWithFeedback = useCart((s) => s.addWithFeedback);
   const busy = useCart((s) => s.pending.includes(productId));
   const error = useCart((s) => s.error);
   const [justAdded, setJustAdded] = useState(false);
 
   async function onClick() {
-    const cart = await add(productId, 1);
-    if (cart?.lines.some((l) => l.productId === productId)) {
+    const ok = await addWithFeedback(productId, document.querySelector(sourceSelector));
+    if (ok) {
       setJustAdded(true);
-      setTimeout(() => setJustAdded(false), 1800);
+      window.setTimeout(() => setJustAdded(false), 1800);
     }
   }
 
   return (
     <div className="flex flex-col gap-2">
-      <MagneticButton size="lg" variant={disabled ? "secondary" : "primary"} onClick={onClick} disabled={disabled || busy} aria-live="polite">
+      <MagneticButton size="lg" variant={disabled ? "secondary" : "primary"} onClick={onClick} disabled={disabled || busy}>
         {busy ? (
           <Loader2 className="size-4 animate-spin" aria-hidden />
         ) : justAdded ? (
@@ -29,8 +30,11 @@ export function AddToCartButton({ productId, disabled }: { productId: string; di
         ) : (
           <ShoppingBag className="size-4" aria-hidden />
         )}
-        {disabled ? "Out of stock" : busy ? "Adding…" : justAdded ? "Added" : "Add to cart"}
+        {disabled ? "Out of stock" : busy ? "Adding…" : justAdded ? "Added & verified" : "Add to cart"}
       </MagneticButton>
+      <p aria-live="polite" className="sr-only">
+        {justAdded ? "Added to cart and verified." : ""}
+      </p>
       {error && !busy && (
         <p role="alert" className="text-xs text-danger">
           {error}

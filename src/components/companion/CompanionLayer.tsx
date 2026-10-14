@@ -123,7 +123,7 @@ export function CompanionLayer() {
         const scale = size / base;
         wrap.style.transform = `translate3d(${x}px, ${y}px, 0) scale(${scale})`;
         cap.style.transform = `translate3d(${x + size / 2}px, ${y + size * 0.88}px, 0) translateX(-50%)`;
-        cap.dataset.compact = String(size < 120);
+        cap.dataset.compact = String(size < 150);
         pipRuntime.center.x = x + size / 2;
         pipRuntime.center.y = y + size / 2;
         pipRuntime.displaySize = size;

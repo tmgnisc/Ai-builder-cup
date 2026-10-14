@@ -3,6 +3,7 @@
 import { gsap } from "gsap";
 import { useGSAP } from "@gsap/react";
 import { Flip } from "gsap/Flip";
+import { MotionPathPlugin } from "gsap/MotionPathPlugin";
 import { ScrambleTextPlugin } from "gsap/ScrambleTextPlugin";
 import { ScrollTrigger } from "gsap/ScrollTrigger";
 import { SplitText } from "gsap/SplitText";
@@ -14,7 +15,7 @@ import { useSyncExternalStore } from "react";
  */
 
 if (typeof window !== "undefined") {
-  gsap.registerPlugin(useGSAP, ScrollTrigger, Flip, SplitText, ScrambleTextPlugin);
+  gsap.registerPlugin(useGSAP, ScrollTrigger, Flip, SplitText, ScrambleTextPlugin, MotionPathPlugin);
   gsap.defaults({ ease: "expo.out", duration: 0.5 });
 }
 
