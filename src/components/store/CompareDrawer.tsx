@@ -94,9 +94,9 @@ export function CompareDrawer() {
                   <ProductHeader key={p.id} product={p} isWinner={result.winnerId === p.id} onRemove={() => remove(p.id)} />
                 ))}
               </div>
-              <div role="rowgroup" className="divide-y divide-border rounded-2xl bg-surface/50 hairline">
+              <div role="rowgroup" className="divide-y divide-border overflow-hidden rounded-2xl bg-surface-2/60 hairline">
                 {result.rows.map((row) => (
-                  <div key={row.key} role="row" data-row className="grid items-center gap-3 px-3 py-2.5" style={{ gridTemplateColumns: cols }}>
+                  <div key={row.key} role="row" data-row className="grid items-center gap-3 px-3 py-2.5 odd:bg-surface/40" style={{ gridTemplateColumns: cols }}>
                     <span role="rowheader" className="text-xs text-muted">
                       {row.label}
                     </span>

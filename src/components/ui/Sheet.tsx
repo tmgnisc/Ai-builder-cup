@@ -112,7 +112,7 @@ export function Sheet({
         aria-describedby={description ? descId : undefined}
         tabIndex={-1}
         className={cn(
-          "glass pointer-events-auto absolute flex flex-col overflow-hidden rounded-[var(--radius-panel)] transition-transform duration-500 ease-[var(--ease-out-expo)] motion-reduce:transition-none",
+          "panel-solid pointer-events-auto absolute flex flex-col overflow-hidden rounded-[var(--radius-panel)] transition-transform duration-500 ease-[var(--ease-out-expo)] motion-reduce:transition-none",
           PANEL[side].base,
           !open && PANEL[side].closed,
           className,

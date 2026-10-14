@@ -95,7 +95,7 @@ export function SpeechBubble() {
         aria-modal="false"
         aria-label="Pip"
         onKeyDown={(e) => e.key === "Escape" && close("user")}
-        className="bubble-panel glass pointer-events-auto relative w-[min(340px,calc(100vw-24px))] rounded-[20px] p-3.5 pr-3"
+        className="bubble-panel glass-strong pointer-events-auto relative w-[min(340px,calc(100vw-24px))] rounded-[20px] p-3.5 pr-3"
       >
         <span ref={tailRef} aria-hidden className="bubble-tail absolute size-3.5 rotate-45 rounded-[3px]" />
         <BubbleBody content={rendered.content} contentKey={rendered.key} />
