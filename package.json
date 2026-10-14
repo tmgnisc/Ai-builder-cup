@@ -23,7 +23,8 @@
     "react-dom": "19.1.0",
     "three": "^0.186.1",
     "zod": "^4.6.7",
-    "zustand": "^5.0.15"
+    "zustand": "^5.0.15",
+    "leva": "^0.10.1"
   },
   "devDependencies": {
     "@eslint/eslintrc": "^3",
@@ -34,7 +35,6 @@
     "@types/three": "^0.186.0",
     "eslint": "^9",
     "eslint-config-next": "15.5.27",
-    "leva": "^0.10.1",
     "tailwindcss": "^4",
     "typescript": "^5",
     "vitest": "^5.0.4"

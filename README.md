@@ -27,10 +27,20 @@ For demos, use `pnpm build && pnpm start`: the in-memory cart lives in a single 
 - Add `?latency=0` to an API URL to disable latency.
 - Env overrides: `PERSONA_FAILURE_RATE`, `PERSONA_LATENCY_MIN_MS`, `PERSONA_LATENCY_MAX_MS`.
 
+## Pip playground
+
+`/playground` (dev only; set `NEXT_PUBLIC_PLAYGROUND=1` to include it in a production build) shows Pip on a stage with:
+
+- a button for every state, plus "cycle all"
+- reactions (hop, spin, shake), click-to-glance, and simulated mic/TTS envelopes
+- leva sliders for every uniform. Turn on *override tween*, tune, then **Copy config** and paste the JSON into `src/components/companion/states.ts`.
+
+Deep links: `/playground?state=thinking`, `/playground?cycle=1`.
+
 ## Build phases
 
 1. ✅ Scaffold, design system, catalog, mock commerce
-2. Pip (three.js orb, eyes, halo, 12 states, `/playground`)
+2. ✅ Pip (three.js orb, eyes, halo, 12 states, `/playground`)
 3. Store UI and GSAP choreography
 4. Agent loop and chat dock
 5. Voice and nudges

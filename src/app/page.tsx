@@ -19,7 +19,7 @@ export default async function HomePage({ searchParams }: { searchParams: Promise
 
   return (
     <>
-      {/* ── Hero (Phase 3: SplitText reveal, typing chips; Phase 2: Pip lives in the anchor) ── */}
+      {/* ── Hero (Phase 3: SplitText reveal, typing chips) ── */}
       <section className="relative mx-auto grid max-w-[1400px] items-center gap-10 px-4 pb-16 pt-12 sm:px-6 md:pt-20 lg:grid-cols-[1.1fr_0.9fr]">
         <div>
           <p className="mb-5 inline-flex items-center gap-2 rounded-full bg-surface px-3 py-1.5 text-xs text-muted hairline">
@@ -71,16 +71,8 @@ export default async function HomePage({ searchParams }: { searchParams: Promise
           </form>
         </div>
 
-        <div
-          data-pip-anchor="hero"
-          aria-hidden
-          className="relative mx-auto hidden aspect-square w-full max-w-[460px] lg:block"
-        >
-          <div
-            className="absolute inset-[8%] rounded-full opacity-40 blur-3xl"
-            style={{ background: "radial-gradient(circle, var(--accent) 0%, transparent 60%)" }}
-          />
-        </div>
+        {/* Pip's hero anchor: the fixed companion layer flies Pip from here into the dock on scroll. */}
+        <div data-pip-anchor="hero" aria-hidden className="relative mx-auto hidden aspect-square w-full max-w-[460px] lg:block" />
       </section>
 
       {/* ── Store ── */}
