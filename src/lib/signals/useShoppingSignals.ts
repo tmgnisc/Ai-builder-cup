@@ -3,47 +3,18 @@
 import { useEffect } from "react";
 import { useCart } from "@/store/useCart";
 import { useCatalogUI } from "@/store/useCatalogUI";
-import { useBubble } from "@/store/useBubble";
-import { useChat } from "@/store/useChat";
 import { useCompare } from "@/store/useCompare";
 import { useSignals } from "@/store/useSignals";
-import { evaluate } from "./nudgeEngine";
 
 /**
  * Records shopping signals from the existing stores (filters, cart, compare; product views
- * come from <ProductViewTracker/>) and runs the nudge engine after each new signal.
- * Evaluation is event-driven: there is no idle timer, so inactivity can't trigger a nudge.
+ * come from <ProductViewTracker/>). The guide engine turns them into behaviour triggers.
  */
 export function useShoppingSignals() {
   useEffect(() => {
     const { record } = useSignals.getState();
-    let retry: number | undefined;
-
-    const runEngine = () => {
-      window.clearTimeout(retry);
-      const s = useSignals.getState();
-      const chat = useChat.getState();
-      const decision = evaluate({
-        events: s.events,
-        now: Date.now(),
-        firedKeys: s.firedKeys,
-        dismissedTypes: s.dismissedTypes,
-        lastNudgeAt: s.lastNudgeAt,
-        lastTypingAt: s.lastTypingAt,
-        paused: s.paused || s.quiet,
-        busy: chat.busy || useBubble.getState().content !== null || s.active !== null,
-        category: useCatalogUI.getState().filters.category,
-      });
-      if (!decision) return;
-      if ("show" in decision) s.show(decision.show);
-      // Typing only postpones a nudge that a real signal already earned.
-      else if (decision.blocked === "typing" && decision.retryAt) retry = window.setTimeout(runEngine, decision.retryAt - Date.now() + 50);
-    };
 
     const unsubs = [
-      useSignals.subscribe((s, prev) => {
-        if (s.events !== prev.events) runEngine();
-      }),
       useCatalogUI.subscribe((s, prev) => {
         if (s.lastChange && s.lastChange !== prev.lastChange) record({ type: "filter", key: s.lastChange.key, at: s.lastChange.at });
       }),
@@ -72,7 +43,6 @@ export function useShoppingSignals() {
     return () => {
       unsubs.forEach((u) => u());
       document.removeEventListener("keydown", onKey, true);
-      window.clearTimeout(retry);
     };
   }, []);
 }

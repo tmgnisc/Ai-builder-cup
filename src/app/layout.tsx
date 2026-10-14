@@ -2,7 +2,7 @@ import type { Metadata, Viewport } from "next";
 import { Inter, JetBrains_Mono, Unbounded } from "next/font/google";
 import { BubbleLayer } from "@/components/bubble/BubbleLayer";
 import { Spotlight } from "@/components/guide/Spotlight";
-import { NudgeLayer } from "@/components/signals/NudgeLayer";
+import { GuideLayer } from "@/components/guide/GuideLayer";
 import { CompanionLayer } from "@/components/companion/CompanionLayer";
 import { ClientBootstrap } from "@/components/layout/ClientBootstrap";
 import { Footer } from "@/components/layout/Footer";
@@ -44,7 +44,7 @@ export default function RootLayout({ children }: Readonly<{ children: React.Reac
         {/* Persistent across navigations: template.tsx remounts children, never these. */}
         <CompanionLayer />
         <BubbleLayer />
-        <NudgeLayer />
+        <GuideLayer />
         <Spotlight />
         <CartDrawer />
         <CompareTray />

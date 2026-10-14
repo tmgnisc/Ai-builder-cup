@@ -10,6 +10,7 @@ import { useCart } from "./useCart";
 import { useCatalogUI } from "./useCatalogUI";
 import { useCompanion } from "./useCompanion";
 import { useCompare } from "./useCompare";
+import { useGuide } from "./useGuide";
 import { useSignals } from "./useSignals";
 import { useVoice } from "./useVoice";
 
@@ -166,6 +167,7 @@ export const useChat = create<ChatState>()((set, get) => {
       useVoice.getState().hush();
       set({ messages: [], memory: EMPTY_MEMORY, busy: false });
       useSignals.getState().reset();
+      useGuide.getState().reset();
       useCatalogUI.getState().setHighlighted([]);
       if (!useSignals.getState().paused) useCompanion.getState().dispatch({ type: "state_change", state: "idle", source: "agent" });
     },
@@ -183,6 +185,12 @@ export const useChat = create<ChatState>()((set, get) => {
     send: async (raw, opts = {}) => {
       const text = raw.trim();
       if (!text) return;
+      // A tip can answer replies itself (e.g. "skip" during the tour offer).
+      const bubble = useBubble.getState().content;
+      if (bubble?.kind === "tip" && bubble.onReply?.(text)) {
+        set((s) => ({ messages: [...s.messages, { id: `user_${++userSeq}`, role: "user", text, blocks: [], trace: [], status: "done" }] }));
+        return;
+      }
       // Talking to Pip wakes it up.
       if (useSignals.getState().paused) useSignals.getState().setPaused(false);
       useVoice.getState().hush();

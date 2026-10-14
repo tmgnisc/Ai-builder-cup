@@ -34,6 +34,9 @@ export type BubbleContent =
       source: "guide" | "system";
       /** Proactive tips count toward "dismissed 3 in a row → quiet mode". */
       proactive?: boolean;
+      /** Lets a tip answer typed/spoken replies itself (e.g. "skip" during the tour). Return true if handled. */
+      onReply?: (text: string) => boolean;
+      onClose?: (reason: CloseReason) => void;
     };
 
 export type CloseReason = "user" | "timeout" | "replaced" | "system";
@@ -60,7 +63,10 @@ export const useBubble = create<BubbleState>()((set, get) => ({
   lastClose: null,
   show: (content, opts = {}) => {
     const prev = get().content;
-    if (prev) set({ lastClose: { at: Date.now(), reason: "replaced", proactive: isProactive(prev) } });
+    if (prev) {
+      set({ lastClose: { at: Date.now(), reason: "replaced", proactive: isProactive(prev) } });
+      if (prev.kind === "tip") prev.onClose?.("replaced");
+    }
     set((s) => ({
       content,
       key: s.key + 1,
@@ -72,6 +78,7 @@ export const useBubble = create<BubbleState>()((set, get) => ({
     const prev = get().content;
     if (!prev) return;
     set({ content: null, inputOpen: false, lastClose: { at: Date.now(), reason, proactive: isProactive(prev) } });
+    if (prev.kind === "tip") prev.onClose?.(reason);
   },
   setInputOpen: (inputOpen) => set({ inputOpen }),
 }));

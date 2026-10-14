@@ -311,7 +311,7 @@ function TypedText({ text }: { text: string }) {
   return (
     <p className="text-[14px] leading-relaxed">
       <Markdown text={text.slice(0, n)} />
-      <span className="sr-only">{text}</span>
+      <span className="sr-only">{text.replace(/\*\*/g, "")}</span>
     </p>
   );
 }

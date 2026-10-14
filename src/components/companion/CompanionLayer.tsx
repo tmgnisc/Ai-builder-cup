@@ -52,8 +52,8 @@ export function CompanionLayer() {
   // Dev-only handle for the playground and browser tests.
   useEffect(() => {
     if (process.env.NODE_ENV === "production") return;
-    void Promise.all([import("@/lib/guide/anchors"), import("@/components/guide/Spotlight"), import("@/lib/guide/placement")]).then(([anchors, spot, placement]) => {
-      (window as unknown as { __pip: unknown }).__pip = { position: usePipPosition, spotlight: spot.useSpotlight, anchors, placement, pilot };
+    void Promise.all([import("@/lib/guide/anchors"), import("@/components/guide/Spotlight"), import("@/lib/guide/placement"), import("@/store/useGuide")]).then(([anchors, spot, placement, guide]) => {
+      (window as unknown as { __pip: unknown }).__pip = { position: usePipPosition, spotlight: spot.useSpotlight, anchors, placement, pilot, guide: guide.useGuide };
     });
   }, []);
 
