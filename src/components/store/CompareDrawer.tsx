@@ -70,7 +70,7 @@ export function CompareDrawer() {
     >
       {result && (
         <div ref={tableRef} className="px-5 pb-6 pt-4">
-          <div data-verdict className="flex gap-3 rounded-2xl bg-accent/10 p-4 shadow-[inset_0_0_0_1px_color-mix(in_oklab,var(--accent)_30%,transparent)]">
+          <div data-verdict data-pip-anchor="compare-verdict" data-pip-topic="compare-verdict" className="flex gap-3 rounded-2xl bg-accent/10 p-4 shadow-[inset_0_0_0_1px_color-mix(in_oklab,var(--accent)_30%,transparent)]">
             <span aria-hidden className="mt-0.5 grid size-7 shrink-0 place-items-center rounded-full bg-[#05060a] shadow-[inset_0_0_0_1.5px_var(--accent),0_0_16px_-4px_var(--accent)]">
               <span className="flex gap-[3px]">
                 <span className="h-2 w-[3px] rounded-full bg-white" />

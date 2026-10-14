@@ -56,7 +56,7 @@ export function CartDrawer() {
       title="Your cart"
       description={cart ? `${cart.itemCount} ${cart.itemCount === 1 ? "item" : "items"}` : "Loading…"}
     >
-      <div className="flex h-full flex-col">
+      <div className="flex h-full flex-col" data-pip-anchor="cart-drawer" data-pip-topic="cart-drawer">
         {lines.length === 0 ? (
           <div className="grid flex-1 place-items-center px-6 py-16 text-center">
             <div>
@@ -138,6 +138,8 @@ export function CartDrawer() {
           </div>
           <Link
             href="/checkout"
+            data-pip-anchor="checkout-button"
+            data-pip-topic="checkout-button"
             onClick={() => setOpen(false)}
             aria-disabled={lines.length === 0}
             className={buttonClasses({ size: "lg", className: cn("mt-4 w-full", lines.length === 0 && "pointer-events-none opacity-45") })}

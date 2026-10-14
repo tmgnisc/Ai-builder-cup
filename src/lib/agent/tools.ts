@@ -3,6 +3,7 @@ import { addToCart, getCart, removeFromCart } from "@/lib/commerce/cartStore";
 import { getProduct, searchProducts } from "@/lib/commerce/catalog";
 import { rollFailure, simulateLatency, type ChaosConfig } from "@/lib/commerce/chaos";
 import { compareProducts } from "@/lib/commerce/compare";
+import { deliveryFor } from "@/lib/commerce/delivery";
 import { formatNPR } from "@/lib/commerce/format";
 import { CartSchema, CategorySchema, ProductSchema, type CommerceErrorCode } from "@/lib/commerce/schemas";
 import { CompareKeySchema } from "./types";
@@ -52,7 +53,6 @@ const DeliverySchema = z.object({
   freeOver: z.number().int(),
 });
 
-const VALLEY = ["kathmandu", "lalitpur", "patan", "bhaktapur", "kirtipur"];
 
 export const TOOLS = {
   search_products: tool({
@@ -132,13 +132,7 @@ export const TOOLS = {
     description: "Delivery time and fee for a city in Nepal.",
     input: z.object({ city: z.string().default("Kathmandu"), productId: z.string().optional() }),
     output: DeliverySchema,
-    handler: ({ city }) => {
-      const valley = VALLEY.includes(city.trim().toLowerCase());
-      const name = city.trim().replace(/\b\w/g, (c) => c.toUpperCase());
-      return valley
-        ? { city: name, zone: "valley" as const, days: "1–2 days", fee: 100, freeOver: 5000 }
-        : { city: name, zone: "outside" as const, days: "3–5 days", fee: 250, freeOver: 50000 };
-    },
+    handler: ({ city }) => deliveryFor(city),
     summarize: (o) => `${o.city} · ${o.days}`,
   }),
 

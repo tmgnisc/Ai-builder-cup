@@ -3,7 +3,7 @@
 import { create } from "zustand";
 import * as pilot from "@/components/companion/pilot";
 import type { Corner, PipMode, Point, SizeKey } from "@/components/companion/pilot";
-import { placeBeside } from "@/lib/guide/placement";
+import { placeBeside, resetPlacement } from "@/lib/guide/placement";
 
 /**
  * Pip's position model (UI-facing). The live, per-frame position lives in `pilot.ts`;
@@ -59,6 +59,7 @@ export const usePipPosition = create<PipPositionState>()((set, get) => {
       if (!el) return false;
       const id = typeof target === "string" ? target : (el.getAttribute("data-pip-anchor") ?? null);
       set({ anchorId: id, corner: null });
+      resetPlacement(el);
       await pilot.flyTo(null, { anchor: el, place: opts.place ?? placeBeside, size: sizeOf(opts.size, "anchored") });
       return true;
     },

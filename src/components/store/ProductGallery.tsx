@@ -15,6 +15,7 @@ type View = (typeof VIEWS)[number]["id"];
 
 /** Main image + thumbnails; switching cross-fades and gently zooms the new view in. */
 export function ProductGallery({ product }: { product: Product }) {
+  const anchor = { "data-pip-anchor": "gallery", "data-pip-topic": "gallery", "data-pip-product": product.id };
   const [view, setView] = useState<View>("front");
   const mainRef = useRef<HTMLDivElement>(null);
 
@@ -27,7 +28,7 @@ export function ProductGallery({ product }: { product: Product }) {
   );
 
   return (
-    <div className="flex flex-col gap-3 lg:sticky lg:top-24 lg:self-start">
+    <div {...anchor} className="flex flex-col gap-3 lg:sticky lg:top-24 lg:self-start">
       <div className="overflow-hidden rounded-[var(--radius-panel)] hairline">
         <div ref={mainRef} data-gallery-main className="aspect-[4/3]">
           <ProductImage product={product} variant="hero" view={view} className={product.stock === 0 ? "grayscale-[35%]" : undefined} />

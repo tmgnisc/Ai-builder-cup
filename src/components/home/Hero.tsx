@@ -109,7 +109,7 @@ export function Hero() {
           you can see every step it takes.
         </p>
 
-        <form data-hero-fade className="mt-8 max-w-xl" onSubmit={onSubmit}>
+        <form data-hero-fade data-pip-anchor="hero-prompt" data-pip-topic="hero-prompt" className="mt-8 max-w-xl" onSubmit={onSubmit}>
           <label htmlFor="hero-prompt" className="sr-only">
             Tell Pip what you need
           </label>
@@ -157,7 +157,7 @@ export function Hero() {
       </div>
 
       {/* Pip's hero anchor: the fixed companion layer flies Pip from here into the dock on scroll. */}
-      <div data-pip-anchor="hero" aria-hidden className="relative mx-auto hidden aspect-square w-full max-w-[460px] lg:block" />
+      <div data-pip-anchor="hero" data-pip-topic="hero" aria-hidden className="relative mx-auto hidden aspect-square w-full max-w-[460px] lg:block" />
     </section>
   );
 }

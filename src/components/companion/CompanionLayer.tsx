@@ -5,6 +5,7 @@ import { usePathname } from "next/navigation";
 import { Component, useEffect, useRef, useState, type ReactNode } from "react";
 import { ScrambleText } from "@/components/ui/ScrambleText";
 import { gsap } from "@/lib/motion";
+import { startAnchorRegistry } from "@/lib/guide/anchors";
 import { placeCenter } from "@/lib/guide/placement";
 import { openPipPrompt } from "@/components/bubble/BubbleLayer";
 import { useBubble } from "@/store/useBubble";
@@ -47,6 +48,14 @@ export function CompanionLayer() {
   const [base, setBase] = useState(436);
 
   usePointerGaze();
+  useEffect(() => startAnchorRegistry(), []);
+  // Dev-only handle for the playground and browser tests.
+  useEffect(() => {
+    if (process.env.NODE_ENV === "production") return;
+    void Promise.all([import("@/lib/guide/anchors"), import("@/components/guide/Spotlight"), import("@/lib/guide/placement")]).then(([anchors, spot, placement]) => {
+      (window as unknown as { __pip: unknown }).__pip = { position: usePipPosition, spotlight: spot.useSpotlight, anchors, placement, pilot };
+    });
+  }, []);
 
   // Defer WebGL until the main thread is idle so it never competes with first paint.
   useEffect(() => {

@@ -1,6 +1,7 @@
 import type { Metadata, Viewport } from "next";
 import { Inter, JetBrains_Mono, Unbounded } from "next/font/google";
 import { BubbleLayer } from "@/components/bubble/BubbleLayer";
+import { Spotlight } from "@/components/guide/Spotlight";
 import { NudgeLayer } from "@/components/signals/NudgeLayer";
 import { CompanionLayer } from "@/components/companion/CompanionLayer";
 import { ClientBootstrap } from "@/components/layout/ClientBootstrap";
@@ -44,6 +45,7 @@ export default function RootLayout({ children }: Readonly<{ children: React.Reac
         <CompanionLayer />
         <BubbleLayer />
         <NudgeLayer />
+        <Spotlight />
         <CartDrawer />
         <CompareTray />
         <CompareDrawer />

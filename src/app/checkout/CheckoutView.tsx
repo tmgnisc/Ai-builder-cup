@@ -56,7 +56,7 @@ export function CheckoutView() {
               );
             })}
           </ul>
-          <aside className="h-fit rounded-[var(--radius-panel)] bg-surface p-5 hairline">
+          <aside data-pip-anchor="checkout-summary" data-pip-topic="checkout" className="h-fit rounded-[var(--radius-panel)] bg-surface p-5 hairline">
             <dl className="space-y-2 text-sm">
               <div className="flex justify-between">
                 <dt className="text-muted">Subtotal</dt>

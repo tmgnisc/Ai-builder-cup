@@ -29,7 +29,7 @@ export const HEADER_H = 64;
 
 /** Orb diameter (px) by context. */
 export const SIZES = {
-  desktop: { hero: 240, presenting: 160, free: 120, anchored: 96, parked: 64 },
+  desktop: { hero: 240, presenting: 160, free: 120, anchored: 84, parked: 64 },
   mobile: { hero: 96, presenting: 64, free: 64, anchored: 64, parked: 64 },
 } as const;
 export type SizeKey = keyof (typeof SIZES)["desktop"];

@@ -11,6 +11,8 @@ export function CartButton() {
       type="button"
       id="cart-button"
       data-cart-target
+      data-pip-anchor="cart-button"
+      data-pip-topic="cart"
       onClick={() => open(true)}
       aria-label={`Open cart, ${count} ${count === 1 ? "item" : "items"}`}
       className="relative grid size-10 place-items-center rounded-full text-text transition-colors hover:bg-surface-2"

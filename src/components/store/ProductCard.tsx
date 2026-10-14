@@ -39,6 +39,9 @@ export function ProductCard({ product }: { product: Product }) {
       ref={ref}
       data-product-id={product.id}
       data-flip-id={product.id}
+      data-pip-anchor={`card:${product.id}`}
+      data-pip-topic="product-card"
+      data-pip-product={product.id}
       onPointerMove={onPointerMove}
       onPointerEnter={(e) => e.pointerType === "mouse" && ref.current && pip.glanceAtElement(ref.current, 1100)}
       className={cn(

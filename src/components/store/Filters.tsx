@@ -51,9 +51,9 @@ export function Filters({ className, inSheet = false }: { className?: string; in
         </button>
       </div>
 
-      <PriceRange />
+      <PriceRange anchor={inSheet ? undefined : "filter-price"} />
 
-      <Group label="Brand">
+      <Group label="Brand" anchor={inSheet ? undefined : "filter-brand"}>
         <div className="flex flex-col gap-1">
           {visibleBrands.map((b) => {
             const checked = filters.brands.includes(b);
@@ -83,7 +83,7 @@ export function Filters({ className, inSheet = false }: { className?: string; in
       </Group>
 
       {showRam && (
-        <Group label="Memory (at least)">
+        <Group label="Memory (at least)" anchor={inSheet ? undefined : "filter-ram"}>
           <Segmented
             options={RAM_OPTIONS.map((v) => ({ value: v, label: v ? `${v} GB` : "Any" }))}
             value={filters.minRamGB}
@@ -92,7 +92,7 @@ export function Filters({ className, inSheet = false }: { className?: string; in
         </Group>
       )}
 
-      <Group label="Battery (at least)">
+      <Group label="Battery (at least)" anchor={inSheet ? undefined : "filter-battery"}>
         <Segmented
           options={BATTERY_OPTIONS.map((v) => ({ value: v, label: v ? `${v} h` : "Any" }))}
           value={filters.minBatteryHours}
@@ -118,9 +118,9 @@ export function Filters({ className, inSheet = false }: { className?: string; in
   );
 }
 
-function Group({ label, children }: { label: string; children: React.ReactNode }) {
+function Group({ label, anchor, children }: { label: string; anchor?: string; children: React.ReactNode }) {
   return (
-    <fieldset>
+    <fieldset data-pip-anchor={anchor} data-pip-topic={anchor}>
       <legend className="mb-2.5 text-[11px] font-medium uppercase tracking-wider text-muted">{label}</legend>
       {children}
     </fieldset>
@@ -152,7 +152,7 @@ function Segmented<T extends number | null>({ options, value, onChange }: { opti
  * Dual-thumb price slider. Dragging updates local state; the store is updated once the
  * user pauses, so each "change" the signals engine sees is a deliberate one.
  */
-function PriceRange() {
+function PriceRange({ anchor }: { anchor?: string }) {
   const committed = useCatalogUI((s) => s.filters.priceRange);
   const setFilter = useCatalogUI((s) => s.setFilter);
   const [range, setRange] = useState<[number, number]>(committed);
@@ -174,7 +174,7 @@ function PriceRange() {
   const isDefault = lo === DEFAULT_FILTERS.priceRange[0] && hi === DEFAULT_FILTERS.priceRange[1];
 
   return (
-    <Group label="Price">
+    <Group label="Price" anchor={anchor}>
       <div className="mb-3 flex items-baseline justify-between font-mono text-xs">
         <span>{formatNPR(lo)}</span>
         <span className="text-muted">to</span>

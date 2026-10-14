@@ -9,6 +9,7 @@ import { ProductGallery } from "@/components/store/ProductGallery";
 import { ProductViewTracker } from "@/components/signals/ProductViewTracker";
 import { Badge, StockBadge } from "@/components/ui/Badge";
 import { getAllProducts, getProduct } from "@/lib/commerce/catalog";
+import { DELIVERY_RULES } from "@/lib/commerce/delivery";
 import { formatNPR, formatWarranty, specRows } from "@/lib/commerce/format";
 
 type Params = { params: Promise<{ id: string }> };
@@ -41,7 +42,9 @@ export default async function ProductPage({ params }: Params) {
 
         <div>
           <div className="flex flex-wrap items-center gap-2">
-            <StockBadge stock={product.stock} />
+            <span data-pip-anchor="stock" data-pip-topic="stock-badge" data-pip-product={product.id}>
+              <StockBadge stock={product.stock} />
+            </span>
             {product.tags.slice(0, 3).map((t) => (
               <Badge key={t}>{t}</Badge>
             ))}
@@ -57,23 +60,32 @@ export default async function ProductPage({ params }: Params) {
           </p>
           <p className="mt-5 max-w-prose text-muted">{product.blurb}</p>
 
-          <p className="mt-8 font-mono text-4xl font-semibold tracking-tight tabular">{formatNPR(product.price)}</p>
+          <p data-pip-anchor="price" data-pip-topic="price" data-pip-product={product.id} className="mt-8 w-fit font-mono text-4xl font-semibold tracking-tight tabular">{formatNPR(product.price)}</p>
           <p className="mt-1 text-xs text-muted">Inclusive of VAT · {formatWarranty(product.specs.warrantyMonths)} warranty</p>
 
           <div className="mt-6 flex flex-wrap items-start gap-3">
-            <AddToCartButton productId={product.id} disabled={product.stock === 0} />
-            <CompareToggle productId={product.id} productName={`${product.brand} ${product.name}`} variant="pill" />
+            <div data-pip-anchor="add-to-cart" data-pip-topic="add-to-cart" data-pip-product={product.id}>
+              <AddToCartButton productId={product.id} disabled={product.stock === 0} />
+            </div>
+            <div data-pip-anchor="compare" data-pip-topic="compare-toggle" data-pip-product={product.id}>
+              <CompareToggle productId={product.id} productName={`${product.brand} ${product.name}`} variant="pill" />
+            </div>
             <AskPipButton productName={product.name} />
           </div>
 
-          <section aria-labelledby="specs-heading" className="mt-10">
+          <p data-pip-anchor="delivery" data-pip-topic="delivery" data-pip-product={product.id} className="mt-5 w-fit rounded-xl bg-surface px-3.5 py-2.5 text-xs text-muted hairline">
+            <span className="text-text">Delivery:</span> Kathmandu valley {DELIVERY_RULES.valley.days} ({formatNPR(DELIVERY_RULES.valley.fee)}, free over{" "}
+            {formatNPR(DELIVERY_RULES.valley.freeOver)}) · rest of Nepal {DELIVERY_RULES.outside.days}
+          </p>
+
+          <section aria-labelledby="specs-heading" className="mt-10" data-pip-anchor="specs" data-pip-topic="spec-table" data-pip-product={product.id}>
             <h2 id="specs-heading" className="font-display text-lg font-semibold tracking-tight">
               Specifications
             </h2>
             <table className="mt-4 w-full overflow-hidden rounded-[var(--radius-card)] text-sm hairline">
               <tbody className="divide-y divide-border">
                 {rows.map((r) => (
-                  <tr key={r.key} className="bg-surface">
+                  <tr key={r.key} className="bg-surface" data-pip-anchor={`spec:${r.key}`} data-pip-topic={`spec-${r.key}`} data-pip-product={product.id}>
                     <th scope="row" className="w-40 px-4 py-3 text-left font-normal text-muted">
                       {r.label}
                     </th>

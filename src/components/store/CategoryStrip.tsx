@@ -47,7 +47,7 @@ export function CategoryStrip() {
   }
 
   return (
-    <div ref={navRef} role="navigation" aria-label="Categories" className="no-scrollbar relative -mx-4 flex gap-2 overflow-x-auto px-4 py-1 sm:mx-0 sm:px-0">
+    <div ref={navRef} role="navigation" aria-label="Categories" data-pip-anchor="categories" data-pip-topic="category-pills" className="no-scrollbar relative -mx-4 flex gap-2 overflow-x-auto px-4 py-1 sm:mx-0 sm:px-0">
       <span ref={indicatorRef} aria-hidden className="absolute left-0 top-0 rounded-full bg-text" />
       <Pill active={category === null} onClick={() => select(null)} icon={ICON.all}>
         All

@@ -105,6 +105,7 @@ export function Sheet({
         ref={panelRef}
         role="dialog"
         aria-modal={modal}
+        data-sheet-open={open}
         onPointerEnter={onPanelPointerEnter}
         onPointerDown={onPanelPointerDown}
         aria-labelledby={titleId}
