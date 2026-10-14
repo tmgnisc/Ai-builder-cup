@@ -24,6 +24,9 @@ export function openPipPrompt(pathname = window.location.pathname) {
  * Everything around Pip's voice: the speech bubble, the History drawer, router registration
  * for agent navigation, and global shortcuts ("/" to talk, hold V for push-to-talk).
  */
+let agentNavAt = 0;
+let lastPath: string | null = null;
+
 export function BubbleLayer() {
   const router = useRouter();
   const pathname = usePathname();
@@ -34,9 +37,22 @@ export function BubbleLayer() {
   const reset = useChat((s) => s.reset);
 
   useEffect(() => {
-    registerNavigator((to) => router.push(to));
+    registerNavigator((to) => {
+      agentNavAt = Date.now();
+      router.push(to);
+    });
     return () => registerNavigator(null);
   }, [router]);
+
+  // The shopper went to another page themselves: a finished agent reply about the last
+  // page shouldn't follow them (and would block Pip's tips there). Agent-driven navigation
+  // keeps its bubble.
+  useEffect(() => {
+    if (lastPath === null || lastPath === pathname) return void (lastPath = pathname);
+    lastPath = pathname;
+    const c = useBubble.getState().content;
+    if (c?.kind === "agent" && !useChat.getState().busy && Date.now() - agentNavAt > 5000) useBubble.getState().close("system");
+  }, [pathname]);
 
   useEffect(() => {
     let pttHeld = false;
