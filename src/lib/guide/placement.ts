@@ -81,6 +81,14 @@ export function placeBeside(anchor: Element, size: number): Point | null {
   }
   if (r.width === 0 || r.bottom < HEADER_H || r.top > window.innerHeight || r.right < 0 || r.left > window.innerWidth) return null;
 
+  // Mobile: Pip stays on the nearer screen edge, just above (or below) the element.
+  if (window.innerWidth < 768) {
+    const x = r.left + r.width / 2 < window.innerWidth / 2 ? MARGIN + R : window.innerWidth - MARGIN - R;
+    const above = r.top - GAP - R;
+    const y = above - R >= HEADER_H + MARGIN ? above : r.bottom + GAP + R;
+    return { x, y: Math.min(y, window.innerHeight - MARGIN - R) };
+  }
+
   const remembered = memo.get(anchor);
   if (remembered) {
     const p = candidate(remembered, r, R);

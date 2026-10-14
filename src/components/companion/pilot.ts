@@ -63,6 +63,8 @@ const state = {
   vy: 0,
   lastT: 0,
   initialized: false,
+  /** Size Pip is heading to; placement uses it (not the mid-flight size) so it picks the right side. */
+  targetSize: 120,
   /** When the anchor first went missing (anchors are released after a grace period). */
   lostSince: 0,
 };
@@ -96,14 +98,23 @@ export function isFlying(): boolean {
   return state.flying;
 }
 
-/** Keeps the orb fully on screen (and below the header). */
+let avoidBottom = 0;
+/** Mobile: keep Pip above a bottom-anchored bubble of this height (0 = none). */
+export function setAvoidBottom(px: number) {
+  avoidBottom = px;
+}
+
+/**
+ * Keeps the orb fully on screen (and below the header). On mobile Pip only lives on the
+ * left/right edges, never over the middle of the content.
+ */
 export function clampToViewport(p: Point, size: number): Point {
   const r = size / 2;
   const top = HEADER_H + MARGIN + r * 0.6;
-  return {
-    x: Math.min(window.innerWidth - MARGIN - r, Math.max(MARGIN + r, p.x)),
-    y: Math.min(window.innerHeight - MARGIN - r, Math.max(top, p.y)),
-  };
+  let x = Math.min(window.innerWidth - MARGIN - r, Math.max(MARGIN + r, p.x));
+  if (isMobile()) x = p.x < window.innerWidth / 2 ? MARGIN + r : window.innerWidth - MARGIN - r;
+  const bottom = window.innerHeight - MARGIN - r - (isMobile() ? avoidBottom : 0);
+  return { x, y: Math.min(bottom, Math.max(top, p.y)) };
 }
 
 export function cornerPoint(corner: Corner, size: number): Point {
@@ -136,7 +147,7 @@ function setSize(size: number, duration: number) {
 function anchorTarget(): Point | null {
   const el = state.anchorEl;
   if (!el || !el.isConnected) return null;
-  const p = state.place?.(el, live.size);
+  const p = state.place?.(el, state.targetSize);
   if (!p) return null;
   return p;
 }
@@ -159,6 +170,7 @@ export interface FlyOptions {
 export function flyTo(target: Point | null, opts: FlyOptions = {}): Promise<void> {
   const mode = opts.mode ?? (opts.anchor ? "anchored" : "free");
   const size = opts.size ?? live.size;
+  state.targetSize = size;
   state.anchorEl = opts.anchor ?? null;
   state.place = opts.place ?? state.place;
   const dest = () => clampToViewport((opts.anchor ? anchorTarget() : null) ?? target ?? rest, size);
@@ -335,18 +347,22 @@ export function frame(now: number): Live {
         break;
       }
       case "free":
-      case "parked":
-        live.x += (rest.x - live.x) * k(10);
-        live.y += (rest.y - live.y) * k(10);
+      case "parked": {
+        const c = avoidBottom && isMobile() ? clampToViewport(rest, live.size) : rest;
+        live.x += (c.x - live.x) * k(10);
+        live.y += (c.y - live.y) * k(10);
         break;
+      }
     }
   }
 
   // Gentle wander when resting free (ramps in after landing so there's no jump).
   state.wander += ((state.mode === "free" && !state.flying && !motion.reduced ? 1 : 0) - state.wander) * k(1.5);
   const t = now / 1000;
-  const wx = Math.sin(t * 0.31) * 20 * state.wander;
-  const wy = Math.sin(t * 0.23 + 1.3) * 14 * state.wander;
+  // On mobile Pip hugs the screen edge, so it only bobs vertically.
+  const mobile = isMobile();
+  const wx = mobile ? 0 : Math.sin(t * 0.31) * 20 * state.wander;
+  const wy = Math.sin(t * 0.23 + 1.3) * (mobile ? 6 : 14) * state.wander;
 
   // Smoothed velocity (px/s) for the scene's stretch.
   const vx = (live.x - px) / dt;

@@ -1,6 +1,7 @@
 "use client";
 
-import { BellOff, Bell, History, MoreHorizontal, Pause, Play, RotateCcw, Shield, Volume2, VolumeX } from "lucide-react";
+import { BellOff, Bell, History, MousePointer2, MoreHorizontal, Pause, Play, RotateCcw, Shield, Volume2, VolumeX } from "lucide-react";
+import { usePipPosition } from "@/store/usePipPosition";
 import { useEffect, useRef, useState } from "react";
 import { cn } from "@/lib/cn";
 import { useChat } from "@/store/useChat";
@@ -22,6 +23,8 @@ export function PipMenu({ onOpenChange }: { onOpenChange?: (open: boolean) => vo
   const reset = useChat((s) => s.reset);
   const setHistoryOpen = useChat((s) => s.setHistoryOpen);
   const hush = useVoice((s) => s.hush);
+  const following = usePipPosition((s) => s.mode === "follow");
+  const setFollow = usePipPosition((s) => s.setFollow);
 
   useEffect(() => onOpenChange?.(open), [open, onOpenChange]);
   useEffect(() => {
@@ -76,6 +79,9 @@ export function PipMenu({ onOpenChange }: { onOpenChange?: (open: boolean) => vo
           </button>
           <button role="menuitemcheckbox" aria-checked={paused} type="button" className={item} onClick={() => (setPaused(!paused), close())}>
             {paused ? <Play className="size-4 text-muted" /> : <Pause className="size-4 text-muted" />} {paused ? "Wake Pip" : "Pause Pip"}
+          </button>
+          <button role="menuitemcheckbox" aria-checked={following} type="button" className={cn(item, "max-md:hidden")} onClick={() => (setFollow(!following), close())}>
+            <MousePointer2 className="size-4 text-muted" /> {following ? "Stop following me" : "Follow my cursor"}
           </button>
           <button role="menuitem" type="button" aria-expanded={privacy} className={item} onClick={() => setPrivacy((p) => !p)}>
             <Shield className="size-4 text-muted" /> What Pip knows

@@ -58,7 +58,10 @@ export function SpeechBubble() {
     const tick = () => position(rootRef.current, panelRef.current, tailRef.current, sideRef);
     tick();
     gsap.ticker.add(tick);
-    return () => gsap.ticker.remove(tick);
+    return () => {
+      gsap.ticker.remove(tick);
+      pilot.setAvoidBottom(0);
+    };
   }, [rendered]);
 
   // Enter / replace / exit.
@@ -116,12 +119,11 @@ function position(root: HTMLDivElement | null, panel: HTMLDivElement | null, tai
   let side: Side;
 
   if (mobile) {
-    // Bottom card, tail pointing up (Pip sits above it) or down.
+    // Bottom-anchored card; Pip is lifted to sit just above it, and the tail points up at Pip.
     x = (vw - W) / 2;
-    const above = py + r + GAP + H <= vh - EDGE;
-    side = above ? "bottom" : "top";
-    y = above ? py + r + GAP : Math.max(HEADER + EDGE, Math.min(vh - H - EDGE, py - r - GAP - H));
-    if (!above && py - r - GAP - H < HEADER + EDGE) y = vh - H - EDGE;
+    y = vh - H - EDGE;
+    side = "bottom";
+    pilot.setAvoidBottom(H + EDGE + GAP);
   } else {
     const fits: Record<Side, boolean> = {
       right: px + r + GAP + W <= vw - EDGE,
@@ -209,6 +211,7 @@ function BubbleBody({ content, contentKey }: { content: BubbleContent; contentKe
       onPointerLeave={() => setHover(false)}
       onFocus={() => setFocused(true)}
       onBlur={() => setFocused(false)}
+      className="max-md:max-h-[62dvh] max-md:overflow-y-auto max-md:overscroll-contain"
       data-hover={hover}
       data-focused={focused}
       data-actions={view.hasActions}

@@ -37,18 +37,42 @@ For demos, use `pnpm build && pnpm start`: the in-memory cart lives in a single 
 - There is no checkout tool. Pip can only open `/checkout`, where the user confirms.
 - `PERSONA_AGENT_PACE` (default 1) scales the demo pacing; set it to 0 for instant responses.
 
-## Voice & nudges
+## Pip, the roaming companion
 
-- **Voice in:** uses the Web Speech API with `lang=en-IN`, so "1 lakh 20 thousand" comes through as words. While you speak, the interim transcript is shown as Pip's caption, and Pip's noise follows your mic loudness via a Web Audio analyser. Unsupported browsers get a disabled mic and can type instead.
-- **Voice out:** `speak()` uses `speechSynthesis` and reads replies to spoken turns aloud. Word-boundary events drive Pip's speaking pulse, with a simulated envelope for voices that don't emit them. Captions are always on, and the speaker button mutes the voice.
-- **Nudges:** `src/lib/signals/nudgeEngine.ts` is a pure function with tunable thresholds in `NUDGE_CONFIG`:
-  - the same product viewed 3+ times
-  - two products alternated between 2+ times
-  - the price filter changed 3+ times within 60 s
-  - an item removed from the cart
+Pip isn't a chat widget. It lives on the whole screen, flies to whatever is relevant, and talks through a speech bubble.
 
-  There's at most one nudge per 90 s. Nudges never appear while typing, while paused or while chatting, and dismissing (✕) suppresses that nudge type for the session. Evaluation is driven by real shopping actions only, never by idle time.
-- **Controls** (chat header): Mute, Pause (Pip sleeps and nudges stop), Privacy, and Reset memory (clears the chat, agent memory and session signals).
+- **Moving:** `pilot.ts` owns Pip's live position, with five modes:
+  - `free`: gentle wander
+  - `anchored`: tracks an element through scrolling
+  - `follow`: trails the cursor at a distance
+  - `parked`: sits in a corner
+  - `dragging`
+
+  Flights follow a curved path with `expo.inOut`. Pip looks at where it's going first, stretches along its direction of travel, and squashes when it lands. One small canvas is moved with CSS transforms, so there's no full-screen WebGL.
+- **Talking:** one `SpeechBubble` with a tail that points at Pip, on the side with the most room. It holds:
+  - streamed text and the last thing you said
+  - up to 3 mini product cards with Add buttons
+  - cart status (pending → verified ✓ / failed ✕), using the line from `get_cart`
+  - chips and a one-line tool trace
+  - an inline reply box with a mic
+
+  It dismisses itself after reading time (about 250 ms per word, 4–12 s), unless it has actions or you're hovering it. The full conversation, with every tool step, is in the **History** drawer (header icon or Pip's ⋯ menu).
+- **Placement:** `placement.ts` tries right → left → above → below of the target, and never covers the cursor, the focused input, the header or an open drawer. Anchors come from `data-pip-anchor` / `data-pip-topic` attributes via the registry in `anchors.ts`.
+- **Agent choreography:** the agent emits `move_to`, `highlight`, `scroll_to`, `set_filters` and `open_drawer`. When Pip presents results, it filters the grid to match and flies to the first card. When comparing, it hovers between the two cards, then above the verdict. When adding, it flies to the product, rides with the item to the cart icon, and only then does the success hop.
+- **Guide engine** (`src/lib/guide/`):
+  - It speaks up on page arrival, when you've been still for 3 s (5 s on mobile), when you rest on something for 1.5 s, when certain sections scroll into view, and on behaviour (revisits, going back and forth between two products, juggling the price filter, removing an item from the cart).
+  - Each element escalates from a one-line tip, to a question with chips, to silence.
+  - Guardrails:
+    - at least 15 s between tips (6 s after a page intro), and 20 s after you dismiss one
+    - never while you're typing, dragging, scrolling or in a modal, and never over an agent reply
+    - three dismissals in a row put Pip in quiet mode
+  - Every tip number is computed from the catalog (`stats.ts`, `tips.ts`). A first-visit tour has 5 spotlighted stops.
+- **Your controls:**
+  - click Pip to talk, drag it to move it, double-click to park it
+  - `/` opens Pip's input; hold `V` to talk
+  - Pip's ⋯ menu has mute, quiet mode (Pip parks and stops offering tips), pause, follow my cursor, privacy, and reset memory
+- **Mobile:** Pip is 64px and stays on the screen edges. The bubble becomes a bottom card, and Pip lifts above it. Idle detection waits 5 s, and there's no hover dwell.
+- **Voice:** recognition uses the Web Speech API with `lang=en-IN`; the live transcript becomes Pip's caption, and Pip reacts to mic loudness. Text-to-speech (`speechSynthesis`) reads replies to spoken turns aloud, with word-boundary events driving Pip's speaking pulse.
 
 ## Pip playground
 
@@ -57,6 +81,7 @@ For demos, use `pnpm build && pnpm start`: the in-memory cart lives in a single 
 - a button for every state, plus "cycle all"
 - reactions (hop, spin, shake), click-to-glance, and simulated mic/TTS envelopes
 - leva sliders for every uniform. Turn on *override tween*, tune, then **Copy config** and paste the JSON into `src/components/companion/states.ts`.
+- position modes, fly to a random anchor, run the tour, a fake idle trigger, samples of every bubble type, and an overlay showing anchors and placement decisions
 
 Deep links: `/playground?state=thinking`, `/playground?cycle=1`.
 
@@ -65,6 +90,17 @@ Deep links: `/playground?state=thinking`, `/playground?cycle=1`.
 1. ✅ Scaffold, design system, catalog, mock commerce
 2. ✅ Pip (three.js orb, eyes, halo, 12 states, `/playground`)
 3. ✅ Store UI and GSAP choreography
-4. ✅ Agent loop and chat dock
-5. ✅ Voice and nudges
-6. Merchant dashboard and polish
+4. ✅ Agent loop
+5. ✅ Voice and signals
+6. ✅ Roaming companion: position model, speech bubble, anchors and placement, guide engine and tour, agent choreography, mobile
+7. Merchant dashboard, performance pass and demo script
+
+## Demo flow
+
+1. On a first visit, Pip lands in the hero, greets you and offers a tour. Say or type "skip".
+2. Browse laptops and rest on a card. Pip flies beside it with a real-data tip.
+3. Click Pip (or hold V) and say: *"I need a laptop under 1 lakh 20 thousand for full-stack development, good battery, enough RAM for Docker."* Pip searches, filters the grid, flies to the first result, and shows 3 mini cards.
+4. Say *"Compare the first two"*. Pip moves between the two cards, then the comparison drawer opens with a grounded verdict.
+5. Say *"Add the lighter one"*. Pip flies from the product to the cart icon, verifies the add (✓), and hops.
+6. Open a product page, scroll to the specs, and rest on the battery row. Pip anchors beside it with a tip.
+7. Dismiss three tips in a row. Pip parks itself and goes quiet.

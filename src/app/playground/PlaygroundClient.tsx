@@ -17,6 +17,7 @@ import {
 import { Button } from "@/components/ui/Button";
 import { cn } from "@/lib/cn";
 import { useCompanion } from "@/store/useCompanion";
+import { RoamingPanel } from "./RoamingPanel";
 
 type NumKey = Exclude<keyof PipParams, "rimR" | "rimG" | "rimB">;
 
@@ -261,6 +262,8 @@ export function PlaygroundClient() {
           </div>
           <p className="mt-3 font-mono text-xs text-muted">caption: {caption ? `"${caption}"` : "(none)"}</p>
         </section>
+
+        <RoamingPanel />
       </div>
 
       {/* Fixed, independently scrolling column: leva calls scrollIntoView on folder resize, which must not scroll the page. */}

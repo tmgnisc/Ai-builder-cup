@@ -2,6 +2,7 @@ import type { Metadata, Viewport } from "next";
 import { Inter, JetBrains_Mono, Unbounded } from "next/font/google";
 import { BubbleLayer } from "@/components/bubble/BubbleLayer";
 import { Spotlight } from "@/components/guide/Spotlight";
+import { AnchorDebug } from "@/components/guide/AnchorDebug";
 import { GuideLayer } from "@/components/guide/GuideLayer";
 import { CompanionLayer } from "@/components/companion/CompanionLayer";
 import { ClientBootstrap } from "@/components/layout/ClientBootstrap";
@@ -46,6 +47,7 @@ export default function RootLayout({ children }: Readonly<{ children: React.Reac
         <BubbleLayer />
         <GuideLayer />
         <Spotlight />
+        {process.env.NODE_ENV !== "production" || process.env.NEXT_PUBLIC_PLAYGROUND === "1" ? <AnchorDebug /> : null}
         <CartDrawer />
         <CompareTray />
         <CompareDrawer />
