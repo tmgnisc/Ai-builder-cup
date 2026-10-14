@@ -145,11 +145,9 @@
     0 24px 60px -20px rgb(0 0 0 / 0.55);
 }
 
-/* Pip's bubble: opaque enough to read over tables and imagery (its border lives on .bubble-panel). */
-@utility glass-strong {
-  background: color-mix(in oklab, var(--surface) 94%, transparent);
-  backdrop-filter: blur(20px) saturate(140%);
-  -webkit-backdrop-filter: blur(20px) saturate(140%);
+/* Pip's bubble: fully opaque so it reads over tables and imagery (its border lives on .bubble-panel). */
+@utility surface-solid {
+  background: var(--surface);
 }
 
 @utility hairline {
@@ -207,12 +205,11 @@
   pointer-events: auto;
   -webkit-appearance: none;
   appearance: none;
-  width: 18px;
-  height: 18px;
+  /* 24px touch target; the visible knob is the inner 18px. */
+  width: 24px;
+  height: 24px;
   border-radius: 9999px;
-  background: var(--text);
-  border: 3px solid var(--bg);
-  box-shadow: 0 0 0 1px var(--border-strong);
+  background: radial-gradient(circle, var(--text) 0 6px, var(--bg) 6px 8.5px, var(--border-strong) 8.5px 9.5px, transparent 9.5px);
   cursor: grab;
 }
 .range-thumb::-moz-range-thumb {

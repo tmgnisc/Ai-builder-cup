@@ -180,7 +180,7 @@ function PriceRange({ anchor }: { anchor?: string }) {
         <span className="text-muted">to</span>
         <span>{hi >= PRICE_MAX ? `${formatNPR(hi)}+` : formatNPR(hi)}</span>
       </div>
-      <div className="relative h-5">
+      <div className="relative h-6">
         <div className="absolute inset-x-0 top-1/2 h-1 -translate-y-1/2 rounded-full bg-surface-2" />
         <div
           className={cn("absolute top-1/2 h-1 -translate-y-1/2 rounded-full", isDefault ? "bg-muted/50" : "bg-accent")}

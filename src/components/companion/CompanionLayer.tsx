@@ -57,18 +57,60 @@ export function CompanionLayer() {
     });
   }, []);
 
-  // Defer WebGL until the main thread is idle so it never competes with first paint.
+  // Defer WebGL (three.js + shader compile) until the page has loaded and the main thread
+  // is idle, so it never competes with first paint or hydration. The CSS stand-in shows
+  // until then.
   useEffect(() => {
     const ric = window.requestIdleCallback ?? ((cb: () => void) => window.setTimeout(cb, 400));
     const cic = window.cancelIdleCallback ?? window.clearTimeout;
-    const id = ric(() => setCanvasReady(true), { timeout: 1500 });
-    return () => cic(id);
+    let idle = 0;
+    let timer = 0;
+    const start = () => {
+      timer = window.setTimeout(() => (idle = ric(() => setCanvasReady(true), { timeout: 2000 })), 600);
+    };
+    if (document.readyState === "complete") start();
+    else window.addEventListener("load", start, { once: true });
+    return () => {
+      window.removeEventListener("load", start);
+      window.clearTimeout(timer);
+      if (idle) cic(idle);
+    };
   }, []);
 
   useEffect(() => {
     pipRuntime.glitchEl = glitchRef.current;
     return () => {
       pipRuntime.glitchEl = null;
+    };
+  }, []);
+
+  // A drawer slid in over a resting Pip: step aside to its edge rather than sit on top of
+  // it. (When Pip is anchored to something inside the drawer, it stays put.)
+  useEffect(() => {
+    let timer = 0;
+    const check = () => {
+      if (pilot.isMobile()) return;
+      const mode = pilot.getMode();
+      if (mode !== "free" && mode !== "parked") return;
+      const { x, y, size } = pilot.getLive();
+      const r = size / 2;
+      for (const el of document.querySelectorAll("[data-sheet-open='true']")) {
+        const b = el.getBoundingClientRect();
+        if (x + r < b.left || x - r > b.right || y + r < b.top || y - r > b.bottom) continue;
+        const target = b.left > window.innerWidth / 2 ? { x: b.left - pilot.MARGIN - r, y } : b.right < window.innerWidth / 2 ? { x: b.right + pilot.MARGIN + r, y } : { x, y: b.top - pilot.MARGIN - r };
+        void usePipPosition.getState().flyToPoint(target, { mode });
+        return;
+      }
+    };
+    const mo = new MutationObserver((records) => {
+      if (!records.some((m) => (m.target as Element).getAttribute("data-sheet-open") === "true")) return;
+      window.clearTimeout(timer);
+      timer = window.setTimeout(check, 520); // after the slide-in
+    });
+    mo.observe(document.body, { subtree: true, attributes: true, attributeFilter: ["data-sheet-open"] });
+    return () => {
+      mo.disconnect();
+      window.clearTimeout(timer);
     };
   }, []);
 

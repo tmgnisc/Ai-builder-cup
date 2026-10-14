@@ -9,6 +9,7 @@ import * as pilot from "@/components/companion/pilot";
 import { STATES } from "@/components/companion/states";
 import { cn } from "@/lib/cn";
 import { gsap, motion, useReducedMotion } from "@/lib/motion";
+import { useSpotlight } from "@/components/guide/Spotlight";
 import { useBubble, type BubbleChip, type BubbleContent } from "@/store/useBubble";
 import { useChat, type ChatMessage } from "@/store/useChat";
 import { useCompanion } from "@/store/useCompanion";
@@ -95,7 +96,7 @@ export function SpeechBubble() {
         aria-modal="false"
         aria-label="Pip"
         onKeyDown={(e) => e.key === "Escape" && close("user")}
-        className="bubble-panel glass-strong pointer-events-auto relative w-[min(340px,calc(100vw-24px))] rounded-[20px] p-3.5 pr-3"
+        className="bubble-panel surface-solid pointer-events-auto relative w-[min(340px,calc(100vw-24px))] rounded-[20px] p-3.5 pr-3"
       >
         <span ref={tailRef} aria-hidden className="bubble-tail absolute size-3.5 rotate-45 rounded-[3px]" />
         <BubbleBody content={rendered.content} contentKey={rendered.key} />
@@ -125,21 +126,31 @@ function position(root: HTMLDivElement | null, panel: HTMLDivElement | null, tai
     side = "bottom";
     pilot.setAvoidBottom(H + EDGE + GAP);
   } else {
-    const fits: Record<Side, boolean> = {
+    const clampY = (v: number) => Math.max(HEADER + EDGE, Math.min(vh - H - EDGE, v));
+    const clampX = (v: number) => Math.max(EDGE, Math.min(vw - W - EDGE, v));
+    const spot: Record<Side, [number, number]> = {
+      right: [px + r + GAP, clampY(py - Math.min(H * 0.35, 60))],
+      left: [px - r - GAP - W, clampY(py - Math.min(H * 0.35, 60))],
+      top: [clampX(px - W / 2), Math.max(HEADER + EDGE, py - r - GAP - H)],
+      bottom: [clampX(px - W / 2), py + r + GAP],
+    };
+    // Don't cover what Pip is pointing at, or a drawer Pip isn't part of.
+    const avoid = [useSpotlight.getState().target, ...document.querySelectorAll("[data-sheet-open='true']")]
+      .filter((el): el is Element => !!el && !el.contains(root))
+      .map((el) => el.getBoundingClientRect())
+      .filter((b) => b.width > 0 && !(b.left <= px && px <= b.right && b.top <= py && py <= b.bottom));
+    const clear = (s: Side) => avoid.every((b) => spot[s][0] >= b.right || spot[s][0] + W <= b.left || spot[s][1] >= b.bottom || spot[s][1] + H <= b.top);
+    const inView: Record<Side, boolean> = {
       right: px + r + GAP + W <= vw - EDGE,
       left: px - r - GAP - W >= EDGE,
       top: py - r - GAP - H >= HEADER + EDGE,
       bottom: py + r + GAP + H <= vh - EDGE,
     };
     const space: Record<Side, number> = { right: vw - px - r, left: px - r, top: (py - r - HEADER) * 1.6, bottom: (vh - py - r) * 1.6 };
+    const sides = (["right", "left", "top", "bottom"] as Side[]).filter((s) => inView[s]).sort((a, b) => space[b] - space[a]);
     const prev = sideRef.current;
-    side = prev && fits[prev] ? prev : ((["right", "left", "top", "bottom"] as Side[]).filter((s) => fits[s]).sort((a, b) => space[b] - space[a])[0] ?? "top");
-    const clampY = (v: number) => Math.max(HEADER + EDGE, Math.min(vh - H - EDGE, v));
-    const clampX = (v: number) => Math.max(EDGE, Math.min(vw - W - EDGE, v));
-    if (side === "right") [x, y] = [px + r + GAP, clampY(py - Math.min(H * 0.35, 60))];
-    else if (side === "left") [x, y] = [px - r - GAP - W, clampY(py - Math.min(H * 0.35, 60))];
-    else if (side === "top") [x, y] = [clampX(px - W / 2), Math.max(HEADER + EDGE, py - r - GAP - H)];
-    else [x, y] = [clampX(px - W / 2), py + r + GAP];
+    side = prev && inView[prev] && clear(prev) ? prev : (sides.find(clear) ?? (prev && inView[prev] ? prev : sides[0]) ?? "top");
+    [x, y] = spot[side];
   }
   sideRef.current = side;
   root.style.transform = `translate3d(${Math.round(x)}px, ${Math.round(y)}px, 0)`;

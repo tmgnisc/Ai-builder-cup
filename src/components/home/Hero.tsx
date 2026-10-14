@@ -52,6 +52,9 @@ export function Hero() {
       });
 
       tl.from("[data-hero-fade]", { autoAlpha: 0, y: 16, duration: 0.8, ease: "expo.out", stagger: 0.08 }, 0.45);
+      // The subtitle is the page's LCP element: it rises in but is never fully hidden, so it
+      // counts as painted at first paint instead of after the animation.
+      tl.from("[data-hero-rise]", { opacity: 0.35, y: 16, duration: 0.8, ease: "expo.out" }, 0.5);
 
       // Chips type themselves in, one after another.
       const chips = gsap.utils.toArray<HTMLElement>("[data-chip-text]");
@@ -104,7 +107,7 @@ export function Hero() {
         >
           Shopping, with someone who <span className="text-accent-text">gets it.</span>
         </h1>
-        <p data-hero-fade className="mt-5 max-w-xl text-lg text-muted">
+        <p data-hero-rise className="mt-5 max-w-xl text-lg text-muted">
           Tell Pip what you need in plain words. It searches the catalog, compares the trade-offs and adds to your cart, and
           you can see every step it takes.
         </p>
@@ -149,7 +152,15 @@ export function Hero() {
                 className="inline-flex min-h-8 items-center rounded-full bg-surface px-3 py-1.5 text-xs text-muted transition-colors hairline hover:text-text"
                 aria-label={`Use example: ${ex}`}
               >
-                <span data-chip-text={ex}>{ex}</span>
+                {/* The invisible copy reserves the full width, so typing never reflows the page. */}
+                <span className="inline-grid">
+                  <span aria-hidden className="invisible col-start-1 row-start-1">
+                    {ex}
+                  </span>
+                  <span data-chip-text={ex} className="col-start-1 row-start-1">
+                    {ex}
+                  </span>
+                </span>
               </button>
             </li>
           ))}
