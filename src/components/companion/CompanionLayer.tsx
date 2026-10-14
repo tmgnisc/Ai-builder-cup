@@ -4,31 +4,27 @@ import dynamic from "next/dynamic";
 import { usePathname } from "next/navigation";
 import { Component, useEffect, useRef, useState, type ReactNode } from "react";
 import { ScrambleText } from "@/components/ui/ScrambleText";
-import { gsap, motion, ScrollTrigger, useGSAP } from "@/lib/motion";
+import { gsap } from "@/lib/motion";
+import { placeCenter } from "@/lib/guide/placement";
 import { useChat } from "@/store/useChat";
 import { useCompanion } from "@/store/useCompanion";
+import { findAnchor, usePipPosition } from "@/store/usePipPosition";
+import * as pilot from "./pilot";
 import { pip, pipRuntime } from "./runtime";
 import { STATES } from "./states";
 import { usePointerGaze } from "./usePointerGaze";
 
 const PipCanvas = dynamic(() => import("./PipCanvas"), { ssr: false, loading: () => <PipStandIn /> });
 
-type Mode = "dock" | "hero" | "stage";
-
-/** Fraction of the canvas box that Pip's body occupies; the hit area matches it. */
-const HIT = 0.56;
+const DRAG_THRESHOLD = 6;
 
 /**
  * Fixed companion layer, mounted once in the root layout so Pip persists across routes.
  *
- * One WebGL canvas, never re-parented. Its box is computed every frame from anchors:
- *   - `[data-pip-anchor="dock"]`  fixed bottom-right (72px orb on mobile, 180px on desktop)
- *   - `[data-pip-anchor="hero"]`  on "/": scroll-scrubbed flight from the hero into the dock
- *   - `[data-pip-anchor="stage"]` on /playground: Pip stays on stage
- * The canvas renders at the largest size it will be shown at and is scaled with a
- * transform; the scene lowers DPR when shrunk so no pixels are wasted.
- *
- * The layer never catches pointer events. Only the circular hit area over Pip does.
+ * Pip roams the whole screen. Its live position comes from `pilot.ts` every frame; one small
+ * WebGL canvas (sized for Pip's largest size) is moved and scaled with a CSS transform, which
+ * is far cheaper than a full-viewport canvas. The layer never catches pointer events: only the
+ * round hit area over Pip's body does (click to talk, drag to move, double-click to park).
  */
 export function CompanionLayer() {
   const pathname = usePathname();
@@ -37,16 +33,18 @@ export function CompanionLayer() {
   const dispatch = useCompanion((s) => s.dispatch);
   const chatOpen = useChat((s) => s.open);
   const toggleChat = useChat((s) => s.toggle);
+  const mode = usePipPosition((s) => s.mode);
 
   const wrapRef = useRef<HTMLDivElement>(null);
   const glitchRef = useRef<HTMLDivElement>(null);
   const captionRef = useRef<HTMLDivElement>(null);
-  const dockRef = useRef<HTMLDivElement>(null);
-  const progress = useRef<{ p: number } | null>(null);
+  const hitRef = useRef<HTMLButtonElement>(null);
+  const press = useRef<{ x: number; y: number; dragging: boolean; id: number } | null>(null);
+  const suppressClick = useRef(false);
 
   const [canvasReady, setCanvasReady] = useState(false);
   const [webglFailed, setWebglFailed] = useState(false);
-  const [viewportKey, setViewportKey] = useState(0);
+  const [base, setBase] = useState(436);
 
   usePointerGaze();
 
@@ -58,20 +56,6 @@ export function CompanionLayer() {
     return () => cic(id);
   }, []);
 
-  // Re-resolve anchors when the viewport crosses breakpoints or resizes.
-  useEffect(() => {
-    let timer: number | undefined;
-    const onResize = () => {
-      window.clearTimeout(timer);
-      timer = window.setTimeout(() => setViewportKey((k) => k + 1), 150);
-    };
-    window.addEventListener("resize", onResize);
-    return () => {
-      window.removeEventListener("resize", onResize);
-      window.clearTimeout(timer);
-    };
-  }, []);
-
   useEffect(() => {
     pipRuntime.glitchEl = glitchRef.current;
     return () => {
@@ -79,113 +63,131 @@ export function CompanionLayer() {
     };
   }, []);
 
+  // Canvas box = Pip's largest size on this device; smaller sizes are a CSS scale.
+  useEffect(() => {
+    const update = () => {
+      setBase(Math.ceil(pilot.sizeFor("hero") / pilot.ORB_FRACTION));
+      pilot.onResize();
+    };
+    update();
+    window.addEventListener("resize", update);
+    return () => window.removeEventListener("resize", update);
+  }, []);
+
+  // Render loop: live position → transform. Runs on GSAP's ticker (paused with the tab).
+  useEffect(() => {
+    const wrap = wrapRef.current;
+    const cap = captionRef.current;
+    if (!wrap || !cap) return;
+    const tick = () => {
+      const p = pilot.frame(performance.now());
+      const box = p.size / pilot.ORB_FRACTION;
+      const scale = box / base;
+      wrap.style.transform = `translate3d(${p.x - box / 2}px, ${p.y - box / 2}px, 0) scale(${scale})`;
+      cap.style.transform = `translate3d(${p.x}px, ${p.y + p.size * 0.62}px, 0) translateX(-50%)`;
+      cap.dataset.compact = String(p.size < 90);
+      pipRuntime.center.x = p.x;
+      pipRuntime.center.y = p.y;
+      pipRuntime.displaySize = box;
+      pipRuntime.renderScale = scale;
+    };
+    gsap.ticker.add(tick);
+    return () => gsap.ticker.remove(tick);
+  }, [base]);
+
+  // Where Pip goes when a page loads or the chat opens.
+  useEffect(() => {
+    const pos = usePipPosition.getState();
+    const id = window.requestAnimationFrame(() => {
+      if (chatOpen) return void pos.goHome();
+      const stage = findAnchor("stage");
+      if (stage) return void pos.flyToAnchor(stage, { size: Math.round(stage.getBoundingClientRect().width * pilot.ORB_FRACTION), place: placeCenter });
+      const hero = findAnchor("hero");
+      if (hero && hero.getBoundingClientRect().width > 0 && window.scrollY < 200) {
+        return void pos.flyToAnchor(hero, { size: "hero", place: placeCenter });
+      }
+      if (pilot.getMode() !== "parked") void pos.goHome();
+    });
+    return () => window.cancelAnimationFrame(id);
+  }, [pathname, chatOpen]);
+
+  // An anchor scrolled away: the hero hands Pip back home; others release Pip near the nearest side.
+  useEffect(() => {
+    pilot.setAnchorLostHandler((last) => {
+      const pos = usePipPosition.getState();
+      if (pos.anchorId === "hero") return void pos.goHome();
+      const size = pilot.sizeFor("free");
+      const side = last.x < window.innerWidth / 2 ? pilot.MARGIN + size / 2 : window.innerWidth - pilot.MARGIN - size / 2;
+      void pos.flyToPoint({ x: side, y: last.y }, { size });
+    });
+    return () => pilot.setAnchorLostHandler(null);
+  }, []);
+
+  // Back at the top of the landing page: Pip returns to the hero.
+  useEffect(() => {
+    if (pathname !== "/") return;
+    let t: number | undefined;
+    const onScroll = () => {
+      window.clearTimeout(t);
+      t = window.setTimeout(() => {
+        const hero = findAnchor("hero");
+        if (window.scrollY < 80 && hero && pilot.getMode() === "free" && !useChat.getState().open) {
+          void usePipPosition.getState().flyToAnchor(hero, { size: "hero", place: placeCenter });
+        }
+      }, 250);
+    };
+    window.addEventListener("scroll", onScroll, { passive: true });
+    return () => {
+      window.removeEventListener("scroll", onScroll);
+      window.clearTimeout(t);
+    };
+  }, [pathname]);
+
   // Greet once per page load when the session starts on the landing page.
   const greeted = useRef(false);
   useEffect(() => {
     if (!canvasReady || greeted.current || pathname !== "/") return;
     greeted.current = true;
-    const id = window.setTimeout(() => dispatch({ type: "state_change", state: "greeting", source: "session" }), 700);
+    const id = window.setTimeout(() => dispatch({ type: "state_change", state: "greeting", source: "session" }), 900);
     return () => window.clearTimeout(id);
   }, [canvasReady, pathname, dispatch]);
 
-  useGSAP(
-    () => {
-      const wrap = wrapRef.current;
-      const cap = captionRef.current;
-      const dock = dockRef.current;
-      if (!wrap || !cap || !dock) return;
-
-      const anchor = document.querySelector<HTMLElement>('[data-pip-anchor="hero"], [data-pip-anchor="stage"]');
-      const anchorVisible = !!anchor && anchor.offsetWidth > 0 && anchor.getClientRects().length > 0;
-      // While chatting, Pip always sits in the dock next to the panel.
-      const mode: Mode = anchorVisible && !chatOpen ? (anchor.dataset.pipAnchor as Mode) : "dock";
-
-      // Measure once per setup; the layout pass uses scroll offsets, not live rects (no forced reflow).
-      const d = dock.getBoundingClientRect();
-      const dockBox = { x: d.left, y: d.top, size: d.width };
-      const a = anchorVisible ? anchor.getBoundingClientRect() : null;
-      const anchorDoc = a ? { x: a.left + window.scrollX, y: a.top + window.scrollY, size: a.width } : null;
-      const base = Math.max(dockBox.size, anchorDoc?.size ?? 0);
-      wrap.style.width = wrap.style.height = `${base}px`;
-
-      const first = progress.current === null;
-      const prog = (progress.current ??= { p: mode === "dock" ? 1 : 0 });
-      const easeX = gsap.parseEase("power2.in");
-      const easeY = gsap.parseEase("power2.out");
-
-      const layout = () => {
-        let { x, y, size } = dockBox;
-        if (anchorDoc && prog.p < 1) {
-          const ax = anchorDoc.x - window.scrollX;
-          const ay = anchorDoc.y - window.scrollY;
-          const p = prog.p;
-          // Different easings per axis give the flight a gentle arc.
-          x = ax + (dockBox.x - ax) * easeX(p);
-          y = ay + (dockBox.y - ay) * easeY(p);
-          size = anchorDoc.size + (dockBox.size - anchorDoc.size) * p;
-        }
-        const scale = size / base;
-        wrap.style.transform = `translate3d(${x}px, ${y}px, 0) scale(${scale})`;
-        cap.style.transform = `translate3d(${x + size / 2}px, ${y + size * 0.88}px, 0) translateX(-50%)`;
-        cap.dataset.compact = String(size < 150);
-        pipRuntime.center.x = x + size / 2;
-        pipRuntime.center.y = y + size / 2;
-        pipRuntime.displaySize = size;
-        pipRuntime.renderScale = scale;
-        pipRuntime.invalidate?.();
-      };
-
-      const target = mode === "dock" ? 1 : 0;
-      if (mode === "hero") {
-        const section = anchor?.closest("section") ?? anchor;
-        const setP = motion.reduced
-          ? (v: number) => {
-              prog.p = v;
-            }
-          : gsap.quickTo(prog, "p", { duration: 0.7, ease: "expo.out" });
-        ScrollTrigger.create({
-          trigger: section,
-          start: "top top",
-          end: "bottom 35%",
-          onUpdate: (self) => setP(self.progress),
-          onRefresh: (self) => setP(self.progress),
-        });
-      } else if (first || motion.reduced) {
-        prog.p = target;
-      } else {
-        gsap.to(prog, { p: target, duration: 0.9, ease: "expo.out" });
-      }
-
-      layout();
-      if (mode === "dock") {
-        // Docked: only needs re-layout while a dock-return tween runs.
-        const tick = () => {
-          layout();
-          if (prog.p >= 1) gsap.ticker.remove(tick);
-        };
-        if (prog.p < 1) gsap.ticker.add(tick);
-        return () => gsap.ticker.remove(tick);
-      }
-      gsap.ticker.add(layout);
-      return () => gsap.ticker.remove(layout);
-    },
-    { dependencies: [pathname, viewportKey, chatOpen], revertOnUpdate: true },
-  );
+  // ── Pointer: click to talk, drag to move, double-click to park ──
+  function onPointerDown(e: React.PointerEvent<HTMLButtonElement>) {
+    if (e.button !== 0) return;
+    press.current = { x: e.clientX, y: e.clientY, dragging: false, id: e.pointerId };
+  }
+  function onPointerMove(e: React.PointerEvent<HTMLButtonElement>) {
+    const p = press.current;
+    if (!p || p.id !== e.pointerId) return;
+    if (!p.dragging && Math.hypot(e.clientX - p.x, e.clientY - p.y) > DRAG_THRESHOLD) {
+      p.dragging = true;
+      hitRef.current?.setPointerCapture(e.pointerId);
+      pilot.beginDrag({ x: p.x, y: p.y });
+    }
+  }
+  function onPointerUp(e: React.PointerEvent<HTMLButtonElement>) {
+    const p = press.current;
+    press.current = null;
+    if (p?.dragging) {
+      hitRef.current?.releasePointerCapture(e.pointerId);
+      pilot.endDrag();
+      suppressClick.current = true;
+    }
+  }
 
   const color = STATES[state].color;
 
   return (
     <>
-      <div data-pip-anchor="dock" ref={dockRef} aria-hidden className="pointer-events-none fixed bottom-1 right-1 size-[132px] md:bottom-6 md:right-6 md:size-[180px]" />
-
       <div
         ref={wrapRef}
         className="pointer-events-none fixed left-0 top-0 z-30 origin-top-left will-change-transform"
-        style={{ ["--pip-color" as string]: color, width: 180, height: 180, transform: "translate3d(-999px,-999px,0)" }}
+        style={{ ["--pip-color" as string]: color, width: base, height: base, transform: "translate3d(-999px,-999px,0)" }}
       >
         <div
           aria-hidden
-          className="absolute inset-[14%] rounded-full opacity-45 blur-2xl transition-[background] duration-500"
+          className="absolute inset-[18%] rounded-full opacity-45 blur-2xl transition-[background] duration-500"
           style={{ background: "radial-gradient(circle, var(--pip-color) 0%, transparent 62%)" }}
         />
         <div ref={glitchRef} role="img" aria-label={`Pip, ${state}`} className="absolute inset-0">
@@ -198,15 +200,35 @@ export function CompanionLayer() {
           )}
         </div>
         <button
+          ref={hitRef}
           type="button"
+          onPointerDown={onPointerDown}
+          onPointerMove={onPointerMove}
+          onPointerUp={onPointerUp}
+          onPointerCancel={onPointerUp}
           onClick={() => {
+            if (suppressClick.current) {
+              suppressClick.current = false;
+              return;
+            }
             pip.react("hop-spin");
             toggleChat();
           }}
-          aria-label={chatOpen ? "Close chat with Pip" : "Talk to Pip"}
+          onDoubleClick={() => {
+            if (useChat.getState().open) useChat.getState().setOpen(false);
+            void usePipPosition.getState().park();
+          }}
+          aria-label={chatOpen ? "Close conversation with Pip" : "Talk to Pip"}
           aria-expanded={chatOpen}
-          className="pointer-events-auto absolute rounded-full focus-visible:outline-offset-0"
-          style={{ left: `${(1 - HIT) * 50}%`, top: `${(1 - HIT) * 50}%`, width: `${HIT * 100}%`, height: `${HIT * 100}%` }}
+          title="Click to talk · drag to move · double-click to park"
+          className="pointer-events-auto absolute touch-none rounded-full focus-visible:outline-offset-0"
+          style={{
+            left: `${(1 - pilot.ORB_FRACTION) * 50}%`,
+            top: `${(1 - pilot.ORB_FRACTION) * 50}%`,
+            width: `${pilot.ORB_FRACTION * 100}%`,
+            height: `${pilot.ORB_FRACTION * 100}%`,
+            cursor: mode === "dragging" ? "grabbing" : "grab",
+          }}
         />
       </div>
 

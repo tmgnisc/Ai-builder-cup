@@ -7,7 +7,7 @@ import type { PipParams } from "./states";
  * and read every frame by the WebGL scene, so nothing here triggers React renders.
  */
 
-export type Reaction = "hop" | "hop-spin" | "shake";
+export type Reaction = "hop" | "hop-spin" | "shake" | "land";
 
 interface Runtime {
   /** Pip's on-screen centre and displayed size in CSS px (updated by the layer's layout pass). */
@@ -16,6 +16,8 @@ interface Runtime {
   /** displayed size / canvas CSS size; the scene lowers DPR when Pip is shrunk. */
   renderScale: number;
   pointer: { x: number; y: number; t: number };
+  /** Pip's screen velocity (px/s) while flying or dragged; drives squash-and-stretch. */
+  velocity: { x: number; y: number };
   glance: { x: number; y: number; until: number } | null;
   /** 0–1 microphone level (Web Audio analyser, Phase 5). */
   micLevel: number;
@@ -35,6 +37,7 @@ export const pipRuntime: Runtime = {
   displaySize: 0,
   renderScale: 1,
   pointer: { x: 0, y: 0, t: -Infinity },
+  velocity: { x: 0, y: 0 },
   glance: null,
   micLevel: 0,
   speechLevel: 0,

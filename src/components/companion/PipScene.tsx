@@ -39,6 +39,10 @@ export function PipScene({ reduced }: { reduced: boolean }) {
   const fx = useRef<Fx>({ glitch: 0, hopY: 0, stretch: 1, spin: 0, shakeX: 0 }).current;
 
   const body = useRef<Group>(null);
+  // Squash-and-stretch along the flight direction: rotate(θ) · scale · rotate(−θ).
+  const flightRot = useRef<Group>(null);
+  const flightScale = useRef<Group>(null);
+  const flightUnrot = useRef<Group>(null);
   const haloGroup = useRef<Group>(null);
   const haloSpin = useRef<Group>(null);
 
@@ -72,6 +76,10 @@ export function PipScene({ reduced }: { reduced: boolean }) {
     const play = (kind: Reaction | null) => {
       if (!kind || reduced) return;
       ctx.add(() => {
+        if (kind === "land") {
+          gsap.fromTo(fx, { stretch: 0.84 }, { stretch: 1, duration: 0.55, ease: "back.out(3)", onUpdate: invalidate });
+          return;
+        }
         if (kind === "shake") {
           gsap.to(fx, {
             keyframes: { shakeX: [0, 0.16, -0.13, 0.1, -0.06, 0.025, 0] },
@@ -231,6 +239,21 @@ export function PipScene({ reduced }: { reduced: boolean }) {
       b.scale.set(s / Math.sqrt(st), s * st, s / Math.sqrt(st));
     }
 
+    // ── Flight stretch (velocity in screen px/s; screen y points down) ──
+    const fr = flightRot.current;
+    const fs = flightScale.current;
+    const fu = flightUnrot.current;
+    if (fr && fs && fu) {
+      const vx = pipRuntime.velocity.x;
+      const vy = -pipRuntime.velocity.y;
+      const speed = Math.hypot(vx, vy);
+      const stretch = live ? Math.min(0.22, speed / 6000) : 0;
+      const angle = speed > 1 ? Math.atan2(vy, vx) : 0;
+      fr.rotation.z = angle;
+      fu.rotation.z = -angle;
+      fs.scale.set(1 + stretch, 1 - stretch * 0.55, 1 - stretch * 0.3);
+    }
+
     // ── Halo ──
     const hg = haloGroup.current;
     if (hg && haloSpin.current) {
@@ -259,9 +282,15 @@ export function PipScene({ reduced }: { reduced: boolean }) {
 
   return (
     <group scale={fit}>
-      <group ref={body}>
-        <PipOrb uniforms={uniforms} />
-        <PipHalo groupRef={haloGroup} spinRef={haloSpin} materials={halo} />
+      <group ref={flightRot}>
+        <group ref={flightScale}>
+          <group ref={flightUnrot}>
+            <group ref={body}>
+              <PipOrb uniforms={uniforms} />
+              <PipHalo groupRef={haloGroup} spinRef={haloSpin} materials={halo} />
+            </group>
+          </group>
+        </group>
       </group>
     </group>
   );
