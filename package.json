@@ -1,0 +1,42 @@
+{
+  "name": "aibuildercup",
+  "version": "0.1.0",
+  "private": true,
+  "scripts": {
+    "dev": "next dev",
+    "build": "next build",
+    "start": "next start",
+    "lint": "eslint",
+    "test": "vitest run",
+    "typecheck": "tsc --noEmit"
+  },
+  "dependencies": {
+    "@gsap/react": "^2.1.2",
+    "@react-three/drei": "^10.7.9",
+    "@react-three/fiber": "^9.8.1",
+    "@react-three/postprocessing": "^3.2.0",
+    "gsap": "^3.15.0",
+    "lucide-react": "^1.55.0",
+    "next": "15.5.27",
+    "postprocessing": "^6.39.5",
+    "react": "19.1.0",
+    "react-dom": "19.1.0",
+    "three": "^0.186.1",
+    "zod": "^4.6.7",
+    "zustand": "^5.0.15"
+  },
+  "devDependencies": {
+    "@eslint/eslintrc": "^3",
+    "@tailwindcss/postcss": "^4",
+    "@types/node": "^22.20.5",
+    "@types/react": "^19",
+    "@types/react-dom": "^19",
+    "@types/three": "^0.186.0",
+    "eslint": "^9",
+    "eslint-config-next": "15.5.27",
+    "leva": "^0.10.1",
+    "tailwindcss": "^4",
+    "typescript": "^5",
+    "vitest": "^5.0.4"
+  }
+}

@@ -1,0 +1,183 @@
+@import "tailwindcss";
+
+/* ───────────────────────── Design tokens ───────────────────────── */
+
+:root {
+  color-scheme: dark;
+
+  --bg: #0a0b0f;
+  --surface: #12141b;
+  --surface-2: #1a1d26;
+  --border: rgb(255 255 255 / 0.08);
+  --border-strong: rgb(255 255 255 / 0.14);
+  --text: #edeef2;
+  --muted: #8a8fa3;
+
+  /* Lime is Pip's signature. --accent is for fills; --accent-text is for lime used as text. */
+  --accent: #c6ff3d;
+  --accent-text: #c6ff3d;
+  --accent-fg: #0a0b0f;
+
+  /* Agent state colours */
+  --state-listening: #3dffb0;
+  --state-thinking: #ffb23d;
+  --state-searching: #3dd9ff;
+  --state-success: #c6ff3d;
+  --state-error: #ff5a5a;
+
+  --glass: rgb(18 20 27 / 0.62);
+  --glass-border: rgb(255 255 255 / 0.1);
+  --overlay: rgb(5 6 9 / 0.6);
+  --grain-opacity: 0.06;
+  --spotlight: rgb(198 255 61 / 0.08);
+}
+
+:root[data-theme="light"] {
+  color-scheme: light;
+
+  --bg: #f4f5f7;
+  --surface: #ffffff;
+  --surface-2: #eceef3;
+  --border: rgb(10 11 15 / 0.08);
+  --border-strong: rgb(10 11 15 / 0.16);
+  --text: #0e1016;
+  --muted: #5b6070;
+
+  --accent: #c6ff3d;
+  --accent-text: #4a7300;
+  --accent-fg: #0a0b0f;
+
+  --state-listening: #00a86b;
+  --state-thinking: #c77700;
+  --state-searching: #0091b8;
+  --state-success: #4a7300;
+  --state-error: #d93636;
+
+  --glass: rgb(255 255 255 / 0.7);
+  --glass-border: rgb(10 11 15 / 0.08);
+  --overlay: rgb(14 16 22 / 0.35);
+  --grain-opacity: 0.035;
+  --spotlight: rgb(74 115 0 / 0.07);
+}
+
+@theme inline {
+  --color-bg: var(--bg);
+  --color-surface: var(--surface);
+  --color-surface-2: var(--surface-2);
+  --color-border: var(--border);
+  --color-border-strong: var(--border-strong);
+  --color-text: var(--text);
+  --color-muted: var(--muted);
+  --color-accent: var(--accent);
+  --color-accent-text: var(--accent-text);
+  --color-accent-fg: var(--accent-fg);
+  --color-listening: var(--state-listening);
+  --color-thinking: var(--state-thinking);
+  --color-searching: var(--state-searching);
+  --color-success: var(--state-success);
+  --color-danger: var(--state-error);
+  --color-glass: var(--glass);
+  --color-glass-border: var(--glass-border);
+  --color-overlay: var(--overlay);
+
+  --font-display: var(--font-unbounded), ui-sans-serif, system-ui, sans-serif;
+  --font-sans: var(--font-inter), ui-sans-serif, system-ui, sans-serif;
+  --font-mono: var(--font-jetbrains), ui-monospace, monospace;
+
+  --radius-card: 16px;
+  --radius-panel: 24px;
+
+  --ease-out-expo: cubic-bezier(0.16, 1, 0.3, 1);
+}
+
+/* ───────────────────────── Base ───────────────────────── */
+
+@layer base {
+  html {
+    background: var(--bg);
+    -webkit-text-size-adjust: 100%;
+  }
+
+  body {
+    background: var(--bg);
+    color: var(--text);
+    font-family: var(--font-sans);
+    -webkit-font-smoothing: antialiased;
+    -moz-osx-font-smoothing: grayscale;
+    min-height: 100dvh;
+    overflow-x: hidden;
+  }
+
+  ::selection {
+    background: var(--accent);
+    color: var(--accent-fg);
+  }
+
+  :focus-visible {
+    outline: 2px solid var(--accent-text);
+    outline-offset: 3px;
+    border-radius: 6px;
+  }
+
+  button:not(:disabled),
+  [role="button"]:not([aria-disabled="true"]) {
+    cursor: pointer;
+  }
+}
+
+/* ───────────────────────── Utilities ───────────────────────── */
+
+@utility glass {
+  background: var(--glass);
+  backdrop-filter: blur(20px) saturate(140%);
+  -webkit-backdrop-filter: blur(20px) saturate(140%);
+  box-shadow:
+    inset 0 0 0 1px var(--glass-border),
+    0 24px 60px -20px rgb(0 0 0 / 0.5);
+}
+
+@utility hairline {
+  box-shadow: inset 0 0 0 1px var(--border);
+}
+
+@utility tabular {
+  font-variant-numeric: tabular-nums;
+}
+
+@utility no-scrollbar {
+  scrollbar-width: none;
+  &::-webkit-scrollbar {
+    display: none;
+  }
+}
+
+/* Film grain: fixed, non-interactive, above content at very low opacity. */
+.grain {
+  position: fixed;
+  inset: -50%;
+  z-index: 100;
+  pointer-events: none;
+  opacity: var(--grain-opacity);
+  background-image: url("data:image/svg+xml;utf8,<svg xmlns='http://www.w3.org/2000/svg' width='220' height='220'><filter id='n'><feTurbulence type='fractalNoise' baseFrequency='0.85' numOctaves='3' stitchTiles='stitch'/><feColorMatrix values='0 0 0 0 1  0 0 0 0 1  0 0 0 0 1  0 0 0 0.9 0'/></filter><rect width='100%' height='100%' filter='url(%23n)'/></svg>");
+  animation: grain-shift 1.2s steps(6) infinite;
+}
+
+@keyframes grain-shift {
+  0% { transform: translate(0, 0); }
+  20% { transform: translate(-3%, 2%); }
+  40% { transform: translate(2%, -4%); }
+  60% { transform: translate(-4%, -1%); }
+  80% { transform: translate(3%, 3%); }
+  100% { transform: translate(0, 0); }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .grain {
+    animation: none;
+  }
+  *,
+  *::before,
+  *::after {
+    scroll-behavior: auto !important;
+  }
+}
