@@ -1,20 +1,22 @@
-import os
+from functools import lru_cache
 
-from dotenv import load_dotenv
-
-load_dotenv()
+from pydantic_settings import BaseSettings, SettingsConfigDict
 
 
-class Config:
-    DEBUG = os.environ.get("FLASK_ENV") == "development"
-    TESTING = False
+class Settings(BaseSettings):
+    """Read from environment variables (and `.env` locally)."""
 
-    GEMINI_API_KEY = os.environ.get("GEMINI_API_KEY", "")
-    GEMINI_MODEL = os.environ.get("GEMINI_MODEL", "gemini-2.5-flash")
+    model_config = SettingsConfigDict(env_file=".env", extra="ignore")
 
-    CORS_ORIGINS = [o.strip() for o in os.environ.get("CORS_ORIGINS", "http://localhost:3000").split(",") if o.strip()]
+    gemini_api_key: str = ""
+    gemini_model: str = "gemini-2.5-flash"
+    cors_origins: str = "http://localhost:3000"
+
+    @property
+    def cors_origin_list(self) -> list[str]:
+        return [o.strip() for o in self.cors_origins.split(",") if o.strip()]
 
 
-class TestConfig(Config):
-    TESTING = True
-    GEMINI_API_KEY = ""
+@lru_cache
+def get_settings() -> Settings:
+    return Settings()

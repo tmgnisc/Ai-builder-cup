@@ -1,15 +1,31 @@
-from flask import Flask, jsonify
-from werkzeug.exceptions import HTTPException
+import logging
+
+from fastapi import FastAPI, Request
+from fastapi.exceptions import RequestValidationError
+from fastapi.responses import JSONResponse
+from starlette.exceptions import HTTPException
+
+logger = logging.getLogger(__name__)
 
 
-def register_error_handlers(app: Flask) -> None:
+def _error(status: int, code: str, message: str) -> JSONResponse:
+    return JSONResponse(status_code=status, content={"error": {"code": code, "message": message}})
+
+
+def register_error_handlers(app: FastAPI) -> None:
     """Every error leaves the API as JSON: `{"error": {"code", "message"}}`."""
 
-    @app.errorhandler(HTTPException)
-    def handle_http(err: HTTPException):
-        return jsonify(error={"code": err.name, "message": err.description}), err.code
+    @app.exception_handler(HTTPException)
+    async def handle_http(_: Request, err: HTTPException):
+        return _error(err.status_code, f"http_{err.status_code}", str(err.detail))
 
-    @app.errorhandler(Exception)
-    def handle_unexpected(err: Exception):
-        app.logger.exception(err)
-        return jsonify(error={"code": "Internal Server Error", "message": "Something went wrong."}), 500
+    @app.exception_handler(RequestValidationError)
+    async def handle_validation(_: Request, err: RequestValidationError):
+        first = err.errors()[0]
+        field = ".".join(str(p) for p in first["loc"] if p != "body")
+        return _error(422, "validation_error", f"{field}: {first['msg']}")
+
+    @app.exception_handler(Exception)
+    async def handle_unexpected(_: Request, err: Exception):
+        logger.exception(err)
+        return _error(500, "internal_error", "Something went wrong.")
