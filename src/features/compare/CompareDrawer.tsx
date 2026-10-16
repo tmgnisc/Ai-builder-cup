@@ -15,7 +15,7 @@ import { useCart } from "@/store/useCart";
 import { useBubble } from "@/store/useBubble";
 import { useCompare } from "@/store/useCompare";
 import { useCompareWinner } from "@/hooks/useCompareWinner";
-import { ProductImage } from "./ProductImage";
+import { ProductImage } from "@/components/store/ProductImage";
 
 /**
  * Bottom comparison drawer. Every value and the verdict come from `useCompareWinner`

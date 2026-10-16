@@ -10,8 +10,7 @@ import { Footer } from "@/components/layout/Footer";
 import { Header } from "@/components/layout/Header";
 import { ThemeScript } from "@/components/layout/ThemeScript";
 import { CartDrawer } from "@/components/store/CartDrawer";
-import { CompareDrawer } from "@/components/store/CompareDrawer";
-import { CompareTray } from "@/components/store/CompareTray";
+import { CompareDrawer, CompareTray } from "@/features/compare";
 import { tokenDefinitions } from "@/tokens/definitions";
 import "@/styles/globals.css";
 

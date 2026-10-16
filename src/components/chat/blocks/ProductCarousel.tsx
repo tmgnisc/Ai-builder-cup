@@ -2,7 +2,7 @@
 
 import { ExternalLink, Plus } from "lucide-react";
 import Link from "next/link";
-import { CompareToggle } from "@/components/store/CompareToggle";
+import { CompareToggle } from "@/features/compare";
 import { ProductImage } from "@/components/store/ProductImage";
 import { StockBadge } from "@/components/ui/Badge";
 import { IconButton } from "@/components/ui/IconButton";

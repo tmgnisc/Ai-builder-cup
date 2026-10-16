@@ -10,7 +10,7 @@ import { formatNPR, keySpecs } from "@/lib/commerce/format";
 import type { Product } from "@/lib/commerce/schemas";
 import { useCart } from "@/store/useCart";
 import { useCatalogUI } from "@/store/useCatalogUI";
-import { CompareToggle } from "./CompareToggle";
+import { CompareToggle } from "@/features/compare";
 import { ProductImage } from "./ProductImage";
 
 /**

@@ -5,7 +5,7 @@ import { useRef } from "react";
 import { getProduct } from "@/lib/commerce/catalog";
 import { gsap, motion, useGSAP } from "@/lib/motion";
 import { MAX_COMPARE, useCompare } from "@/store/useCompare";
-import { ProductImage } from "./ProductImage";
+import { ProductImage } from "@/components/store/ProductImage";
 
 /**
  * Floating tray listing products picked for comparison. Sits bottom-left so it never

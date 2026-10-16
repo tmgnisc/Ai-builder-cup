@@ -4,7 +4,7 @@ import { notFound } from "next/navigation";
 import { ArrowLeft, Star } from "lucide-react";
 import { AddToCartButton } from "@/components/store/AddToCartButton";
 import { AskPipButton } from "@/components/store/AskPipButton";
-import { CompareToggle } from "@/components/store/CompareToggle";
+import { CompareToggle } from "@/features/compare";
 import { ProductGallery } from "@/components/store/ProductGallery";
 import { ProductViewTracker } from "@/components/signals/ProductViewTracker";
 import { Badge, StockBadge } from "@/components/ui/Badge";
