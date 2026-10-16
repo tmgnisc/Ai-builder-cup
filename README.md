@@ -33,13 +33,18 @@ A dedicated side-by-side comparison workspace at `/compare?ids=a,b[,c,d]`:
 
 - **Shareable and refresh-safe**: URL query params are the single source of truth for the comparison selection.
 - **2 to 4 products**: Supports up to 4 products across TS and Python backend registries.
+- **Pip integration**: Ask Pip to add or remove products from comparison by voice or chat (`Add HP Pavilion to compare`, `Remove Acer Swift`), updating the URL reactively.
 - **Strict semantics**: Full table markup (`<table>`, `<caption>`, `<thead>`, `<tbody>`, `<th scope="col">`, `<th scope="row">`, `<th scope="colgroup">`).
-- **Sticky headers**: Header cards stay anchored while scrolling, showing the product image, title, price, single-line stock badge, Add to cart, and remove button.
+- **Sticky headers**: Header cards stay anchored while scrolling, showing the product image, title, price, single-line stock badge, verified Add to cart, and remove button.
+- **Mobile 4-column experience**: At 390px, sticky attribute name column on the left plus smooth horizontal scroll-snap product columns.
 - **Grouped spec sections**: Clear sections for Performance, Battery & Weight, Display, Connectivity, and Warranty.
 - **Differences-only toggle**: Accessible switch that hides matching rows with `aria-live="polite"` feedback for screen readers.
 - **Best-value highlights**: Subtle cell backgrounds with check icons and visually hidden `(best value)` text.
+- **Verified Cart Add**: Uses `addWithFeedback` with inline verification state (`idle` → `busy` → `verified ✓` / `failed ✕`) and `aria-live` announcements.
+- **Catalog-grounded missing info**: Any missing specs automatically emit `missing_info` events to the merchant dashboard.
 - **Cross-category guards**: Warning banner when comparing products from different categories with a one-click dominant category filter.
-- **Clamped companion layering**: Pip's positioning logic prevents the orb from obscuring sticky comparison headers or action controls.
+- **Clamped companion layering**: Pip's flight controller guarantees the orb never obscures comparison tables, summary panels, or action controls on desktop or mobile.
+- **CompareDrawer preview**: Compact bottom drawer preview on store pages that shares identical compare rules and links directly to the `/compare` workspace.
 
 ## Agent
 
@@ -145,7 +150,7 @@ Simulated mobile (4× CPU slowdown) scores about 65–70. The shared bundle (Rea
 
 1. **Meet Pip (20 s).** Open `/`. Pip lands in the hero, says hello and offers a 20-second tour. Click **Yes, show me** and step through 2–3 stops (spotlight + bubble), then **Skip tour**.
 2. **Ask by voice (40 s).** Hold `V` and say: *"I need a laptop under 1 lakh 20 thousand for full-stack development, good battery, enough RAM for Docker."* Pip goes listening → thinking → searching, filters the grid to match, flies to the first card and shows 3 mini cards. The trace line shows `search_products`.
-3. **Compare (30 s).** Say *"Compare the first two."* Pip hovers between the two cards, the comparison drawer opens, and Pip moves above the grounded verdict. Every value and the lime "winner" cells come from the catalog.
+3. **Compare workspace (40 s).** Say *"Compare the first two."* Pip opens the dedicated `/compare?ids=...` workspace, showing side-by-side grouped specs (Performance, Battery & Weight, Display, Connectivity, Warranty) with sticky product cards, live stock counts, and grounded catalog analysis. Then ask Pip: *"Add the HP Pavilion to compare."* Pip updates the URL to include all 3 (up to 4 supported), and re-evaluates the verdict without full reload. Flip the **Show differences only** switch to hide identical specs. On mobile (390px), swipe across scroll-snap columns with attribute names pinned on the left; Pip parks cleanly in the safe zone without covering any table cells or controls.
 4. **Add with verification (30 s).** Say *"Add the lighter one."* Pip flies to the product, rides with it to the cart icon, re-reads the cart, and only then hops: *"Added & verified ✓"*.
 5. **Honest failure (20 s).** Type *"Add the ThinkPad E14."* It's out of stock, so Pip shows the error state, says so plainly and offers an in-stock alternative.
 6. **Proactive help (40 s).** Open the **Swift Go 14** page (`/product/acer-swift-go-14`) and rest the mouse on the battery row of the spec table: Pip anchors beside it with a catalog fact (*"10 h, longer than 60% of the laptops here"*). Then keep still. Pip checks in: *"Anything stopping you from getting the Swift Go 14?"* Click **Something's confusing** and type *"Not sure if 16 GB is enough for Docker."*

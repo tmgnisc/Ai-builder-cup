@@ -40,6 +40,8 @@ export const tokens = {
     orb: 55,
     popover: 60,
     bubble: 65,
+    dialog: 70,
+    tooltip: 75,
     toast: 80,
     spotlight: 85,
     grain: 100,

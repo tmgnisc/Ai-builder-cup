@@ -13,7 +13,7 @@
     "orientationAngle": 0,
     "orientationType": "landscape-primary"
   },
-  "timestamp": "2026-10-16T09:35:21.754Z",
+  "timestamp": "2026-10-16T10:59:20.246Z",
   "url": "http://localhost:3001/compare?ids=lenovo-ideapad-slim-5-14,sony-wh-1000xm5",
   "toolOptions": {
     "runOnly": {
@@ -1129,9 +1129,9 @@
             }
           ],
           "impact": null,
-          "html": "<div aria-live=\"polite\" class=\"sr-only\">Showing all 12 attributes</div>",
+          "html": "<div data-diff-announcement=\"true\" aria-live=\"polite\" class=\"sr-only\">Showing all 12 attributes</div>",
           "target": [
-            ".gap-3.flex.items-center > .sr-only[aria-live=\"polite\"]"
+            "div[data-diff-announcement=\"true\"]"
           ]
         },
         {
@@ -1251,7 +1251,7 @@
           "impact": null,
           "html": "<button type=\"button\" aria-label=\"Remove Lenovo IdeaPa...\" title=\"Remove Lenovo IdeaPa...\" aria-busy=\"false\" class=\"grid shrink-0 select...\">",
           "target": [
-            ".min-w-48.align-top.sm\\:min-w-56:nth-child(2) > .flex-col.gap-2.flex > .h-28.rounded-xl.w-full > .right-2.top-2.bg-black\\/45"
+            ".align-top.p-4[scope=\"col\"]:nth-child(2) > .flex-col.gap-2.flex > .h-28.rounded-xl.w-full > .right-2.top-2.bg-black\\/45"
           ]
         },
         {
@@ -1291,7 +1291,47 @@
           "impact": null,
           "html": "<button type=\"button\" aria-busy=\"false\" class=\"inline-flex shrink-0...\" aria-label=\"Add to cart: IdeaPad...\">",
           "target": [
-            ".min-w-48.align-top.sm\\:min-w-56:nth-child(2) > .flex-col.gap-2.flex > .text-accent-fg.active\\:brightness-95.shadow-\\[0_0_0_1px_var\\(--border-strong\\)\\,0_8px_24px_-8px_var\\(--accent\\)\\]"
+            ".align-top.p-4[scope=\"col\"]:nth-child(2) > .flex-col.gap-2.flex > .gap-1.mt-1.flex-col > .transition-all.text-accent-fg.active\\:brightness-95"
+          ]
+        },
+        {
+          "any": [],
+          "all": [
+            {
+              "id": "aria-allowed-attr",
+              "data": null,
+              "relatedNodes": [],
+              "impact": "critical",
+              "message": "ARIA attributes are used correctly for the defined role"
+            },
+            {
+              "id": "aria-allowed-attr-elm",
+              "data": null,
+              "relatedNodes": [],
+              "message": "ARIA attributes are allowed for this element",
+              "impact": "critical"
+            },
+            {
+              "id": "aria-no-deprecated-attr",
+              "data": null,
+              "relatedNodes": [],
+              "impact": "critical",
+              "message": "No deprecated ARIA attributes are used"
+            }
+          ],
+          "none": [
+            {
+              "id": "aria-unsupported-attr",
+              "data": null,
+              "relatedNodes": [],
+              "impact": "critical",
+              "message": "ARIA attribute is supported"
+            }
+          ],
+          "impact": null,
+          "html": "<span aria-live=\"polite\" class=\"sr-only\"></span>",
+          "target": [
+            ".align-top.p-4[scope=\"col\"]:nth-child(2) > .flex-col.gap-2.flex > .gap-1.mt-1.flex-col > .sr-only[aria-live=\"polite\"]"
           ]
         },
         {
@@ -1371,7 +1411,7 @@
           "impact": null,
           "html": "<button type=\"button\" aria-label=\"Remove Sony WH-1000X...\" title=\"Remove Sony WH-1000X...\" aria-busy=\"false\" class=\"grid shrink-0 select...\">",
           "target": [
-            ".min-w-48.align-top.sm\\:min-w-56:nth-child(3) > .flex-col.gap-2.flex > .h-28.rounded-xl.w-full > .right-2.top-2.bg-black\\/45"
+            ".align-top.p-4[scope=\"col\"]:nth-child(3) > .flex-col.gap-2.flex > .h-28.rounded-xl.w-full > .right-2.top-2.bg-black\\/45"
           ]
         },
         {
@@ -1411,7 +1451,47 @@
           "impact": null,
           "html": "<button type=\"button\" aria-busy=\"false\" class=\"inline-flex shrink-0...\" aria-label=\"Add to cart: WH-1000...\">",
           "target": [
-            ".min-w-48.align-top.sm\\:min-w-56:nth-child(3) > .flex-col.gap-2.flex > .text-accent-fg.active\\:brightness-95.shadow-\\[0_0_0_1px_var\\(--border-strong\\)\\,0_8px_24px_-8px_var\\(--accent\\)\\]"
+            ".align-top.p-4[scope=\"col\"]:nth-child(3) > .flex-col.gap-2.flex > .gap-1.mt-1.flex-col > .transition-all.text-accent-fg.active\\:brightness-95"
+          ]
+        },
+        {
+          "any": [],
+          "all": [
+            {
+              "id": "aria-allowed-attr",
+              "data": null,
+              "relatedNodes": [],
+              "impact": "critical",
+              "message": "ARIA attributes are used correctly for the defined role"
+            },
+            {
+              "id": "aria-allowed-attr-elm",
+              "data": null,
+              "relatedNodes": [],
+              "message": "ARIA attributes are allowed for this element",
+              "impact": "critical"
+            },
+            {
+              "id": "aria-no-deprecated-attr",
+              "data": null,
+              "relatedNodes": [],
+              "impact": "critical",
+              "message": "No deprecated ARIA attributes are used"
+            }
+          ],
+          "none": [
+            {
+              "id": "aria-unsupported-attr",
+              "data": null,
+              "relatedNodes": [],
+              "impact": "critical",
+              "message": "ARIA attribute is supported"
+            }
+          ],
+          "impact": null,
+          "html": "<span aria-live=\"polite\" class=\"sr-only\"></span>",
+          "target": [
+            ".align-top.p-4[scope=\"col\"]:nth-child(3) > .flex-col.gap-2.flex > .gap-1.mt-1.flex-col > .sr-only[aria-live=\"polite\"]"
           ]
         },
         {
@@ -2028,9 +2108,9 @@
           ],
           "none": [],
           "impact": null,
-          "html": "<div aria-live=\"polite\" class=\"sr-only\">Showing all 12 attributes</div>",
+          "html": "<div data-diff-announcement=\"true\" aria-live=\"polite\" class=\"sr-only\">Showing all 12 attributes</div>",
           "target": [
-            ".gap-3.flex.items-center > .sr-only[aria-live=\"polite\"]"
+            "div[data-diff-announcement=\"true\"]"
           ]
         },
         {
@@ -2084,7 +2164,7 @@
           "impact": null,
           "html": "<button type=\"button\" aria-label=\"Remove Lenovo IdeaPa...\" title=\"Remove Lenovo IdeaPa...\" aria-busy=\"false\" class=\"grid shrink-0 select...\">",
           "target": [
-            ".min-w-48.align-top.sm\\:min-w-56:nth-child(2) > .flex-col.gap-2.flex > .h-28.rounded-xl.w-full > .right-2.top-2.bg-black\\/45"
+            ".align-top.p-4[scope=\"col\"]:nth-child(2) > .flex-col.gap-2.flex > .h-28.rounded-xl.w-full > .right-2.top-2.bg-black\\/45"
           ]
         },
         {
@@ -2102,7 +2182,25 @@
           "impact": null,
           "html": "<button type=\"button\" aria-busy=\"false\" class=\"inline-flex shrink-0...\" aria-label=\"Add to cart: IdeaPad...\">",
           "target": [
-            ".min-w-48.align-top.sm\\:min-w-56:nth-child(2) > .flex-col.gap-2.flex > .text-accent-fg.active\\:brightness-95.shadow-\\[0_0_0_1px_var\\(--border-strong\\)\\,0_8px_24px_-8px_var\\(--accent\\)\\]"
+            ".align-top.p-4[scope=\"col\"]:nth-child(2) > .flex-col.gap-2.flex > .gap-1.mt-1.flex-col > .transition-all.text-accent-fg.active\\:brightness-95"
+          ]
+        },
+        {
+          "any": [],
+          "all": [
+            {
+              "id": "aria-conditional-attr",
+              "data": null,
+              "relatedNodes": [],
+              "impact": "serious",
+              "message": "ARIA attribute is allowed"
+            }
+          ],
+          "none": [],
+          "impact": null,
+          "html": "<span aria-live=\"polite\" class=\"sr-only\"></span>",
+          "target": [
+            ".align-top.p-4[scope=\"col\"]:nth-child(2) > .flex-col.gap-2.flex > .gap-1.mt-1.flex-col > .sr-only[aria-live=\"polite\"]"
           ]
         },
         {
@@ -2138,7 +2236,7 @@
           "impact": null,
           "html": "<button type=\"button\" aria-label=\"Remove Sony WH-1000X...\" title=\"Remove Sony WH-1000X...\" aria-busy=\"false\" class=\"grid shrink-0 select...\">",
           "target": [
-            ".min-w-48.align-top.sm\\:min-w-56:nth-child(3) > .flex-col.gap-2.flex > .h-28.rounded-xl.w-full > .right-2.top-2.bg-black\\/45"
+            ".align-top.p-4[scope=\"col\"]:nth-child(3) > .flex-col.gap-2.flex > .h-28.rounded-xl.w-full > .right-2.top-2.bg-black\\/45"
           ]
         },
         {
@@ -2156,7 +2254,25 @@
           "impact": null,
           "html": "<button type=\"button\" aria-busy=\"false\" class=\"inline-flex shrink-0...\" aria-label=\"Add to cart: WH-1000...\">",
           "target": [
-            ".min-w-48.align-top.sm\\:min-w-56:nth-child(3) > .flex-col.gap-2.flex > .text-accent-fg.active\\:brightness-95.shadow-\\[0_0_0_1px_var\\(--border-strong\\)\\,0_8px_24px_-8px_var\\(--accent\\)\\]"
+            ".align-top.p-4[scope=\"col\"]:nth-child(3) > .flex-col.gap-2.flex > .gap-1.mt-1.flex-col > .transition-all.text-accent-fg.active\\:brightness-95"
+          ]
+        },
+        {
+          "any": [],
+          "all": [
+            {
+              "id": "aria-conditional-attr",
+              "data": null,
+              "relatedNodes": [],
+              "impact": "serious",
+              "message": "ARIA attribute is allowed"
+            }
+          ],
+          "none": [],
+          "impact": null,
+          "html": "<span aria-live=\"polite\" class=\"sr-only\"></span>",
+          "target": [
+            ".align-top.p-4[scope=\"col\"]:nth-child(3) > .flex-col.gap-2.flex > .gap-1.mt-1.flex-col > .sr-only[aria-live=\"polite\"]"
           ]
         },
         {
@@ -3082,7 +3198,7 @@
           "impact": null,
           "html": "<svg xmlns=\"http://www.w3.org/2000/svg\" width=\"24\" height=\"24\" viewBox=\"0 0 24 24\" fill=\"none\" stroke=\"currentColor\" stroke-width=\"2\" stroke-linecap=\"round\" stroke-linejoin=\"round\" class=\"lucide lucide-x size-3.5\" aria-hidden=\"true\"><path d=\"M18 6 6 18\"></path><path d=\"m6 6 12 12\"></path></svg>",
           "target": [
-            ".min-w-48.align-top.sm\\:min-w-56:nth-child(2) > .flex-col.gap-2.flex > .h-28.rounded-xl.w-full > .right-2.top-2.bg-black\\/45 > .size-3\\.5.lucide-x.lucide"
+            ".align-top.p-4[scope=\"col\"]:nth-child(2) > .flex-col.gap-2.flex > .h-28.rounded-xl.w-full > .right-2.top-2.bg-black\\/45 > .size-3\\.5.lucide-x.lucide"
           ]
         },
         {
@@ -3114,7 +3230,7 @@
           "impact": null,
           "html": "<span aria-hidden=\"true\" class=\"size-1.5 rounded-full bg-current\"></span>",
           "target": [
-            ".min-w-48.align-top.sm\\:min-w-56:nth-child(2) > .flex-col.gap-2.flex > .pt-1.justify-between.gap-2 > .leading-none.tracking-wide.bg-listening\\/12 > .bg-current.size-1\\.5.rounded-full"
+            ".align-top.p-4[scope=\"col\"]:nth-child(2) > .flex-col.gap-2.flex > .pt-1.justify-between.gap-2 > .leading-none.tracking-wide.bg-listening\\/12 > .bg-current.size-1\\.5.rounded-full"
           ]
         },
         {
@@ -3146,7 +3262,7 @@
           "impact": null,
           "html": "<svg xmlns=\"http://www.w3.org/2000/svg\" width=\"24\" height=\"24\" viewBox=\"0 0 24 24\" fill=\"none\" stroke=\"currentColor\" stroke-width=\"2\" stroke-linecap=\"round\" stroke-linejoin=\"round\" class=\"lucide lucide-plus size-3.5\" aria-hidden=\"true\"><path d=\"M5 12h14\"></path><path d=\"M12 5v14\"></path></svg>",
           "target": [
-            ".min-w-48.align-top.sm\\:min-w-56:nth-child(2) > .flex-col.gap-2.flex > .text-accent-fg.active\\:brightness-95.shadow-\\[0_0_0_1px_var\\(--border-strong\\)\\,0_8px_24px_-8px_var\\(--accent\\)\\] > .lucide-plus.size-3\\.5.lucide"
+            ".align-top.p-4[scope=\"col\"]:nth-child(2) > .flex-col.gap-2.flex > .gap-1.mt-1.flex-col > .transition-all.text-accent-fg.active\\:brightness-95 > .lucide-plus.size-3\\.5.lucide"
           ]
         },
         {
@@ -3242,7 +3358,7 @@
           "impact": null,
           "html": "<svg xmlns=\"http://www.w3.org/2000/svg\" width=\"24\" height=\"24\" viewBox=\"0 0 24 24\" fill=\"none\" stroke=\"currentColor\" stroke-width=\"2\" stroke-linecap=\"round\" stroke-linejoin=\"round\" class=\"lucide lucide-x size-3.5\" aria-hidden=\"true\"><path d=\"M18 6 6 18\"></path><path d=\"m6 6 12 12\"></path></svg>",
           "target": [
-            ".min-w-48.align-top.sm\\:min-w-56:nth-child(3) > .flex-col.gap-2.flex > .h-28.rounded-xl.w-full > .right-2.top-2.bg-black\\/45 > .size-3\\.5.lucide-x.lucide"
+            ".align-top.p-4[scope=\"col\"]:nth-child(3) > .flex-col.gap-2.flex > .h-28.rounded-xl.w-full > .right-2.top-2.bg-black\\/45 > .size-3\\.5.lucide-x.lucide"
           ]
         },
         {
@@ -3274,7 +3390,7 @@
           "impact": null,
           "html": "<span aria-hidden=\"true\" class=\"size-1.5 rounded-full bg-current\"></span>",
           "target": [
-            ".min-w-48.align-top.sm\\:min-w-56:nth-child(3) > .flex-col.gap-2.flex > .pt-1.justify-between.gap-2 > .leading-none.tracking-wide.bg-listening\\/12 > .bg-current.size-1\\.5.rounded-full"
+            ".align-top.p-4[scope=\"col\"]:nth-child(3) > .flex-col.gap-2.flex > .pt-1.justify-between.gap-2 > .leading-none.tracking-wide.bg-listening\\/12 > .bg-current.size-1\\.5.rounded-full"
           ]
         },
         {
@@ -3306,7 +3422,7 @@
           "impact": null,
           "html": "<svg xmlns=\"http://www.w3.org/2000/svg\" width=\"24\" height=\"24\" viewBox=\"0 0 24 24\" fill=\"none\" stroke=\"currentColor\" stroke-width=\"2\" stroke-linecap=\"round\" stroke-linejoin=\"round\" class=\"lucide lucide-plus size-3.5\" aria-hidden=\"true\"><path d=\"M5 12h14\"></path><path d=\"M12 5v14\"></path></svg>",
           "target": [
-            ".min-w-48.align-top.sm\\:min-w-56:nth-child(3) > .flex-col.gap-2.flex > .text-accent-fg.active\\:brightness-95.shadow-\\[0_0_0_1px_var\\(--border-strong\\)\\,0_8px_24px_-8px_var\\(--accent\\)\\] > .lucide-plus.size-3\\.5.lucide"
+            ".align-top.p-4[scope=\"col\"]:nth-child(3) > .flex-col.gap-2.flex > .gap-1.mt-1.flex-col > .transition-all.text-accent-fg.active\\:brightness-95 > .lucide-plus.size-3\\.5.lucide"
           ]
         },
         {
@@ -4320,9 +4436,9 @@
             }
           ],
           "impact": null,
-          "html": "<div aria-live=\"polite\" class=\"sr-only\">Showing all 12 attributes</div>",
+          "html": "<div data-diff-announcement=\"true\" aria-live=\"polite\" class=\"sr-only\">Showing all 12 attributes</div>",
           "target": [
-            ".gap-3.flex.items-center > .sr-only[aria-live=\"polite\"]"
+            "div[data-diff-announcement=\"true\"]"
           ]
         },
         {
@@ -4376,7 +4492,7 @@
           "impact": null,
           "html": "<button type=\"button\" aria-label=\"Remove Lenovo IdeaPa...\" title=\"Remove Lenovo IdeaPa...\" aria-busy=\"false\" class=\"grid shrink-0 select...\">",
           "target": [
-            ".min-w-48.align-top.sm\\:min-w-56:nth-child(2) > .flex-col.gap-2.flex > .h-28.rounded-xl.w-full > .right-2.top-2.bg-black\\/45"
+            ".align-top.p-4[scope=\"col\"]:nth-child(2) > .flex-col.gap-2.flex > .h-28.rounded-xl.w-full > .right-2.top-2.bg-black\\/45"
           ]
         },
         {
@@ -4394,7 +4510,25 @@
           "impact": null,
           "html": "<button type=\"button\" aria-busy=\"false\" class=\"inline-flex shrink-0...\" aria-label=\"Add to cart: IdeaPad...\">",
           "target": [
-            ".min-w-48.align-top.sm\\:min-w-56:nth-child(2) > .flex-col.gap-2.flex > .text-accent-fg.active\\:brightness-95.shadow-\\[0_0_0_1px_var\\(--border-strong\\)\\,0_8px_24px_-8px_var\\(--accent\\)\\]"
+            ".align-top.p-4[scope=\"col\"]:nth-child(2) > .flex-col.gap-2.flex > .gap-1.mt-1.flex-col > .transition-all.text-accent-fg.active\\:brightness-95"
+          ]
+        },
+        {
+          "any": [],
+          "all": [],
+          "none": [
+            {
+              "id": "aria-prohibited-attr",
+              "data": null,
+              "relatedNodes": [],
+              "impact": "serious",
+              "message": "ARIA attribute is allowed"
+            }
+          ],
+          "impact": null,
+          "html": "<span aria-live=\"polite\" class=\"sr-only\"></span>",
+          "target": [
+            ".align-top.p-4[scope=\"col\"]:nth-child(2) > .flex-col.gap-2.flex > .gap-1.mt-1.flex-col > .sr-only[aria-live=\"polite\"]"
           ]
         },
         {
@@ -4430,7 +4564,7 @@
           "impact": null,
           "html": "<button type=\"button\" aria-label=\"Remove Sony WH-1000X...\" title=\"Remove Sony WH-1000X...\" aria-busy=\"false\" class=\"grid shrink-0 select...\">",
           "target": [
-            ".min-w-48.align-top.sm\\:min-w-56:nth-child(3) > .flex-col.gap-2.flex > .h-28.rounded-xl.w-full > .right-2.top-2.bg-black\\/45"
+            ".align-top.p-4[scope=\"col\"]:nth-child(3) > .flex-col.gap-2.flex > .h-28.rounded-xl.w-full > .right-2.top-2.bg-black\\/45"
           ]
         },
         {
@@ -4448,7 +4582,25 @@
           "impact": null,
           "html": "<button type=\"button\" aria-busy=\"false\" class=\"inline-flex shrink-0...\" aria-label=\"Add to cart: WH-1000...\">",
           "target": [
-            ".min-w-48.align-top.sm\\:min-w-56:nth-child(3) > .flex-col.gap-2.flex > .text-accent-fg.active\\:brightness-95.shadow-\\[0_0_0_1px_var\\(--border-strong\\)\\,0_8px_24px_-8px_var\\(--accent\\)\\]"
+            ".align-top.p-4[scope=\"col\"]:nth-child(3) > .flex-col.gap-2.flex > .gap-1.mt-1.flex-col > .transition-all.text-accent-fg.active\\:brightness-95"
+          ]
+        },
+        {
+          "any": [],
+          "all": [],
+          "none": [
+            {
+              "id": "aria-prohibited-attr",
+              "data": null,
+              "relatedNodes": [],
+              "impact": "serious",
+              "message": "ARIA attribute is allowed"
+            }
+          ],
+          "impact": null,
+          "html": "<span aria-live=\"polite\" class=\"sr-only\"></span>",
+          "target": [
+            ".align-top.p-4[scope=\"col\"]:nth-child(3) > .flex-col.gap-2.flex > .gap-1.mt-1.flex-col > .sr-only[aria-live=\"polite\"]"
           ]
         },
         {
@@ -5711,9 +5863,9 @@
           ],
           "none": [],
           "impact": null,
-          "html": "<div aria-live=\"polite\" class=\"sr-only\">Showing all 12 attributes</div>",
+          "html": "<div data-diff-announcement=\"true\" aria-live=\"polite\" class=\"sr-only\">Showing all 12 attributes</div>",
           "target": [
-            ".gap-3.flex.items-center > .sr-only[aria-live=\"polite\"]"
+            "div[data-diff-announcement=\"true\"]"
           ]
         },
         {
@@ -5809,7 +5961,7 @@
           "impact": null,
           "html": "<button type=\"button\" aria-label=\"Remove Lenovo IdeaPa...\" title=\"Remove Lenovo IdeaPa...\" aria-busy=\"false\" class=\"grid shrink-0 select...\">",
           "target": [
-            ".min-w-48.align-top.sm\\:min-w-56:nth-child(2) > .flex-col.gap-2.flex > .h-28.rounded-xl.w-full > .right-2.top-2.bg-black\\/45"
+            ".align-top.p-4[scope=\"col\"]:nth-child(2) > .flex-col.gap-2.flex > .h-28.rounded-xl.w-full > .right-2.top-2.bg-black\\/45"
           ]
         },
         {
@@ -5841,7 +5993,39 @@
           "impact": null,
           "html": "<button type=\"button\" aria-busy=\"false\" class=\"inline-flex shrink-0...\" aria-label=\"Add to cart: IdeaPad...\">",
           "target": [
-            ".min-w-48.align-top.sm\\:min-w-56:nth-child(2) > .flex-col.gap-2.flex > .text-accent-fg.active\\:brightness-95.shadow-\\[0_0_0_1px_var\\(--border-strong\\)\\,0_8px_24px_-8px_var\\(--accent\\)\\]"
+            ".align-top.p-4[scope=\"col\"]:nth-child(2) > .flex-col.gap-2.flex > .gap-1.mt-1.flex-col > .transition-all.text-accent-fg.active\\:brightness-95"
+          ]
+        },
+        {
+          "any": [],
+          "all": [
+            {
+              "id": "aria-valid-attr-value",
+              "data": null,
+              "relatedNodes": [],
+              "impact": "critical",
+              "message": "ARIA attribute values are valid"
+            },
+            {
+              "id": "aria-errormessage",
+              "data": null,
+              "relatedNodes": [],
+              "impact": "critical",
+              "message": "aria-errormessage exists and references elements visible to screen readers that use a supported aria-errormessage technique"
+            },
+            {
+              "id": "aria-level",
+              "data": null,
+              "relatedNodes": [],
+              "impact": "critical",
+              "message": "aria-level values are valid"
+            }
+          ],
+          "none": [],
+          "impact": null,
+          "html": "<span aria-live=\"polite\" class=\"sr-only\"></span>",
+          "target": [
+            ".align-top.p-4[scope=\"col\"]:nth-child(2) > .flex-col.gap-2.flex > .gap-1.mt-1.flex-col > .sr-only[aria-live=\"polite\"]"
           ]
         },
         {
@@ -5905,7 +6089,7 @@
           "impact": null,
           "html": "<button type=\"button\" aria-label=\"Remove Sony WH-1000X...\" title=\"Remove Sony WH-1000X...\" aria-busy=\"false\" class=\"grid shrink-0 select...\">",
           "target": [
-            ".min-w-48.align-top.sm\\:min-w-56:nth-child(3) > .flex-col.gap-2.flex > .h-28.rounded-xl.w-full > .right-2.top-2.bg-black\\/45"
+            ".align-top.p-4[scope=\"col\"]:nth-child(3) > .flex-col.gap-2.flex > .h-28.rounded-xl.w-full > .right-2.top-2.bg-black\\/45"
           ]
         },
         {
@@ -5937,7 +6121,39 @@
           "impact": null,
           "html": "<button type=\"button\" aria-busy=\"false\" class=\"inline-flex shrink-0...\" aria-label=\"Add to cart: WH-1000...\">",
           "target": [
-            ".min-w-48.align-top.sm\\:min-w-56:nth-child(3) > .flex-col.gap-2.flex > .text-accent-fg.active\\:brightness-95.shadow-\\[0_0_0_1px_var\\(--border-strong\\)\\,0_8px_24px_-8px_var\\(--accent\\)\\]"
+            ".align-top.p-4[scope=\"col\"]:nth-child(3) > .flex-col.gap-2.flex > .gap-1.mt-1.flex-col > .transition-all.text-accent-fg.active\\:brightness-95"
+          ]
+        },
+        {
+          "any": [],
+          "all": [
+            {
+              "id": "aria-valid-attr-value",
+              "data": null,
+              "relatedNodes": [],
+              "impact": "critical",
+              "message": "ARIA attribute values are valid"
+            },
+            {
+              "id": "aria-errormessage",
+              "data": null,
+              "relatedNodes": [],
+              "impact": "critical",
+              "message": "aria-errormessage exists and references elements visible to screen readers that use a supported aria-errormessage technique"
+            },
+            {
+              "id": "aria-level",
+              "data": null,
+              "relatedNodes": [],
+              "impact": "critical",
+              "message": "aria-level values are valid"
+            }
+          ],
+          "none": [],
+          "impact": null,
+          "html": "<span aria-live=\"polite\" class=\"sr-only\"></span>",
+          "target": [
+            ".align-top.p-4[scope=\"col\"]:nth-child(3) > .flex-col.gap-2.flex > .gap-1.mt-1.flex-col > .sr-only[aria-live=\"polite\"]"
           ]
         },
         {
@@ -6474,9 +6690,9 @@
           "all": [],
           "none": [],
           "impact": null,
-          "html": "<div aria-live=\"polite\" class=\"sr-only\">Showing all 12 attributes</div>",
+          "html": "<div data-diff-announcement=\"true\" aria-live=\"polite\" class=\"sr-only\">Showing all 12 attributes</div>",
           "target": [
-            ".gap-3.flex.items-center > .sr-only[aria-live=\"polite\"]"
+            "div[data-diff-announcement=\"true\"]"
           ]
         },
         {
@@ -6530,7 +6746,7 @@
           "impact": null,
           "html": "<button type=\"button\" aria-label=\"Remove Lenovo IdeaPa...\" title=\"Remove Lenovo IdeaPa...\" aria-busy=\"false\" class=\"grid shrink-0 select...\">",
           "target": [
-            ".min-w-48.align-top.sm\\:min-w-56:nth-child(2) > .flex-col.gap-2.flex > .h-28.rounded-xl.w-full > .right-2.top-2.bg-black\\/45"
+            ".align-top.p-4[scope=\"col\"]:nth-child(2) > .flex-col.gap-2.flex > .h-28.rounded-xl.w-full > .right-2.top-2.bg-black\\/45"
           ]
         },
         {
@@ -6548,7 +6764,25 @@
           "impact": null,
           "html": "<button type=\"button\" aria-busy=\"false\" class=\"inline-flex shrink-0...\" aria-label=\"Add to cart: IdeaPad...\">",
           "target": [
-            ".min-w-48.align-top.sm\\:min-w-56:nth-child(2) > .flex-col.gap-2.flex > .text-accent-fg.active\\:brightness-95.shadow-\\[0_0_0_1px_var\\(--border-strong\\)\\,0_8px_24px_-8px_var\\(--accent\\)\\]"
+            ".align-top.p-4[scope=\"col\"]:nth-child(2) > .flex-col.gap-2.flex > .gap-1.mt-1.flex-col > .transition-all.text-accent-fg.active\\:brightness-95"
+          ]
+        },
+        {
+          "any": [
+            {
+              "id": "aria-valid-attr",
+              "data": null,
+              "relatedNodes": [],
+              "impact": "critical",
+              "message": "ARIA attribute name is valid"
+            }
+          ],
+          "all": [],
+          "none": [],
+          "impact": null,
+          "html": "<span aria-live=\"polite\" class=\"sr-only\"></span>",
+          "target": [
+            ".align-top.p-4[scope=\"col\"]:nth-child(2) > .flex-col.gap-2.flex > .gap-1.mt-1.flex-col > .sr-only[aria-live=\"polite\"]"
           ]
         },
         {
@@ -6584,7 +6818,7 @@
           "impact": null,
           "html": "<button type=\"button\" aria-label=\"Remove Sony WH-1000X...\" title=\"Remove Sony WH-1000X...\" aria-busy=\"false\" class=\"grid shrink-0 select...\">",
           "target": [
-            ".min-w-48.align-top.sm\\:min-w-56:nth-child(3) > .flex-col.gap-2.flex > .h-28.rounded-xl.w-full > .right-2.top-2.bg-black\\/45"
+            ".align-top.p-4[scope=\"col\"]:nth-child(3) > .flex-col.gap-2.flex > .h-28.rounded-xl.w-full > .right-2.top-2.bg-black\\/45"
           ]
         },
         {
@@ -6602,7 +6836,25 @@
           "impact": null,
           "html": "<button type=\"button\" aria-busy=\"false\" class=\"inline-flex shrink-0...\" aria-label=\"Add to cart: WH-1000...\">",
           "target": [
-            ".min-w-48.align-top.sm\\:min-w-56:nth-child(3) > .flex-col.gap-2.flex > .text-accent-fg.active\\:brightness-95.shadow-\\[0_0_0_1px_var\\(--border-strong\\)\\,0_8px_24px_-8px_var\\(--accent\\)\\]"
+            ".align-top.p-4[scope=\"col\"]:nth-child(3) > .flex-col.gap-2.flex > .gap-1.mt-1.flex-col > .transition-all.text-accent-fg.active\\:brightness-95"
+          ]
+        },
+        {
+          "any": [
+            {
+              "id": "aria-valid-attr",
+              "data": null,
+              "relatedNodes": [],
+              "impact": "critical",
+              "message": "ARIA attribute name is valid"
+            }
+          ],
+          "all": [],
+          "none": [],
+          "impact": null,
+          "html": "<span aria-live=\"polite\" class=\"sr-only\"></span>",
+          "target": [
+            ".align-top.p-4[scope=\"col\"]:nth-child(3) > .flex-col.gap-2.flex > .gap-1.mt-1.flex-col > .sr-only[aria-live=\"polite\"]"
           ]
         },
         {
@@ -7063,7 +7315,7 @@
           "impact": null,
           "html": "<button type=\"button\" aria-label=\"Remove Lenovo IdeaPa...\" title=\"Remove Lenovo IdeaPa...\" aria-busy=\"false\" class=\"grid shrink-0 select...\">",
           "target": [
-            ".min-w-48.align-top.sm\\:min-w-56:nth-child(2) > .flex-col.gap-2.flex > .h-28.rounded-xl.w-full > .right-2.top-2.bg-black\\/45"
+            ".align-top.p-4[scope=\"col\"]:nth-child(2) > .flex-col.gap-2.flex > .h-28.rounded-xl.w-full > .right-2.top-2.bg-black\\/45"
           ]
         },
         {
@@ -7088,7 +7340,7 @@
           "impact": null,
           "html": "<button type=\"button\" aria-busy=\"false\" class=\"inline-flex shrink-0...\" aria-label=\"Add to cart: IdeaPad...\">",
           "target": [
-            ".min-w-48.align-top.sm\\:min-w-56:nth-child(2) > .flex-col.gap-2.flex > .text-accent-fg.active\\:brightness-95.shadow-\\[0_0_0_1px_var\\(--border-strong\\)\\,0_8px_24px_-8px_var\\(--accent\\)\\]"
+            ".align-top.p-4[scope=\"col\"]:nth-child(2) > .flex-col.gap-2.flex > .gap-1.mt-1.flex-col > .transition-all.text-accent-fg.active\\:brightness-95"
           ]
         },
         {
@@ -7113,7 +7365,7 @@
           "impact": null,
           "html": "<button type=\"button\" aria-label=\"Remove Sony WH-1000X...\" title=\"Remove Sony WH-1000X...\" aria-busy=\"false\" class=\"grid shrink-0 select...\">",
           "target": [
-            ".min-w-48.align-top.sm\\:min-w-56:nth-child(3) > .flex-col.gap-2.flex > .h-28.rounded-xl.w-full > .right-2.top-2.bg-black\\/45"
+            ".align-top.p-4[scope=\"col\"]:nth-child(3) > .flex-col.gap-2.flex > .h-28.rounded-xl.w-full > .right-2.top-2.bg-black\\/45"
           ]
         },
         {
@@ -7138,7 +7390,7 @@
           "impact": null,
           "html": "<button type=\"button\" aria-busy=\"false\" class=\"inline-flex shrink-0...\" aria-label=\"Add to cart: WH-1000...\">",
           "target": [
-            ".min-w-48.align-top.sm\\:min-w-56:nth-child(3) > .flex-col.gap-2.flex > .text-accent-fg.active\\:brightness-95.shadow-\\[0_0_0_1px_var\\(--border-strong\\)\\,0_8px_24px_-8px_var\\(--accent\\)\\]"
+            ".align-top.p-4[scope=\"col\"]:nth-child(3) > .flex-col.gap-2.flex > .gap-1.mt-1.flex-col > .transition-all.text-accent-fg.active\\:brightness-95"
           ]
         },
         {
@@ -7757,6 +8009,31 @@
             {
               "id": "color-contrast",
               "data": {
+                "fgColor": "#edeef2",
+                "bgColor": "#13151b",
+                "contrastRatio": 15.73,
+                "fontSize": "9.0pt (12px)",
+                "fontWeight": "normal",
+                "expectedContrastRatio": "4.5:1"
+              },
+              "relatedNodes": [],
+              "impact": "serious",
+              "message": "Element has sufficient color contrast of 15.73"
+            }
+          ],
+          "all": [],
+          "none": [],
+          "impact": null,
+          "html": "<span class=\"text-xs text-text\">In stock (8 units)</span>",
+          "target": [
+            ".bg-surface\\/70.py-1.px-2\\.5:nth-child(2) > .text-text.text-xs"
+          ]
+        },
+        {
+          "any": [
+            {
+              "id": "color-contrast",
+              "data": {
                 "fgColor": "#3dffb0",
                 "bgColor": "#18312d",
                 "contrastRatio": 10.63,
@@ -7800,6 +8077,31 @@
           "html": "<span class=\"font-medium text-text\">WH-1000XM5<!-- -->:</span>",
           "target": [
             ".bg-surface\\/70.py-1.px-2\\.5:nth-child(3) > .font-medium.text-text"
+          ]
+        },
+        {
+          "any": [
+            {
+              "id": "color-contrast",
+              "data": {
+                "fgColor": "#edeef2",
+                "bgColor": "#13151b",
+                "contrastRatio": 15.73,
+                "fontSize": "9.0pt (12px)",
+                "fontWeight": "normal",
+                "expectedContrastRatio": "4.5:1"
+              },
+              "relatedNodes": [],
+              "impact": "serious",
+              "message": "Element has sufficient color contrast of 15.73"
+            }
+          ],
+          "all": [],
+          "none": [],
+          "impact": null,
+          "html": "<span class=\"text-xs text-text\">In stock (6 units)</span>",
+          "target": [
+            ".bg-surface\\/70.py-1.px-2\\.5:nth-child(3) > .text-text.text-xs"
           ]
         },
         {
@@ -7899,7 +8201,7 @@
           "impact": null,
           "html": "<span class=\"text-xs font-semibold uppercase tracking-wider text-muted\">Specification</span>",
           "target": [
-            ".w-40 > .uppercase.tracking-wider.font-semibold"
+            ".z-20 > .uppercase.tracking-wider.font-semibold"
           ]
         },
         {
@@ -7924,7 +8226,7 @@
           "impact": null,
           "html": "<p class=\"text-2xs uppercase tracking-wider text-muted\">Lenovo</p>",
           "target": [
-            ".min-w-48.align-top.sm\\:min-w-56:nth-child(2) > .flex-col.gap-2.flex > .min-w-0 > .text-2xs.uppercase.tracking-wider"
+            ".align-top.p-4[scope=\"col\"]:nth-child(2) > .flex-col.gap-2.flex > .min-w-0 > .text-2xs.uppercase.tracking-wider"
           ]
         },
         {
@@ -7949,7 +8251,7 @@
           "impact": null,
           "html": "<span class=\"font-mono text-sm font-semibold text-text\">NPR 1,04,500</span>",
           "target": [
-            ".min-w-48.align-top.sm\\:min-w-56:nth-child(2) > .flex-col.gap-2.flex > .pt-1.justify-between.gap-2 > .text-sm.font-semibold.font-mono"
+            ".align-top.p-4[scope=\"col\"]:nth-child(2) > .flex-col.gap-2.flex > .pt-1.justify-between.gap-2 > .text-sm.font-semibold.font-mono"
           ]
         },
         {
@@ -7974,7 +8276,7 @@
           "impact": null,
           "html": "<span class=\"inline-flex shrink-0 items-center gap-1.5 whitespace-nowrap rounded-full px-2.5 py-1 text-xs font-medium leading-none tracking-wide bg-listening/12 text-listening shrink-0 whitespace-nowrap\"><span aria-hidden=\"true\" class=\"size-1.5 rounded-full bg-current\"></span>In stock</span>",
           "target": [
-            ".min-w-48.align-top.sm\\:min-w-56:nth-child(2) > .flex-col.gap-2.flex > .pt-1.justify-between.gap-2 > .leading-none.tracking-wide.bg-listening\\/12"
+            ".align-top.p-4[scope=\"col\"]:nth-child(2) > .flex-col.gap-2.flex > .pt-1.justify-between.gap-2 > .leading-none.tracking-wide.bg-listening\\/12"
           ]
         },
         {
@@ -8047,7 +8349,7 @@
           "all": [],
           "none": [],
           "impact": null,
-          "html": "<th scope=\"colgroup\" colspan=\"4\" class=\"px-4 py-2 font-display text-xs font-bold uppercase tracking-wider text-muted\">Overview</th>",
+          "html": "<th scope=\"colgroup\" colspan=\"4\" class=\"sticky left-0 px-4 py-2 font-display text-xs font-bold uppercase tracking-wider text-muted\">Overview</th>",
           "target": [
             ".bg-surface-2\\/60:nth-child(1) > .py-2[scope=\"colgroup\"][colspan=\"4\"]"
           ]
@@ -8058,23 +8360,23 @@
               "id": "color-contrast",
               "data": {
                 "fgColor": "#8a8fa3",
-                "bgColor": "#0e1015",
-                "contrastRatio": 5.92,
+                "bgColor": "#12141b",
+                "contrastRatio": 5.72,
                 "fontSize": "10.5pt (14px)",
                 "fontWeight": "normal",
                 "expectedContrastRatio": "4.5:1"
               },
               "relatedNodes": [],
               "impact": "serious",
-              "message": "Element has sufficient color contrast of 5.92"
+              "message": "Element has sufficient color contrast of 5.72"
             }
           ],
           "all": [],
           "none": [],
           "impact": null,
-          "html": "<th scope=\"row\" class=\"px-4 py-3 align-middle text-xs font-medium text-muted sm:text-sm\">Price</th>",
+          "html": "<th scope=\"row\" class=\"sticky left-0 z-10 w-36 min-w-32 bg-surface/95 backdrop-blur hairline-r px-4 py-3 align-middle text-xs font-medium text-muted sm:w-48 sm:min-w-44 sm:text-sm\">Price</th>",
           "target": [
-            ".hover\\:bg-surface-2\\/20.border-b:nth-child(2) > th[scope=\"row\"]"
+            ".hover\\:bg-surface-2\\/20.border-b:nth-child(2) > .z-10.w-36[scope=\"row\"]"
           ]
         },
         {
@@ -8099,7 +8401,7 @@
           "impact": null,
           "html": "<span class=\"break-words\">NPR 1,04,500</span>",
           "target": [
-            ".hover\\:bg-surface-2\\/20.border-b:nth-child(2) > .font-mono:nth-child(2) > .break-words"
+            ".hover\\:bg-surface-2\\/20.border-b:nth-child(2) > .snap-start.sm\\:min-w-56.min-w-44:nth-child(2) > .break-words"
           ]
         },
         {
@@ -8133,23 +8435,23 @@
               "id": "color-contrast",
               "data": {
                 "fgColor": "#8a8fa3",
-                "bgColor": "#0e1015",
-                "contrastRatio": 5.92,
+                "bgColor": "#12141b",
+                "contrastRatio": 5.72,
                 "fontSize": "10.5pt (14px)",
                 "fontWeight": "normal",
                 "expectedContrastRatio": "4.5:1"
               },
               "relatedNodes": [],
               "impact": "serious",
-              "message": "Element has sufficient color contrast of 5.92"
+              "message": "Element has sufficient color contrast of 5.72"
             }
           ],
           "all": [],
           "none": [],
           "impact": null,
-          "html": "<th scope=\"row\" class=\"px-4 py-3 align-middle text-xs font-medium text-muted sm:text-sm\">Rating</th>",
+          "html": "<th scope=\"row\" class=\"sticky left-0 z-10 w-36 min-w-32 bg-surface/95 backdrop-blur hairline-r px-4 py-3 align-middle text-xs font-medium text-muted sm:w-48 sm:min-w-44 sm:text-sm\">Rating</th>",
           "target": [
-            ".hover\\:bg-surface-2\\/20.border-b:nth-child(3) > th[scope=\"row\"]"
+            ".hover\\:bg-surface-2\\/20.border-b:nth-child(3) > .z-10.w-36[scope=\"row\"]"
           ]
         },
         {
@@ -8174,7 +8476,7 @@
           "impact": null,
           "html": "<span class=\"break-words\">4.6 ★</span>",
           "target": [
-            ".hover\\:bg-surface-2\\/20.border-b:nth-child(3) > .font-mono:nth-child(2) > .break-words"
+            ".hover\\:bg-surface-2\\/20.border-b:nth-child(3) > .snap-start.sm\\:min-w-56.min-w-44:nth-child(2) > .break-words"
           ]
         },
         {
@@ -8199,7 +8501,7 @@
           "impact": null,
           "html": "<span class=\"break-words\">4.7 ★</span>",
           "target": [
-            ".hover\\:bg-surface-2\\/20.border-b:nth-child(3) > .font-mono:nth-child(3) > .break-words"
+            ".hover\\:bg-surface-2\\/20.border-b:nth-child(3) > .snap-start.sm\\:min-w-56.min-w-44:nth-child(3) > .break-words"
           ]
         },
         {
@@ -8222,7 +8524,7 @@
           "all": [],
           "none": [],
           "impact": null,
-          "html": "<th scope=\"colgroup\" colspan=\"4\" class=\"px-4 py-2 font-display text-xs font-bold uppercase tracking-wider text-muted\">Performance</th>",
+          "html": "<th scope=\"colgroup\" colspan=\"4\" class=\"sticky left-0 px-4 py-2 font-display text-xs font-bold uppercase tracking-wider text-muted\">Performance</th>",
           "target": [
             ".bg-surface-2\\/60:nth-child(4) > .py-2[scope=\"colgroup\"][colspan=\"4\"]"
           ]
@@ -8233,23 +8535,23 @@
               "id": "color-contrast",
               "data": {
                 "fgColor": "#8a8fa3",
-                "bgColor": "#0e1015",
-                "contrastRatio": 5.92,
+                "bgColor": "#12141b",
+                "contrastRatio": 5.72,
                 "fontSize": "10.5pt (14px)",
                 "fontWeight": "normal",
                 "expectedContrastRatio": "4.5:1"
               },
               "relatedNodes": [],
               "impact": "serious",
-              "message": "Element has sufficient color contrast of 5.92"
+              "message": "Element has sufficient color contrast of 5.72"
             }
           ],
           "all": [],
           "none": [],
           "impact": null,
-          "html": "<th scope=\"row\" class=\"px-4 py-3 align-middle text-xs font-medium text-muted sm:text-sm\">Processor</th>",
+          "html": "<th scope=\"row\" class=\"sticky left-0 z-10 w-36 min-w-32 bg-surface/95 backdrop-blur hairline-r px-4 py-3 align-middle text-xs font-medium text-muted sm:w-48 sm:min-w-44 sm:text-sm\">Processor</th>",
           "target": [
-            ".hover\\:bg-surface-2\\/20.border-b:nth-child(5) > th[scope=\"row\"]"
+            ".hover\\:bg-surface-2\\/20.border-b:nth-child(5) > .z-10.w-36[scope=\"row\"]"
           ]
         },
         {
@@ -8274,7 +8576,7 @@
           "impact": null,
           "html": "<span class=\"break-words\">AMD Ryzen 7 8845HS (8C/16T)</span>",
           "target": [
-            ".hover\\:bg-surface-2\\/20.border-b:nth-child(5) > .font-sans.font-mono:nth-child(2) > .break-words"
+            ".hover\\:bg-surface-2\\/20.border-b:nth-child(5) > .font-sans.snap-start.sm\\:min-w-56:nth-child(2) > .break-words"
           ]
         },
         {
@@ -8283,23 +8585,23 @@
               "id": "color-contrast",
               "data": {
                 "fgColor": "#8a8fa3",
-                "bgColor": "#0e1015",
-                "contrastRatio": 5.92,
+                "bgColor": "#12141b",
+                "contrastRatio": 5.72,
                 "fontSize": "10.5pt (14px)",
                 "fontWeight": "normal",
                 "expectedContrastRatio": "4.5:1"
               },
               "relatedNodes": [],
               "impact": "serious",
-              "message": "Element has sufficient color contrast of 5.92"
+              "message": "Element has sufficient color contrast of 5.72"
             }
           ],
           "all": [],
           "none": [],
           "impact": null,
-          "html": "<th scope=\"row\" class=\"px-4 py-3 align-middle text-xs font-medium text-muted sm:text-sm\">Graphics</th>",
+          "html": "<th scope=\"row\" class=\"sticky left-0 z-10 w-36 min-w-32 bg-surface/95 backdrop-blur hairline-r px-4 py-3 align-middle text-xs font-medium text-muted sm:w-48 sm:min-w-44 sm:text-sm\">Graphics</th>",
           "target": [
-            ".hover\\:bg-surface-2\\/20.border-b:nth-child(6) > th[scope=\"row\"]"
+            ".hover\\:bg-surface-2\\/20.border-b:nth-child(6) > .z-10.w-36[scope=\"row\"]"
           ]
         },
         {
@@ -8324,7 +8626,7 @@
           "impact": null,
           "html": "<span class=\"break-words\">AMD Radeon 780M (integrated)</span>",
           "target": [
-            ".hover\\:bg-surface-2\\/20.border-b:nth-child(6) > .font-sans.font-mono:nth-child(2) > .break-words"
+            ".hover\\:bg-surface-2\\/20.border-b:nth-child(6) > .font-sans.snap-start.sm\\:min-w-56:nth-child(2) > .break-words"
           ]
         },
         {
@@ -8333,23 +8635,23 @@
               "id": "color-contrast",
               "data": {
                 "fgColor": "#8a8fa3",
-                "bgColor": "#0e1015",
-                "contrastRatio": 5.92,
+                "bgColor": "#12141b",
+                "contrastRatio": 5.72,
                 "fontSize": "10.5pt (14px)",
                 "fontWeight": "normal",
                 "expectedContrastRatio": "4.5:1"
               },
               "relatedNodes": [],
               "impact": "serious",
-              "message": "Element has sufficient color contrast of 5.92"
+              "message": "Element has sufficient color contrast of 5.72"
             }
           ],
           "all": [],
           "none": [],
           "impact": null,
-          "html": "<th scope=\"row\" class=\"px-4 py-3 align-middle text-xs font-medium text-muted sm:text-sm\">Memory</th>",
+          "html": "<th scope=\"row\" class=\"sticky left-0 z-10 w-36 min-w-32 bg-surface/95 backdrop-blur hairline-r px-4 py-3 align-middle text-xs font-medium text-muted sm:w-48 sm:min-w-44 sm:text-sm\">Memory</th>",
           "target": [
-            ".hover\\:bg-surface-2\\/20.border-b:nth-child(7) > th[scope=\"row\"]"
+            ".hover\\:bg-surface-2\\/20.border-b:nth-child(7) > .z-10.w-36[scope=\"row\"]"
           ]
         },
         {
@@ -8383,23 +8685,23 @@
               "id": "color-contrast",
               "data": {
                 "fgColor": "#8a8fa3",
-                "bgColor": "#0e1015",
-                "contrastRatio": 5.92,
+                "bgColor": "#12141b",
+                "contrastRatio": 5.72,
                 "fontSize": "10.5pt (14px)",
                 "fontWeight": "normal",
                 "expectedContrastRatio": "4.5:1"
               },
               "relatedNodes": [],
               "impact": "serious",
-              "message": "Element has sufficient color contrast of 5.92"
+              "message": "Element has sufficient color contrast of 5.72"
             }
           ],
           "all": [],
           "none": [],
           "impact": null,
-          "html": "<th scope=\"row\" class=\"px-4 py-3 align-middle text-xs font-medium text-muted sm:text-sm\">Storage</th>",
+          "html": "<th scope=\"row\" class=\"sticky left-0 z-10 w-36 min-w-32 bg-surface/95 backdrop-blur hairline-r px-4 py-3 align-middle text-xs font-medium text-muted sm:w-48 sm:min-w-44 sm:text-sm\">Storage</th>",
           "target": [
-            ".hover\\:bg-surface-2\\/20.border-b:nth-child(8) > th[scope=\"row\"]"
+            ".hover\\:bg-surface-2\\/20.border-b:nth-child(8) > .z-10.w-36[scope=\"row\"]"
           ]
         },
         {
@@ -8447,7 +8749,7 @@
           "all": [],
           "none": [],
           "impact": null,
-          "html": "<th scope=\"colgroup\" colspan=\"4\" class=\"px-4 py-2 font-display text-xs font-bold uppercase tracking-wider text-muted\">Battery &amp; Weight</th>",
+          "html": "<th scope=\"colgroup\" colspan=\"4\" class=\"sticky left-0 px-4 py-2 font-display text-xs font-bold uppercase tracking-wider text-muted\">Battery &amp; Weight</th>",
           "target": [
             ".bg-surface-2\\/60:nth-child(9) > .py-2[scope=\"colgroup\"][colspan=\"4\"]"
           ]
@@ -8458,23 +8760,23 @@
               "id": "color-contrast",
               "data": {
                 "fgColor": "#8a8fa3",
-                "bgColor": "#0e1015",
-                "contrastRatio": 5.92,
+                "bgColor": "#12141b",
+                "contrastRatio": 5.72,
                 "fontSize": "10.5pt (14px)",
                 "fontWeight": "normal",
                 "expectedContrastRatio": "4.5:1"
               },
               "relatedNodes": [],
               "impact": "serious",
-              "message": "Element has sufficient color contrast of 5.92"
+              "message": "Element has sufficient color contrast of 5.72"
             }
           ],
           "all": [],
           "none": [],
           "impact": null,
-          "html": "<th scope=\"row\" class=\"px-4 py-3 align-middle text-xs font-medium text-muted sm:text-sm\">Battery</th>",
+          "html": "<th scope=\"row\" class=\"sticky left-0 z-10 w-36 min-w-32 bg-surface/95 backdrop-blur hairline-r px-4 py-3 align-middle text-xs font-medium text-muted sm:w-48 sm:min-w-44 sm:text-sm\">Battery</th>",
           "target": [
-            ".hover\\:bg-surface-2\\/20.border-b:nth-child(10) > th[scope=\"row\"]"
+            ".hover\\:bg-surface-2\\/20.border-b:nth-child(10) > .z-10.w-36[scope=\"row\"]"
           ]
         },
         {
@@ -8499,7 +8801,7 @@
           "impact": null,
           "html": "<span class=\"break-words\">12 h</span>",
           "target": [
-            ".hover\\:bg-surface-2\\/20.border-b:nth-child(10) > .font-mono:nth-child(2) > .break-words"
+            ".hover\\:bg-surface-2\\/20.border-b:nth-child(10) > .snap-start.sm\\:min-w-56.min-w-44:nth-child(2) > .break-words"
           ]
         },
         {
@@ -8533,23 +8835,23 @@
               "id": "color-contrast",
               "data": {
                 "fgColor": "#8a8fa3",
-                "bgColor": "#0e1015",
-                "contrastRatio": 5.92,
+                "bgColor": "#12141b",
+                "contrastRatio": 5.72,
                 "fontSize": "10.5pt (14px)",
                 "fontWeight": "normal",
                 "expectedContrastRatio": "4.5:1"
               },
               "relatedNodes": [],
               "impact": "serious",
-              "message": "Element has sufficient color contrast of 5.92"
+              "message": "Element has sufficient color contrast of 5.72"
             }
           ],
           "all": [],
           "none": [],
           "impact": null,
-          "html": "<th scope=\"row\" class=\"px-4 py-3 align-middle text-xs font-medium text-muted sm:text-sm\">Weight</th>",
+          "html": "<th scope=\"row\" class=\"sticky left-0 z-10 w-36 min-w-32 bg-surface/95 backdrop-blur hairline-r px-4 py-3 align-middle text-xs font-medium text-muted sm:w-48 sm:min-w-44 sm:text-sm\">Weight</th>",
           "target": [
-            ".hover\\:bg-surface-2\\/20.border-b:nth-child(11) > th[scope=\"row\"]"
+            ".hover\\:bg-surface-2\\/20.border-b:nth-child(11) > .z-10.w-36[scope=\"row\"]"
           ]
         },
         {
@@ -8574,7 +8876,7 @@
           "impact": null,
           "html": "<span class=\"break-words\">1.46 kg</span>",
           "target": [
-            ".hover\\:bg-surface-2\\/20.border-b:nth-child(11) > .font-mono:nth-child(2) > .break-words"
+            ".hover\\:bg-surface-2\\/20.border-b:nth-child(11) > .snap-start.sm\\:min-w-56.min-w-44:nth-child(2) > .break-words"
           ]
         },
         {
@@ -8622,7 +8924,7 @@
           "all": [],
           "none": [],
           "impact": null,
-          "html": "<th scope=\"colgroup\" colspan=\"4\" class=\"px-4 py-2 font-display text-xs font-bold uppercase tracking-wider text-muted\">Display &amp; Media</th>",
+          "html": "<th scope=\"colgroup\" colspan=\"4\" class=\"sticky left-0 px-4 py-2 font-display text-xs font-bold uppercase tracking-wider text-muted\">Display &amp; Media</th>",
           "target": [
             ".bg-surface-2\\/60:nth-child(12) > .py-2[scope=\"colgroup\"][colspan=\"4\"]"
           ]
@@ -8633,23 +8935,23 @@
               "id": "color-contrast",
               "data": {
                 "fgColor": "#8a8fa3",
-                "bgColor": "#0e1015",
-                "contrastRatio": 5.92,
+                "bgColor": "#12141b",
+                "contrastRatio": 5.72,
                 "fontSize": "10.5pt (14px)",
                 "fontWeight": "normal",
                 "expectedContrastRatio": "4.5:1"
               },
               "relatedNodes": [],
               "impact": "serious",
-              "message": "Element has sufficient color contrast of 5.92"
+              "message": "Element has sufficient color contrast of 5.72"
             }
           ],
           "all": [],
           "none": [],
           "impact": null,
-          "html": "<th scope=\"row\" class=\"px-4 py-3 align-middle text-xs font-medium text-muted sm:text-sm\">Display</th>",
+          "html": "<th scope=\"row\" class=\"sticky left-0 z-10 w-36 min-w-32 bg-surface/95 backdrop-blur hairline-r px-4 py-3 align-middle text-xs font-medium text-muted sm:w-48 sm:min-w-44 sm:text-sm\">Display</th>",
           "target": [
-            ".hover\\:bg-surface-2\\/20.border-b:nth-child(13) > th[scope=\"row\"]"
+            ".hover\\:bg-surface-2\\/20.border-b:nth-child(13) > .z-10.w-36[scope=\"row\"]"
           ]
         },
         {
@@ -8674,7 +8976,7 @@
           "impact": null,
           "html": "<span class=\"break-words\">14\" WUXGA OLED, 60 Hz</span>",
           "target": [
-            ".hover\\:bg-surface-2\\/20.border-b:nth-child(13) > .font-sans.font-mono:nth-child(2) > .break-words"
+            ".hover\\:bg-surface-2\\/20.border-b:nth-child(13) > .font-sans.snap-start.sm\\:min-w-56:nth-child(2) > .break-words"
           ]
         },
         {
@@ -8697,7 +8999,7 @@
           "all": [],
           "none": [],
           "impact": null,
-          "html": "<th scope=\"colgroup\" colspan=\"4\" class=\"px-4 py-2 font-display text-xs font-bold uppercase tracking-wider text-muted\">Connectivity</th>",
+          "html": "<th scope=\"colgroup\" colspan=\"4\" class=\"sticky left-0 px-4 py-2 font-display text-xs font-bold uppercase tracking-wider text-muted\">Connectivity</th>",
           "target": [
             ".bg-surface-2\\/60:nth-child(14) > .py-2[scope=\"colgroup\"][colspan=\"4\"]"
           ]
@@ -8708,23 +9010,23 @@
               "id": "color-contrast",
               "data": {
                 "fgColor": "#8a8fa3",
-                "bgColor": "#0e1015",
-                "contrastRatio": 5.92,
+                "bgColor": "#12141b",
+                "contrastRatio": 5.72,
                 "fontSize": "10.5pt (14px)",
                 "fontWeight": "normal",
                 "expectedContrastRatio": "4.5:1"
               },
               "relatedNodes": [],
               "impact": "serious",
-              "message": "Element has sufficient color contrast of 5.92"
+              "message": "Element has sufficient color contrast of 5.72"
             }
           ],
           "all": [],
           "none": [],
           "impact": null,
-          "html": "<th scope=\"row\" class=\"px-4 py-3 align-middle text-xs font-medium text-muted sm:text-sm\">Ports</th>",
+          "html": "<th scope=\"row\" class=\"sticky left-0 z-10 w-36 min-w-32 bg-surface/95 backdrop-blur hairline-r px-4 py-3 align-middle text-xs font-medium text-muted sm:w-48 sm:min-w-44 sm:text-sm\">Ports</th>",
           "target": [
-            ".hover\\:bg-surface-2\\/20.border-b:nth-child(15) > th[scope=\"row\"]"
+            ".hover\\:bg-surface-2\\/20.border-b:nth-child(15) > .z-10.w-36[scope=\"row\"]"
           ]
         },
         {
@@ -8749,7 +9051,7 @@
           "impact": null,
           "html": "<span class=\"break-words\">2× USB-C (USB4), 2× USB-A, HDMI 2.1, microSD</span>",
           "target": [
-            ".hover\\:bg-surface-2\\/20.border-b:nth-child(15) > .font-sans.font-mono:nth-child(2) > .break-words"
+            ".hover\\:bg-surface-2\\/20.border-b:nth-child(15) > .font-sans.snap-start.sm\\:min-w-56:nth-child(2) > .break-words"
           ]
         },
         {
@@ -8758,23 +9060,23 @@
               "id": "color-contrast",
               "data": {
                 "fgColor": "#8a8fa3",
-                "bgColor": "#0e1015",
-                "contrastRatio": 5.92,
+                "bgColor": "#12141b",
+                "contrastRatio": 5.72,
                 "fontSize": "10.5pt (14px)",
                 "fontWeight": "normal",
                 "expectedContrastRatio": "4.5:1"
               },
               "relatedNodes": [],
               "impact": "serious",
-              "message": "Element has sufficient color contrast of 5.92"
+              "message": "Element has sufficient color contrast of 5.72"
             }
           ],
           "all": [],
           "none": [],
           "impact": null,
-          "html": "<th scope=\"row\" class=\"px-4 py-3 align-middle text-xs font-medium text-muted sm:text-sm\">Connectivity</th>",
+          "html": "<th scope=\"row\" class=\"sticky left-0 z-10 w-36 min-w-32 bg-surface/95 backdrop-blur hairline-r px-4 py-3 align-middle text-xs font-medium text-muted sm:w-48 sm:min-w-44 sm:text-sm\">Connectivity</th>",
           "target": [
-            ".hover\\:bg-surface-2\\/20.border-b:nth-child(16) > th[scope=\"row\"]"
+            ".hover\\:bg-surface-2\\/20.border-b:nth-child(16) > .z-10.w-36[scope=\"row\"]"
           ]
         },
         {
@@ -8799,7 +9101,7 @@
           "impact": null,
           "html": "<span class=\"break-words\">Bluetooth 5.2, LDAC, multipoint</span>",
           "target": [
-            ".hover\\:bg-surface-2\\/20.border-b:nth-child(16) > .font-sans.font-mono:nth-child(3) > .break-words"
+            ".hover\\:bg-surface-2\\/20.border-b:nth-child(16) > .font-sans.snap-start.sm\\:min-w-56:nth-child(3) > .break-words"
           ]
         },
         {
@@ -8822,7 +9124,7 @@
           "all": [],
           "none": [],
           "impact": null,
-          "html": "<th scope=\"colgroup\" colspan=\"4\" class=\"px-4 py-2 font-display text-xs font-bold uppercase tracking-wider text-muted\">Warranty &amp; Support</th>",
+          "html": "<th scope=\"colgroup\" colspan=\"4\" class=\"sticky left-0 px-4 py-2 font-display text-xs font-bold uppercase tracking-wider text-muted\">Warranty &amp; Support</th>",
           "target": [
             ".bg-surface-2\\/60:nth-child(17) > .py-2[scope=\"colgroup\"][colspan=\"4\"]"
           ]
@@ -8833,23 +9135,23 @@
               "id": "color-contrast",
               "data": {
                 "fgColor": "#8a8fa3",
-                "bgColor": "#0e1015",
-                "contrastRatio": 5.92,
+                "bgColor": "#12141b",
+                "contrastRatio": 5.72,
                 "fontSize": "10.5pt (14px)",
                 "fontWeight": "normal",
                 "expectedContrastRatio": "4.5:1"
               },
               "relatedNodes": [],
               "impact": "serious",
-              "message": "Element has sufficient color contrast of 5.92"
+              "message": "Element has sufficient color contrast of 5.72"
             }
           ],
           "all": [],
           "none": [],
           "impact": null,
-          "html": "<th scope=\"row\" class=\"px-4 py-3 align-middle text-xs font-medium text-muted sm:text-sm\">Warranty</th>",
+          "html": "<th scope=\"row\" class=\"sticky left-0 z-10 w-36 min-w-32 bg-surface/95 backdrop-blur hairline-r px-4 py-3 align-middle text-xs font-medium text-muted sm:w-48 sm:min-w-44 sm:text-sm\">Warranty</th>",
           "target": [
-            ".hover\\:bg-surface-2\\/20.border-b:nth-child(18) > th[scope=\"row\"]"
+            ".hover\\:bg-surface-2\\/20.border-b:nth-child(18) > .z-10.w-36[scope=\"row\"]"
           ]
         },
         {
@@ -8899,7 +9201,7 @@
           "impact": null,
           "html": "<span class=\"break-words\">1 yr</span>",
           "target": [
-            ".hover\\:bg-surface-2\\/20.border-b:nth-child(18) > .font-mono:nth-child(3) > .break-words"
+            ".hover\\:bg-surface-2\\/20.border-b:nth-child(18) > .snap-start.sm\\:min-w-56.min-w-44:nth-child(3) > .break-words"
           ]
         },
         {
@@ -9370,7 +9672,7 @@
           "impact": null,
           "html": "<button type=\"button\" aria-busy=\"false\" class=\"inline-flex shrink-0...\" aria-label=\"Add to cart: IdeaPad...\">",
           "target": [
-            ".min-w-48.align-top.sm\\:min-w-56:nth-child(2) > .flex-col.gap-2.flex > .text-accent-fg.active\\:brightness-95.shadow-\\[0_0_0_1px_var\\(--border-strong\\)\\,0_8px_24px_-8px_var\\(--accent\\)\\]"
+            ".align-top.p-4[scope=\"col\"]:nth-child(2) > .flex-col.gap-2.flex > .gap-1.mt-1.flex-col > .transition-all.text-accent-fg.active\\:brightness-95"
           ]
         },
         {
@@ -9388,7 +9690,7 @@
           "impact": null,
           "html": "<button type=\"button\" aria-busy=\"false\" class=\"inline-flex shrink-0...\" aria-label=\"Add to cart: WH-1000...\">",
           "target": [
-            ".min-w-48.align-top.sm\\:min-w-56:nth-child(3) > .flex-col.gap-2.flex > .text-accent-fg.active\\:brightness-95.shadow-\\[0_0_0_1px_var\\(--border-strong\\)\\,0_8px_24px_-8px_var\\(--accent\\)\\]"
+            ".align-top.p-4[scope=\"col\"]:nth-child(3) > .flex-col.gap-2.flex > .gap-1.mt-1.flex-col > .transition-all.text-accent-fg.active\\:brightness-95"
           ]
         }
       ]
@@ -9654,7 +9956,7 @@
           "impact": null,
           "html": "<a class=\"font-display text-sm font-semibold text-text hover:underline break-words\" href=\"/product/lenovo-ideapad-slim-5-14\">IdeaPad Slim 5 14</a>",
           "target": [
-            ".min-w-48.align-top.sm\\:min-w-56:nth-child(2) > .flex-col.gap-2.flex > .min-w-0 > .hover\\:underline"
+            ".align-top.p-4[scope=\"col\"]:nth-child(2) > .flex-col.gap-2.flex > .min-w-0 > .hover\\:underline"
           ]
         },
         {
@@ -10529,7 +10831,7 @@
           "impact": null,
           "html": "<button type=\"button\" aria-label=\"Remove Lenovo IdeaPa...\" title=\"Remove Lenovo IdeaPa...\" aria-busy=\"false\" class=\"grid shrink-0 select...\">",
           "target": [
-            ".min-w-48.align-top.sm\\:min-w-56:nth-child(2) > .flex-col.gap-2.flex > .h-28.rounded-xl.w-full > .right-2.top-2.bg-black\\/45"
+            ".align-top.p-4[scope=\"col\"]:nth-child(2) > .flex-col.gap-2.flex > .h-28.rounded-xl.w-full > .right-2.top-2.bg-black\\/45"
           ]
         },
         {
@@ -10547,7 +10849,7 @@
           "impact": null,
           "html": "<button type=\"button\" aria-busy=\"false\" class=\"inline-flex shrink-0...\" aria-label=\"Add to cart: IdeaPad...\">",
           "target": [
-            ".min-w-48.align-top.sm\\:min-w-56:nth-child(2) > .flex-col.gap-2.flex > .text-accent-fg.active\\:brightness-95.shadow-\\[0_0_0_1px_var\\(--border-strong\\)\\,0_8px_24px_-8px_var\\(--accent\\)\\]"
+            ".align-top.p-4[scope=\"col\"]:nth-child(2) > .flex-col.gap-2.flex > .gap-1.mt-1.flex-col > .transition-all.text-accent-fg.active\\:brightness-95"
           ]
         },
         {
@@ -10583,7 +10885,7 @@
           "impact": null,
           "html": "<button type=\"button\" aria-label=\"Remove Sony WH-1000X...\" title=\"Remove Sony WH-1000X...\" aria-busy=\"false\" class=\"grid shrink-0 select...\">",
           "target": [
-            ".min-w-48.align-top.sm\\:min-w-56:nth-child(3) > .flex-col.gap-2.flex > .h-28.rounded-xl.w-full > .right-2.top-2.bg-black\\/45"
+            ".align-top.p-4[scope=\"col\"]:nth-child(3) > .flex-col.gap-2.flex > .h-28.rounded-xl.w-full > .right-2.top-2.bg-black\\/45"
           ]
         },
         {
@@ -10601,7 +10903,7 @@
           "impact": null,
           "html": "<button type=\"button\" aria-busy=\"false\" class=\"inline-flex shrink-0...\" aria-label=\"Add to cart: WH-1000...\">",
           "target": [
-            ".min-w-48.align-top.sm\\:min-w-56:nth-child(3) > .flex-col.gap-2.flex > .text-accent-fg.active\\:brightness-95.shadow-\\[0_0_0_1px_var\\(--border-strong\\)\\,0_8px_24px_-8px_var\\(--accent\\)\\]"
+            ".align-top.p-4[scope=\"col\"]:nth-child(3) > .flex-col.gap-2.flex > .gap-1.mt-1.flex-col > .transition-all.text-accent-fg.active\\:brightness-95"
           ]
         },
         {
@@ -11051,7 +11353,7 @@
           "impact": "serious",
           "html": "<a class=\"font-display text-sm font-semibold text-text hover:underline break-words\" href=\"/product/lenovo-ideapad-slim-5-14\">IdeaPad Slim 5 14</a>",
           "target": [
-            ".min-w-48.align-top.sm\\:min-w-56:nth-child(2) > .flex-col.gap-2.flex > .min-w-0 > .hover\\:underline"
+            ".align-top.p-4[scope=\"col\"]:nth-child(2) > .flex-col.gap-2.flex > .min-w-0 > .hover\\:underline"
           ],
           "failureSummary": "Fix any of the following:\n  Element's background color could not be determined because it is overlapped by another element"
         },
@@ -11074,9 +11376,9 @@
           "all": [],
           "none": [],
           "impact": "serious",
-          "html": "<button type=\"button\" aria-busy=\"false\" class=\"inline-flex shrink-0...\" aria-label=\"Add to cart: IdeaPad...\">",
+          "html": "<span>Add to cart</span>",
           "target": [
-            ".min-w-48.align-top.sm\\:min-w-56:nth-child(2) > .flex-col.gap-2.flex > .text-accent-fg.active\\:brightness-95.shadow-\\[0_0_0_1px_var\\(--border-strong\\)\\,0_8px_24px_-8px_var\\(--accent\\)\\]"
+            ".align-top.p-4[scope=\"col\"]:nth-child(2) > .flex-col.gap-2.flex > .gap-1.mt-1.flex-col > .transition-all.text-accent-fg.active\\:brightness-95 > span"
           ],
           "failureSummary": "Fix any of the following:\n  Element's background color could not be determined because it is overlapped by another element"
         },
@@ -11133,7 +11435,7 @@
           "impact": "serious",
           "html": "<p class=\"text-2xs uppercase tracking-wider text-muted\">Sony</p>",
           "target": [
-            ".min-w-48.align-top.sm\\:min-w-56:nth-child(3) > .flex-col.gap-2.flex > .min-w-0 > .text-2xs.uppercase.tracking-wider"
+            ".align-top.p-4[scope=\"col\"]:nth-child(3) > .flex-col.gap-2.flex > .min-w-0 > .text-2xs.uppercase.tracking-wider"
           ],
           "failureSummary": "Fix any of the following:\n  Element's background color could not be determined because it is overlapped by another element"
         },
@@ -11183,7 +11485,7 @@
           "impact": "serious",
           "html": "<span class=\"font-mono text-sm font-semibold text-text\">NPR 54,999</span>",
           "target": [
-            ".min-w-48.align-top.sm\\:min-w-56:nth-child(3) > .flex-col.gap-2.flex > .pt-1.justify-between.gap-2 > .text-sm.font-semibold.font-mono"
+            ".align-top.p-4[scope=\"col\"]:nth-child(3) > .flex-col.gap-2.flex > .pt-1.justify-between.gap-2 > .text-sm.font-semibold.font-mono"
           ],
           "failureSummary": "Fix any of the following:\n  Element's background color could not be determined because it is overlapped by another element"
         },
@@ -11208,7 +11510,7 @@
           "impact": "serious",
           "html": "<span class=\"inline-flex shrink-0 items-center gap-1.5 whitespace-nowrap rounded-full px-2.5 py-1 text-xs font-medium leading-none tracking-wide bg-listening/12 text-listening shrink-0 whitespace-nowrap\"><span aria-hidden=\"true\" class=\"size-1.5 rounded-full bg-current\"></span>In stock</span>",
           "target": [
-            ".min-w-48.align-top.sm\\:min-w-56:nth-child(3) > .flex-col.gap-2.flex > .pt-1.justify-between.gap-2 > .leading-none.tracking-wide.bg-listening\\/12"
+            ".align-top.p-4[scope=\"col\"]:nth-child(3) > .flex-col.gap-2.flex > .pt-1.justify-between.gap-2 > .leading-none.tracking-wide.bg-listening\\/12"
           ],
           "failureSummary": "Fix any of the following:\n  Element's background color could not be determined because it is overlapped by another element"
         },
@@ -11231,9 +11533,9 @@
           "all": [],
           "none": [],
           "impact": "serious",
-          "html": "<button type=\"button\" aria-busy=\"false\" class=\"inline-flex shrink-0...\" aria-label=\"Add to cart: WH-1000...\">",
+          "html": "<span>Add to cart</span>",
           "target": [
-            ".min-w-48.align-top.sm\\:min-w-56:nth-child(3) > .flex-col.gap-2.flex > .text-accent-fg.active\\:brightness-95.shadow-\\[0_0_0_1px_var\\(--border-strong\\)\\,0_8px_24px_-8px_var\\(--accent\\)\\]"
+            ".align-top.p-4[scope=\"col\"]:nth-child(3) > .flex-col.gap-2.flex > .gap-1.mt-1.flex-col > .transition-all.text-accent-fg.active\\:brightness-95 > span"
           ],
           "failureSummary": "Fix any of the following:\n  Element's background color could not be determined because it is overlapped by another element"
         }
@@ -11269,7 +11571,7 @@
                 {
                   "html": "<th scope=\"col\" class=\"hidden min-w-44 border-l border-dashed border-border/40 p-4 align-middle sm:table-cell\">",
                   "target": [
-                    ".min-w-44"
+                    ".border-l.sm\\:table-cell[scope=\"col\"]"
                   ]
                 }
               ],

@@ -55,7 +55,7 @@ async function run() {
     const diffSwitch = page1.locator("button[role='switch']");
     await diffSwitch.waitFor({ state: "visible", timeout: 5000 });
 
-    const liveRegion = page1.locator("[data-compare-workspace='true'] [aria-live='polite']");
+    const liveRegion = page1.locator("[data-diff-announcement='true']");
     const initialText = await liveRegion.textContent();
     console.log(`Initial live announcement: "${initialText?.trim()}"`);
 
@@ -168,8 +168,70 @@ async function run() {
     console.log("✓ Non-matching category product filtered out successfully");
     await context3.close();
 
+    // ----------------------------------------------------
+    // Flow 6: Pip on /compare: pin 3, Pip adds a 4th, reload (identical view), Pip removes one
+    // ----------------------------------------------------
+    console.log("\n--- Flow 6: Pip on /compare: Pin 3, Add 4th, Reload, Remove One ---");
+    const context4 = await browser.newContext({ viewport: { width: 1280, height: 800 } });
+    const page4 = await context4.newPage();
+    const pin3Url = `${baseUrl}/compare?ids=apple-macbook-pro-14-m4-pro,lenovo-ideapad-slim-5-14,acer-swift-go-14`;
+    await page4.goto(pin3Url, { waitUntil: "domcontentloaded" });
+    await page4.waitForTimeout(600);
+
+    // Verify 3 products in table initially
+    const headersBefore = page4.locator("th button[aria-label*='Remove'][aria-label*='comparison']");
+    const countBefore = await headersBefore.count();
+    console.log(`Initial pinned products in table: ${countBefore}`);
+    if (countBefore !== 3) throw new Error(`Expected 3 products, found ${countBefore}`);
+
+    // Pip adds a 4th product via chat turn: "Add HP Pavilion to compare"
+    console.log("Asking Pip: 'Add HP Pavilion to compare'...");
+    await page4.evaluate(async () => {
+      const { useChat } = window as unknown as { useChat: { getState: () => { send: (text: string) => Promise<void> } } };
+      await useChat.getState().send("Add HP Pavilion to compare");
+    });
+    // Wait for agent turn to process and URL to update
+    await page4.waitForURL(/hp-pavilion-plus-14/, { timeout: 10000 });
+    await page4.waitForTimeout(600);
+
+    const headersAfterAdd = page4.locator("th button[aria-label*='Remove'][aria-label*='comparison']");
+    const countAfterAdd = await headersAfterAdd.count();
+    console.log(`After Pip added 4th: count is ${countAfterAdd}, URL: ${page4.url()}`);
+    if (countAfterAdd !== 4) throw new Error(`Expected 4 products after Pip add, got ${countAfterAdd}`);
+
+    // Reload page to verify identical 4-product view
+    console.log("Reloading page to verify refresh safety...");
+    await page4.reload({ waitUntil: "domcontentloaded" });
+    await page4.waitForTimeout(600);
+
+    const headersAfterReload = page4.locator("th button[aria-label*='Remove'][aria-label*='comparison']");
+    const countAfterReload = await headersAfterReload.count();
+    console.log(`After reload: count is ${countAfterReload}`);
+    if (countAfterReload !== 4) throw new Error(`Expected 4 products after reload, got ${countAfterReload}`);
+    console.log("✓ Identical 4-product view confirmed after reload");
+
+    // Pip removes one product: "Remove Acer Swift from compare"
+    console.log("Asking Pip: 'Remove Acer Swift from compare'...");
+    await page4.evaluate(async () => {
+      const { useChat } = window as unknown as { useChat: { getState: () => { send: (text: string) => Promise<void> } } };
+      await useChat.getState().send("Remove Acer Swift from compare");
+    });
+    // Wait for URL to update (no longer containing acer-swift-go-14)
+    await page4.waitForFunction(
+      () => !window.location.search.includes("acer-swift-go-14"),
+      { timeout: 10000 },
+    );
+    await page4.waitForTimeout(600);
+
+    const headersAfterRemove = page4.locator("th button[aria-label*='Remove'][aria-label*='comparison']");
+    const countAfterRemove = await headersAfterRemove.count();
+    console.log(`After Pip removed 1: count is ${countAfterRemove}, URL: ${page4.url()}`);
+    if (countAfterRemove !== 3) throw new Error(`Expected 3 products after Pip remove, got ${countAfterRemove}`);
+    console.log("✓ Pip successfully added 4th, view reloaded identically, and Pip removed one");
+    await context4.close();
+
     console.log("\n=======================================================");
-    console.log("ALL 5 PLAYWRIGHT E2E FLOWS PASSED SUCCESSFULLY!");
+    console.log("ALL 6 PLAYWRIGHT E2E FLOWS PASSED SUCCESSFULLY!");
     console.log("=======================================================\n");
   } finally {
     await browser.close();

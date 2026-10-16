@@ -14,7 +14,7 @@ import {
 } from "lucide-react";
 import Link from "next/link";
 import { useRouter } from "next/navigation";
-import { Fragment, useEffect, useId, useMemo, useState } from "react";
+import { Fragment, useEffect, useId, useMemo, useRef, useState } from "react";
 import { StockBadge } from "@/components/ui/Badge";
 import { Button, buttonClasses } from "@/components/ui/Button";
 import { EmptyState } from "@/components/ui/EmptyState";
@@ -31,6 +31,7 @@ import type { Product } from "@/lib/commerce/schemas";
 import { useCart } from "@/store/useCart";
 import { useCatalogUI } from "@/store/useCatalogUI";
 import { MAX_COMPARE, useCompare } from "@/store/useCompare";
+import { useMerchantSession } from "@/store/useMerchantSession";
 import { groupRowsBySection } from "./CompareSections";
 
 const CATEGORY_NAMES: Record<string, string> = {
@@ -57,9 +58,6 @@ export function CompareWorkspace({
   const toggle = useCompare((s) => s.toggle);
   const context = useCompare((s) => s.context);
   const priorities = useCompare((s) => s.priorities);
-
-  const addWithFeedback = useCart((s) => s.addWithFeedback);
-  const pendingCart = useCart((s) => s.pending);
   const catalogCategory = useCatalogUI((s) => s.filters.category);
 
   const [onlyDifferences, setOnlyDifferences] = useState(false);
@@ -124,6 +122,23 @@ export function CompareWorkspace({
     [allRows, onlyDifferences],
   );
   const sections = useMemo(() => groupRowsBySection(visibleRows), [visibleRows]);
+
+  // Emit missing_info events for merchant dashboard when specs are absent
+  useEffect(() => {
+    if (!result || products.length === 0) return;
+    for (const row of allRows) {
+      for (const p of products) {
+        const val = row.values[p.id];
+        if (!val || val === "—") {
+          useMerchantSession.getState().recordMissingInfo({
+            productId: p.id,
+            field: row.key,
+            question: `What is the ${row.label} specification for ${p.name}?`,
+          });
+        }
+      }
+    }
+  }, [allRows, products, result]);
 
   // Quick-add suggestions for empty state or adding slots
   const allCatalog = useMemo(() => getAllProducts(), []);
@@ -285,7 +300,7 @@ export function CompareWorkspace({
   return (
     <div
       data-compare-workspace="true"
-      className="mx-auto max-w-7xl px-4 py-8 sm:px-6 lg:px-8"
+      className="mx-auto max-w-7xl px-4 py-8 pb-32 sm:px-6 sm:pb-20 lg:px-8"
     >
       {/* Breadcrumb */}
       <nav aria-label="Breadcrumb" className="mb-4 flex items-center gap-2 text-xs sm:text-sm text-muted">
@@ -365,7 +380,7 @@ export function CompareWorkspace({
 
       {/* Summary Panel: Pip's Catalog-Grounded Analysis & Live Stock */}
       {result && (
-        <div className="mb-6 rounded-2xl bg-surface-2/60 p-5 hairline">
+        <div data-compare-summary="true" className="mb-6 rounded-2xl bg-surface-2/60 p-5 hairline">
           <div className="flex items-start gap-3">
             <span
               aria-hidden="true"
@@ -386,15 +401,19 @@ export function CompareWorkspace({
                 <span className="font-semibold uppercase tracking-wider text-2xs text-muted">
                   Live Stock:
                 </span>
-                {products.map((p) => (
-                  <span
-                    key={p.id}
-                    className="inline-flex items-center gap-1.5 rounded-full bg-surface/70 px-2.5 py-1 hairline"
-                  >
-                    <span className="font-medium text-text">{p.name}:</span>
-                    <StockBadge stock={p.stock} className="shrink-0" />
-                  </span>
-                ))}
+                {products.map((p) => {
+                  const stockText = p.stock > 0 ? `In stock (${p.stock} units)` : "Out of stock";
+                  return (
+                    <span
+                      key={p.id}
+                      className="inline-flex items-center gap-1.5 rounded-full bg-surface/70 px-2.5 py-1 hairline"
+                    >
+                      <span className="font-medium text-text">{p.name}:</span>
+                      <span className="text-xs text-text">{stockText}</span>
+                      <StockBadge stock={p.stock} className="shrink-0" />
+                    </span>
+                  );
+                })}
               </div>
             </div>
           </div>
@@ -402,7 +421,7 @@ export function CompareWorkspace({
       )}
 
       {/* Workspace Controls Bar */}
-      <div className="mb-4 flex flex-wrap items-center justify-between gap-3">
+      <div data-compare-controls="true" className="mb-4 flex flex-wrap items-center justify-between gap-3">
         <div className="flex items-center gap-3">
           {/* Differences-only switch */}
           <div className="flex items-center gap-2">
@@ -431,7 +450,7 @@ export function CompareWorkspace({
           </div>
 
           {/* Screen reader live announcement */}
-          <div aria-live="polite" className="sr-only">
+          <div data-diff-announcement="true" aria-live="polite" className="sr-only">
             {onlyDifferences
               ? `Filtered to ${diffRowCount} differing attributes`
               : `Showing all ${allRows.length} attributes`}
@@ -466,7 +485,10 @@ export function CompareWorkspace({
       </div>
 
       {/* Semantic Comparison Table */}
-      <div className="relative overflow-x-auto rounded-2xl bg-surface/50 shadow-sm hairline">
+      <div
+        data-compare-table="true"
+        className="relative overflow-x-auto rounded-2xl bg-surface/50 shadow-sm hairline snap-x snap-mandatory"
+      >
         <table className="w-full border-collapse text-left">
           <caption className="sr-only">
             Side-by-side product comparison of {products.map((p) => p.name).join(", ")}
@@ -478,7 +500,10 @@ export function CompareWorkspace({
             className="sticky top-0 z-sticky bg-surface/95 backdrop-blur shadow-sm"
           >
             <tr className="border-b border-border/60">
-              <th scope="col" className="w-40 min-w-36 p-4 align-bottom sm:w-48 sm:min-w-44">
+              <th
+                scope="col"
+                className="sticky left-0 z-20 w-36 min-w-32 bg-surface/95 backdrop-blur hairline-r p-4 align-bottom sm:w-48 sm:min-w-44"
+              >
                 <span className="text-xs font-semibold uppercase tracking-wider text-muted">
                   Specification
                 </span>
@@ -486,14 +511,12 @@ export function CompareWorkspace({
 
               {products.map((p) => {
                 const isWinner = result?.winnerId === p.id;
-                const isBusy = pendingCart.includes(p.id);
-                const isOutOfStock = p.stock === 0;
 
                 return (
                   <th
                     key={p.id}
                     scope="col"
-                    className="min-w-48 p-4 align-top sm:min-w-56"
+                    className="snap-start min-w-44 p-4 align-top sm:min-w-56"
                   >
                     <div className="flex flex-col gap-2">
                       {/* Product Thumbnail with Winner badge & Remove */}
@@ -535,26 +558,8 @@ export function CompareWorkspace({
                         <StockBadge stock={p.stock} className="shrink-0 whitespace-nowrap" />
                       </div>
 
-                      {/* Add to Cart Button */}
-                      <Button
-                        size="sm"
-                        variant="primary"
-                        disabled={isOutOfStock || isBusy}
-                        onClick={() => addWithFeedback(p.id, null)}
-                        className="mt-1 w-full"
-                        aria-label={
-                          isOutOfStock
-                            ? `Add to cart: ${p.name} (out of stock)`
-                            : `Add to cart: ${p.name} (${formatNPR(p.price)})`
-                        }
-                      >
-                        {isBusy ? (
-                          <Loader2 className="size-3.5 animate-spin" aria-hidden="true" />
-                        ) : (
-                          <Plus className="size-3.5" aria-hidden="true" />
-                        )}
-                        Add to cart
-                      </Button>
+                      {/* Verified Add to Cart Button */}
+                      <CompareAddToCartButton product={p} />
                     </div>
                   </th>
                 );
@@ -595,7 +600,7 @@ export function CompareWorkspace({
                     <th
                       scope="colgroup"
                       colSpan={products.length + (products.length < MAX_COMPARE && availableToAdd.length > 0 ? 2 : 1)}
-                      className="px-4 py-2 font-display text-xs font-bold uppercase tracking-wider text-muted"
+                      className="sticky left-0 px-4 py-2 font-display text-xs font-bold uppercase tracking-wider text-muted"
                     >
                       {section.title}
                     </th>
@@ -609,7 +614,7 @@ export function CompareWorkspace({
                     >
                       <th
                         scope="row"
-                        className="px-4 py-3 align-middle text-xs font-medium text-muted sm:text-sm"
+                        className="sticky left-0 z-10 w-36 min-w-32 bg-surface/95 backdrop-blur hairline-r px-4 py-3 align-middle text-xs font-medium text-muted sm:w-48 sm:min-w-44 sm:text-sm"
                       >
                         {row.label}
                       </th>
@@ -622,7 +627,7 @@ export function CompareWorkspace({
                           <td
                             key={p.id}
                             className={cn(
-                              "px-4 py-3 align-middle font-mono text-xs sm:text-sm transition-colors",
+                              "snap-start min-w-44 px-4 py-3 align-middle font-mono text-xs sm:text-sm sm:min-w-56 transition-colors",
                               isWin
                                 ? "bg-accent/8 font-semibold text-accent-text shadow-[inset_0_0_0_1px_color-mix(in_oklab,var(--accent)_20%,transparent)]"
                                 : "text-text",
@@ -652,6 +657,98 @@ export function CompareWorkspace({
           </tbody>
         </table>
       </div>
+    </div>
+  );
+}
+
+interface CompareAddToCartButtonProps {
+  product: Product;
+}
+
+function CompareAddToCartButton({ product }: CompareAddToCartButtonProps) {
+  const addWithFeedback = useCart((s) => s.addWithFeedback);
+  const pending = useCart((s) => s.pending.includes(product.id));
+  const isOutOfStock = product.stock === 0;
+
+  const [status, setStatus] = useState<"idle" | "busy" | "verified" | "failed">("idle");
+  const [errorMsg, setErrorMsg] = useState<string>("");
+  const buttonRef = useRef<HTMLButtonElement>(null);
+
+  const handleClick = async () => {
+    if (isOutOfStock || pending || status === "busy") return;
+    setStatus("busy");
+    setErrorMsg("");
+    try {
+      const ok = await addWithFeedback(product.id, buttonRef.current);
+      if (ok) {
+        setStatus("verified");
+        setTimeout(() => setStatus("idle"), 2500);
+      } else {
+        setStatus("failed");
+        setErrorMsg("Store accepted it, but could not verify item in cart.");
+        setTimeout(() => setStatus("idle"), 3000);
+      }
+    } catch (err: unknown) {
+      setStatus("failed");
+      setErrorMsg(err instanceof Error ? err.message : "Store service unavailable.");
+      setTimeout(() => setStatus("idle"), 3000);
+    }
+  };
+
+  const busy = pending || status === "busy";
+
+  return (
+    <div className="mt-1 flex flex-col gap-1">
+      <Button
+        ref={buttonRef}
+        size="sm"
+        variant={status === "verified" ? "secondary" : "primary"}
+        disabled={isOutOfStock || busy}
+        onClick={handleClick}
+        className={cn(
+          "w-full transition-all",
+          status === "verified" && "border-accent text-accent-text bg-accent/15 hover:bg-accent/20",
+          status === "failed" && "border-destructive text-destructive bg-destructive/10 hover:bg-destructive/15",
+        )}
+        aria-label={
+          isOutOfStock
+            ? `Add to cart: ${product.name} (out of stock)`
+            : status === "verified"
+            ? `${product.name}: added and verified`
+            : status === "failed"
+            ? `${product.name}: addition failed, could not verify`
+            : `Add to cart: ${product.name} (${formatNPR(product.price)})`
+        }
+      >
+        {busy ? (
+          <>
+            <Loader2 className="size-3.5 animate-spin" aria-hidden="true" />
+            <span>Adding…</span>
+          </>
+        ) : status === "verified" ? (
+          <>
+            <Check className="size-3.5 text-accent-text" aria-hidden="true" />
+            <span>Added & verified ✓</span>
+          </>
+        ) : status === "failed" ? (
+          <>
+            <X className="size-3.5 text-destructive" aria-hidden="true" />
+            <span>Failed to verify</span>
+          </>
+        ) : (
+          <>
+            <Plus className="size-3.5" aria-hidden="true" />
+            <span>Add to cart</span>
+          </>
+        )}
+      </Button>
+      <span aria-live="polite" className="sr-only">
+        {status === "verified"
+          ? `Added ${product.name} to cart, stock confirmed and verified`
+          : status === "failed"
+          ? `Failed to verify adding ${product.name} to cart. ${errorMsg}`
+          : ""}
+      </span>
     </div>
   );
 }

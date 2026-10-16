@@ -108,7 +108,8 @@ export const mockAgent: Agent = {
   name: "mock",
   async run(req: AgentRequest, io: AgentIO) {
     const memory: AgentMemory = { ...req.memory, turn: req.memory.turn + 1 };
-    const intent = parseIntent(req.message, { hasPreviousQuery: !!memory.lastQuery });
+    const onCompare = req.context.path === "/compare" || req.context.compareIds.length >= 2;
+    const intent = parseIntent(req.message, { hasPreviousQuery: !!memory.lastQuery, onCompare });
     const msg = io.message();
     const h = new Handlers(io, msg, memory, req);
     await h.handle(intent);
@@ -138,6 +139,10 @@ class Handlers {
         return this.search(intent.refinement && this.memory.lastQuery ? this.refine(this.memory.lastQuery, intent.query) : intent.query);
       case "compare":
         return this.compare(intent.ref);
+      case "add_compare":
+        return this.addCompare(intent.ref);
+      case "remove_compare":
+        return this.removeCompare(intent.ref);
       case "similar":
         return this.similar(intent.ref, intent.cheaper);
       case "add":
@@ -324,7 +329,7 @@ class Handlers {
     let ids = ref ? resolveRef(ref, pool, { focusId: memory.focusProductId, pageProductId: this.req.context.pageProductId }) : pool.slice(0, 2);
     if (ref?.kind === "names" && ids.length === 1 && memory.focusProductId && memory.focusProductId !== ids[0]) ids = [memory.focusProductId, ids[0]];
     if (ref?.kind === "names" && ids.length === 1 && this.req.context.pageProductId && this.req.context.pageProductId !== ids[0]) ids = [this.req.context.pageProductId, ids[0]];
-    ids = [...new Set(ids)].slice(0, 3);
+    ids = [...new Set(ids)].slice(0, 4);
 
     // "Compare it with similar ones": one product resolved → add its closest in-stock neighbours.
     if (ids.length === 1) {
@@ -374,6 +379,124 @@ class Handlers {
     const cheapest = [...ps].sort((a, b) => a.price - b.price)[0];
     if (cheapest && cheapest.id !== winner?.id && cheapest.id !== lightest?.id && cheapest.stock > 0) chips.push("Add the cheaper one");
     if (chips.length) this.chips(chips);
+  }
+
+  private async addCompare(ref: Ref | null) {
+    const { io, msg, memory } = this;
+    const current = [...new Set(this.req.context.compareIds)];
+    if (current.length >= 4) {
+      io.state("speaking");
+      await io.say(msg, "You can compare up to 4 products at once. Remove one first before adding another.");
+      return;
+    }
+
+    const all = getAllProducts();
+    const candidateIds = all.map((p) => p.id);
+    const resolved = resolveRef(ref, candidateIds, {
+      focusId: memory.focusProductId,
+      pageProductId: this.req.context.pageProductId,
+      suggestedId: memory.suggestedId,
+    });
+
+    if (resolved.length === 0) {
+      io.state("speaking");
+      await io.say(msg, "Which product would you like to add to the comparison?");
+      return;
+    }
+
+    const targetId = resolved[0];
+    const targetProduct = getProduct(targetId);
+    if (!targetProduct) {
+      io.state("error", "Product not found");
+      await io.say(msg, "I couldn't find that product in the catalog.");
+      return;
+    }
+
+    if (current.includes(targetId)) {
+      io.state("speaking");
+      await io.say(msg, `**${name(targetProduct)}** is already in your comparison.`);
+      return;
+    }
+
+    const nextIds = [...current, targetId].slice(0, 4);
+    memory.lastComparedIds = nextIds;
+    memory.focusProductId = targetId;
+
+    if (nextIds.length < 2) {
+      io.ui({ type: "open_compare", productIds: nextIds });
+      io.state("speaking");
+      await io.say(msg, `Added **${name(targetProduct)}** to compare. Add another product to compare specs side by side.`);
+      return;
+    }
+
+    io.state("comparing", `Comparing ${nextIds.length} products…`);
+    await io.pause(400);
+
+    const r = await io.call(msg, "compare_products", { productIds: nextIds });
+    if (!r.ok) {
+      io.state("error", "Couldn't compare");
+      await io.say(msg, `I couldn't update the comparison (${r.error.message}).`);
+      return;
+    }
+
+    io.ui({ type: "open_compare", productIds: nextIds });
+    io.ui({ type: "move_to", anchorId: "compare-verdict" });
+    io.block(msg, {
+      kind: "comparison",
+      id: `${msg}-cmp`,
+      productIds: nextIds,
+      verdict: r.output.verdict,
+      winnerId: r.output.winnerId,
+    });
+    await io.pause(600);
+
+    io.state("speaking");
+    await io.say(msg, `Added **${name(targetProduct)}** to the comparison (${nextIds.length} products):\n\n${r.output.verdict}`);
+  }
+
+  private async removeCompare(ref: Ref | null) {
+    const { io, msg, memory } = this;
+    const current = [...new Set(this.req.context.compareIds)];
+    if (current.length === 0) {
+      io.state("speaking");
+      await io.say(msg, "There are no products in your comparison to remove.");
+      return;
+    }
+
+    const resolved = resolveRef(ref, current, {
+      focusId: memory.focusProductId,
+      pageProductId: this.req.context.pageProductId,
+    });
+
+    if (resolved.length === 0) {
+      io.state("speaking");
+      await io.say(msg, "Which product would you like to remove from the comparison?");
+      this.chips(products(current).map((p) => `Remove ${name(p)} from compare`));
+      return;
+    }
+
+    const targetId = resolved[0];
+    const targetProduct = getProduct(targetId);
+    const nextIds = current.filter((id) => id !== targetId);
+    memory.lastComparedIds = nextIds;
+
+    if (nextIds.length >= 2) {
+      io.state("comparing", `Comparing ${nextIds.length} products…`);
+      await io.pause(400);
+      const r = await io.call(msg, "compare_products", { productIds: nextIds });
+      io.ui({ type: "open_compare", productIds: nextIds });
+      io.state("speaking");
+      const v = r.ok ? r.output.verdict : "";
+      await io.say(msg, `Removed **${targetProduct ? name(targetProduct) : targetId}** from the comparison.${v ? `\n\n${v}` : ""}`);
+    } else if (nextIds.length === 1) {
+      io.ui({ type: "open_compare", productIds: nextIds });
+      io.state("speaking");
+      await io.say(msg, `Removed **${targetProduct ? name(targetProduct) : targetId}**. You now have 1 product selected; pick another to compare specs.`);
+    } else {
+      io.ui({ type: "navigate", to: "/" });
+      io.state("speaking");
+      await io.say(msg, `Removed **${targetProduct ? name(targetProduct) : targetId}**. Your comparison is now empty.`);
+    }
   }
 
   // ── Similar / alternatives ──

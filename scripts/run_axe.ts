@@ -34,6 +34,20 @@ const PAGES: PageAudit[] = [
     path: "/compare?ids=lenovo-ideapad-slim-5-14,acer-swift-go-14",
   },
   {
+    name: "Compare Workspace Pip Bubble Open",
+    path: "/compare?ids=apple-macbook-pro-14-m4-pro,lenovo-ideapad-slim-5-14,acer-swift-go-14,hp-pavilion-plus-14",
+    prepare: async (page) => {
+      await page.evaluate(() => {
+        const bubble = (window as unknown as Record<string, { getState: () => { show: (content: unknown, opts?: unknown) => void } }>).__useBubble;
+        bubble?.getState().show({
+          kind: "prompt",
+          suggestions: ["Show differences", "Which has better battery?", "Add winner to cart"],
+        }, { input: true });
+      });
+      await page.waitForTimeout(600);
+    },
+  },
+  {
     name: "Compare Workspace Differences",
     path: "/compare?ids=lenovo-ideapad-slim-5-14,acer-swift-go-14",
     prepare: async (page) => {

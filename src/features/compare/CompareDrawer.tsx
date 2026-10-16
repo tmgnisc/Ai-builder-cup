@@ -18,9 +18,12 @@ import { useCompare } from "@/store/useCompare";
 import { useCompareWinner } from "@/hooks/useCompareWinner";
 import { ProductImage } from "@/features/catalog";
 
+import { buttonClasses } from "@/components/ui/Button";
+import { buildCompareUrl } from "@/lib/commerce/compareUrl";
+
 /**
- * Bottom comparison drawer. Every value and the verdict come from `useCompareWinner`
- * over catalog data. Rows reveal in sequence; winning cells flash lime.
+ * Bottom comparison drawer preview. Every value and the verdict come from `useCompareWinner`
+ * over catalog data. Includes a direct action to open the full /compare workspace.
  */
 export function CompareDrawer() {
   const pathname = usePathname();
@@ -53,8 +56,13 @@ export function CompareDrawer() {
   // When on the dedicated /compare workspace page, the full table is shown instead of this drawer.
   if (pathname === "/compare") return null;
 
-  // Equal product columns with tokenized grid utilities.
-  const colsClass = products.length === 2 ? "compare-grid-2" : "compare-grid-3";
+  // Equal product columns with tokenized grid utilities (up to 4 products).
+  const colsClass =
+    products.length === 2
+      ? "compare-grid-2"
+      : products.length === 4
+      ? "compare-grid-4"
+      : "compare-grid-3";
 
   return (
     <Drawer
@@ -125,6 +133,16 @@ export function CompareDrawer() {
                 ))}
               </div>
             </div>
+          </div>
+
+          <div className="mt-5 border-t border-border/40 pt-4">
+            <Link
+              href={buildCompareUrl(ids)}
+              onClick={() => setOpen(false)}
+              className={buttonClasses({ variant: "primary", size: "md", className: "w-full" })}
+            >
+              Open full comparison workspace ({products.length} products)
+            </Link>
           </div>
         </div>
       )}

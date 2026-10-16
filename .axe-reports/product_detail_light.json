@@ -13,7 +13,7 @@
     "orientationAngle": 0,
     "orientationType": "landscape-primary"
   },
-  "timestamp": "2026-10-16T09:35:50.831Z",
+  "timestamp": "2026-10-16T10:59:42.592Z",
   "url": "http://localhost:3001/product/lenovo-ideapad-slim-5-14",
   "toolOptions": {
     "runOnly": {
@@ -1570,9 +1570,9 @@
             }
           ],
           "impact": null,
-          "html": "<button type=\"button\" aria-label=\"Talk to Pip\" aria-expanded=\"true\" title=\"Click to talk · drag...\" class=\"pointer-events-auto ...\" style=\"left:22.499999999999...\">",
+          "html": "<button type=\"button\" aria-label=\"Talk to Pip\" aria-expanded=\"false\" title=\"Click to talk · drag...\" class=\"pointer-events-auto ...\" style=\"left:22.499999999999...\">",
           "target": [
-            ".touch-none"
+            ".pointer-events-auto"
           ]
         },
         {
@@ -1613,166 +1613,6 @@
           "html": "<p aria-live=\"polite\" class=\"sr-only\"></p>",
           "target": [
             "body > .sr-only[aria-live=\"polite\"]"
-          ]
-        },
-        {
-          "any": [],
-          "all": [
-            {
-              "id": "aria-allowed-attr",
-              "data": null,
-              "relatedNodes": [],
-              "impact": "critical",
-              "message": "ARIA attributes are used correctly for the defined role"
-            },
-            {
-              "id": "aria-allowed-attr-elm",
-              "data": null,
-              "relatedNodes": [],
-              "message": "ARIA attributes are allowed for this element",
-              "impact": "critical"
-            },
-            {
-              "id": "aria-no-deprecated-attr",
-              "data": null,
-              "relatedNodes": [],
-              "impact": "critical",
-              "message": "No deprecated ARIA attributes are used"
-            }
-          ],
-          "none": [
-            {
-              "id": "aria-unsupported-attr",
-              "data": null,
-              "relatedNodes": [],
-              "impact": "critical",
-              "message": "ARIA attribute is supported"
-            }
-          ],
-          "impact": null,
-          "html": "<div role=\"dialog\" aria-modal=\"false\" aria-label=\"Pip\" class=\"bubble-panel surface-solid pointer-events-auto relative bubble-width rounded-panel p-3.5 pr-3\" style=\"transform-origin: 100% 30%; translate: none; rotate: none; scale: none; transform: translate(0px, 0px); opacity: 1;\">",
-          "target": [
-            ".bubble-panel"
-          ]
-        },
-        {
-          "any": [],
-          "all": [
-            {
-              "id": "aria-allowed-attr",
-              "data": null,
-              "relatedNodes": [],
-              "impact": "critical",
-              "message": "ARIA attributes are used correctly for the defined role"
-            },
-            {
-              "id": "aria-allowed-attr-elm",
-              "data": null,
-              "relatedNodes": [],
-              "message": "ARIA attributes are allowed for this element",
-              "impact": "critical"
-            },
-            {
-              "id": "aria-no-deprecated-attr",
-              "data": null,
-              "relatedNodes": [],
-              "impact": "critical",
-              "message": "No deprecated ARIA attributes are used"
-            }
-          ],
-          "none": [
-            {
-              "id": "aria-unsupported-attr",
-              "data": null,
-              "relatedNodes": [],
-              "impact": "critical",
-              "message": "ARIA attribute is supported"
-            }
-          ],
-          "impact": null,
-          "html": "<button type=\"button\" aria-label=\"Pip settings\" title=\"Pip settings\" aria-busy=\"false\" class=\"grid shrink-0 select...\">",
-          "target": [
-            "button[aria-label=\"Pip settings\"]"
-          ]
-        },
-        {
-          "any": [],
-          "all": [
-            {
-              "id": "aria-allowed-attr",
-              "data": null,
-              "relatedNodes": [],
-              "impact": "critical",
-              "message": "ARIA attributes are used correctly for the defined role"
-            },
-            {
-              "id": "aria-allowed-attr-elm",
-              "data": null,
-              "relatedNodes": [],
-              "message": "ARIA attributes are allowed for this element",
-              "impact": "critical"
-            },
-            {
-              "id": "aria-no-deprecated-attr",
-              "data": null,
-              "relatedNodes": [],
-              "impact": "critical",
-              "message": "No deprecated ARIA attributes are used"
-            }
-          ],
-          "none": [
-            {
-              "id": "aria-unsupported-attr",
-              "data": null,
-              "relatedNodes": [],
-              "impact": "critical",
-              "message": "ARIA attribute is supported"
-            }
-          ],
-          "impact": null,
-          "html": "<button type=\"button\" aria-label=\"Dismiss\" title=\"Dismiss\" aria-busy=\"false\" class=\"grid shrink-0 select...\">",
-          "target": [
-            "button[aria-label=\"Dismiss\"]"
-          ]
-        },
-        {
-          "any": [],
-          "all": [
-            {
-              "id": "aria-allowed-attr",
-              "data": null,
-              "relatedNodes": [],
-              "impact": "critical",
-              "message": "ARIA attributes are used correctly for the defined role"
-            },
-            {
-              "id": "aria-allowed-attr-elm",
-              "data": null,
-              "relatedNodes": [],
-              "message": "ARIA attributes are allowed for this element",
-              "impact": "critical"
-            },
-            {
-              "id": "aria-no-deprecated-attr",
-              "data": null,
-              "relatedNodes": [],
-              "impact": "critical",
-              "message": "No deprecated ARIA attributes are used"
-            }
-          ],
-          "none": [
-            {
-              "id": "aria-unsupported-attr",
-              "data": null,
-              "relatedNodes": [],
-              "impact": "critical",
-              "message": "ARIA attribute is supported"
-            }
-          ],
-          "impact": null,
-          "html": "<div class=\"pr-14\" aria-live=\"polite\">",
-          "target": [
-            ".pr-14"
           ]
         },
         {
@@ -2209,9 +2049,9 @@
           ],
           "none": [],
           "impact": null,
-          "html": "<button type=\"button\" aria-label=\"Talk to Pip\" aria-expanded=\"true\" title=\"Click to talk · drag...\" class=\"pointer-events-auto ...\" style=\"left:22.499999999999...\">",
+          "html": "<button type=\"button\" aria-label=\"Talk to Pip\" aria-expanded=\"false\" title=\"Click to talk · drag...\" class=\"pointer-events-auto ...\" style=\"left:22.499999999999...\">",
           "target": [
-            ".touch-none"
+            ".pointer-events-auto"
           ]
         },
         {
@@ -2230,78 +2070,6 @@
           "html": "<p aria-live=\"polite\" class=\"sr-only\"></p>",
           "target": [
             "body > .sr-only[aria-live=\"polite\"]"
-          ]
-        },
-        {
-          "any": [],
-          "all": [
-            {
-              "id": "aria-conditional-attr",
-              "data": null,
-              "relatedNodes": [],
-              "impact": "serious",
-              "message": "ARIA attribute is allowed"
-            }
-          ],
-          "none": [],
-          "impact": null,
-          "html": "<div role=\"dialog\" aria-modal=\"false\" aria-label=\"Pip\" class=\"bubble-panel surface-solid pointer-events-auto relative bubble-width rounded-panel p-3.5 pr-3\" style=\"transform-origin: 100% 30%; translate: none; rotate: none; scale: none; transform: translate(0px, 0px); opacity: 1;\">",
-          "target": [
-            ".bubble-panel"
-          ]
-        },
-        {
-          "any": [],
-          "all": [
-            {
-              "id": "aria-conditional-attr",
-              "data": null,
-              "relatedNodes": [],
-              "impact": "serious",
-              "message": "ARIA attribute is allowed"
-            }
-          ],
-          "none": [],
-          "impact": null,
-          "html": "<button type=\"button\" aria-label=\"Pip settings\" title=\"Pip settings\" aria-busy=\"false\" class=\"grid shrink-0 select...\">",
-          "target": [
-            "button[aria-label=\"Pip settings\"]"
-          ]
-        },
-        {
-          "any": [],
-          "all": [
-            {
-              "id": "aria-conditional-attr",
-              "data": null,
-              "relatedNodes": [],
-              "impact": "serious",
-              "message": "ARIA attribute is allowed"
-            }
-          ],
-          "none": [],
-          "impact": null,
-          "html": "<button type=\"button\" aria-label=\"Dismiss\" title=\"Dismiss\" aria-busy=\"false\" class=\"grid shrink-0 select...\">",
-          "target": [
-            "button[aria-label=\"Dismiss\"]"
-          ]
-        },
-        {
-          "any": [],
-          "all": [
-            {
-              "id": "aria-conditional-attr",
-              "data": null,
-              "relatedNodes": [],
-              "impact": "serious",
-              "message": "ARIA attribute is allowed"
-            }
-          ],
-          "none": [],
-          "impact": null,
-          "html": "<div class=\"pr-14\" aria-live=\"polite\">",
-          "target": [
-            ".pr-14"
           ]
         },
         {
@@ -2572,24 +2340,6 @@
             }
           ],
           "impact": null,
-          "html": "<div role=\"dialog\" aria-modal=\"false\" aria-label=\"Pip\" class=\"bubble-panel surface-solid pointer-events-auto relative bubble-width rounded-panel p-3.5 pr-3\" style=\"transform-origin: 100% 30%; translate: none; rotate: none; scale: none; transform: translate(0px, 0px); opacity: 1;\">",
-          "target": [
-            ".bubble-panel"
-          ]
-        },
-        {
-          "any": [],
-          "all": [],
-          "none": [
-            {
-              "id": "deprecatedrole",
-              "data": null,
-              "relatedNodes": [],
-              "impact": "minor",
-              "message": "ARIA role is not deprecated"
-            }
-          ],
-          "impact": null,
           "html": "<div aria-live=\"assertive\" id=\"__next-route-announcer__\" role=\"alert\" style=\"position: absolute; border: 0px; height: 1px; margin: -1px; padding: 0px; width: 1px; clip: rect(0px, 0px, 0px, 0px); overflow: hidden; white-space: nowrap; overflow-wrap: normal;\"></div>",
           "target": [
             [
@@ -2685,7 +2435,7 @@
           "impact": null,
           "html": "<span aria-hidden=\"true\" class=\"relative grid size-7 place-items-center rounded-full bg-accent shadow-[0_0_24px_-4px_var(--accent)]\">",
           "target": [
-            ".shadow-\\[0_0_24px_-4px_var\\(--accent\\)\\]"
+            ".size-7"
           ]
         },
         {
@@ -3259,134 +3009,6 @@
           ],
           "none": [],
           "impact": null,
-          "html": "<span aria-hidden=\"true\" class=\"bubble-tail absolute size-3.5 rotate-45 rounded-xs\" style=\"top: 43.75px; right: -6px;\"></span>",
-          "target": [
-            ".bubble-tail"
-          ]
-        },
-        {
-          "any": [],
-          "all": [
-            {
-              "id": "focusable-modal-open",
-              "data": null,
-              "relatedNodes": [],
-              "impact": "serious",
-              "message": "No focusable elements while a modal is open"
-            },
-            {
-              "id": "focusable-disabled",
-              "data": null,
-              "relatedNodes": [],
-              "impact": "serious",
-              "message": "No focusable elements contained within element"
-            },
-            {
-              "id": "focusable-not-tabbable",
-              "data": null,
-              "relatedNodes": [],
-              "impact": "serious",
-              "message": "No focusable elements contained within element"
-            }
-          ],
-          "none": [],
-          "impact": null,
-          "html": "<svg xmlns=\"http://www.w3.org/2000/svg\" width=\"24\" height=\"24\" viewBox=\"0 0 24 24\" fill=\"none\" stroke=\"currentColor\" stroke-width=\"2\" stroke-linecap=\"round\" stroke-linejoin=\"round\" class=\"lucide lucide-ellipsis lucide-more-horizontal size-4\" aria-hidden=\"true\">",
-          "target": [
-            ".lucide-ellipsis"
-          ]
-        },
-        {
-          "any": [],
-          "all": [
-            {
-              "id": "focusable-modal-open",
-              "data": null,
-              "relatedNodes": [],
-              "impact": "serious",
-              "message": "No focusable elements while a modal is open"
-            },
-            {
-              "id": "focusable-disabled",
-              "data": null,
-              "relatedNodes": [],
-              "impact": "serious",
-              "message": "No focusable elements contained within element"
-            },
-            {
-              "id": "focusable-not-tabbable",
-              "data": null,
-              "relatedNodes": [],
-              "impact": "serious",
-              "message": "No focusable elements contained within element"
-            }
-          ],
-          "none": [],
-          "impact": null,
-          "html": "<svg xmlns=\"http://www.w3.org/2000/svg\" width=\"24\" height=\"24\" viewBox=\"0 0 24 24\" fill=\"none\" stroke=\"currentColor\" stroke-width=\"2\" stroke-linecap=\"round\" stroke-linejoin=\"round\" class=\"lucide lucide-x size-3.5\" aria-hidden=\"true\"><path d=\"M18 6 6 18\"></path><path d=\"m6 6 12 12\"></path></svg>",
-          "target": [
-            ".size-3\\.5.lucide-x.lucide"
-          ]
-        },
-        {
-          "any": [],
-          "all": [
-            {
-              "id": "focusable-modal-open",
-              "data": null,
-              "relatedNodes": [],
-              "impact": "serious",
-              "message": "No focusable elements while a modal is open"
-            },
-            {
-              "id": "focusable-disabled",
-              "data": null,
-              "relatedNodes": [],
-              "impact": "serious",
-              "message": "No focusable elements contained within element"
-            },
-            {
-              "id": "focusable-not-tabbable",
-              "data": null,
-              "relatedNodes": [],
-              "impact": "serious",
-              "message": "No focusable elements contained within element"
-            }
-          ],
-          "none": [],
-          "impact": null,
-          "html": "<span aria-hidden=\"true\" class=\"absolute inset-x-4 bottom-1 h-px origin-left rounded-full opacity-70\" style=\"background: rgb(198, 255, 61); translate: none; rotate: none; scale: none; opacity: 0; transform: translate3d(0px, 0px, 0px) scale(0.9698, 1);\"></span>",
-          "target": [
-            ".inset-x-4"
-          ]
-        },
-        {
-          "any": [],
-          "all": [
-            {
-              "id": "focusable-modal-open",
-              "data": null,
-              "relatedNodes": [],
-              "impact": "serious",
-              "message": "No focusable elements while a modal is open"
-            },
-            {
-              "id": "focusable-disabled",
-              "data": null,
-              "relatedNodes": [],
-              "impact": "serious",
-              "message": "No focusable elements contained within element"
-            },
-            {
-              "id": "focusable-not-tabbable",
-              "data": null,
-              "relatedNodes": [],
-              "impact": "serious",
-              "message": "No focusable elements contained within element"
-            }
-          ],
-          "none": [],
-          "impact": null,
           "html": "<li aria-hidden=\"true\" class=\"hidden size-10 rounded-full border border-dashed border-border-strong sm:block\"></li>",
           "target": [
             "li:nth-child(1)"
@@ -3613,7 +3235,7 @@
           "impact": null,
           "html": "<div aria-hidden=\"true\" class=\"absolute inset-0 bg-overlay transition-opacity duration-300 opacity-0\"></div>",
           "target": [
-            ".z-modal > .bg-overlay.transition-opacity.opacity-0"
+            ".z-modal.fixed[inert=\"\"]:nth-child(23) > .bg-overlay.transition-opacity.opacity-0"
           ]
         },
         {
@@ -3709,7 +3331,7 @@
           "impact": null,
           "html": "<div aria-hidden=\"true\" class=\"absolute inset-0 bg-overlay transition-opacity duration-300 opacity-0\"></div>",
           "target": [
-            ".z-drawer.fixed[inert=\"\"]:nth-child(25) > .bg-overlay.transition-opacity.opacity-0"
+            ".z-drawer > .bg-overlay.transition-opacity.opacity-0"
           ]
         },
         {
@@ -3837,7 +3459,7 @@
           "impact": null,
           "html": "<div aria-hidden=\"true\" class=\"absolute inset-0 bg-overlay transition-opacity duration-300 opacity-0\"></div>",
           "target": [
-            ".z-drawer.fixed[inert=\"\"]:nth-child(26) > .bg-overlay.transition-opacity.opacity-0"
+            ".z-modal.fixed[inert=\"\"]:nth-child(25) > .bg-overlay.transition-opacity.opacity-0"
           ]
         },
         {
@@ -4263,9 +3885,9 @@
             }
           ],
           "impact": null,
-          "html": "<button type=\"button\" aria-label=\"Talk to Pip\" aria-expanded=\"true\" title=\"Click to talk · drag...\" class=\"pointer-events-auto ...\" style=\"left:22.499999999999...\">",
+          "html": "<button type=\"button\" aria-label=\"Talk to Pip\" aria-expanded=\"false\" title=\"Click to talk · drag...\" class=\"pointer-events-auto ...\" style=\"left:22.499999999999...\">",
           "target": [
-            ".touch-none"
+            ".pointer-events-auto"
           ]
         },
         {
@@ -4284,78 +3906,6 @@
           "html": "<p aria-live=\"polite\" class=\"sr-only\"></p>",
           "target": [
             "body > .sr-only[aria-live=\"polite\"]"
-          ]
-        },
-        {
-          "any": [],
-          "all": [],
-          "none": [
-            {
-              "id": "aria-prohibited-attr",
-              "data": null,
-              "relatedNodes": [],
-              "impact": "serious",
-              "message": "ARIA attribute is allowed"
-            }
-          ],
-          "impact": null,
-          "html": "<div role=\"dialog\" aria-modal=\"false\" aria-label=\"Pip\" class=\"bubble-panel surface-solid pointer-events-auto relative bubble-width rounded-panel p-3.5 pr-3\" style=\"transform-origin: 100% 30%; translate: none; rotate: none; scale: none; transform: translate(0px, 0px); opacity: 1;\">",
-          "target": [
-            ".bubble-panel"
-          ]
-        },
-        {
-          "any": [],
-          "all": [],
-          "none": [
-            {
-              "id": "aria-prohibited-attr",
-              "data": null,
-              "relatedNodes": [],
-              "impact": "serious",
-              "message": "ARIA attribute is allowed"
-            }
-          ],
-          "impact": null,
-          "html": "<button type=\"button\" aria-label=\"Pip settings\" title=\"Pip settings\" aria-busy=\"false\" class=\"grid shrink-0 select...\">",
-          "target": [
-            "button[aria-label=\"Pip settings\"]"
-          ]
-        },
-        {
-          "any": [],
-          "all": [],
-          "none": [
-            {
-              "id": "aria-prohibited-attr",
-              "data": null,
-              "relatedNodes": [],
-              "impact": "serious",
-              "message": "ARIA attribute is allowed"
-            }
-          ],
-          "impact": null,
-          "html": "<button type=\"button\" aria-label=\"Dismiss\" title=\"Dismiss\" aria-busy=\"false\" class=\"grid shrink-0 select...\">",
-          "target": [
-            "button[aria-label=\"Dismiss\"]"
-          ]
-        },
-        {
-          "any": [],
-          "all": [],
-          "none": [
-            {
-              "id": "aria-prohibited-attr",
-              "data": null,
-              "relatedNodes": [],
-              "impact": "serious",
-              "message": "ARIA attribute is allowed"
-            }
-          ],
-          "impact": null,
-          "html": "<div class=\"pr-14\" aria-live=\"polite\">",
-          "target": [
-            ".pr-14"
           ]
         },
         {
@@ -4611,24 +4161,6 @@
           "html": "<div role=\"img\" aria-label=\"Pip, idle\" class=\"absolute inset-0\">",
           "target": [
             "div[aria-label=\"Pip, idle\"]"
-          ]
-        },
-        {
-          "any": [
-            {
-              "id": "aria-required-attr",
-              "data": null,
-              "relatedNodes": [],
-              "impact": "critical",
-              "message": "All required ARIA attributes are present"
-            }
-          ],
-          "all": [],
-          "none": [],
-          "impact": null,
-          "html": "<div role=\"dialog\" aria-modal=\"false\" aria-label=\"Pip\" class=\"bubble-panel surface-solid pointer-events-auto relative bubble-width rounded-panel p-3.5 pr-3\" style=\"transform-origin: 100% 30%; translate: none; rotate: none; scale: none; transform: translate(0px, 0px); opacity: 1;\">",
-          "target": [
-            ".bubble-panel"
           ]
         },
         {
@@ -5160,38 +4692,6 @@
           "html": "<div role=\"img\" aria-label=\"Pip, idle\" class=\"absolute inset-0\">",
           "target": [
             "div[aria-label=\"Pip, idle\"]"
-          ]
-        },
-        {
-          "any": [],
-          "all": [],
-          "none": [
-            {
-              "id": "invalidrole",
-              "data": null,
-              "relatedNodes": [],
-              "impact": "critical",
-              "message": "ARIA role is valid"
-            },
-            {
-              "id": "abstractrole",
-              "data": null,
-              "relatedNodes": [],
-              "impact": "critical",
-              "message": "Abstract roles are not used"
-            },
-            {
-              "id": "unsupportedrole",
-              "data": null,
-              "relatedNodes": [],
-              "impact": "critical",
-              "message": "ARIA role is supported"
-            }
-          ],
-          "impact": null,
-          "html": "<div role=\"dialog\" aria-modal=\"false\" aria-label=\"Pip\" class=\"bubble-panel surface-solid pointer-events-auto relative bubble-width rounded-panel p-3.5 pr-3\" style=\"transform-origin: 100% 30%; translate: none; rotate: none; scale: none; transform: translate(0px, 0px); opacity: 1;\">",
-          "target": [
-            ".bubble-panel"
           ]
         },
         {
@@ -5984,9 +5484,9 @@
           ],
           "none": [],
           "impact": null,
-          "html": "<button type=\"button\" aria-label=\"Talk to Pip\" aria-expanded=\"true\" title=\"Click to talk · drag...\" class=\"pointer-events-auto ...\" style=\"left:22.499999999999...\">",
+          "html": "<button type=\"button\" aria-label=\"Talk to Pip\" aria-expanded=\"false\" title=\"Click to talk · drag...\" class=\"pointer-events-auto ...\" style=\"left:22.499999999999...\">",
           "target": [
-            ".touch-none"
+            ".pointer-events-auto"
           ]
         },
         {
@@ -6019,134 +5519,6 @@
           "html": "<p aria-live=\"polite\" class=\"sr-only\"></p>",
           "target": [
             "body > .sr-only[aria-live=\"polite\"]"
-          ]
-        },
-        {
-          "any": [],
-          "all": [
-            {
-              "id": "aria-valid-attr-value",
-              "data": null,
-              "relatedNodes": [],
-              "impact": "critical",
-              "message": "ARIA attribute values are valid"
-            },
-            {
-              "id": "aria-errormessage",
-              "data": null,
-              "relatedNodes": [],
-              "impact": "critical",
-              "message": "aria-errormessage exists and references elements visible to screen readers that use a supported aria-errormessage technique"
-            },
-            {
-              "id": "aria-level",
-              "data": null,
-              "relatedNodes": [],
-              "impact": "critical",
-              "message": "aria-level values are valid"
-            }
-          ],
-          "none": [],
-          "impact": null,
-          "html": "<div role=\"dialog\" aria-modal=\"false\" aria-label=\"Pip\" class=\"bubble-panel surface-solid pointer-events-auto relative bubble-width rounded-panel p-3.5 pr-3\" style=\"transform-origin: 100% 30%; translate: none; rotate: none; scale: none; transform: translate(0px, 0px); opacity: 1;\">",
-          "target": [
-            ".bubble-panel"
-          ]
-        },
-        {
-          "any": [],
-          "all": [
-            {
-              "id": "aria-valid-attr-value",
-              "data": null,
-              "relatedNodes": [],
-              "impact": "critical",
-              "message": "ARIA attribute values are valid"
-            },
-            {
-              "id": "aria-errormessage",
-              "data": null,
-              "relatedNodes": [],
-              "impact": "critical",
-              "message": "aria-errormessage exists and references elements visible to screen readers that use a supported aria-errormessage technique"
-            },
-            {
-              "id": "aria-level",
-              "data": null,
-              "relatedNodes": [],
-              "impact": "critical",
-              "message": "aria-level values are valid"
-            }
-          ],
-          "none": [],
-          "impact": null,
-          "html": "<button type=\"button\" aria-label=\"Pip settings\" title=\"Pip settings\" aria-busy=\"false\" class=\"grid shrink-0 select...\">",
-          "target": [
-            "button[aria-label=\"Pip settings\"]"
-          ]
-        },
-        {
-          "any": [],
-          "all": [
-            {
-              "id": "aria-valid-attr-value",
-              "data": null,
-              "relatedNodes": [],
-              "impact": "critical",
-              "message": "ARIA attribute values are valid"
-            },
-            {
-              "id": "aria-errormessage",
-              "data": null,
-              "relatedNodes": [],
-              "impact": "critical",
-              "message": "aria-errormessage exists and references elements visible to screen readers that use a supported aria-errormessage technique"
-            },
-            {
-              "id": "aria-level",
-              "data": null,
-              "relatedNodes": [],
-              "impact": "critical",
-              "message": "aria-level values are valid"
-            }
-          ],
-          "none": [],
-          "impact": null,
-          "html": "<button type=\"button\" aria-label=\"Dismiss\" title=\"Dismiss\" aria-busy=\"false\" class=\"grid shrink-0 select...\">",
-          "target": [
-            "button[aria-label=\"Dismiss\"]"
-          ]
-        },
-        {
-          "any": [],
-          "all": [
-            {
-              "id": "aria-valid-attr-value",
-              "data": null,
-              "relatedNodes": [],
-              "impact": "critical",
-              "message": "ARIA attribute values are valid"
-            },
-            {
-              "id": "aria-errormessage",
-              "data": null,
-              "relatedNodes": [],
-              "impact": "critical",
-              "message": "aria-errormessage exists and references elements visible to screen readers that use a supported aria-errormessage technique"
-            },
-            {
-              "id": "aria-level",
-              "data": null,
-              "relatedNodes": [],
-              "impact": "critical",
-              "message": "aria-level values are valid"
-            }
-          ],
-          "none": [],
-          "impact": null,
-          "html": "<div class=\"pr-14\" aria-live=\"polite\">",
-          "target": [
-            ".pr-14"
           ]
         },
         {
@@ -6575,9 +5947,9 @@
           "all": [],
           "none": [],
           "impact": null,
-          "html": "<button type=\"button\" aria-label=\"Talk to Pip\" aria-expanded=\"true\" title=\"Click to talk · drag...\" class=\"pointer-events-auto ...\" style=\"left:22.499999999999...\">",
+          "html": "<button type=\"button\" aria-label=\"Talk to Pip\" aria-expanded=\"false\" title=\"Click to talk · drag...\" class=\"pointer-events-auto ...\" style=\"left:22.499999999999...\">",
           "target": [
-            ".touch-none"
+            ".pointer-events-auto"
           ]
         },
         {
@@ -6596,78 +5968,6 @@
           "html": "<p aria-live=\"polite\" class=\"sr-only\"></p>",
           "target": [
             "body > .sr-only[aria-live=\"polite\"]"
-          ]
-        },
-        {
-          "any": [
-            {
-              "id": "aria-valid-attr",
-              "data": null,
-              "relatedNodes": [],
-              "impact": "critical",
-              "message": "ARIA attribute name is valid"
-            }
-          ],
-          "all": [],
-          "none": [],
-          "impact": null,
-          "html": "<div role=\"dialog\" aria-modal=\"false\" aria-label=\"Pip\" class=\"bubble-panel surface-solid pointer-events-auto relative bubble-width rounded-panel p-3.5 pr-3\" style=\"transform-origin: 100% 30%; translate: none; rotate: none; scale: none; transform: translate(0px, 0px); opacity: 1;\">",
-          "target": [
-            ".bubble-panel"
-          ]
-        },
-        {
-          "any": [
-            {
-              "id": "aria-valid-attr",
-              "data": null,
-              "relatedNodes": [],
-              "impact": "critical",
-              "message": "ARIA attribute name is valid"
-            }
-          ],
-          "all": [],
-          "none": [],
-          "impact": null,
-          "html": "<button type=\"button\" aria-label=\"Pip settings\" title=\"Pip settings\" aria-busy=\"false\" class=\"grid shrink-0 select...\">",
-          "target": [
-            "button[aria-label=\"Pip settings\"]"
-          ]
-        },
-        {
-          "any": [
-            {
-              "id": "aria-valid-attr",
-              "data": null,
-              "relatedNodes": [],
-              "impact": "critical",
-              "message": "ARIA attribute name is valid"
-            }
-          ],
-          "all": [],
-          "none": [],
-          "impact": null,
-          "html": "<button type=\"button\" aria-label=\"Dismiss\" title=\"Dismiss\" aria-busy=\"false\" class=\"grid shrink-0 select...\">",
-          "target": [
-            "button[aria-label=\"Dismiss\"]"
-          ]
-        },
-        {
-          "any": [
-            {
-              "id": "aria-valid-attr",
-              "data": null,
-              "relatedNodes": [],
-              "impact": "critical",
-              "message": "ARIA attribute name is valid"
-            }
-          ],
-          "all": [],
-          "none": [],
-          "impact": null,
-          "html": "<div class=\"pr-14\" aria-live=\"polite\">",
-          "target": [
-            ".pr-14"
           ]
         },
         {
@@ -6738,70 +6038,6 @@
           "html": "<div role=\"img\" aria-label=\"Lenovo IdeaPad Slim 5 14\" class=\"relative size-full overflow-hidden\" style=\"background:linear-gradient(135deg, #1a2a6c, var(--bg))\">",
           "target": [
             "div[data-gallery-main=\"true\"] > .size-full[aria-label=\"Lenovo IdeaPad Slim 5 14\"][role=\"img\"]"
-          ]
-        },
-        {
-          "any": [],
-          "all": [
-            {
-              "id": "important-letter-spacing",
-              "data": null,
-              "relatedNodes": [],
-              "impact": "serious",
-              "message": "Letter-spacing in the style attribute is not set to !important, or meets the minimum"
-            },
-            {
-              "id": "important-word-spacing",
-              "data": null,
-              "relatedNodes": [],
-              "impact": "serious",
-              "message": "word-spacing in the style attribute is not set to !important, or meets the minimum"
-            },
-            {
-              "id": "important-line-height",
-              "data": null,
-              "relatedNodes": [],
-              "impact": "serious",
-              "message": "line-height in the style attribute is not set to !important, or meets the minimum"
-            }
-          ],
-          "none": [],
-          "impact": null,
-          "html": "<div class=\"pointer-events-none fixed left-0 top-0 z-bubble will-change-transform\" style=\"transform: translate3d(782px, 525px, 0px); --pip-color: #c6ff3d;\">",
-          "target": [
-            ".z-bubble"
-          ]
-        },
-        {
-          "any": [],
-          "all": [
-            {
-              "id": "important-letter-spacing",
-              "data": null,
-              "relatedNodes": [],
-              "impact": "serious",
-              "message": "Letter-spacing in the style attribute is not set to !important, or meets the minimum"
-            },
-            {
-              "id": "important-word-spacing",
-              "data": null,
-              "relatedNodes": [],
-              "impact": "serious",
-              "message": "word-spacing in the style attribute is not set to !important, or meets the minimum"
-            },
-            {
-              "id": "important-line-height",
-              "data": null,
-              "relatedNodes": [],
-              "impact": "serious",
-              "message": "line-height in the style attribute is not set to !important, or meets the minimum"
-            }
-          ],
-          "none": [],
-          "impact": null,
-          "html": "<div role=\"dialog\" aria-modal=\"false\" aria-label=\"Pip\" class=\"bubble-panel surface-solid pointer-events-auto relative bubble-width rounded-panel p-3.5 pr-3\" style=\"transform-origin: 100% 30%; translate: none; rotate: none; scale: none; transform: translate(0px, 0px); opacity: 1;\">",
-          "target": [
-            ".bubble-panel"
           ]
         }
       ]
@@ -7055,77 +6291,9 @@
           "all": [],
           "none": [],
           "impact": null,
-          "html": "<button type=\"button\" aria-label=\"Talk to Pip\" aria-expanded=\"true\" title=\"Click to talk · drag...\" class=\"pointer-events-auto ...\" style=\"left:22.499999999999...\">",
+          "html": "<button type=\"button\" aria-label=\"Talk to Pip\" aria-expanded=\"false\" title=\"Click to talk · drag...\" class=\"pointer-events-auto ...\" style=\"left:22.499999999999...\">",
           "target": [
-            ".touch-none"
-          ]
-        },
-        {
-          "any": [
-            {
-              "id": "aria-label",
-              "data": null,
-              "relatedNodes": [],
-              "impact": "critical",
-              "message": "aria-label attribute exists and is not empty"
-            },
-            {
-              "id": "non-empty-title",
-              "data": null,
-              "relatedNodes": [],
-              "impact": "critical",
-              "message": "Element has a title attribute"
-            }
-          ],
-          "all": [],
-          "none": [],
-          "impact": null,
-          "html": "<button type=\"button\" aria-label=\"Pip settings\" title=\"Pip settings\" aria-busy=\"false\" class=\"grid shrink-0 select...\">",
-          "target": [
-            "button[aria-label=\"Pip settings\"]"
-          ]
-        },
-        {
-          "any": [
-            {
-              "id": "aria-label",
-              "data": null,
-              "relatedNodes": [],
-              "impact": "critical",
-              "message": "aria-label attribute exists and is not empty"
-            },
-            {
-              "id": "non-empty-title",
-              "data": null,
-              "relatedNodes": [],
-              "impact": "critical",
-              "message": "Element has a title attribute"
-            }
-          ],
-          "all": [],
-          "none": [],
-          "impact": null,
-          "html": "<button type=\"button\" aria-label=\"Dismiss\" title=\"Dismiss\" aria-busy=\"false\" class=\"grid shrink-0 select...\">",
-          "target": [
-            "button[aria-label=\"Dismiss\"]"
-          ]
-        },
-        {
-          "any": [
-            {
-              "id": "button-has-visible-text",
-              "data": null,
-              "relatedNodes": [],
-              "impact": "critical",
-              "message": "Element has inner text that is visible to screen readers"
-            }
-          ],
-          "all": [],
-          "none": [],
-          "impact": null,
-          "html": "<button type=\"button\" class=\"mt-2 text-xs text-muted underline-offset-2 hover:text-text hover:underline\">Reply to Pip</button>",
-          "target": [
-            ".underline-offset-2"
+            ".pointer-events-auto"
           ]
         }
       ]
@@ -7946,56 +7114,6 @@
           "html": "<p class=\"font-mono text-xs\">Demo store · prices in NPR · checkout always needs your confirmation</p>",
           "target": [
             ".pb-36 > .font-mono.text-xs"
-          ]
-        },
-        {
-          "any": [
-            {
-              "id": "color-contrast",
-              "data": {
-                "fgColor": "#0e1016",
-                "bgColor": "#ffffff",
-                "contrastRatio": 19.01,
-                "fontSize": "10.5pt (14px)",
-                "fontWeight": "normal",
-                "expectedContrastRatio": "4.5:1"
-              },
-              "relatedNodes": [],
-              "impact": "serious",
-              "message": "Element has sufficient color contrast of 19.01"
-            }
-          ],
-          "all": [],
-          "none": [],
-          "impact": null,
-          "html": "<strong class=\"font-semibold text-text\">IdeaPad Slim 5 14</strong>",
-          "target": [
-            "strong"
-          ]
-        },
-        {
-          "any": [
-            {
-              "id": "color-contrast",
-              "data": {
-                "fgColor": "#4e5464",
-                "bgColor": "#ffffff",
-                "contrastRatio": 7.56,
-                "fontSize": "9.0pt (12px)",
-                "fontWeight": "normal",
-                "expectedContrastRatio": "4.5:1"
-              },
-              "relatedNodes": [],
-              "impact": "serious",
-              "message": "Element has sufficient color contrast of 7.56"
-            }
-          ],
-          "all": [],
-          "none": [],
-          "impact": null,
-          "html": "<button type=\"button\" class=\"mt-2 text-xs text-muted underline-offset-2 hover:text-text hover:underline\">Reply to Pip</button>",
-          "target": [
-            ".underline-offset-2"
           ]
         }
       ]
@@ -8947,63 +8065,9 @@
           "all": [],
           "none": [],
           "impact": null,
-          "html": "<button type=\"button\" aria-label=\"Talk to Pip\" aria-expanded=\"true\" title=\"Click to talk · drag...\" class=\"pointer-events-auto ...\" style=\"left:22.499999999999...\">",
+          "html": "<button type=\"button\" aria-label=\"Talk to Pip\" aria-expanded=\"false\" title=\"Click to talk · drag...\" class=\"pointer-events-auto ...\" style=\"left:22.499999999999...\">",
           "target": [
-            ".touch-none"
-          ]
-        },
-        {
-          "any": [
-            {
-              "id": "no-focusable-content",
-              "data": null,
-              "relatedNodes": [],
-              "impact": "serious",
-              "message": "Element does not have focusable descendants"
-            }
-          ],
-          "all": [],
-          "none": [],
-          "impact": null,
-          "html": "<button type=\"button\" aria-label=\"Pip settings\" title=\"Pip settings\" aria-busy=\"false\" class=\"grid shrink-0 select...\">",
-          "target": [
-            "button[aria-label=\"Pip settings\"]"
-          ]
-        },
-        {
-          "any": [
-            {
-              "id": "no-focusable-content",
-              "data": null,
-              "relatedNodes": [],
-              "impact": "serious",
-              "message": "Element does not have focusable descendants"
-            }
-          ],
-          "all": [],
-          "none": [],
-          "impact": null,
-          "html": "<button type=\"button\" aria-label=\"Dismiss\" title=\"Dismiss\" aria-busy=\"false\" class=\"grid shrink-0 select...\">",
-          "target": [
-            "button[aria-label=\"Dismiss\"]"
-          ]
-        },
-        {
-          "any": [
-            {
-              "id": "no-focusable-content",
-              "data": null,
-              "relatedNodes": [],
-              "impact": "serious",
-              "message": "Element does not have focusable descendants"
-            }
-          ],
-          "all": [],
-          "none": [],
-          "impact": null,
-          "html": "<button type=\"button\" class=\"mt-2 text-xs text-muted underline-offset-2 hover:text-text hover:underline\">Reply to Pip</button>",
-          "target": [
-            ".underline-offset-2"
+            ".pointer-events-auto"
           ]
         }
       ]
@@ -9646,31 +8710,6 @@
             "tr[data-pip-anchor=\"spec:screen\"] > th"
           ],
           "failureSummary": "Fix any of the following:\n  Element's background color could not be determined because it is overlapped by another element"
-        },
-        {
-          "any": [
-            {
-              "id": "color-contrast",
-              "data": {
-                "contrastRatio": 0,
-                "fontSize": "10.5pt (14px)",
-                "fontWeight": "normal",
-                "messageKey": "elmPartiallyObscuring",
-                "expectedContrastRatio": "4.5:1"
-              },
-              "relatedNodes": [],
-              "impact": "serious",
-              "message": "Element's background color could not be determined because it partially overlaps other elements"
-            }
-          ],
-          "all": [],
-          "none": [],
-          "impact": "serious",
-          "html": "<span class=\"block\">The <strong class=\"font-semibold text-text\">IdeaPad Slim 5 14</strong>. 12 h of battery beats 80% of the laptops here. Ask me anything about it, or rest on a spec and I'll put it in context.</span>",
-          "target": [
-            ".block"
-          ],
-          "failureSummary": "Fix any of the following:\n  Element's background color could not be determined because it partially overlaps other elements"
         }
       ]
     }

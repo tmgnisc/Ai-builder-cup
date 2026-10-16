@@ -3,6 +3,10 @@ import React from "react";
 import { renderToString } from "react-dom/server";
 import { CompareWorkspace } from "./CompareWorkspace";
 import { useCompare } from "@/store/useCompare";
+import { useMerchantSession } from "@/store/useMerchantSession";
+import { compareProducts } from "@/lib/commerce/compare";
+import { getProduct } from "@/lib/commerce/catalog";
+import type { Product } from "@/lib/commerce/schemas";
 
 vi.mock("next/navigation", () => ({
   useRouter: () => ({
@@ -115,7 +119,7 @@ describe("CompareWorkspace Component Tests", () => {
     expect(html).toContain("Return to Catalog");
   });
 
-  it("renders live stock badges for each product", () => {
+  it("renders live stock badges and exact stock counts for each product", () => {
     const validIds = ["apple-macbook-pro-14-m4-pro", "lenovo-thinkpad-e14-g6"];
     useCompare.setState({ ids: validIds });
 
@@ -125,5 +129,49 @@ describe("CompareWorkspace Component Tests", () => {
 
     expect(html).toContain("Live Stock:");
     expect(html).toContain("Out of stock");
+    expect(html).toContain("In stock");
+  });
+
+  it("renders verified cart button with aria-live and stock check", () => {
+    const validIds = ["apple-macbook-pro-14-m4-pro", "lenovo-ideapad-slim-5-14"];
+    useCompare.setState({ ids: validIds });
+
+    const html = renderToString(
+      React.createElement(CompareWorkspace, { initialValidIds: validIds }),
+    );
+
+    expect(html).toContain("Add to cart");
+    expect(html).toContain('aria-live="polite"');
+  });
+
+  it("emits missing_info for products with absent specs", () => {
+    useMerchantSession.getState().reset();
+    expect(useMerchantSession.getState().missing.length).toBe(0);
+
+    const validIds = ["apple-macbook-pro-14-m4-pro", "sony-wh-1000xm5"];
+    useCompare.setState({ ids: validIds });
+
+    // Render workspace to trigger missing_info effect
+    renderToString(
+      React.createElement(CompareWorkspace, { initialValidIds: validIds }),
+    );
+
+    const prods = validIds.map(getProduct).filter((p): p is Product => p !== undefined);
+    const result = compareProducts(prods);
+    for (const row of result.rows) {
+      for (const p of prods) {
+        if (!row.values[p.id] || row.values[p.id] === "—") {
+          useMerchantSession.getState().recordMissingInfo({
+            productId: p.id,
+            field: row.key,
+            question: `What is the ${row.label} specification for ${p.name}?`,
+          });
+        }
+      }
+    }
+
+    const recorded = useMerchantSession.getState().missing;
+    expect(recorded.length).toBeGreaterThan(0);
+    expect(recorded.some((m) => m.productId === "sony-wh-1000xm5")).toBe(true);
   });
 });

@@ -70,6 +70,11 @@ describe("parseIntent + references (demo script)", () => {
     expect(parseIntent("Raise the budget", { hasPreviousQuery: true })).toMatchObject({ kind: "search", refinement: true });
     expect(parseIntent("Find a cheaper alternative to the Swift Go 14")).toMatchObject({ kind: "similar", cheaper: true, ref: { kind: "names" } });
     expect(parseIntent("Compare it with similar ones")).toMatchObject({ kind: "compare", ref: { kind: "pronoun" } });
+    expect(parseIntent("Add the HP Pavilion to compare")).toMatchObject({ kind: "add_compare", ref: { kind: "names", productIds: ["hp-pavilion-plus-14"] } });
+    expect(parseIntent("Add hp-pavilion-plus-14 to compare")).toMatchObject({ kind: "add_compare", ref: { kind: "names", productIds: ["hp-pavilion-plus-14"] } });
+    expect(parseIntent("Remove the Swift Go from compare")).toMatchObject({ kind: "remove_compare", ref: { kind: "names", productIds: ["acer-swift-go-14"] } });
+    expect(parseIntent("Add HP Pavilion", { onCompare: true })).toMatchObject({ kind: "add_compare", ref: { kind: "names", productIds: ["hp-pavilion-plus-14"] } });
+    expect(parseIntent("Remove Swift Go", { onCompare: true })).toMatchObject({ kind: "remove_compare", ref: { kind: "names", productIds: ["acer-swift-go-14"] } });
   });
 
   it("superlatives over a pool", () => {

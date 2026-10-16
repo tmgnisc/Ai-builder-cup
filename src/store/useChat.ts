@@ -11,6 +11,7 @@ import { useCart } from "./useCart";
 import { PRICE_MAX, PRICE_MIN, useCatalogUI } from "./useCatalogUI";
 import { useCompanion } from "./useCompanion";
 import { useCompare } from "./useCompare";
+import { buildCompareUrl } from "@/lib/commerce/compareUrl";
 import { findAnchor, usePipPosition } from "./usePipPosition";
 import { useFeedback } from "./useFeedback";
 import { useGuide } from "./useGuide";
@@ -150,7 +151,7 @@ async function performUI(action: UIAction) {
       return;
     case "open_compare": {
       useCompare.getState().show(action.productIds, { context: action.context, priorities: action.priorities });
-      const targetUrl = `/compare?ids=${encodeURIComponent(action.productIds.join(","))}`;
+      const targetUrl = buildCompareUrl(action.productIds);
       if (navigate) navigate(targetUrl);
       else window.location.assign(targetUrl);
       return;
@@ -322,3 +323,8 @@ export const useChat = create<ChatState>()((set, get) => {
     },
   };
 });
+
+if (typeof window !== "undefined") {
+  (window as unknown as Record<string, unknown>).__useChat = useChat;
+  (window as unknown as Record<string, unknown>).useChat = useChat;
+}

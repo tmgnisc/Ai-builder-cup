@@ -158,14 +158,30 @@ export function clampToViewport(p: Point, size: number): Point {
       }
     }
 
-    // On the compare workspace, ensure Pip orb never obscures sticky table headers or action buttons
-    const compareHeader = document.querySelector("[data-compare-header='true']");
-    if (compareHeader) {
-      const ch = compareHeader.getBoundingClientRect();
-      if (ch.width > 0 && ch.height > 0) {
-        if (p.y - r < ch.bottom + MARGIN && p.y + r > ch.top - MARGIN) {
-          if (x + r > ch.left && x - r < ch.right) {
-            top = Math.max(top, ch.bottom + MARGIN + r);
+    // On the compare workspace, ensure Pip orb never covers table, summary, controls, or header
+    const compareElements = document.querySelectorAll(
+      "[data-compare-header='true'], [data-compare-summary='true'], [data-compare-controls='true'], [data-compare-table='true']"
+    );
+    for (const el of compareElements) {
+      const b = el.getBoundingClientRect();
+      if (b.width > 0 && b.height > 0) {
+        const overlapsX = x + r > b.left - MARGIN && x - r < b.right + MARGIN;
+        const overlapsY = p.y + r > b.top - MARGIN && p.y - r < b.bottom + MARGIN;
+        if (overlapsX && overlapsY) {
+          if (!isMobile()) {
+            if (b.right + MARGIN + r <= window.innerWidth - MARGIN) {
+              x = b.right + MARGIN + r;
+            } else if (b.left - MARGIN - r >= MARGIN) {
+              x = b.left - MARGIN - r;
+            } else {
+              top = Math.max(top, b.bottom + MARGIN + r);
+            }
+          } else {
+            if (b.bottom + MARGIN + r <= window.innerHeight - MARGIN) {
+              top = Math.max(top, b.bottom + MARGIN + r);
+            } else if (b.top - MARGIN - r >= HEADER_H + MARGIN) {
+              bottom = Math.min(bottom, b.top - MARGIN - r);
+            }
           }
         }
       }

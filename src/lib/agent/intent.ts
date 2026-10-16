@@ -32,6 +32,8 @@ export type Intent =
   | { kind: "add"; ref: Ref | null; qty: number }
   | { kind: "remove"; ref: Ref | null }
   | { kind: "compare"; ref: Ref | null }
+  | { kind: "add_compare"; ref: Ref | null }
+  | { kind: "remove_compare"; ref: Ref | null }
   | { kind: "similar"; ref: Ref | null; cheaper: boolean }
   | { kind: "delivery"; city: string | null }
   | { kind: "question"; ref: Ref | null; topic: Topic }
@@ -80,6 +82,9 @@ function buildAliases(products: readonly Product[]): Alias[] {
     const paren = p.name.match(/\((.*?)\)/)?.[1];
     if (paren) set.add(clean(`${words.slice(0, 2).join(" ")} ${paren}`));
     if (firstWordCount.get(words[0]) === 1 && words[0].length >= 4 && !AMBIGUOUS_WORDS.has(words[0])) set.add(words[0]);
+    // Also support exact product ID and space-separated ID
+    set.add(clean(p.id));
+    set.add(clean(p.id.replace(/-/g, " ")));
     for (const a of set) if (a.length >= 4 && !AMBIGUOUS_WORDS.has(a)) out.push({ id: p.id, alias: a });
   }
   return out;
@@ -332,12 +337,32 @@ function detectTopic(t: string): Topic {
   return "general";
 }
 
-export function parseIntent(text: string, opts: { hasPreviousQuery?: boolean } = {}): Intent {
+export function parseIntent(
+  text: string,
+  opts: { hasPreviousQuery?: boolean; onCompare?: boolean } = {},
+): Intent {
   const t = normalize(text);
   const words = t.trim().split(" ").length;
 
   if (has(t, /^ (try again|retry|again|one more time) $/)) return { kind: "retry" };
   if (has(t, /\b(check ?out|place (the |an |my )?order|make (the )?payment|pay now|pay for)\b/)) return { kind: "checkout" };
+
+  const isCompareAdd =
+    has(t, /\b(add|put|include|compare)\b.*\b(to compare|to comparison|in compare|in comparison|as well|too)\b/) ||
+    has(t, /\b(compare)\b.*\b(too|as well)\b/) ||
+    (opts.onCompare && has(t, /\b(add|include|put)\b/) && !has(t, /\b(cart|basket|buy)\b/));
+
+  if (isCompareAdd) {
+    return { kind: "add_compare", ref: parseRef(text) };
+  }
+
+  const isCompareRemove =
+    has(t, /\b(remove|delete|take out|drop|get rid of)\b.*\b(from compare|from comparison|out of compare|out of comparison)\b/) ||
+    (opts.onCompare && has(t, /\b(remove|delete|take out|drop)\b/) && !has(t, /\b(cart|basket)\b/));
+
+  if (isCompareRemove) {
+    return { kind: "remove_compare", ref: parseRef(text) };
+  }
 
   const qtyMatch = t.match(/\b(two|2|three|3) (of (them|those|these)|units?|pieces?)\b/);
   const qty = qtyMatch ? (NUMBER_WORDS[qtyMatch[1]] ?? 1) : 1;

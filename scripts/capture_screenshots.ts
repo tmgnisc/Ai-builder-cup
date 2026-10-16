@@ -104,6 +104,27 @@ async function run() {
       await preparePage("/compare?ids=lenovo-ideapad-slim-5-14,acer-swift-go-14,apple-macbook-pro-14-m4-pro,hp-pavilion-plus-14");
       await page.screenshot({ path: path.join(outputDir, `compare_workspace_4col_${vp.name}_${theme}.png`), fullPage: false });
 
+      // 7b. Compare Workspace - Pip Bubble Open
+      console.log(`Capturing compare workspace Pip bubble open (${vp.name}, ${theme})...`);
+      await page.evaluate(() => {
+        const bubble = (window as unknown as Record<string, { getState: () => { show: (content: unknown, opts?: unknown) => void } }>).__useBubble;
+        bubble?.getState().show({
+          kind: "prompt",
+          suggestions: ["Show differences", "Which has better battery?", "Add winner to cart"],
+        }, { input: true });
+      });
+      await page.waitForTimeout(600);
+      await page.screenshot({ path: path.join(outputDir, `compare_workspace_pip_bubble_${vp.name}_${theme}.png`), fullPage: false });
+
+      // 7c. Compare Workspace - Pip Parked (verifying Pip never covers table, summary, or controls)
+      console.log(`Capturing compare workspace Pip parked (${vp.name}, ${theme})...`);
+      await page.evaluate(() => {
+        const bubble = (window as unknown as Record<string, { getState: () => { close: (reason: string) => void } }>).__useBubble;
+        bubble?.getState().close("user");
+      });
+      await page.waitForTimeout(600);
+      await page.screenshot({ path: path.join(outputDir, `compare_workspace_pip_parked_${vp.name}_${theme}.png`), fullPage: false });
+
       // 8. Compare Workspace - Cross-Category
       console.log(`Capturing compare workspace cross-category (${vp.name}, ${theme})...`);
       await preparePage("/compare?ids=lenovo-ideapad-slim-5-14,sony-wh-1000xm5");

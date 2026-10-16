@@ -13,7 +13,7 @@
     "orientationAngle": 0,
     "orientationType": "landscape-primary"
   },
-  "timestamp": "2026-10-16T09:35:25.970Z",
+  "timestamp": "2026-10-16T10:59:24.712Z",
   "url": "http://localhost:3001/",
   "toolOptions": {
     "runOnly": {
@@ -6247,7 +6247,7 @@
           "impact": null,
           "html": "<button type=\"button\" aria-label=\"Add IdeaPad Slim 5 1...\" title=\"Add IdeaPad Slim 5 1...\" aria-busy=\"false\" class=\"grid shrink-0 select...\">",
           "target": [
-            ".flex-col.gap-2[role=\"columnheader\"]:nth-child(2) > .justify-between.gap-2.items-center > .active\\:brightness-95.shadow-\\[0_0_0_1px_var\\(--border-strong\\)\\,0_8px_24px_-8px_var\\(--accent\\)\\].select-none"
+            ".flex-col.gap-2[role=\"columnheader\"]:nth-child(2) > .justify-between.gap-2.items-center > .active\\:brightness-95.shadow-\\[0_0_0_1px_var\\(--border-strong\\)\\,0_8px_24px_-8px_var\\(--accent\\)\\].size-8"
           ]
         },
         {
@@ -6367,7 +6367,7 @@
           "impact": null,
           "html": "<button type=\"button\" aria-label=\"Add Swift Go 14 to c...\" title=\"Add Swift Go 14 to c...\" aria-busy=\"false\" class=\"grid shrink-0 select...\">",
           "target": [
-            ".flex-col.gap-2[role=\"columnheader\"]:nth-child(3) > .justify-between.gap-2.items-center > .active\\:brightness-95.shadow-\\[0_0_0_1px_var\\(--border-strong\\)\\,0_8px_24px_-8px_var\\(--accent\\)\\].select-none"
+            ".flex-col.gap-2[role=\"columnheader\"]:nth-child(3) > .justify-between.gap-2.items-center > .active\\:brightness-95.shadow-\\[0_0_0_1px_var\\(--border-strong\\)\\,0_8px_24px_-8px_var\\(--accent\\)\\].size-8"
           ]
         }
       ]
@@ -8926,7 +8926,7 @@
           "impact": null,
           "html": "<button type=\"button\" aria-label=\"Add IdeaPad Slim 5 1...\" title=\"Add IdeaPad Slim 5 1...\" aria-busy=\"false\" class=\"grid shrink-0 select...\">",
           "target": [
-            ".flex-col.gap-2[role=\"columnheader\"]:nth-child(2) > .justify-between.gap-2.items-center > .active\\:brightness-95.shadow-\\[0_0_0_1px_var\\(--border-strong\\)\\,0_8px_24px_-8px_var\\(--accent\\)\\].select-none"
+            ".flex-col.gap-2[role=\"columnheader\"]:nth-child(2) > .justify-between.gap-2.items-center > .active\\:brightness-95.shadow-\\[0_0_0_1px_var\\(--border-strong\\)\\,0_8px_24px_-8px_var\\(--accent\\)\\].size-8"
           ]
         },
         {
@@ -8980,7 +8980,7 @@
           "impact": null,
           "html": "<button type=\"button\" aria-label=\"Add Swift Go 14 to c...\" title=\"Add Swift Go 14 to c...\" aria-busy=\"false\" class=\"grid shrink-0 select...\">",
           "target": [
-            ".flex-col.gap-2[role=\"columnheader\"]:nth-child(3) > .justify-between.gap-2.items-center > .active\\:brightness-95.shadow-\\[0_0_0_1px_var\\(--border-strong\\)\\,0_8px_24px_-8px_var\\(--accent\\)\\].select-none"
+            ".flex-col.gap-2[role=\"columnheader\"]:nth-child(3) > .justify-between.gap-2.items-center > .active\\:brightness-95.shadow-\\[0_0_0_1px_var\\(--border-strong\\)\\,0_8px_24px_-8px_var\\(--accent\\)\\].size-8"
           ]
         }
       ]
@@ -19053,7 +19053,7 @@
           "impact": null,
           "html": "<svg xmlns=\"http://www.w3.org/2000/svg\" width=\"24\" height=\"24\" viewBox=\"0 0 24 24\" fill=\"none\" stroke=\"currentColor\" stroke-width=\"2\" stroke-linecap=\"round\" stroke-linejoin=\"round\" class=\"lucide lucide-git-compare-arrows size-4\" aria-hidden=\"true\">",
           "target": [
-            ".h-10.bg-searching.ml-1 > .lucide-git-compare-arrows.size-4.lucide"
+            ".bg-searching.h-10.ml-1 > .lucide-git-compare-arrows.size-4.lucide"
           ]
         },
         {
@@ -19757,7 +19757,7 @@
           "impact": null,
           "html": "<svg xmlns=\"http://www.w3.org/2000/svg\" width=\"24\" height=\"24\" viewBox=\"0 0 24 24\" fill=\"none\" stroke=\"currentColor\" stroke-width=\"2\" stroke-linecap=\"round\" stroke-linejoin=\"round\" class=\"lucide lucide-plus size-3.5\" aria-hidden=\"true\"><path d=\"M5 12h14\"></path><path d=\"M12 5v14\"></path></svg>",
           "target": [
-            ".flex-col.gap-2[role=\"columnheader\"]:nth-child(2) > .justify-between.gap-2.items-center > .active\\:brightness-95.shadow-\\[0_0_0_1px_var\\(--border-strong\\)\\,0_8px_24px_-8px_var\\(--accent\\)\\].select-none > .size-3\\.5.lucide-plus.lucide"
+            ".flex-col.gap-2[role=\"columnheader\"]:nth-child(2) > .justify-between.gap-2.items-center > .active\\:brightness-95.shadow-\\[0_0_0_1px_var\\(--border-strong\\)\\,0_8px_24px_-8px_var\\(--accent\\)\\].size-8 > .size-3\\.5.lucide-plus.lucide"
           ]
         },
         {
@@ -19917,7 +19917,7 @@
           "impact": null,
           "html": "<svg xmlns=\"http://www.w3.org/2000/svg\" width=\"24\" height=\"24\" viewBox=\"0 0 24 24\" fill=\"none\" stroke=\"currentColor\" stroke-width=\"2\" stroke-linecap=\"round\" stroke-linejoin=\"round\" class=\"lucide lucide-plus size-3.5\" aria-hidden=\"true\"><path d=\"M5 12h14\"></path><path d=\"M12 5v14\"></path></svg>",
           "target": [
-            ".flex-col.gap-2[role=\"columnheader\"]:nth-child(3) > .justify-between.gap-2.items-center > .active\\:brightness-95.shadow-\\[0_0_0_1px_var\\(--border-strong\\)\\,0_8px_24px_-8px_var\\(--accent\\)\\].select-none > .size-3\\.5.lucide-plus.lucide"
+            ".flex-col.gap-2[role=\"columnheader\"]:nth-child(3) > .justify-between.gap-2.items-center > .active\\:brightness-95.shadow-\\[0_0_0_1px_var\\(--border-strong\\)\\,0_8px_24px_-8px_var\\(--accent\\)\\].size-8 > .size-3\\.5.lucide-plus.lucide"
           ]
         },
         {
@@ -22618,7 +22618,7 @@
           "impact": null,
           "html": "<button type=\"button\" aria-label=\"Add IdeaPad Slim 5 1...\" title=\"Add IdeaPad Slim 5 1...\" aria-busy=\"false\" class=\"grid shrink-0 select...\">",
           "target": [
-            ".flex-col.gap-2[role=\"columnheader\"]:nth-child(2) > .justify-between.gap-2.items-center > .active\\:brightness-95.shadow-\\[0_0_0_1px_var\\(--border-strong\\)\\,0_8px_24px_-8px_var\\(--accent\\)\\].select-none"
+            ".flex-col.gap-2[role=\"columnheader\"]:nth-child(2) > .justify-between.gap-2.items-center > .active\\:brightness-95.shadow-\\[0_0_0_1px_var\\(--border-strong\\)\\,0_8px_24px_-8px_var\\(--accent\\)\\].size-8"
           ]
         },
         {
@@ -22672,7 +22672,7 @@
           "impact": null,
           "html": "<button type=\"button\" aria-label=\"Add Swift Go 14 to c...\" title=\"Add Swift Go 14 to c...\" aria-busy=\"false\" class=\"grid shrink-0 select...\">",
           "target": [
-            ".flex-col.gap-2[role=\"columnheader\"]:nth-child(3) > .justify-between.gap-2.items-center > .active\\:brightness-95.shadow-\\[0_0_0_1px_var\\(--border-strong\\)\\,0_8px_24px_-8px_var\\(--accent\\)\\].select-none"
+            ".flex-col.gap-2[role=\"columnheader\"]:nth-child(3) > .justify-between.gap-2.items-center > .active\\:brightness-95.shadow-\\[0_0_0_1px_var\\(--border-strong\\)\\,0_8px_24px_-8px_var\\(--accent\\)\\].size-8"
           ]
         }
       ]
@@ -33137,7 +33137,7 @@
           "impact": null,
           "html": "<button type=\"button\" aria-label=\"Add IdeaPad Slim 5 1...\" title=\"Add IdeaPad Slim 5 1...\" aria-busy=\"false\" class=\"grid shrink-0 select...\">",
           "target": [
-            ".flex-col.gap-2[role=\"columnheader\"]:nth-child(2) > .justify-between.gap-2.items-center > .active\\:brightness-95.shadow-\\[0_0_0_1px_var\\(--border-strong\\)\\,0_8px_24px_-8px_var\\(--accent\\)\\].select-none"
+            ".flex-col.gap-2[role=\"columnheader\"]:nth-child(2) > .justify-between.gap-2.items-center > .active\\:brightness-95.shadow-\\[0_0_0_1px_var\\(--border-strong\\)\\,0_8px_24px_-8px_var\\(--accent\\)\\].size-8"
           ]
         },
         {
@@ -33233,7 +33233,7 @@
           "impact": null,
           "html": "<button type=\"button\" aria-label=\"Add Swift Go 14 to c...\" title=\"Add Swift Go 14 to c...\" aria-busy=\"false\" class=\"grid shrink-0 select...\">",
           "target": [
-            ".flex-col.gap-2[role=\"columnheader\"]:nth-child(3) > .justify-between.gap-2.items-center > .active\\:brightness-95.shadow-\\[0_0_0_1px_var\\(--border-strong\\)\\,0_8px_24px_-8px_var\\(--accent\\)\\].select-none"
+            ".flex-col.gap-2[role=\"columnheader\"]:nth-child(3) > .justify-between.gap-2.items-center > .active\\:brightness-95.shadow-\\[0_0_0_1px_var\\(--border-strong\\)\\,0_8px_24px_-8px_var\\(--accent\\)\\].size-8"
           ]
         }
       ]
@@ -35792,7 +35792,7 @@
           "impact": null,
           "html": "<button type=\"button\" aria-label=\"Add IdeaPad Slim 5 1...\" title=\"Add IdeaPad Slim 5 1...\" aria-busy=\"false\" class=\"grid shrink-0 select...\">",
           "target": [
-            ".flex-col.gap-2[role=\"columnheader\"]:nth-child(2) > .justify-between.gap-2.items-center > .active\\:brightness-95.shadow-\\[0_0_0_1px_var\\(--border-strong\\)\\,0_8px_24px_-8px_var\\(--accent\\)\\].select-none"
+            ".flex-col.gap-2[role=\"columnheader\"]:nth-child(2) > .justify-between.gap-2.items-center > .active\\:brightness-95.shadow-\\[0_0_0_1px_var\\(--border-strong\\)\\,0_8px_24px_-8px_var\\(--accent\\)\\].size-8"
           ]
         },
         {
@@ -35846,7 +35846,7 @@
           "impact": null,
           "html": "<button type=\"button\" aria-label=\"Add Swift Go 14 to c...\" title=\"Add Swift Go 14 to c...\" aria-busy=\"false\" class=\"grid shrink-0 select...\">",
           "target": [
-            ".flex-col.gap-2[role=\"columnheader\"]:nth-child(3) > .justify-between.gap-2.items-center > .active\\:brightness-95.shadow-\\[0_0_0_1px_var\\(--border-strong\\)\\,0_8px_24px_-8px_var\\(--accent\\)\\].select-none"
+            ".flex-col.gap-2[role=\"columnheader\"]:nth-child(3) > .justify-between.gap-2.items-center > .active\\:brightness-95.shadow-\\[0_0_0_1px_var\\(--border-strong\\)\\,0_8px_24px_-8px_var\\(--accent\\)\\].size-8"
           ]
         }
       ]
@@ -39155,7 +39155,7 @@
           "impact": null,
           "html": "<button type=\"button\" aria-label=\"Add IdeaPad Slim 5 1...\" title=\"Add IdeaPad Slim 5 1...\" aria-busy=\"false\" class=\"grid shrink-0 select...\">",
           "target": [
-            ".flex-col.gap-2[role=\"columnheader\"]:nth-child(2) > .justify-between.gap-2.items-center > .active\\:brightness-95.shadow-\\[0_0_0_1px_var\\(--border-strong\\)\\,0_8px_24px_-8px_var\\(--accent\\)\\].select-none"
+            ".flex-col.gap-2[role=\"columnheader\"]:nth-child(2) > .justify-between.gap-2.items-center > .active\\:brightness-95.shadow-\\[0_0_0_1px_var\\(--border-strong\\)\\,0_8px_24px_-8px_var\\(--accent\\)\\].size-8"
           ]
         },
         {
@@ -39205,7 +39205,7 @@
           "impact": null,
           "html": "<button type=\"button\" aria-label=\"Add Swift Go 14 to c...\" title=\"Add Swift Go 14 to c...\" aria-busy=\"false\" class=\"grid shrink-0 select...\">",
           "target": [
-            ".flex-col.gap-2[role=\"columnheader\"]:nth-child(3) > .justify-between.gap-2.items-center > .active\\:brightness-95.shadow-\\[0_0_0_1px_var\\(--border-strong\\)\\,0_8px_24px_-8px_var\\(--accent\\)\\].select-none"
+            ".flex-col.gap-2[role=\"columnheader\"]:nth-child(3) > .justify-between.gap-2.items-center > .active\\:brightness-95.shadow-\\[0_0_0_1px_var\\(--border-strong\\)\\,0_8px_24px_-8px_var\\(--accent\\)\\].size-8"
           ]
         }
       ]
@@ -48213,6 +48213,32 @@
           "target": [
             ".hover\\:underline.break-words[href$=\"acer-swift-go-14\"]"
           ]
+        },
+        {
+          "any": [
+            {
+              "id": "has-visible-text",
+              "data": null,
+              "relatedNodes": [],
+              "impact": "serious",
+              "message": "Element has text that is visible to screen readers"
+            }
+          ],
+          "all": [],
+          "none": [
+            {
+              "id": "focusable-no-name",
+              "data": null,
+              "relatedNodes": [],
+              "impact": "serious",
+              "message": "Element is not in tab order or has accessible text"
+            }
+          ],
+          "impact": null,
+          "html": "<a class=\"inline-flex shrink-0...\" href=\"/compare?ids=lenovo-...\">",
+          "target": [
+            ".border-border\\/40 > .justify-center.active\\:brightness-95.shadow-\\[0_0_0_1px_var\\(--border-strong\\)\\,0_8px_24px_-8px_var\\(--accent\\)\\]"
+          ]
         }
       ]
     },
@@ -51076,7 +51102,7 @@
           "impact": null,
           "html": "<button type=\"button\" aria-label=\"Add IdeaPad Slim 5 1...\" title=\"Add IdeaPad Slim 5 1...\" aria-busy=\"false\" class=\"grid shrink-0 select...\">",
           "target": [
-            ".flex-col.gap-2[role=\"columnheader\"]:nth-child(2) > .justify-between.gap-2.items-center > .active\\:brightness-95.shadow-\\[0_0_0_1px_var\\(--border-strong\\)\\,0_8px_24px_-8px_var\\(--accent\\)\\].select-none"
+            ".flex-col.gap-2[role=\"columnheader\"]:nth-child(2) > .justify-between.gap-2.items-center > .active\\:brightness-95.shadow-\\[0_0_0_1px_var\\(--border-strong\\)\\,0_8px_24px_-8px_var\\(--accent\\)\\].size-8"
           ]
         },
         {
@@ -51130,7 +51156,7 @@
           "impact": null,
           "html": "<button type=\"button\" aria-label=\"Add Swift Go 14 to c...\" title=\"Add Swift Go 14 to c...\" aria-busy=\"false\" class=\"grid shrink-0 select...\">",
           "target": [
-            ".flex-col.gap-2[role=\"columnheader\"]:nth-child(3) > .justify-between.gap-2.items-center > .active\\:brightness-95.shadow-\\[0_0_0_1px_var\\(--border-strong\\)\\,0_8px_24px_-8px_var\\(--accent\\)\\].select-none"
+            ".flex-col.gap-2[role=\"columnheader\"]:nth-child(3) > .justify-between.gap-2.items-center > .active\\:brightness-95.shadow-\\[0_0_0_1px_var\\(--border-strong\\)\\,0_8px_24px_-8px_var\\(--accent\\)\\].size-8"
           ]
         }
       ]

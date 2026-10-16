@@ -348,6 +348,8 @@ export const tokens = {
     orb: ${tokenDefinitions.zIndex.orb},
     popover: ${tokenDefinitions.zIndex.popover},
     bubble: ${tokenDefinitions.zIndex.bubble},
+    dialog: ${tokenDefinitions.zIndex.dialog},
+    tooltip: ${tokenDefinitions.zIndex.tooltip},
     toast: ${tokenDefinitions.zIndex.toast},
     spotlight: ${tokenDefinitions.zIndex.spotlight},
     grain: ${tokenDefinitions.zIndex.grain},
