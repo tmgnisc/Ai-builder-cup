@@ -61,7 +61,7 @@ describe("Tool Registry Parity (TypeScript)", () => {
     // Transient failure simulation
     const res = await executeTool("search_products", {}, {
       sessionId: "test",
-      chaos: { failureRate: 1, latencyMin: 0, latencyMax: 0, silentDrop: false },
+      chaos: { failureRate: 1, latencyMin: 0, latencyMax: 0 },
     });
     expect(res.ok).toBe(false);
     if (!res.ok) {
@@ -73,7 +73,7 @@ describe("Tool Registry Parity (TypeScript)", () => {
     // Invalid input error mapping
     const badInputRes = await executeTool("search_products", { limit: -1 }, {
       sessionId: "test",
-      chaos: { failureRate: 0, latencyMin: 0, latencyMax: 0, silentDrop: false },
+      chaos: { failureRate: 0, latencyMin: 0, latencyMax: 0 },
     });
     expect(badInputRes.ok).toBe(false);
     if (!badInputRes.ok) {
