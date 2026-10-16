@@ -18,6 +18,7 @@ import { Button } from "@/components/ui/Button";
 import { tokenDefinitions } from "@/tokens/definitions";
 import { cn } from "@/lib/cn";
 import { useCompanion } from "@/store/useCompanion";
+import { PrimitivesShowcase } from "@/components/ui/PrimitivesShowcase";
 import { RoamingPanel } from "./RoamingPanel";
 
 type NumKey = Exclude<keyof PipParams, "rimR" | "rimG" | "rimB">;
@@ -170,9 +171,13 @@ export function PlaygroundClient() {
 
   useEffect(() => () => void (pipRuntime.override = null), []);
 
-  // Deep links: /playground?state=thinking, /playground?cycle=1
+  const [activeTab, setActiveTab] = useState<"pip" | "primitives">("pip");
+
+  // Deep links: /playground?state=thinking, /playground?cycle=1, /playground?tab=primitives
   useEffect(() => {
     const sp = new URLSearchParams(window.location.search);
+    const tab = sp.get("tab");
+    if (tab === "primitives") setActiveTab("primitives");
     const s = sp.get("state");
     if (s && (PIP_STATES as readonly string[]).includes(s)) {
       window.setTimeout(() => dispatch({ type: "state_change", state: s as PipState, source: "dev" }), 300);
@@ -217,104 +222,134 @@ export function PlaygroundClient() {
   }
 
   return (
-    <div className="mx-auto max-w-page px-4 pt-8 sm:px-6 lg:pr-96">
-      <div>
-        <div className="flex items-baseline justify-between">
-          <h1 className="font-display text-2xl font-semibold tracking-tight">Pip playground</h1>
-          <p className="font-mono text-xs text-muted">
-            state: <span className="text-text">{state}</span>
-          </p>
-        </div>
-        <p className="mt-1 text-sm text-muted">Click anywhere on the stage to make Pip glance there. Move the pointer to test gaze-follow (returns to drift after 4 s idle).</p>
-
-        <div
-          className="relative mt-6 grid aspect-square w-full max-w-xl cursor-crosshair place-items-center rounded-panel bg-surface hairline"
-          onClick={(e) => pip.glanceAt(e.clientX, e.clientY, 1400)}
+    <div className={cn("mx-auto max-w-page px-4 pt-8 sm:px-6", activeTab === "pip" ? "lg:pr-96" : "pb-16")}>
+      <div className="mb-8 flex items-center gap-2 border-b border-border pb-4">
+        <button
+          type="button"
+          onClick={() => setActiveTab("pip")}
+          className={cn(
+            "rounded-xl px-4 py-2 text-sm font-medium transition-colors",
+            activeTab === "pip" ? "bg-accent text-accent-text" : "text-muted hover:text-text bg-surface hairline",
+          )}
         >
-          <div data-pip-anchor="stage" className="aspect-square w-[82%]" aria-hidden />
-        </div>
-
-        <section aria-labelledby="states-h" className="mt-8">
-          <div className="flex items-center justify-between">
-            <h2 id="states-h" className="font-display text-sm font-semibold uppercase tracking-wider text-muted">
-              States
-            </h2>
-            <Button size="sm" variant={cycling ? "primary" : "secondary"} onClick={() => setCycling((c) => !c)}>
-              {cycling ? <Pause className="size-3.5" /> : <Play className="size-3.5" />}
-              {cycling ? "Stop cycling" : "Cycle all states"}
-            </Button>
-          </div>
-          <div className="mt-3 grid grid-cols-2 gap-2 sm:grid-cols-4 lg:grid-cols-6">
-            {PIP_STATES.map((s) => (
-              <button
-                key={s}
-                type="button"
-                onClick={() => go(s)}
-                aria-pressed={state === s}
-                className={cn(
-                  "flex items-center gap-2 rounded-xl px-3 py-2.5 text-left text-sm transition-colors",
-                  state === s ? "bg-text text-bg" : "bg-surface hairline hover:bg-surface-2",
-                )}
-              >
-                <span className="size-2 shrink-0 rounded-full" style={{ background: STATES[s].color }} />
-                {s}
-              </button>
-            ))}
-          </div>
-          <p className="mt-3 font-mono text-xs text-muted">caption: {caption ? `"${caption}"` : "(none)"}</p>
-        </section>
-
-        <RoamingPanel />
+          Pip 3D Companion Bench
+        </button>
+        <button
+          type="button"
+          onClick={() => setActiveTab("primitives")}
+          className={cn(
+            "rounded-xl px-4 py-2 text-sm font-medium transition-colors",
+            activeTab === "primitives" ? "bg-accent text-accent-text" : "text-muted hover:text-text bg-surface hairline",
+          )}
+        >
+          UI Primitives Kit
+        </button>
       </div>
 
-      {/* Fixed, independently scrolling column: leva calls scrollIntoView on folder resize, which must not scroll the page. */}
-      <aside className="mt-8 flex flex-col gap-6 pb-10 lg:fixed lg:bottom-4 lg:right-6 lg:top-20 lg:z-20 lg:mt-0 lg:w-90 lg:overflow-y-auto lg:pb-4">
-        <section className="rounded-[var(--radius-card)] bg-surface p-4 hairline">
-          <h2 className="text-sm font-semibold">Reactions (do not change state)</h2>
-          <div className="mt-3 flex flex-wrap gap-2">
-            <Button size="sm" variant="secondary" onClick={() => react("hop")}>Hop</Button>
-            <Button size="sm" variant="secondary" onClick={() => react("hop-spin")}>Hop + spin</Button>
-            <Button size="sm" variant="secondary" onClick={() => react("shake")}>Shake</Button>
-          </div>
-        </section>
-
-        <section className="rounded-[var(--radius-card)] bg-surface p-4 hairline">
-          <h2 className="text-sm font-semibold">Audio inputs (simulated)</h2>
-          <label className="mt-3 flex items-center gap-3 text-sm">
-            <span className="w-24 text-muted">Mic level</span>
-            <input type="range" min={0} max={1} step={0.01} value={mic} onChange={(e) => setMic(+e.target.value)} className="flex-1 accent-[var(--accent)]" disabled={autoMic} />
-          </label>
-          <label className="mt-2 flex items-center gap-2 text-sm">
-            <input type="checkbox" checked={autoMic} onChange={(e) => setAutoMic(e.target.checked)} className="accent-[var(--accent)]" />
-            Auto mic envelope (try in <code className="font-mono text-xs">listening</code>)
-          </label>
-          <label className="mt-2 flex items-center gap-2 text-sm">
-            <input type="checkbox" checked={autoSpeech} onChange={(e) => setAutoSpeech(e.target.checked)} className="accent-[var(--accent)]" />
-            TTS envelope (try in <code className="font-mono text-xs">speaking</code>; off = built-in simulation)
-          </label>
-        </section>
-
-        <section className="rounded-[var(--radius-card)] bg-surface p-4 hairline">
-          <div className="flex items-center justify-between">
-            <h2 className="text-sm font-semibold">Uniforms</h2>
-            <div className="flex gap-1">
-              <Button size="sm" variant="ghost" onClick={() => set(levaValuesFor(state))} aria-label="Reset sliders to the current state">
-                <RotateCcw className="size-3.5" />
-              </Button>
-              <Button size="sm" variant="secondary" onClick={copySnippet}>
-                <Copy className="size-3.5" />
-                {copied ? "Copied" : "Copy config"}
-              </Button>
+      {activeTab === "primitives" ? (
+        <PrimitivesShowcase />
+      ) : (
+        <>
+          <div>
+            <div className="flex items-baseline justify-between">
+              <h1 className="font-display text-2xl font-semibold tracking-tight">Pip playground</h1>
+              <p className="font-mono text-xs text-muted">
+                state: <span className="text-text">{state}</span>
+              </p>
             </div>
+            <p className="mt-1 text-sm text-muted">Click anywhere on the stage to make Pip glance there. Move the pointer to test gaze-follow (returns to drift after 4 s idle).</p>
+
+            <div
+              className="relative mt-6 grid aspect-square w-full max-w-xl cursor-crosshair place-items-center rounded-panel bg-surface hairline"
+              onClick={(e) => pip.glanceAt(e.clientX, e.clientY, 1400)}
+            >
+              <div data-pip-anchor="stage" className="aspect-square w-[82%]" aria-hidden />
+            </div>
+
+            <section aria-labelledby="states-h" className="mt-8">
+              <div className="flex items-center justify-between">
+                <h2 id="states-h" className="font-display text-sm font-semibold uppercase tracking-wider text-muted">
+                  States
+                </h2>
+                <Button size="sm" variant={cycling ? "primary" : "secondary"} onClick={() => setCycling((c) => !c)}>
+                  {cycling ? <Pause className="size-3.5" /> : <Play className="size-3.5" />}
+                  {cycling ? "Stop cycling" : "Cycle all states"}
+                </Button>
+              </div>
+              <div className="mt-3 grid grid-cols-2 gap-2 sm:grid-cols-4 lg:grid-cols-6">
+                {PIP_STATES.map((s) => (
+                  <button
+                    key={s}
+                    type="button"
+                    onClick={() => go(s)}
+                    aria-pressed={state === s}
+                    className={cn(
+                      "flex items-center gap-2 rounded-xl px-3 py-2.5 text-left text-sm transition-colors",
+                      state === s ? "bg-text text-bg" : "bg-surface hairline hover:bg-surface-2",
+                    )}
+                  >
+                    <span className="size-2 shrink-0 rounded-full" style={{ background: STATES[s].color }} />
+                    {s}
+                  </button>
+                ))}
+              </div>
+              <p className="mt-3 font-mono text-xs text-muted">caption: {caption ? `"${caption}"` : "(none)"}</p>
+            </section>
+
+            <RoamingPanel />
           </div>
-          <p className="mt-1 text-xs text-muted">
-            Sliders track the active state. Turn on <em>override tween</em> to drive Pip directly, then copy the JSON into <code className="font-mono">states.ts</code>.
-          </p>
-          <div className="mt-3 overflow-hidden rounded-xl">
-            <Leva fill flat titleBar={false} hideCopyButton />
-          </div>
-        </section>
-      </aside>
+
+          {/* Fixed, independently scrolling column: leva calls scrollIntoView on folder resize, which must not scroll the page. */}
+          <aside className="mt-8 flex flex-col gap-6 pb-10 lg:fixed lg:bottom-4 lg:right-6 lg:top-20 lg:z-20 lg:mt-0 lg:w-90 lg:overflow-y-auto lg:pb-4">
+            <section className="rounded-[var(--radius-card)] bg-surface p-4 hairline">
+              <h2 className="text-sm font-semibold">Reactions (do not change state)</h2>
+              <div className="mt-3 flex flex-wrap gap-2">
+                <Button size="sm" variant="secondary" onClick={() => react("hop")}>Hop</Button>
+                <Button size="sm" variant="secondary" onClick={() => react("hop-spin")}>Hop + spin</Button>
+                <Button size="sm" variant="secondary" onClick={() => react("shake")}>Shake</Button>
+              </div>
+            </section>
+
+            <section className="rounded-[var(--radius-card)] bg-surface p-4 hairline">
+              <h2 className="text-sm font-semibold">Audio inputs (simulated)</h2>
+              <label className="mt-3 flex items-center gap-3 text-sm">
+                <span className="w-24 text-muted">Mic level</span>
+                <input type="range" min={0} max={1} step={0.01} value={mic} onChange={(e) => setMic(+e.target.value)} className="flex-1 accent-[var(--accent)]" disabled={autoMic} />
+              </label>
+              <label className="mt-2 flex items-center gap-2 text-sm">
+                <input type="checkbox" checked={autoMic} onChange={(e) => setAutoMic(e.target.checked)} className="accent-[var(--accent)]" />
+                Auto mic envelope (try in <code className="font-mono text-xs">listening</code>)
+              </label>
+              <label className="mt-2 flex items-center gap-2 text-sm">
+                <input type="checkbox" checked={autoSpeech} onChange={(e) => setAutoSpeech(e.target.checked)} className="accent-[var(--accent)]" />
+                TTS envelope (try in <code className="font-mono text-xs">speaking</code>; off = built-in simulation)
+              </label>
+            </section>
+
+            <section className="rounded-[var(--radius-card)] bg-surface p-4 hairline">
+              <div className="flex items-center justify-between">
+                <h2 className="text-sm font-semibold">Uniforms</h2>
+                <div className="flex gap-1">
+                  <Button size="sm" variant="ghost" onClick={() => set(levaValuesFor(state))} aria-label="Reset sliders to the current state">
+                    <RotateCcw className="size-3.5" />
+                  </Button>
+                  <Button size="sm" variant="secondary" onClick={copySnippet}>
+                    <Copy className="size-3.5" />
+                    {copied ? "Copied" : "Copy config"}
+                  </Button>
+                </div>
+              </div>
+              <p className="mt-1 text-xs text-muted">
+                Sliders track the active state. Turn on <em>override tween</em> to drive Pip directly, then copy the JSON into <code className="font-mono">states.ts</code>.
+              </p>
+              <div className="mt-3 overflow-hidden rounded-xl">
+                <Leva fill flat titleBar={false} hideCopyButton />
+              </div>
+            </section>
+          </aside>
+        </>
+      )}
     </div>
   );
+
 }
