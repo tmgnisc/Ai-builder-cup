@@ -31,15 +31,15 @@ export function CheckoutView() {
       </p>
 
       {placed ? (
-        <div role="status" className="mt-8 rounded-[var(--radius-panel)] bg-surface p-8 text-center hairline">
+        <div role="status" className="mt-8 rounded-panel bg-surface p-8 text-center hairline">
           <p className="font-display text-xl font-semibold">Demo order confirmed</p>
           <p className="mt-2 text-sm text-muted">This is a demo store, so no payment was taken and nothing will ship.</p>
         </div>
       ) : lines.length === 0 ? (
-        <div className="mt-8 rounded-[var(--radius-panel)] bg-surface p-8 text-center text-muted hairline">Your cart is empty.</div>
+        <div className="mt-8 rounded-panel bg-surface p-8 text-center text-muted hairline">Your cart is empty.</div>
       ) : (
-        <div className="mt-8 grid gap-6 md:grid-cols-[1fr_300px]">
-          <ul className="divide-y divide-border rounded-[var(--radius-panel)] bg-surface hairline">
+        <div className="mt-8 grid gap-6 md:grid-cols-checkout">
+          <ul className="divide-y divide-border rounded-panel bg-surface hairline">
             {lines.map((l) => {
               const p = getProduct(l.productId);
               return (
@@ -56,7 +56,7 @@ export function CheckoutView() {
               );
             })}
           </ul>
-          <aside data-pip-anchor="checkout-summary" data-pip-topic="checkout" className="h-fit rounded-[var(--radius-panel)] bg-surface p-5 hairline">
+          <aside data-pip-anchor="checkout-summary" data-pip-topic="checkout" className="h-fit rounded-panel bg-surface p-5 hairline">
             <dl className="space-y-2 text-sm">
               <div className="flex justify-between">
                 <dt className="text-muted">Subtotal</dt>

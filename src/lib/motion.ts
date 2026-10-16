@@ -4,7 +4,6 @@ import { gsap } from "gsap";
 import { useGSAP } from "@gsap/react";
 import { Flip } from "gsap/Flip";
 import { MotionPathPlugin } from "gsap/MotionPathPlugin";
-import { ScrambleTextPlugin } from "gsap/ScrambleTextPlugin";
 import { ScrollTrigger } from "gsap/ScrollTrigger";
 import { SplitText } from "gsap/SplitText";
 import { prefersReducedMotion, useReducedMotion } from "@/hooks/useReducedMotion";
@@ -16,7 +15,7 @@ import { tokens } from "@/styles/tokens";
  */
 
 if (typeof window !== "undefined") {
-  gsap.registerPlugin(useGSAP, ScrollTrigger, Flip, SplitText, ScrambleTextPlugin, MotionPathPlugin);
+  gsap.registerPlugin(useGSAP, ScrollTrigger, Flip, SplitText, MotionPathPlugin);
   gsap.defaults({ ease: tokens.easings.out, duration: tokens.durations.deliberate });
 }
 

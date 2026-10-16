@@ -1,5 +1,5 @@
 import type { Metadata } from "next";
-import { CheckoutView } from "./CheckoutView";
+import { CheckoutView } from "@/features/checkout";
 
 export const metadata: Metadata = { title: "Checkout" };
 

@@ -2,6 +2,7 @@ export * from "./CompanionLayer";
 export * from "./runtime";
 export * from "./states";
 export * as pilot from "./pilot";
+export { HEADER_H, MARGIN, type Point, type Corner, type PipMode, type SizeKey } from "./pilot";
 export * from "./usePointerGaze";
 export * from "./PipCanvas";
 export * from "./PipHalo";

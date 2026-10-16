@@ -1,8 +1,7 @@
 "use client";
 
 import { create } from "zustand";
-import * as pilot from "@/features/companion/pilot";
-import type { Corner, PipMode, Point, SizeKey } from "@/features/companion/pilot";
+import { pilot, type Corner, type PipMode, type Point, type SizeKey } from "@/features/companion";
 import { placeBeside, resetPlacement } from "@/lib/guide/placement";
 
 /**

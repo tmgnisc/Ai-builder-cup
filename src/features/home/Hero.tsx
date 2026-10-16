@@ -95,15 +95,15 @@ export function Hero() {
   }
 
   return (
-    <section ref={root} className="relative mx-auto grid max-w-page items-center gap-10 px-4 pb-16 pt-12 sm:px-6 md:pt-20 lg:grid-cols-[1.1fr_0.9fr]">
+    <section ref={root} className="relative mx-auto grid max-w-page items-center gap-10 px-4 pb-16 pt-12 sm:px-6 md:pt-20 lg:grid-cols-hero">
       <div>
         <p data-hero-fade className="mb-5 inline-flex items-center gap-2 rounded-full bg-surface px-3 py-1.5 text-xs text-muted hairline">
           <span className="size-1.5 rounded-full bg-accent shadow-[0_0_10px_var(--accent)]" aria-hidden />
-          Kathmandu electronics &amp; hardware · Pip on bench
+          Kathmandu electronics &amp; hardware
         </p>
         <h1
           data-split
-          className="font-display text-[clamp(2.4rem,6vw,4.75rem)] font-semibold leading-[1.02] tracking-[-0.03em] [&_.char]:inline-block"
+          className="font-display hero-headline font-semibold [&_.char]:inline-block"
         >
           Honest hardware. <span className="text-accent-text">Direct advice.</span>
         </h1>

@@ -25,6 +25,11 @@ export function Ticker({ value, format = defaultFormat, duration = 0.8, classNam
     () => {
       const el = ref.current;
       if (!el) return;
+      if (motion.reduced) {
+        current.current.n = value;
+        el.textContent = format(value);
+        return;
+      }
       gsap.to(current.current, {
         n: value,
         duration: motion.dur(duration),
@@ -39,9 +44,9 @@ export function Ticker({ value, format = defaultFormat, duration = 0.8, classNam
   );
 
   return (
-    <span className={cn("tabular font-mono", className)}>
+    <span className={cn("tabular font-mono", className)} aria-label={format(value)}>
       <span className="sr-only">{format(value)}</span>
-      <span ref={ref} aria-hidden>
+      <span ref={ref} aria-hidden="true">
         {format(current.current.n)}
       </span>
     </span>

@@ -1,7 +1,6 @@
 "use client";
 
-import { HEADER_H, MARGIN, type Point } from "@/features/companion/pilot";
-import { pipRuntime } from "@/features/companion";
+import { HEADER_H, MARGIN, pipRuntime, type Point } from "@/features/companion";
 
 /**
  * Where to put Pip next to a target element without blocking the user.

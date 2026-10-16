@@ -1,4 +1,4 @@
-import { Hero } from "@/components/home/Hero";
+import { Hero } from "@/features/home";
 import { StoreSection } from "@/features/catalog";
 import { CategorySchema } from "@/lib/commerce/schemas";
 
