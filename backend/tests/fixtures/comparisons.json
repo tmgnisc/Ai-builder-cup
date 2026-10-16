@@ -1,0 +1,1150 @@
+[
+  {
+    "name": "ideapad_vs_swift_default",
+    "productIds": [
+      "lenovo-ideapad-slim-5-14",
+      "acer-swift-go-14"
+    ],
+    "options": {},
+    "result": {
+      "productIds": [
+        "lenovo-ideapad-slim-5-14",
+        "acer-swift-go-14"
+      ],
+      "rows": [
+        {
+          "key": "price",
+          "label": "Price",
+          "values": {
+            "lenovo-ideapad-slim-5-14": "NPR 1,04,500",
+            "acer-swift-go-14": "NPR 1,09,999"
+          },
+          "winners": [
+            "lenovo-ideapad-slim-5-14"
+          ],
+          "numeric": true
+        },
+        {
+          "key": "ram",
+          "label": "Memory",
+          "values": {
+            "lenovo-ideapad-slim-5-14": "16 GB",
+            "acer-swift-go-14": "16 GB"
+          },
+          "winners": [],
+          "numeric": true
+        },
+        {
+          "key": "storage",
+          "label": "Storage",
+          "values": {
+            "lenovo-ideapad-slim-5-14": "1 TB",
+            "acer-swift-go-14": "512 GB"
+          },
+          "winners": [
+            "lenovo-ideapad-slim-5-14"
+          ],
+          "numeric": true
+        },
+        {
+          "key": "battery",
+          "label": "Battery",
+          "values": {
+            "lenovo-ideapad-slim-5-14": "12 h",
+            "acer-swift-go-14": "10 h"
+          },
+          "winners": [
+            "lenovo-ideapad-slim-5-14"
+          ],
+          "numeric": true
+        },
+        {
+          "key": "weight",
+          "label": "Weight",
+          "values": {
+            "lenovo-ideapad-slim-5-14": "1.46 kg",
+            "acer-swift-go-14": "1.32 kg"
+          },
+          "winners": [
+            "acer-swift-go-14"
+          ],
+          "numeric": true
+        },
+        {
+          "key": "warranty",
+          "label": "Warranty",
+          "values": {
+            "lenovo-ideapad-slim-5-14": "2 yr",
+            "acer-swift-go-14": "1 yr"
+          },
+          "winners": [
+            "lenovo-ideapad-slim-5-14"
+          ],
+          "numeric": true
+        },
+        {
+          "key": "rating",
+          "label": "Rating",
+          "values": {
+            "lenovo-ideapad-slim-5-14": "4.6 ★",
+            "acer-swift-go-14": "4.5 ★"
+          },
+          "winners": [],
+          "numeric": true
+        },
+        {
+          "key": "cpu",
+          "label": "Processor",
+          "values": {
+            "lenovo-ideapad-slim-5-14": "AMD Ryzen 7 8845HS (8C/16T)",
+            "acer-swift-go-14": "Intel Core Ultra 5 125H (14C/18T)"
+          },
+          "winners": [],
+          "numeric": false
+        },
+        {
+          "key": "gpu",
+          "label": "Graphics",
+          "values": {
+            "lenovo-ideapad-slim-5-14": "AMD Radeon 780M (integrated)",
+            "acer-swift-go-14": "Intel Arc Graphics (integrated)"
+          },
+          "winners": [],
+          "numeric": false
+        },
+        {
+          "key": "screen",
+          "label": "Display",
+          "values": {
+            "lenovo-ideapad-slim-5-14": "14\" WUXGA OLED, 60 Hz",
+            "acer-swift-go-14": "14\" 2.8K OLED, 90 Hz"
+          },
+          "winners": [],
+          "numeric": false
+        },
+        {
+          "key": "ports",
+          "label": "Ports",
+          "values": {
+            "lenovo-ideapad-slim-5-14": "2× USB-C (USB4), 2× USB-A, HDMI 2.1, microSD",
+            "acer-swift-go-14": "2× Thunderbolt 4, 2× USB-A, HDMI 2.1"
+          },
+          "winners": [],
+          "numeric": false
+        }
+      ],
+      "advantages": {
+        "lenovo-ideapad-slim-5-14": [
+          "NPR 5,499 cheaper",
+          "2 h more battery",
+          "double the storage",
+          "1 yr longer warranty"
+        ],
+        "acer-swift-go-14": [
+          "140 g lighter"
+        ]
+      },
+      "predicates": {
+        "lenovo-ideapad-slim-5-14": [
+          "is NPR 5,499 cheaper",
+          "has 2 h more battery",
+          "has double the storage",
+          "has 1 yr longer warranty"
+        ],
+        "acer-swift-go-14": [
+          "is 140 g lighter"
+        ]
+      },
+      "scores": {
+        "lenovo-ideapad-slim-5-14": 9.75,
+        "acer-swift-go-14": 3.5
+      },
+      "winnerId": "lenovo-ideapad-slim-5-14",
+      "verdict": "The IdeaPad Slim 5 14 is the better all-round pick: NPR 5,499 cheaper, 2 h more battery, double the storage, same RAM. The Swift Go 14 is 140 g lighter."
+    }
+  },
+  {
+    "name": "ideapad_vs_swift_docker_context",
+    "productIds": [
+      "lenovo-ideapad-slim-5-14",
+      "acer-swift-go-14"
+    ],
+    "options": {
+      "context": "Docker + travel"
+    },
+    "result": {
+      "productIds": [
+        "lenovo-ideapad-slim-5-14",
+        "acer-swift-go-14"
+      ],
+      "rows": [
+        {
+          "key": "price",
+          "label": "Price",
+          "values": {
+            "lenovo-ideapad-slim-5-14": "NPR 1,04,500",
+            "acer-swift-go-14": "NPR 1,09,999"
+          },
+          "winners": [
+            "lenovo-ideapad-slim-5-14"
+          ],
+          "numeric": true
+        },
+        {
+          "key": "ram",
+          "label": "Memory",
+          "values": {
+            "lenovo-ideapad-slim-5-14": "16 GB",
+            "acer-swift-go-14": "16 GB"
+          },
+          "winners": [],
+          "numeric": true
+        },
+        {
+          "key": "storage",
+          "label": "Storage",
+          "values": {
+            "lenovo-ideapad-slim-5-14": "1 TB",
+            "acer-swift-go-14": "512 GB"
+          },
+          "winners": [
+            "lenovo-ideapad-slim-5-14"
+          ],
+          "numeric": true
+        },
+        {
+          "key": "battery",
+          "label": "Battery",
+          "values": {
+            "lenovo-ideapad-slim-5-14": "12 h",
+            "acer-swift-go-14": "10 h"
+          },
+          "winners": [
+            "lenovo-ideapad-slim-5-14"
+          ],
+          "numeric": true
+        },
+        {
+          "key": "weight",
+          "label": "Weight",
+          "values": {
+            "lenovo-ideapad-slim-5-14": "1.46 kg",
+            "acer-swift-go-14": "1.32 kg"
+          },
+          "winners": [
+            "acer-swift-go-14"
+          ],
+          "numeric": true
+        },
+        {
+          "key": "warranty",
+          "label": "Warranty",
+          "values": {
+            "lenovo-ideapad-slim-5-14": "2 yr",
+            "acer-swift-go-14": "1 yr"
+          },
+          "winners": [
+            "lenovo-ideapad-slim-5-14"
+          ],
+          "numeric": true
+        },
+        {
+          "key": "rating",
+          "label": "Rating",
+          "values": {
+            "lenovo-ideapad-slim-5-14": "4.6 ★",
+            "acer-swift-go-14": "4.5 ★"
+          },
+          "winners": [],
+          "numeric": true
+        },
+        {
+          "key": "cpu",
+          "label": "Processor",
+          "values": {
+            "lenovo-ideapad-slim-5-14": "AMD Ryzen 7 8845HS (8C/16T)",
+            "acer-swift-go-14": "Intel Core Ultra 5 125H (14C/18T)"
+          },
+          "winners": [],
+          "numeric": false
+        },
+        {
+          "key": "gpu",
+          "label": "Graphics",
+          "values": {
+            "lenovo-ideapad-slim-5-14": "AMD Radeon 780M (integrated)",
+            "acer-swift-go-14": "Intel Arc Graphics (integrated)"
+          },
+          "winners": [],
+          "numeric": false
+        },
+        {
+          "key": "screen",
+          "label": "Display",
+          "values": {
+            "lenovo-ideapad-slim-5-14": "14\" WUXGA OLED, 60 Hz",
+            "acer-swift-go-14": "14\" 2.8K OLED, 90 Hz"
+          },
+          "winners": [],
+          "numeric": false
+        },
+        {
+          "key": "ports",
+          "label": "Ports",
+          "values": {
+            "lenovo-ideapad-slim-5-14": "2× USB-C (USB4), 2× USB-A, HDMI 2.1, microSD",
+            "acer-swift-go-14": "2× Thunderbolt 4, 2× USB-A, HDMI 2.1"
+          },
+          "winners": [],
+          "numeric": false
+        }
+      ],
+      "advantages": {
+        "lenovo-ideapad-slim-5-14": [
+          "NPR 5,499 cheaper",
+          "2 h more battery",
+          "double the storage",
+          "1 yr longer warranty"
+        ],
+        "acer-swift-go-14": [
+          "140 g lighter"
+        ]
+      },
+      "predicates": {
+        "lenovo-ideapad-slim-5-14": [
+          "is NPR 5,499 cheaper",
+          "has 2 h more battery",
+          "has double the storage",
+          "has 1 yr longer warranty"
+        ],
+        "acer-swift-go-14": [
+          "is 140 g lighter"
+        ]
+      },
+      "scores": {
+        "lenovo-ideapad-slim-5-14": 9.75,
+        "acer-swift-go-14": 3.5
+      },
+      "winnerId": "lenovo-ideapad-slim-5-14",
+      "verdict": "For Docker + travel, the IdeaPad Slim 5 14 is the better fit: NPR 5,499 cheaper, 2 h more battery, double the storage, same RAM. The Swift Go 14 is 140 g lighter."
+    }
+  },
+  {
+    "name": "ideapad_vs_swift_weight_priority",
+    "productIds": [
+      "lenovo-ideapad-slim-5-14",
+      "acer-swift-go-14"
+    ],
+    "options": {
+      "priorities": [
+        "weight",
+        "price"
+      ]
+    },
+    "result": {
+      "productIds": [
+        "lenovo-ideapad-slim-5-14",
+        "acer-swift-go-14"
+      ],
+      "rows": [
+        {
+          "key": "price",
+          "label": "Price",
+          "values": {
+            "lenovo-ideapad-slim-5-14": "NPR 1,04,500",
+            "acer-swift-go-14": "NPR 1,09,999"
+          },
+          "winners": [
+            "lenovo-ideapad-slim-5-14"
+          ],
+          "numeric": true
+        },
+        {
+          "key": "ram",
+          "label": "Memory",
+          "values": {
+            "lenovo-ideapad-slim-5-14": "16 GB",
+            "acer-swift-go-14": "16 GB"
+          },
+          "winners": [],
+          "numeric": true
+        },
+        {
+          "key": "storage",
+          "label": "Storage",
+          "values": {
+            "lenovo-ideapad-slim-5-14": "1 TB",
+            "acer-swift-go-14": "512 GB"
+          },
+          "winners": [
+            "lenovo-ideapad-slim-5-14"
+          ],
+          "numeric": true
+        },
+        {
+          "key": "battery",
+          "label": "Battery",
+          "values": {
+            "lenovo-ideapad-slim-5-14": "12 h",
+            "acer-swift-go-14": "10 h"
+          },
+          "winners": [
+            "lenovo-ideapad-slim-5-14"
+          ],
+          "numeric": true
+        },
+        {
+          "key": "weight",
+          "label": "Weight",
+          "values": {
+            "lenovo-ideapad-slim-5-14": "1.46 kg",
+            "acer-swift-go-14": "1.32 kg"
+          },
+          "winners": [
+            "acer-swift-go-14"
+          ],
+          "numeric": true
+        },
+        {
+          "key": "warranty",
+          "label": "Warranty",
+          "values": {
+            "lenovo-ideapad-slim-5-14": "2 yr",
+            "acer-swift-go-14": "1 yr"
+          },
+          "winners": [
+            "lenovo-ideapad-slim-5-14"
+          ],
+          "numeric": true
+        },
+        {
+          "key": "rating",
+          "label": "Rating",
+          "values": {
+            "lenovo-ideapad-slim-5-14": "4.6 ★",
+            "acer-swift-go-14": "4.5 ★"
+          },
+          "winners": [],
+          "numeric": true
+        },
+        {
+          "key": "cpu",
+          "label": "Processor",
+          "values": {
+            "lenovo-ideapad-slim-5-14": "AMD Ryzen 7 8845HS (8C/16T)",
+            "acer-swift-go-14": "Intel Core Ultra 5 125H (14C/18T)"
+          },
+          "winners": [],
+          "numeric": false
+        },
+        {
+          "key": "gpu",
+          "label": "Graphics",
+          "values": {
+            "lenovo-ideapad-slim-5-14": "AMD Radeon 780M (integrated)",
+            "acer-swift-go-14": "Intel Arc Graphics (integrated)"
+          },
+          "winners": [],
+          "numeric": false
+        },
+        {
+          "key": "screen",
+          "label": "Display",
+          "values": {
+            "lenovo-ideapad-slim-5-14": "14\" WUXGA OLED, 60 Hz",
+            "acer-swift-go-14": "14\" 2.8K OLED, 90 Hz"
+          },
+          "winners": [],
+          "numeric": false
+        },
+        {
+          "key": "ports",
+          "label": "Ports",
+          "values": {
+            "lenovo-ideapad-slim-5-14": "2× USB-C (USB4), 2× USB-A, HDMI 2.1, microSD",
+            "acer-swift-go-14": "2× Thunderbolt 4, 2× USB-A, HDMI 2.1"
+          },
+          "winners": [],
+          "numeric": false
+        }
+      ],
+      "advantages": {
+        "lenovo-ideapad-slim-5-14": [
+          "NPR 5,499 cheaper",
+          "double the storage",
+          "2 h more battery",
+          "1 yr longer warranty"
+        ],
+        "acer-swift-go-14": [
+          "140 g lighter"
+        ]
+      },
+      "predicates": {
+        "lenovo-ideapad-slim-5-14": [
+          "is NPR 5,499 cheaper",
+          "has double the storage",
+          "has 2 h more battery",
+          "has 1 yr longer warranty"
+        ],
+        "acer-swift-go-14": [
+          "is 140 g lighter"
+        ]
+      },
+      "scores": {
+        "lenovo-ideapad-slim-5-14": 6.25,
+        "acer-swift-go-14": 3.5
+      },
+      "winnerId": "lenovo-ideapad-slim-5-14",
+      "verdict": "The IdeaPad Slim 5 14 is the better all-round pick: NPR 5,499 cheaper, double the storage, 2 h more battery. The Swift Go 14 is 140 g lighter."
+    }
+  },
+  {
+    "name": "three_way_cross_category",
+    "productIds": [
+      "lenovo-ideapad-slim-5-14",
+      "acer-swift-go-14",
+      "sony-wh-1000xm5"
+    ],
+    "options": {},
+    "result": {
+      "productIds": [
+        "lenovo-ideapad-slim-5-14",
+        "acer-swift-go-14",
+        "sony-wh-1000xm5"
+      ],
+      "rows": [
+        {
+          "key": "price",
+          "label": "Price",
+          "values": {
+            "lenovo-ideapad-slim-5-14": "NPR 1,04,500",
+            "acer-swift-go-14": "NPR 1,09,999",
+            "sony-wh-1000xm5": "NPR 54,999"
+          },
+          "winners": [
+            "sony-wh-1000xm5"
+          ],
+          "numeric": true
+        },
+        {
+          "key": "ram",
+          "label": "Memory",
+          "values": {
+            "lenovo-ideapad-slim-5-14": "16 GB",
+            "acer-swift-go-14": "16 GB",
+            "sony-wh-1000xm5": "—"
+          },
+          "winners": [
+            "lenovo-ideapad-slim-5-14",
+            "acer-swift-go-14"
+          ],
+          "numeric": true
+        },
+        {
+          "key": "storage",
+          "label": "Storage",
+          "values": {
+            "lenovo-ideapad-slim-5-14": "1 TB",
+            "acer-swift-go-14": "512 GB",
+            "sony-wh-1000xm5": "—"
+          },
+          "winners": [
+            "lenovo-ideapad-slim-5-14"
+          ],
+          "numeric": true
+        },
+        {
+          "key": "battery",
+          "label": "Battery",
+          "values": {
+            "lenovo-ideapad-slim-5-14": "12 h",
+            "acer-swift-go-14": "10 h",
+            "sony-wh-1000xm5": "30 h"
+          },
+          "winners": [
+            "sony-wh-1000xm5"
+          ],
+          "numeric": true
+        },
+        {
+          "key": "weight",
+          "label": "Weight",
+          "values": {
+            "lenovo-ideapad-slim-5-14": "1.46 kg",
+            "acer-swift-go-14": "1.32 kg",
+            "sony-wh-1000xm5": "250 g"
+          },
+          "winners": [
+            "sony-wh-1000xm5"
+          ],
+          "numeric": true
+        },
+        {
+          "key": "warranty",
+          "label": "Warranty",
+          "values": {
+            "lenovo-ideapad-slim-5-14": "2 yr",
+            "acer-swift-go-14": "1 yr",
+            "sony-wh-1000xm5": "1 yr"
+          },
+          "winners": [
+            "lenovo-ideapad-slim-5-14"
+          ],
+          "numeric": true
+        },
+        {
+          "key": "rating",
+          "label": "Rating",
+          "values": {
+            "lenovo-ideapad-slim-5-14": "4.6 ★",
+            "acer-swift-go-14": "4.5 ★",
+            "sony-wh-1000xm5": "4.7 ★"
+          },
+          "winners": [
+            "lenovo-ideapad-slim-5-14",
+            "sony-wh-1000xm5"
+          ],
+          "numeric": true
+        },
+        {
+          "key": "cpu",
+          "label": "Processor",
+          "values": {
+            "lenovo-ideapad-slim-5-14": "AMD Ryzen 7 8845HS (8C/16T)",
+            "acer-swift-go-14": "Intel Core Ultra 5 125H (14C/18T)",
+            "sony-wh-1000xm5": "—"
+          },
+          "winners": [],
+          "numeric": false
+        },
+        {
+          "key": "gpu",
+          "label": "Graphics",
+          "values": {
+            "lenovo-ideapad-slim-5-14": "AMD Radeon 780M (integrated)",
+            "acer-swift-go-14": "Intel Arc Graphics (integrated)",
+            "sony-wh-1000xm5": "—"
+          },
+          "winners": [],
+          "numeric": false
+        },
+        {
+          "key": "screen",
+          "label": "Display",
+          "values": {
+            "lenovo-ideapad-slim-5-14": "14\" WUXGA OLED, 60 Hz",
+            "acer-swift-go-14": "14\" 2.8K OLED, 90 Hz",
+            "sony-wh-1000xm5": "—"
+          },
+          "winners": [],
+          "numeric": false
+        },
+        {
+          "key": "ports",
+          "label": "Ports",
+          "values": {
+            "lenovo-ideapad-slim-5-14": "2× USB-C (USB4), 2× USB-A, HDMI 2.1, microSD",
+            "acer-swift-go-14": "2× Thunderbolt 4, 2× USB-A, HDMI 2.1",
+            "sony-wh-1000xm5": "—"
+          },
+          "winners": [],
+          "numeric": false
+        },
+        {
+          "key": "connectivity",
+          "label": "Connectivity",
+          "values": {
+            "lenovo-ideapad-slim-5-14": "—",
+            "acer-swift-go-14": "—",
+            "sony-wh-1000xm5": "Bluetooth 5.2, LDAC, multipoint"
+          },
+          "winners": [],
+          "numeric": false
+        }
+      ],
+      "advantages": {
+        "lenovo-ideapad-slim-5-14": [
+          "double the storage",
+          "1 yr longer warranty",
+          "better rated (4.6 vs 4.5)"
+        ],
+        "acer-swift-go-14": [],
+        "sony-wh-1000xm5": [
+          "NPR 49,501 cheaper",
+          "18 h more battery",
+          "1.07 kg lighter",
+          "better rated (4.7 vs 4.5)"
+        ]
+      },
+      "predicates": {
+        "lenovo-ideapad-slim-5-14": [
+          "has double the storage",
+          "has 1 yr longer warranty",
+          "is better rated (4.6 vs 4.5)"
+        ],
+        "acer-swift-go-14": [],
+        "sony-wh-1000xm5": [
+          "is NPR 49,501 cheaper",
+          "has 18 h more battery",
+          "is 1.07 kg lighter",
+          "is better rated (4.7 vs 4.5)"
+        ]
+      },
+      "scores": {
+        "lenovo-ideapad-slim-5-14": 3,
+        "acer-swift-go-14": 0,
+        "sony-wh-1000xm5": 12.25
+      },
+      "winnerId": "sony-wh-1000xm5",
+      "verdict": "The WH-1000XM5 is the better all-round pick: NPR 49,501 cheaper, 18 h more battery, 1.07 kg lighter. The IdeaPad Slim 5 14 has double the storage."
+    }
+  },
+  {
+    "name": "macbook_vs_ideapad",
+    "productIds": [
+      "apple-macbook-air-m3-13",
+      "lenovo-ideapad-slim-5-14"
+    ],
+    "options": {},
+    "result": {
+      "productIds": [
+        "apple-macbook-air-m3-13",
+        "lenovo-ideapad-slim-5-14"
+      ],
+      "rows": [
+        {
+          "key": "price",
+          "label": "Price",
+          "values": {
+            "apple-macbook-air-m3-13": "NPR 1,64,900",
+            "lenovo-ideapad-slim-5-14": "NPR 1,04,500"
+          },
+          "winners": [
+            "lenovo-ideapad-slim-5-14"
+          ],
+          "numeric": true
+        },
+        {
+          "key": "ram",
+          "label": "Memory",
+          "values": {
+            "apple-macbook-air-m3-13": "16 GB",
+            "lenovo-ideapad-slim-5-14": "16 GB"
+          },
+          "winners": [],
+          "numeric": true
+        },
+        {
+          "key": "storage",
+          "label": "Storage",
+          "values": {
+            "apple-macbook-air-m3-13": "256 GB",
+            "lenovo-ideapad-slim-5-14": "1 TB"
+          },
+          "winners": [
+            "lenovo-ideapad-slim-5-14"
+          ],
+          "numeric": true
+        },
+        {
+          "key": "battery",
+          "label": "Battery",
+          "values": {
+            "apple-macbook-air-m3-13": "18 h",
+            "lenovo-ideapad-slim-5-14": "12 h"
+          },
+          "winners": [
+            "apple-macbook-air-m3-13"
+          ],
+          "numeric": true
+        },
+        {
+          "key": "weight",
+          "label": "Weight",
+          "values": {
+            "apple-macbook-air-m3-13": "1.24 kg",
+            "lenovo-ideapad-slim-5-14": "1.46 kg"
+          },
+          "winners": [
+            "apple-macbook-air-m3-13"
+          ],
+          "numeric": true
+        },
+        {
+          "key": "warranty",
+          "label": "Warranty",
+          "values": {
+            "apple-macbook-air-m3-13": "1 yr",
+            "lenovo-ideapad-slim-5-14": "2 yr"
+          },
+          "winners": [
+            "lenovo-ideapad-slim-5-14"
+          ],
+          "numeric": true
+        },
+        {
+          "key": "rating",
+          "label": "Rating",
+          "values": {
+            "apple-macbook-air-m3-13": "4.8 ★",
+            "lenovo-ideapad-slim-5-14": "4.6 ★"
+          },
+          "winners": [
+            "apple-macbook-air-m3-13"
+          ],
+          "numeric": true
+        },
+        {
+          "key": "cpu",
+          "label": "Processor",
+          "values": {
+            "apple-macbook-air-m3-13": "Apple M3 (8-core CPU)",
+            "lenovo-ideapad-slim-5-14": "AMD Ryzen 7 8845HS (8C/16T)"
+          },
+          "winners": [],
+          "numeric": false
+        },
+        {
+          "key": "gpu",
+          "label": "Graphics",
+          "values": {
+            "apple-macbook-air-m3-13": "Apple M3 8-core GPU",
+            "lenovo-ideapad-slim-5-14": "AMD Radeon 780M (integrated)"
+          },
+          "winners": [],
+          "numeric": false
+        },
+        {
+          "key": "screen",
+          "label": "Display",
+          "values": {
+            "apple-macbook-air-m3-13": "13.6\" Liquid Retina, 60 Hz",
+            "lenovo-ideapad-slim-5-14": "14\" WUXGA OLED, 60 Hz"
+          },
+          "winners": [],
+          "numeric": false
+        },
+        {
+          "key": "ports",
+          "label": "Ports",
+          "values": {
+            "apple-macbook-air-m3-13": "2× Thunderbolt / USB 4, MagSafe 3",
+            "lenovo-ideapad-slim-5-14": "2× USB-C (USB4), 2× USB-A, HDMI 2.1, microSD"
+          },
+          "winners": [],
+          "numeric": false
+        }
+      ],
+      "advantages": {
+        "apple-macbook-air-m3-13": [
+          "6 h more battery",
+          "220 g lighter",
+          "better rated (4.8 vs 4.6)"
+        ],
+        "lenovo-ideapad-slim-5-14": [
+          "NPR 60,400 cheaper",
+          "double the storage",
+          "1 yr longer warranty"
+        ]
+      },
+      "predicates": {
+        "apple-macbook-air-m3-13": [
+          "has 6 h more battery",
+          "is 220 g lighter",
+          "is better rated (4.8 vs 4.6)"
+        ],
+        "lenovo-ideapad-slim-5-14": [
+          "is NPR 60,400 cheaper",
+          "has double the storage",
+          "has 1 yr longer warranty"
+        ]
+      },
+      "scores": {
+        "apple-macbook-air-m3-13": 8.25,
+        "lenovo-ideapad-slim-5-14": 6
+      },
+      "winnerId": "apple-macbook-air-m3-13",
+      "verdict": "The MacBook Air 13\" (M3) is the better all-round pick: 6 h more battery, 220 g lighter, better rated (4.8 vs 4.6), same RAM. The IdeaPad Slim 5 14 is NPR 60,400 cheaper."
+    }
+  },
+  {
+    "name": "iphone_vs_s24fe",
+    "productIds": [
+      "apple-iphone-16-pro",
+      "samsung-galaxy-s24-fe"
+    ],
+    "options": {},
+    "result": {
+      "productIds": [
+        "apple-iphone-16-pro",
+        "samsung-galaxy-s24-fe"
+      ],
+      "rows": [
+        {
+          "key": "price",
+          "label": "Price",
+          "values": {
+            "apple-iphone-16-pro": "NPR 1,99,900",
+            "samsung-galaxy-s24-fe": "NPR 89,999"
+          },
+          "winners": [
+            "samsung-galaxy-s24-fe"
+          ],
+          "numeric": true
+        },
+        {
+          "key": "ram",
+          "label": "Memory",
+          "values": {
+            "apple-iphone-16-pro": "8 GB",
+            "samsung-galaxy-s24-fe": "8 GB"
+          },
+          "winners": [],
+          "numeric": true
+        },
+        {
+          "key": "storage",
+          "label": "Storage",
+          "values": {
+            "apple-iphone-16-pro": "256 GB",
+            "samsung-galaxy-s24-fe": "256 GB"
+          },
+          "winners": [],
+          "numeric": true
+        },
+        {
+          "key": "battery",
+          "label": "Battery",
+          "values": {
+            "apple-iphone-16-pro": "27 h",
+            "samsung-galaxy-s24-fe": "28 h"
+          },
+          "winners": [
+            "samsung-galaxy-s24-fe"
+          ],
+          "numeric": true
+        },
+        {
+          "key": "weight",
+          "label": "Weight",
+          "values": {
+            "apple-iphone-16-pro": "199 g",
+            "samsung-galaxy-s24-fe": "213 g"
+          },
+          "winners": [],
+          "numeric": true
+        },
+        {
+          "key": "warranty",
+          "label": "Warranty",
+          "values": {
+            "apple-iphone-16-pro": "1 yr",
+            "samsung-galaxy-s24-fe": "1 yr"
+          },
+          "winners": [],
+          "numeric": true
+        },
+        {
+          "key": "rating",
+          "label": "Rating",
+          "values": {
+            "apple-iphone-16-pro": "4.8 ★",
+            "samsung-galaxy-s24-fe": "4.5 ★"
+          },
+          "winners": [
+            "apple-iphone-16-pro"
+          ],
+          "numeric": true
+        },
+        {
+          "key": "cpu",
+          "label": "Processor",
+          "values": {
+            "apple-iphone-16-pro": "Apple A18 Pro",
+            "samsung-galaxy-s24-fe": "Exynos 2400e"
+          },
+          "winners": [],
+          "numeric": false
+        },
+        {
+          "key": "screen",
+          "label": "Display",
+          "values": {
+            "apple-iphone-16-pro": "6.3\" OLED, 120 Hz",
+            "samsung-galaxy-s24-fe": "6.7\" AMOLED, 120 Hz"
+          },
+          "winners": [],
+          "numeric": false
+        },
+        {
+          "key": "camera",
+          "label": "Camera",
+          "values": {
+            "apple-iphone-16-pro": "48 MP main + 48 MP ultrawide + 12 MP 5× tele",
+            "samsung-galaxy-s24-fe": "50 MP main + 12 MP ultrawide + 8 MP 3× tele"
+          },
+          "winners": [],
+          "numeric": false
+        },
+        {
+          "key": "connectivity",
+          "label": "Connectivity",
+          "values": {
+            "apple-iphone-16-pro": "5G, Wi-Fi 7, USB-C (USB 3)",
+            "samsung-galaxy-s24-fe": "5G, Wi-Fi 6E, USB-C"
+          },
+          "winners": [],
+          "numeric": false
+        }
+      ],
+      "advantages": {
+        "apple-iphone-16-pro": [
+          "better rated (4.8 vs 4.5)"
+        ],
+        "samsung-galaxy-s24-fe": [
+          "NPR 1,09,901 cheaper",
+          "1 h more battery"
+        ]
+      },
+      "predicates": {
+        "apple-iphone-16-pro": [
+          "is better rated (4.8 vs 4.5)"
+        ],
+        "samsung-galaxy-s24-fe": [
+          "is NPR 1,09,901 cheaper",
+          "has 1 h more battery"
+        ]
+      },
+      "scores": {
+        "apple-iphone-16-pro": 1,
+        "samsung-galaxy-s24-fe": 7.75
+      },
+      "winnerId": "samsung-galaxy-s24-fe",
+      "verdict": "The Galaxy S24 FE is the better all-round pick: NPR 1,09,901 cheaper, 1 h more battery, same RAM. The iPhone 16 Pro is better rated (4.8 vs 4.5)."
+    }
+  },
+  {
+    "name": "single_product",
+    "productIds": [
+      "lenovo-ideapad-slim-5-14"
+    ],
+    "options": {},
+    "result": {
+      "productIds": [
+        "lenovo-ideapad-slim-5-14"
+      ],
+      "rows": [
+        {
+          "key": "price",
+          "label": "Price",
+          "values": {
+            "lenovo-ideapad-slim-5-14": "NPR 1,04,500"
+          },
+          "winners": [],
+          "numeric": true
+        },
+        {
+          "key": "ram",
+          "label": "Memory",
+          "values": {
+            "lenovo-ideapad-slim-5-14": "16 GB"
+          },
+          "winners": [],
+          "numeric": true
+        },
+        {
+          "key": "storage",
+          "label": "Storage",
+          "values": {
+            "lenovo-ideapad-slim-5-14": "1 TB"
+          },
+          "winners": [],
+          "numeric": true
+        },
+        {
+          "key": "battery",
+          "label": "Battery",
+          "values": {
+            "lenovo-ideapad-slim-5-14": "12 h"
+          },
+          "winners": [],
+          "numeric": true
+        },
+        {
+          "key": "weight",
+          "label": "Weight",
+          "values": {
+            "lenovo-ideapad-slim-5-14": "1.46 kg"
+          },
+          "winners": [],
+          "numeric": true
+        },
+        {
+          "key": "warranty",
+          "label": "Warranty",
+          "values": {
+            "lenovo-ideapad-slim-5-14": "2 yr"
+          },
+          "winners": [],
+          "numeric": true
+        },
+        {
+          "key": "rating",
+          "label": "Rating",
+          "values": {
+            "lenovo-ideapad-slim-5-14": "4.6 ★"
+          },
+          "winners": [],
+          "numeric": true
+        },
+        {
+          "key": "cpu",
+          "label": "Processor",
+          "values": {
+            "lenovo-ideapad-slim-5-14": "AMD Ryzen 7 8845HS (8C/16T)"
+          },
+          "winners": [],
+          "numeric": false
+        },
+        {
+          "key": "gpu",
+          "label": "Graphics",
+          "values": {
+            "lenovo-ideapad-slim-5-14": "AMD Radeon 780M (integrated)"
+          },
+          "winners": [],
+          "numeric": false
+        },
+        {
+          "key": "screen",
+          "label": "Display",
+          "values": {
+            "lenovo-ideapad-slim-5-14": "14\" WUXGA OLED, 60 Hz"
+          },
+          "winners": [],
+          "numeric": false
+        },
+        {
+          "key": "ports",
+          "label": "Ports",
+          "values": {
+            "lenovo-ideapad-slim-5-14": "2× USB-C (USB4), 2× USB-A, HDMI 2.1, microSD"
+          },
+          "winners": [],
+          "numeric": false
+        }
+      ],
+      "advantages": {
+        "lenovo-ideapad-slim-5-14": []
+      },
+      "predicates": {
+        "lenovo-ideapad-slim-5-14": []
+      },
+      "scores": {
+        "lenovo-ideapad-slim-5-14": 0
+      },
+      "winnerId": null,
+      "verdict": "Add another product to compare."
+    }
+  }
+]
