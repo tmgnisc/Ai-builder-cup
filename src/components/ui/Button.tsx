@@ -1,5 +1,7 @@
-import type { ComponentProps } from "react";
+import { Loader2 } from "lucide-react";
+import type { ComponentProps, ReactNode } from "react";
 import { cn } from "@/lib/cn";
+import { focusRing } from "./focusRing";
 
 export type ButtonVariant = "primary" | "secondary" | "ghost" | "outline" | "danger";
 export type ButtonSize = "sm" | "md" | "lg" | "icon";
@@ -27,6 +29,7 @@ export function buttonClasses({
 }: { variant?: ButtonVariant; size?: ButtonSize; className?: string } = {}): string {
   return cn(
     "inline-flex shrink-0 select-none items-center justify-center whitespace-nowrap transition-[background-color,box-shadow,color,filter,transform] duration-200 ease-[var(--ease-out-expo)] disabled:pointer-events-none disabled:opacity-45",
+    focusRing,
     VARIANT[variant],
     SIZE[size],
     className,
@@ -36,8 +39,34 @@ export function buttonClasses({
 export interface ButtonProps extends ComponentProps<"button"> {
   variant?: ButtonVariant;
   size?: ButtonSize;
+  loading?: boolean;
+  iconLeft?: ReactNode;
+  iconRight?: ReactNode;
 }
 
-export function Button({ variant, size, className, type = "button", ...props }: ButtonProps) {
-  return <button type={type} className={buttonClasses({ variant, size, className })} {...props} />;
+export function Button({
+  variant,
+  size,
+  loading = false,
+  disabled,
+  iconLeft,
+  iconRight,
+  children,
+  className,
+  type = "button",
+  ...props
+}: ButtonProps) {
+  return (
+    <button
+      type={type}
+      disabled={disabled || loading}
+      aria-busy={loading}
+      className={buttonClasses({ variant, size, className })}
+      {...props}
+    >
+      {loading ? <Loader2 className="size-4 animate-spin" aria-hidden /> : iconLeft}
+      {children}
+      {!loading && iconRight}
+    </button>
+  );
 }
