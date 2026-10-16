@@ -2,7 +2,7 @@
 
 import { Check, Loader2, ShoppingBag } from "lucide-react";
 import { useState } from "react";
-import { MagneticButton } from "@/components/ui/MagneticButton";
+import { Button } from "@/components/ui/Button";
 import { useCart } from "@/store/useCart";
 
 /** Product-page add button: verified add, then fly the gallery image into the cart. */
@@ -22,7 +22,7 @@ export function AddToCartButton({ productId, disabled, sourceSelector = "[data-g
 
   return (
     <div className="flex flex-col gap-2">
-      <MagneticButton size="lg" variant={disabled ? "secondary" : "primary"} onClick={onClick} disabled={disabled || busy}>
+      <Button size="lg" variant={disabled ? "secondary" : "primary"} onClick={onClick} disabled={disabled || busy}>
         {busy ? (
           <Loader2 className="size-4 animate-spin" aria-hidden />
         ) : justAdded ? (
@@ -31,7 +31,7 @@ export function AddToCartButton({ productId, disabled, sourceSelector = "[data-g
           <ShoppingBag className="size-4" aria-hidden />
         )}
         {disabled ? "Out of stock" : busy ? "Adding…" : justAdded ? "Added & verified" : "Add to cart"}
-      </MagneticButton>
+      </Button>
       <p aria-live="polite" className="sr-only">
         {justAdded ? "Added to cart and verified." : ""}
       </p>
