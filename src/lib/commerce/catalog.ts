@@ -1,6 +1,7 @@
-import { products } from "@/data/products";
+import productsJson from "../../../backend/app/data/products.json";
 import type { Category, Product, ProductQuery, ProductSearchResult } from "./schemas";
 
+const products: readonly Product[] = productsJson as unknown as Product[];
 const byId = new Map(products.map((p) => [p.id, p]));
 
 const STOPWORDS = new Set(["a", "an", "the", "for", "with", "and", "or", "of", "to", "in", "on", "i", "me", "my", "need", "want", "some", "good"]);

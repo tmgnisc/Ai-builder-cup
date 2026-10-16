@@ -1,9 +1,10 @@
 import fs from "node:fs";
 import path from "node:path";
-import { products } from "../src/data/products";
-import { searchProducts } from "../src/lib/commerce/catalog";
+import { getAllProducts, searchProducts } from "../src/lib/commerce/catalog";
 import { compareProducts, type CompareKey } from "../src/lib/commerce/compare";
 import type { Product, ProductQuery } from "../src/lib/commerce/schemas";
+
+const products = getAllProducts();
 
 const outDir = path.resolve(__dirname, "../backend/tests/fixtures");
 const appDataDir = path.resolve(__dirname, "../backend/app/data");

@@ -1,8 +1,9 @@
 import { describe, expect, it } from "vitest";
-import { products } from "@/data/products";
 import { addToCart, getCart, removeFromCart } from "./cartStore";
-import { searchProducts } from "./catalog";
+import { getAllProducts, searchProducts } from "./catalog";
 import { ProductSchema } from "./schemas";
+
+const products = getAllProducts();
 
 describe("catalog data", () => {
   it("validates every product against the schema", () => {
