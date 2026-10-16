@@ -55,9 +55,9 @@ export function CompareDrawer() {
     { dependencies: [open, ids.join(",")], scope: tableRef, revertOnUpdate: true },
   );
 
-  // Equal product columns regardless of content length; the table scrolls horizontally on narrow screens.
-  const cols = `minmax(96px, 0.6fr) repeat(${products.length}, minmax(0, 1fr))`;
-  const minWidth = 120 + products.length * 190;
+  // Equal product columns regardless of content length; gracefully scrolls horizontally when > 2 products.
+  const cols = `minmax(84px, 0.5fr) repeat(${products.length}, minmax(120px, 1fr))`;
+  const minWidth = products.length <= 2 ? "100%" : `${84 + products.length * 140}px`;
 
   return (
     <Drawer
