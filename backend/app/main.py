@@ -1,7 +1,7 @@
 from fastapi import FastAPI
 from fastapi.middleware.cors import CORSMiddleware
 
-from .api.routers import cart, health, products
+from .api.routers import agent, cart, health, products
 from .core.config import Settings, get_settings
 from .core.errors import register_error_handlers
 from .core.logging import setup_logging
@@ -29,6 +29,7 @@ def create_app(settings: Settings | None = None) -> FastAPI:
     app.include_router(health.router)
     app.include_router(products.router, prefix="/api/products", tags=["products"])
     app.include_router(cart.router, prefix="/api/cart", tags=["cart"])
+    app.include_router(agent.router)
 
     return app
 

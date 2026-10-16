@@ -8,6 +8,7 @@ import { getProduct } from "@/lib/commerce/catalog";
 import type { FrictionTheme, MissingInfo, TopQuestion } from "@/data/merchant";
 import { useChat } from "@/store/useChat";
 import { useFeedback } from "@/store/useFeedback";
+import { useMerchantSession } from "@/store/useMerchantSession";
 
 const INTENT_TONE: Record<TopQuestion["intent"], BadgeTone> = { search: "info", compare: "accent", add: "success", delivery: "neutral", question: "warning" };
 
@@ -62,6 +63,9 @@ export function QuestionsList({ items }: { items: TopQuestion[] }) {
 }
 
 export function MissingInfoList({ items }: { items: MissingInfo[] }) {
+  const live = useMerchantSession((s) => s.missing);
+  const combined = useMemo(() => [...live, ...items], [live, items]);
+
   return (
     <Panel
       id="merchant-missing"
@@ -71,12 +75,16 @@ export function MissingInfoList({ items }: { items: MissingInfo[] }) {
       aside={<span className="text-[11px] text-muted">Pip had to say “not listed”</span>}
     >
       <ul className="divide-y divide-border">
-        {items.map((m) => {
+        {combined.map((m, idx) => {
           const p = getProduct(m.productId);
+          const isLive = idx < live.length;
           return (
-            <li key={`${m.productId}-${m.field}`} data-list-row className="flex items-center gap-3 py-2.5 first:pt-0 last:pb-0">
+            <li key={`${m.productId}-${m.field}-${idx}`} data-list-row className="flex items-center gap-3 py-2.5 first:pt-0 last:pb-0">
               <div className="min-w-0 flex-1">
-                <p className="text-[13px] font-medium">{m.field}</p>
+                <div className="flex items-center gap-2">
+                  <p className="text-[13px] font-medium">{m.field}</p>
+                  {isLive && <Badge tone="accent">live</Badge>}
+                </div>
                 <p className="truncate text-xs text-muted" title={m.example}>
                   “{m.example}”
                 </p>

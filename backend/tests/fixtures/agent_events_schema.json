@@ -1,0 +1,191 @@
+{
+  "discriminator": "type",
+  "eventTypes": [
+    "state_change",
+    "message_start",
+    "text_delta",
+    "tool_call",
+    "tool_result",
+    "block",
+    "ui",
+    "missing_info",
+    "memory",
+    "error",
+    "done"
+  ],
+  "events": [
+    {
+      "type": "state_change",
+      "required": [
+        "type",
+        "state"
+      ],
+      "properties": [
+        "type",
+        "state",
+        "caption"
+      ]
+    },
+    {
+      "type": "message_start",
+      "required": [
+        "type",
+        "messageId"
+      ],
+      "properties": [
+        "type",
+        "messageId"
+      ]
+    },
+    {
+      "type": "text_delta",
+      "required": [
+        "type",
+        "messageId",
+        "delta"
+      ],
+      "properties": [
+        "type",
+        "messageId",
+        "delta"
+      ]
+    },
+    {
+      "type": "tool_call",
+      "required": [
+        "type",
+        "messageId",
+        "callId",
+        "name"
+      ],
+      "properties": [
+        "type",
+        "messageId",
+        "callId",
+        "name",
+        "input"
+      ]
+    },
+    {
+      "type": "tool_result",
+      "required": [
+        "type",
+        "messageId",
+        "callId",
+        "name",
+        "ok",
+        "summary",
+        "durationMs"
+      ],
+      "properties": [
+        "type",
+        "messageId",
+        "callId",
+        "name",
+        "ok",
+        "summary",
+        "durationMs",
+        "error"
+      ]
+    },
+    {
+      "type": "block",
+      "required": [
+        "type",
+        "messageId",
+        "block"
+      ],
+      "properties": [
+        "type",
+        "messageId",
+        "block"
+      ]
+    },
+    {
+      "type": "ui",
+      "required": [
+        "type",
+        "action"
+      ],
+      "properties": [
+        "type",
+        "action"
+      ]
+    },
+    {
+      "type": "missing_info",
+      "required": [
+        "type",
+        "field",
+        "productId"
+      ],
+      "properties": [
+        "type",
+        "field",
+        "productId",
+        "question"
+      ]
+    },
+    {
+      "type": "memory",
+      "required": [
+        "type",
+        "memory"
+      ],
+      "properties": [
+        "type",
+        "memory"
+      ]
+    },
+    {
+      "type": "error",
+      "required": [
+        "type",
+        "message"
+      ],
+      "properties": [
+        "type",
+        "message"
+      ]
+    },
+    {
+      "type": "done",
+      "required": [
+        "type"
+      ],
+      "properties": [
+        "type"
+      ]
+    }
+  ],
+  "pipStates": [
+    "idle",
+    "greeting",
+    "listening",
+    "thinking",
+    "searching",
+    "presenting",
+    "comparing",
+    "speaking",
+    "acting",
+    "success",
+    "error",
+    "sleeping"
+  ],
+  "blockKinds": [
+    "product_carousel",
+    "comparison",
+    "cart_action",
+    "clarify"
+  ],
+  "uiActionTypes": [
+    "highlight",
+    "move_to",
+    "scroll_to",
+    "set_filters",
+    "open_drawer",
+    "open_compare",
+    "cart_updated",
+    "navigate"
+  ]
+}

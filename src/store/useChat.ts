@@ -14,6 +14,7 @@ import { useCompare } from "./useCompare";
 import { findAnchor, usePipPosition } from "./usePipPosition";
 import { useFeedback } from "./useFeedback";
 import { useGuide } from "./useGuide";
+import { useMerchantSession } from "./useMerchantSession";
 import { useSignals } from "./useSignals";
 import { useVoice } from "./useVoice";
 
@@ -203,6 +204,9 @@ export const useChat = create<ChatState>()((set, get) => {
       case "ui":
         await performUI(ev.action);
         return;
+      case "missing_info":
+        useMerchantSession.getState().recordMissingInfo(ev);
+        return;
       case "memory":
         set({ memory: ev.memory });
         return;
@@ -238,6 +242,7 @@ export const useChat = create<ChatState>()((set, get) => {
       useSignals.getState().reset();
       useGuide.getState().reset();
       useFeedback.getState().reset();
+      useMerchantSession.getState().reset();
       useCatalogUI.getState().setHighlighted([]);
       if (!useSignals.getState().paused) useCompanion.getState().dispatch({ type: "state_change", state: "idle", source: "agent" });
     },

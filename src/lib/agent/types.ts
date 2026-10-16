@@ -139,6 +139,13 @@ export type AgentRequest = z.infer<typeof AgentRequestSchema>;
 
 // ── Events ──
 
+export const MissingInfoEventSchema = z.object({
+  type: z.literal("missing_info"),
+  field: z.string().trim().min(1),
+  productId: z.string().trim().min(1),
+  question: z.string().max(200).optional(),
+});
+
 export const AgentEventSchema = z.discriminatedUnion("type", [
   z.object({ type: z.literal("state_change"), state: PipStateSchema, caption: z.string().optional() }),
   z.object({ type: z.literal("message_start"), messageId: z.string() }),
@@ -156,6 +163,7 @@ export const AgentEventSchema = z.discriminatedUnion("type", [
   }),
   z.object({ type: z.literal("block"), messageId: z.string(), block: BlockSchema }),
   z.object({ type: z.literal("ui"), action: UIActionSchema }),
+  MissingInfoEventSchema,
   z.object({ type: z.literal("memory"), memory: AgentMemorySchema }),
   z.object({ type: z.literal("error"), message: z.string() }),
   z.object({ type: z.literal("done") }),

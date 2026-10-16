@@ -25,6 +25,40 @@ export async function POST(req: Request) {
 
   const sessionId = await getSessionId();
   const chaos = resolveChaos(req);
+
+  // When configured for Gemini with a backend URL, proxy to Python FastAPI backend
+  if (process.env.PERSONA_AGENT === "gemini" && process.env.BACKEND_URL) {
+    try {
+      const backendUrl = `${process.env.BACKEND_URL.replace(/\/+$/, "")}/api/agent`;
+      const chaosHeader = req.headers.get("x-persona-chaos");
+      const headers: Record<string, string> = {
+        "content-type": "application/json",
+        cookie: `persona_sid=${sessionId}`,
+      };
+      if (chaosHeader) headers["x-persona-chaos"] = chaosHeader;
+
+      const backendResp = await fetch(backendUrl, {
+        method: "POST",
+        headers,
+        body: JSON.stringify(parsed.data),
+        signal: req.signal,
+      });
+
+      if (backendResp.ok && backendResp.body) {
+        return new Response(backendResp.body, {
+          headers: {
+            "content-type": "application/x-ndjson; charset=utf-8",
+            "cache-control": "no-store, no-transform",
+            "x-accel-buffering": "no",
+          },
+        });
+      }
+      console.warn(`[agent proxy] backend returned ${backendResp.status}, falling back to mockAgent`);
+    } catch (err) {
+      console.warn("[agent proxy] backend unreachable, falling back to mockAgent", err);
+    }
+  }
+
   const pace = Number(process.env.PERSONA_AGENT_PACE ?? req.headers.get("x-persona-pace") ?? 1);
   const encoder = new TextEncoder();
 
