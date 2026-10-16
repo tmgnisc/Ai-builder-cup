@@ -4,13 +4,17 @@ from pydantic_settings import BaseSettings, SettingsConfigDict
 
 
 class Settings(BaseSettings):
-    """Read from environment variables (and `.env` locally)."""
+    """Application settings read from environment variables or .env file."""
 
     model_config = SettingsConfigDict(env_file=".env", extra="ignore")
 
     gemini_api_key: str = ""
     gemini_model: str = "gemini-2.5-flash"
     cors_origins: str = "http://localhost:3000"
+    persona_failure_rate: float = 0.0
+    persona_latency_min_ms: int = 200
+    persona_latency_max_ms: int = 600
+    log_level: str = "INFO"
 
     @property
     def cors_origin_list(self) -> list[str]:
