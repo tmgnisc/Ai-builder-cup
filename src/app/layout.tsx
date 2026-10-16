@@ -9,7 +9,7 @@ import { ClientBootstrap } from "@/components/layout/ClientBootstrap";
 import { Footer } from "@/components/layout/Footer";
 import { Header } from "@/components/layout/Header";
 import { ThemeScript } from "@/components/layout/ThemeScript";
-import { CartDrawer } from "@/components/store/CartDrawer";
+import { CartDrawer } from "@/features/cart";
 import { CompareDrawer, CompareTray } from "@/features/compare";
 import { tokenDefinitions } from "@/tokens/definitions";
 import "@/styles/globals.css";

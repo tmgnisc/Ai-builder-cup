@@ -1,6 +1,6 @@
 import Link from "next/link";
 import { CATEGORIES } from "@/lib/commerce/schemas";
-import { CartButton } from "./CartButton";
+import { CartButton } from "@/features/cart";
 import { PipHeaderControls } from "./PipHeaderControls";
 import { ThemeToggle } from "./ThemeToggle";
 

@@ -13,7 +13,7 @@ import { EmptyState } from "@/components/ui/EmptyState";
 import { getProduct } from "@/lib/commerce/catalog";
 import { formatNPR } from "@/lib/commerce/format";
 import { useCart } from "@/store/useCart";
-import { ProductImage } from "./ProductImage";
+import { ProductImage } from "@/components/store/ProductImage";
 
 /**
  * Cart drawer. Opens modally from the header; after a verified add it "peeks" in non-modally
