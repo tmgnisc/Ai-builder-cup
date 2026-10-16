@@ -3,7 +3,7 @@
 import { ArrowLeft, Lock, ShieldCheck } from "lucide-react";
 import Link from "next/link";
 import { useState } from "react";
-import { ProductImage } from "@/components/store/ProductImage";
+import { ProductImage } from "@/features/catalog";
 import { Button } from "@/components/ui/Button";
 import { Ticker } from "@/components/ui/Ticker";
 import { getProduct } from "@/lib/commerce/catalog";

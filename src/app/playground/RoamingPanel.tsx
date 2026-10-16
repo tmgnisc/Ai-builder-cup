@@ -1,7 +1,7 @@
 "use client";
 
 import { useAnchors } from "@/lib/guide/anchors";
-import { ProductImage } from "@/components/store/ProductImage";
+import { ProductImage } from "@/features/catalog";
 import { useDebugOverlay } from "@/components/guide/AnchorDebug";
 import { startTour } from "@/components/guide/tour";
 import { Button } from "@/components/ui/Button";

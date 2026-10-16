@@ -3,7 +3,7 @@
 import { ExternalLink, Plus } from "lucide-react";
 import Link from "next/link";
 import { CompareToggle } from "@/features/compare";
-import { ProductImage } from "@/components/store/ProductImage";
+import { ProductImage } from "@/features/catalog";
 import { StockBadge } from "@/components/ui/Badge";
 import { IconButton } from "@/components/ui/IconButton";
 import { getProduct } from "@/lib/commerce/catalog";

@@ -1,7 +1,7 @@
 "use client";
 
 import { Check, Loader2, X } from "lucide-react";
-import { ProductImage } from "@/components/store/ProductImage";
+import { ProductImage } from "@/features/catalog";
 import { cn } from "@/lib/cn";
 import { getProduct } from "@/lib/commerce/catalog";
 import { formatNPR } from "@/lib/commerce/format";

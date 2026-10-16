@@ -1,5 +1,5 @@
 import { Hero } from "@/components/home/Hero";
-import { StoreSection } from "@/components/store/StoreSection";
+import { StoreSection } from "@/features/catalog";
 import { CategorySchema } from "@/lib/commerce/schemas";
 
 export default async function HomePage({ searchParams }: { searchParams: Promise<{ category?: string }> }) {

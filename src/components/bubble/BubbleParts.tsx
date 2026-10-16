@@ -3,7 +3,7 @@
 import { ChevronDown, Loader2, Plus } from "lucide-react";
 import Link from "next/link";
 import { useState } from "react";
-import { ProductImage } from "@/components/store/ProductImage";
+import { ProductImage } from "@/features/catalog";
 import { IconButton } from "@/components/ui/IconButton";
 import { Chip } from "@/components/ui/Chip";
 import { cn } from "@/lib/cn";
