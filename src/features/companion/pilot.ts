@@ -177,10 +177,13 @@ export function clampToViewport(p: Point, size: number): Point {
               top = Math.max(top, b.bottom + MARGIN + r);
             }
           } else {
+            // Mobile: push below or above element; if element covers screen, park in bottom clearance
             if (b.bottom + MARGIN + r <= window.innerHeight - MARGIN) {
               top = Math.max(top, b.bottom + MARGIN + r);
             } else if (b.top - MARGIN - r >= HEADER_H + MARGIN) {
               bottom = Math.min(bottom, b.top - MARGIN - r);
+            } else {
+              bottom = window.innerHeight - MARGIN - r;
             }
           }
         }
@@ -206,6 +209,16 @@ export function nearestCorner(p: Point = live): Corner {
 
 /** Default resting spot: right side, lower third (where a docked assistant is expected). */
 export function homePoint(size = live.size): Point {
+  const isCompare = typeof window !== "undefined" && window.location.pathname.startsWith("/compare");
+  if (isCompare) {
+    return clampToViewport(
+      {
+        x: window.innerWidth - MARGIN - size / 2 - 4,
+        y: window.innerHeight - MARGIN - size / 2 - 4,
+      },
+      size,
+    );
+  }
   return clampToViewport({ x: window.innerWidth - MARGIN - size / 2 - 8, y: window.innerHeight * 0.72 }, size);
 }
 

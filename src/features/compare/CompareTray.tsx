@@ -1,7 +1,7 @@
 "use client";
 
 import { GitCompareArrows, X } from "lucide-react";
-import { useRouter } from "next/navigation";
+import { usePathname, useRouter } from "next/navigation";
 import { useRef } from "react";
 import { getProduct } from "@/lib/commerce/catalog";
 import { gsap, motion, useGSAP } from "@/lib/motion";
@@ -20,7 +20,9 @@ export function CompareTray() {
   const clear = useCompare((s) => s.clear);
   const ref = useRef<HTMLDivElement>(null);
   const router = useRouter();
-  const visible = ids.length > 0 && !open;
+  const pathname = usePathname();
+  const isComparePage = pathname?.startsWith("/compare");
+  const visible = ids.length > 0 && !open && !isComparePage;
 
   useGSAP(
     () => {
@@ -42,6 +44,8 @@ export function CompareTray() {
     },
     { dependencies: [rejectedAt] },
   );
+
+  if (isComparePage) return null;
 
   return (
     <div

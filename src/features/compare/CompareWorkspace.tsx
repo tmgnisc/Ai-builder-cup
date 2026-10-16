@@ -163,19 +163,29 @@ export function CompareWorkspace({
     }
   };
 
-  const handleFilterToDominant = () => {
-    if (!dominantCategory) return;
+  const handleFilterToCategory = (targetCategory: Product["category"]) => {
     const kept = products
-      .filter((p) => p.category === dominantCategory.category)
+      .filter((p) => p.category === targetCategory)
       .map((p) => p.id);
-    setIds(kept);
-    useCompare.setState({ ids: kept, open: false });
+
+    // If fewer than 2 items remain in this category, replenish from available catalog products of the same category
+    if (kept.length < 2) {
+      const candidates = allCatalog.filter(
+        (p) => p.category === targetCategory && !kept.includes(p.id)
+      );
+      for (const cand of candidates) {
+        if (kept.length >= 2) break;
+        kept.push(cand.id);
+      }
+    }
+
     if (kept.length >= 2) {
-      router.replace(buildCompareUrl(kept), { scroll: false });
-    } else if (kept.length === 1) {
+      setIds(kept);
+      useCompare.setState({ ids: kept, open: false });
       router.replace(buildCompareUrl(kept), { scroll: false });
     } else {
-      router.replace("/compare", { scroll: false });
+      // If no other products in this category exist, navigate to catalog category filter
+      router.push(`/?category=${encodeURIComponent(targetCategory)}#store`);
     }
   };
 
@@ -367,14 +377,24 @@ export function CompareWorkspace({
               </p>
             </div>
           </div>
-          <Button
-            size="sm"
-            variant="secondary"
-            onClick={handleFilterToDominant}
-            className="self-start whitespace-nowrap sm:self-center"
-          >
-            Keep only {CATEGORY_NAMES[dominantCategory.category] ?? dominantCategory.category} ({dominantCategory.count})
-          </Button>
+          <div className="flex flex-wrap items-center gap-2 self-start sm:self-center">
+            {categories.map((cat) => {
+              const count = products.filter((p) => p.category === cat).length;
+              const catName = CATEGORY_NAMES[cat] ?? cat;
+              return (
+                <Button
+                  key={cat}
+                  size="sm"
+                  variant="secondary"
+                  onClick={() => handleFilterToCategory(cat)}
+                  className="whitespace-nowrap"
+                  aria-label={`Compare only ${catName} products`}
+                >
+                  Filter to {catName} ({count})
+                </Button>
+              );
+            })}
+          </div>
         </div>
       )}
 
@@ -600,7 +620,7 @@ export function CompareWorkspace({
                     <th
                       scope="colgroup"
                       colSpan={products.length + (products.length < MAX_COMPARE && availableToAdd.length > 0 ? 2 : 1)}
-                      className="sticky left-0 px-4 py-2 font-display text-xs font-bold uppercase tracking-wider text-muted"
+                      className="sticky left-0 z-10 bg-surface-2/95 backdrop-blur hairline-r px-4 py-2 font-display text-xs font-bold uppercase tracking-wider text-muted"
                     >
                       {section.title}
                     </th>

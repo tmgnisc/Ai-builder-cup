@@ -87,7 +87,7 @@ describe("CompareWorkspace Component Tests", () => {
     expect(html).toContain('role="alert"');
     expect(html).toContain("Cross-Category Comparison");
     expect(html).toContain("Comparing across different categories");
-    expect(html).toContain("Keep only");
+    expect(html).toContain("Filter to");
   });
 
   it("renders friendly empty state when fewer than 2 products selected", () => {

@@ -212,6 +212,7 @@ def create_pip_agent(model: str | BaseLlm) -> LlmAgent:
                     ),
                 )
             )
+            turn_ctx.event_queue.append(UiEvent(action=UIAction(type="open_compare", productIds=pids)))
             turn_ctx.memory.lastComparedIds = pids
 
         elif tool.name == "check_stock":
