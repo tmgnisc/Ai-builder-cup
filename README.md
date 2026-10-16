@@ -27,6 +27,20 @@ For demos, use `pnpm build && pnpm start`: the in-memory cart lives in a single 
 - Add `?latency=0` to an API URL to disable latency.
 - Env overrides: `PERSONA_FAILURE_RATE`, `PERSONA_LATENCY_MIN_MS`, `PERSONA_LATENCY_MAX_MS`.
 
+## Compare workspace (`/compare`)
+
+A dedicated side-by-side comparison workspace at `/compare?ids=a,b[,c,d]`:
+
+- **Shareable and refresh-safe**: URL query params are the single source of truth for the comparison selection.
+- **2 to 4 products**: Supports up to 4 products across TS and Python backend registries.
+- **Strict semantics**: Full table markup (`<table>`, `<caption>`, `<thead>`, `<tbody>`, `<th scope="col">`, `<th scope="row">`, `<th scope="colgroup">`).
+- **Sticky headers**: Header cards stay anchored while scrolling, showing the product image, title, price, single-line stock badge, Add to cart, and remove button.
+- **Grouped spec sections**: Clear sections for Performance, Battery & Weight, Display, Connectivity, and Warranty.
+- **Differences-only toggle**: Accessible switch that hides matching rows with `aria-live="polite"` feedback for screen readers.
+- **Best-value highlights**: Subtle cell backgrounds with check icons and visually hidden `(best value)` text.
+- **Cross-category guards**: Warning banner when comparing products from different categories with a one-click dominant category filter.
+- **Clamped companion layering**: Pip's positioning logic prevents the orb from obscuring sticky comparison headers or action controls.
+
 ## Agent
 
 `POST /api/agent` streams newline-delimited JSON `AgentEvent`s (see `src/lib/agent/types.ts`). The server is stateless: the client sends `{ message, memory, context }` each turn.

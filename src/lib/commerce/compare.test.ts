@@ -97,6 +97,9 @@ describe("compareProducts", () => {
         category: "laptops",
         price: 100000,
         rating: 4.5,
+        reviewCount: 10,
+        blurb: "Performance laptop",
+        palette: ["var(--bg)", "var(--text)"] as [string, string],
         stock: 5,
         tags: ["laptop"],
         specs: {

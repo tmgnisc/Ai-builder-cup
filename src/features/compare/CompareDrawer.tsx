@@ -2,6 +2,7 @@
 
 import { Check, Loader2, Plus, Trophy, X } from "lucide-react";
 import Link from "next/link";
+import { usePathname } from "next/navigation";
 import { useRef } from "react";
 import { StockBadge } from "@/components/ui/Badge";
 import { Drawer } from "@/components/ui/Drawer";
@@ -22,6 +23,7 @@ import { ProductImage } from "@/features/catalog";
  * over catalog data. Rows reveal in sequence; winning cells flash lime.
  */
 export function CompareDrawer() {
+  const pathname = usePathname();
   const ids = useCompare((s) => s.ids);
   const open = useCompare((s) => s.open);
   const setOpen = useCompare((s) => s.setOpen);
@@ -47,6 +49,9 @@ export function CompareDrawer() {
     },
     { dependencies: [open, ids.join(",")], scope: tableRef, revertOnUpdate: true },
   );
+
+  // When on the dedicated /compare workspace page, the full table is shown instead of this drawer.
+  if (pathname === "/compare") return null;
 
   // Equal product columns with tokenized grid utilities.
   const colsClass = products.length === 2 ? "compare-grid-2" : "compare-grid-3";

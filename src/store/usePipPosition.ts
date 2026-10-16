@@ -39,7 +39,11 @@ export const usePipPosition = create<PipPositionState>()((set, get) => {
     const l = pilot.getLive();
     set({ x: l.x, y: l.y, size: l.size, mode: pilot.getMode(), rev: get().rev + 1, ...extra });
   };
-  if (typeof window !== "undefined") pilot.onPilotChange(() => sync());
+  if (typeof window !== "undefined") {
+    queueMicrotask(() => {
+      pilot?.onPilotChange?.(() => sync());
+    });
+  }
 
   return {
     x: -500,

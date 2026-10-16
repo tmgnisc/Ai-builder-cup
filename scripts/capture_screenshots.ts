@@ -94,6 +94,26 @@ async function run() {
       await preparePage("/merchant");
       await page.screenshot({ path: path.join(outputDir, `merchant_${vp.name}_${theme}.png`), fullPage: false });
 
+      // 6. Compare Workspace - 2 products
+      console.log(`Capturing compare workspace 2-products (${vp.name}, ${theme})...`);
+      await preparePage("/compare?ids=lenovo-ideapad-slim-5-14,acer-swift-go-14");
+      await page.screenshot({ path: path.join(outputDir, `compare_workspace_2col_${vp.name}_${theme}.png`), fullPage: false });
+
+      // 7. Compare Workspace - 4 products
+      console.log(`Capturing compare workspace 4-products (${vp.name}, ${theme})...`);
+      await preparePage("/compare?ids=lenovo-ideapad-slim-5-14,acer-swift-go-14,apple-macbook-pro-14-m4-pro,hp-pavilion-plus-14");
+      await page.screenshot({ path: path.join(outputDir, `compare_workspace_4col_${vp.name}_${theme}.png`), fullPage: false });
+
+      // 8. Compare Workspace - Cross-Category
+      console.log(`Capturing compare workspace cross-category (${vp.name}, ${theme})...`);
+      await preparePage("/compare?ids=lenovo-ideapad-slim-5-14,sony-wh-1000xm5");
+      await page.screenshot({ path: path.join(outputDir, `compare_workspace_crosscat_${vp.name}_${theme}.png`), fullPage: false });
+
+      // 9. Compare Workspace - Out of Stock Winner
+      console.log(`Capturing compare workspace OOS winner (${vp.name}, ${theme})...`);
+      await preparePage("/compare?ids=lenovo-thinkpad-e14-g6,hp-pavilion-plus-14");
+      await page.screenshot({ path: path.join(outputDir, `compare_workspace_oos_winner_${vp.name}_${theme}.png`), fullPage: false });
+
       await context.close();
     }
   }

@@ -1,9 +1,9 @@
 "use client";
 
 import { create } from "zustand";
-import type { CompareKey } from "@/lib/commerce/compare";
+import { MAX_COMPARE, type CompareKey } from "@/lib/commerce/compare";
 
-export const MAX_COMPARE = 4;
+export { MAX_COMPARE };
 
 interface CompareState {
   ids: string[];

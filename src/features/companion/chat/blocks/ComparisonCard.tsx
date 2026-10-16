@@ -1,6 +1,7 @@
 "use client";
 
 import { Maximize2, Trophy } from "lucide-react";
+import { useRouter } from "next/navigation";
 import { useMemo } from "react";
 import { cn } from "@/lib/cn";
 import { getProduct } from "@/lib/commerce/catalog";
@@ -23,10 +24,11 @@ export function ComparisonCard({
   priorities?: CompareKey[];
 }) {
   const show = useCompare((s) => s.show);
+  const router = useRouter();
   const products = productIds.map(getProduct).filter((p): p is Product => !!p);
   const rows = useMemo(() => compareProducts(products, { priorities, context }).rows.filter((r) => r.numeric && r.key !== "rating"), [products, priorities, context]);
 
-  const gridClass = products.length === 2 ? "compare-card-grid-2" : "compare-card-grid-3";
+  const gridClass = products.length === 2 ? "compare-card-grid-2" : products.length === 4 ? "compare-card-grid-4" : "compare-card-grid-3";
 
   return (
     <div className="mt-2.5 overflow-hidden rounded-2xl bg-surface hairline">
@@ -55,7 +57,10 @@ export function ComparisonCard({
       </dl>
       <button
         type="button"
-        onClick={() => show(productIds, { context, priorities })}
+        onClick={() => {
+          show(productIds, { context, priorities });
+          router.push(`/compare?ids=${productIds.join(",")}`);
+        }}
         className="flex w-full items-center justify-center gap-1.5 border-t border-border py-2 text-xs text-muted hover:bg-surface-2 hover:text-text"
         aria-label={`Open full comparison. ${verdict}`}
       >

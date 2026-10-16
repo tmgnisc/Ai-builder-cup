@@ -30,6 +30,25 @@ const PAGES: PageAudit[] = [
     path: "/product/lenovo-ideapad-slim-5-14",
   },
   {
+    name: "Compare Workspace",
+    path: "/compare?ids=lenovo-ideapad-slim-5-14,acer-swift-go-14",
+  },
+  {
+    name: "Compare Workspace Differences",
+    path: "/compare?ids=lenovo-ideapad-slim-5-14,acer-swift-go-14",
+    prepare: async (page) => {
+      const diffSwitch = page.locator("button[role='switch']").first();
+      if (await diffSwitch.count()) {
+        await diffSwitch.click();
+        await page.waitForTimeout(300);
+      }
+    },
+  },
+  {
+    name: "Compare Workspace Cross-Category",
+    path: "/compare?ids=lenovo-ideapad-slim-5-14,sony-wh-1000xm5",
+  },
+  {
     name: "Compare Drawer",
     path: "/",
     prepare: async (page) => {
@@ -84,6 +103,7 @@ async function run() {
         const context = await browser.newContext({
           viewport: { width: 1280, height: 800 },
           colorScheme: theme,
+          reducedMotion: "reduce",
         });
         const page = await context.newPage();
 

@@ -110,7 +110,7 @@ export function setAvoidBottom(px: number) {
  */
 export function clampToViewport(p: Point, size: number): Point {
   const r = size / 2;
-  const top = HEADER_H + MARGIN + r * 0.6;
+  let top = HEADER_H + MARGIN + r * 0.6;
   let x = Math.min(window.innerWidth - MARGIN - r, Math.max(MARGIN + r, p.x));
   if (isMobile()) x = p.x < window.innerWidth / 2 ? MARGIN + r : window.innerWidth - MARGIN - r;
   let bottom = window.innerHeight - MARGIN - r - (isMobile() ? avoidBottom : 0);
@@ -153,6 +153,19 @@ export function clampToViewport(p: Point, size: number): Point {
             if (mb.top - MARGIN - r >= top) {
               bottom = Math.min(bottom, mb.top - MARGIN - r);
             }
+          }
+        }
+      }
+    }
+
+    // On the compare workspace, ensure Pip orb never obscures sticky table headers or action buttons
+    const compareHeader = document.querySelector("[data-compare-header='true']");
+    if (compareHeader) {
+      const ch = compareHeader.getBoundingClientRect();
+      if (ch.width > 0 && ch.height > 0) {
+        if (p.y - r < ch.bottom + MARGIN && p.y + r > ch.top - MARGIN) {
+          if (x + r > ch.left && x - r < ch.right) {
+            top = Math.max(top, ch.bottom + MARGIN + r);
           }
         }
       }

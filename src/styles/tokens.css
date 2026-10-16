@@ -65,13 +65,13 @@
   --border: rgb(10 11 15 / 0.08);
   --border-strong: rgb(10 11 15 / 0.16);
   --text: #0e1016;
-  --muted: #5b6070;
+  --muted: #4e5464;
 
   --accent: #c6ff3d;
   --accent-text: #4a7300;
   --accent-fg: #0a0b0f;
 
-  --state-listening: #047857;
+  --state-listening: #065f46;
   --state-thinking: #92400e;
   --state-searching: #075985;
   --state-success: #4a7300;

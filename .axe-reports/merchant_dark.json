@@ -13,7 +13,7 @@
     "orientationAngle": 0,
     "orientationType": "landscape-primary"
   },
-  "timestamp": "2026-10-16T06:27:24.161Z",
+  "timestamp": "2026-10-16T09:35:43.092Z",
   "url": "http://localhost:3001/merchant",
   "toolOptions": {
     "runOnly": {
@@ -231,6 +231,22 @@
       "description": "Ensure the autocomplete attribute is correct and suitable for the form field",
       "help": "autocomplete attribute must be used correctly",
       "helpUrl": "https://dequeuniversity.com/rules/axe/4.14/autocomplete-valid?application=playwright",
+      "nodes": []
+    },
+    {
+      "id": "avoid-inline-spacing",
+      "impact": null,
+      "tags": [
+        "cat.structure",
+        "wcag21aa",
+        "wcag1412",
+        "EN-301-549",
+        "EN-9.1.4.12",
+        "ACT"
+      ],
+      "description": "Ensure that text spacing set through style attributes can be adjusted with custom stylesheets",
+      "help": "Inline text spacing must be adjustable with custom stylesheets",
+      "helpUrl": "https://dequeuniversity.com/rules/axe/4.14/avoid-inline-spacing?application=playwright",
       "nodes": []
     },
     {
@@ -1156,7 +1172,7 @@
             }
           ],
           "impact": null,
-          "html": "<section data-pip-anchor=\"merchant-funnel\" data-pip-topic=\"merchant-funnel\" aria-labelledby=\"funnel-h\" class=\"rounded-card bg-surface p-5 hairline\" style=\"translate: none; rotate: none; scale: none; transform: translate(0px, 0px); opacity: 1; visibility: inherit;\">",
+          "html": "<section data-pip-anchor=\"merchant-funnel\" data-pip-topic=\"merchant-funnel\" aria-labelledby=\"funnel-h\" class=\"rounded-card bg-surface p-5 hairline\">",
           "target": [
             "section[data-pip-anchor=\"merchant-funnel\"]"
           ]
@@ -1196,7 +1212,7 @@
             }
           ],
           "impact": null,
-          "html": "<section data-pip-anchor=\"merchant-session\" data-pip-topic=\"merchant-session\" aria-labelledby=\"merchant-session-h\" class=\"flex min-w-0 flex-col rounded-card bg-surface p-5 hairline\" ...>",
+          "html": "<section data-pip-anchor=\"merchant-session\" data-pip-topic=\"merchant-session\" aria-labelledby=\"merchant-session-h\" class=\"flex min-w-0 flex-col rounded-card bg-surface p-5 hairline\">",
           "target": [
             "section[data-pip-anchor=\"merchant-session\"]"
           ]
@@ -1236,7 +1252,7 @@
             }
           ],
           "impact": null,
-          "html": "<section data-pip-anchor=\"merchant-questions\" data-pip-topic=\"merchant-questions\" aria-labelledby=\"merchant-questions-h\" class=\"flex min-w-0 flex-co...\" style=\"translate: none; rot...\">",
+          "html": "<section data-pip-anchor=\"merchant-questions\" data-pip-topic=\"merchant-questions\" aria-labelledby=\"merchant-questions-h\" class=\"flex min-w-0 flex-col rounded-card bg-surface p-5 hairline\">",
           "target": [
             "section[data-pip-anchor=\"merchant-questions\"]"
           ]
@@ -1276,7 +1292,7 @@
             }
           ],
           "impact": null,
-          "html": "<section data-pip-anchor=\"merchant-missing\" data-pip-topic=\"merchant-missing\" aria-labelledby=\"merchant-missing-h\" class=\"flex min-w-0 flex-col rounded-card bg-surface p-5 hairline\" ...>",
+          "html": "<section data-pip-anchor=\"merchant-missing\" data-pip-topic=\"merchant-missing\" aria-labelledby=\"merchant-missing-h\" class=\"flex min-w-0 flex-col rounded-card bg-surface p-5 hairline\">",
           "target": [
             "section[data-pip-anchor=\"merchant-missing\"]"
           ]
@@ -1316,7 +1332,7 @@
             }
           ],
           "impact": null,
-          "html": "<section data-pip-anchor=\"merchant-friction\" data-pip-topic=\"merchant-friction\" aria-labelledby=\"merchant-friction-h\" class=\"flex min-w-0 flex-co...\" style=\"translate: none; rot...\">",
+          "html": "<section data-pip-anchor=\"merchant-friction\" data-pip-topic=\"merchant-friction\" aria-labelledby=\"merchant-friction-h\" class=\"flex min-w-0 flex-col rounded-card bg-surface p-5 hairline\">",
           "target": [
             "section[data-pip-anchor=\"merchant-friction\"]"
           ]
@@ -1396,9 +1412,9 @@
             }
           ],
           "impact": null,
-          "html": "<button type=\"button\" aria-label=\"Talk to Pip\" aria-expanded=\"true\" title=\"Click to talk · drag...\" class=\"pointer-events-auto ...\" style=\"left:22.499999999999...\">",
+          "html": "<button type=\"button\" aria-label=\"Talk to Pip\" aria-expanded=\"false\" title=\"Click to talk · drag...\" class=\"pointer-events-auto ...\" style=\"left:22.499999999999...\">",
           "target": [
-            ".touch-none"
+            ".pointer-events-auto"
           ]
         },
         {
@@ -1438,167 +1454,7 @@
           "impact": null,
           "html": "<p aria-live=\"polite\" class=\"sr-only\"></p>",
           "target": [
-            ".sr-only[aria-live=\"polite\"]"
-          ]
-        },
-        {
-          "any": [],
-          "all": [
-            {
-              "id": "aria-allowed-attr",
-              "data": null,
-              "relatedNodes": [],
-              "impact": "critical",
-              "message": "ARIA attributes are used correctly for the defined role"
-            },
-            {
-              "id": "aria-allowed-attr-elm",
-              "data": null,
-              "relatedNodes": [],
-              "message": "ARIA attributes are allowed for this element",
-              "impact": "critical"
-            },
-            {
-              "id": "aria-no-deprecated-attr",
-              "data": null,
-              "relatedNodes": [],
-              "impact": "critical",
-              "message": "No deprecated ARIA attributes are used"
-            }
-          ],
-          "none": [
-            {
-              "id": "aria-unsupported-attr",
-              "data": null,
-              "relatedNodes": [],
-              "impact": "critical",
-              "message": "ARIA attribute is supported"
-            }
-          ],
-          "impact": null,
-          "html": "<div role=\"dialog\" aria-modal=\"false\" aria-label=\"Pip\" class=\"bubble-panel surface...\" style=\"transform-origin: 10...\">",
-          "target": [
-            ".bubble-panel"
-          ]
-        },
-        {
-          "any": [],
-          "all": [
-            {
-              "id": "aria-allowed-attr",
-              "data": null,
-              "relatedNodes": [],
-              "impact": "critical",
-              "message": "ARIA attributes are used correctly for the defined role"
-            },
-            {
-              "id": "aria-allowed-attr-elm",
-              "data": null,
-              "relatedNodes": [],
-              "message": "ARIA attributes are allowed for this element",
-              "impact": "critical"
-            },
-            {
-              "id": "aria-no-deprecated-attr",
-              "data": null,
-              "relatedNodes": [],
-              "impact": "critical",
-              "message": "No deprecated ARIA attributes are used"
-            }
-          ],
-          "none": [
-            {
-              "id": "aria-unsupported-attr",
-              "data": null,
-              "relatedNodes": [],
-              "impact": "critical",
-              "message": "ARIA attribute is supported"
-            }
-          ],
-          "impact": null,
-          "html": "<button type=\"button\" aria-label=\"Pip settings\" title=\"Pip settings\" aria-busy=\"false\" class=\"grid shrink-0 select...\">",
-          "target": [
-            "button[aria-label=\"Pip settings\"]"
-          ]
-        },
-        {
-          "any": [],
-          "all": [
-            {
-              "id": "aria-allowed-attr",
-              "data": null,
-              "relatedNodes": [],
-              "impact": "critical",
-              "message": "ARIA attributes are used correctly for the defined role"
-            },
-            {
-              "id": "aria-allowed-attr-elm",
-              "data": null,
-              "relatedNodes": [],
-              "message": "ARIA attributes are allowed for this element",
-              "impact": "critical"
-            },
-            {
-              "id": "aria-no-deprecated-attr",
-              "data": null,
-              "relatedNodes": [],
-              "impact": "critical",
-              "message": "No deprecated ARIA attributes are used"
-            }
-          ],
-          "none": [
-            {
-              "id": "aria-unsupported-attr",
-              "data": null,
-              "relatedNodes": [],
-              "impact": "critical",
-              "message": "ARIA attribute is supported"
-            }
-          ],
-          "impact": null,
-          "html": "<button type=\"button\" aria-label=\"Dismiss\" title=\"Dismiss\" aria-busy=\"false\" class=\"grid shrink-0 select...\">",
-          "target": [
-            "button[aria-label=\"Dismiss\"]"
-          ]
-        },
-        {
-          "any": [],
-          "all": [
-            {
-              "id": "aria-allowed-attr",
-              "data": null,
-              "relatedNodes": [],
-              "impact": "critical",
-              "message": "ARIA attributes are used correctly for the defined role"
-            },
-            {
-              "id": "aria-allowed-attr-elm",
-              "data": null,
-              "relatedNodes": [],
-              "message": "ARIA attributes are allowed for this element",
-              "impact": "critical"
-            },
-            {
-              "id": "aria-no-deprecated-attr",
-              "data": null,
-              "relatedNodes": [],
-              "impact": "critical",
-              "message": "No deprecated ARIA attributes are used"
-            }
-          ],
-          "none": [
-            {
-              "id": "aria-unsupported-attr",
-              "data": null,
-              "relatedNodes": [],
-              "impact": "critical",
-              "message": "ARIA attribute is supported"
-            }
-          ],
-          "impact": null,
-          "html": "<div class=\"pr-14\" aria-live=\"polite\"><p class=\"text-sm leading-relaxed break-words\"><span class=\"block\">This is </span><span class=\"sr-only\">This is the merchant view: how shoppers use me, what they ask, and where product info is missing.</span></p></div>",
-          "target": [
-            ".pr-14"
+            "p[aria-live=\"polite\"]"
           ]
         },
         {
@@ -1855,7 +1711,7 @@
           ],
           "none": [],
           "impact": null,
-          "html": "<section data-pip-anchor=\"merchant-funnel\" data-pip-topic=\"merchant-funnel\" aria-labelledby=\"funnel-h\" class=\"rounded-card bg-surface p-5 hairline\" style=\"translate: none; rotate: none; scale: none; transform: translate(0px, 0px); opacity: 1; visibility: inherit;\">",
+          "html": "<section data-pip-anchor=\"merchant-funnel\" data-pip-topic=\"merchant-funnel\" aria-labelledby=\"funnel-h\" class=\"rounded-card bg-surface p-5 hairline\">",
           "target": [
             "section[data-pip-anchor=\"merchant-funnel\"]"
           ]
@@ -1873,7 +1729,7 @@
           ],
           "none": [],
           "impact": null,
-          "html": "<section data-pip-anchor=\"merchant-session\" data-pip-topic=\"merchant-session\" aria-labelledby=\"merchant-session-h\" class=\"flex min-w-0 flex-col rounded-card bg-surface p-5 hairline\" ...>",
+          "html": "<section data-pip-anchor=\"merchant-session\" data-pip-topic=\"merchant-session\" aria-labelledby=\"merchant-session-h\" class=\"flex min-w-0 flex-col rounded-card bg-surface p-5 hairline\">",
           "target": [
             "section[data-pip-anchor=\"merchant-session\"]"
           ]
@@ -1891,7 +1747,7 @@
           ],
           "none": [],
           "impact": null,
-          "html": "<section data-pip-anchor=\"merchant-questions\" data-pip-topic=\"merchant-questions\" aria-labelledby=\"merchant-questions-h\" class=\"flex min-w-0 flex-co...\" style=\"translate: none; rot...\">",
+          "html": "<section data-pip-anchor=\"merchant-questions\" data-pip-topic=\"merchant-questions\" aria-labelledby=\"merchant-questions-h\" class=\"flex min-w-0 flex-col rounded-card bg-surface p-5 hairline\">",
           "target": [
             "section[data-pip-anchor=\"merchant-questions\"]"
           ]
@@ -1909,7 +1765,7 @@
           ],
           "none": [],
           "impact": null,
-          "html": "<section data-pip-anchor=\"merchant-missing\" data-pip-topic=\"merchant-missing\" aria-labelledby=\"merchant-missing-h\" class=\"flex min-w-0 flex-col rounded-card bg-surface p-5 hairline\" ...>",
+          "html": "<section data-pip-anchor=\"merchant-missing\" data-pip-topic=\"merchant-missing\" aria-labelledby=\"merchant-missing-h\" class=\"flex min-w-0 flex-col rounded-card bg-surface p-5 hairline\">",
           "target": [
             "section[data-pip-anchor=\"merchant-missing\"]"
           ]
@@ -1927,7 +1783,7 @@
           ],
           "none": [],
           "impact": null,
-          "html": "<section data-pip-anchor=\"merchant-friction\" data-pip-topic=\"merchant-friction\" aria-labelledby=\"merchant-friction-h\" class=\"flex min-w-0 flex-co...\" style=\"translate: none; rot...\">",
+          "html": "<section data-pip-anchor=\"merchant-friction\" data-pip-topic=\"merchant-friction\" aria-labelledby=\"merchant-friction-h\" class=\"flex min-w-0 flex-col rounded-card bg-surface p-5 hairline\">",
           "target": [
             "section[data-pip-anchor=\"merchant-friction\"]"
           ]
@@ -1963,9 +1819,9 @@
           ],
           "none": [],
           "impact": null,
-          "html": "<button type=\"button\" aria-label=\"Talk to Pip\" aria-expanded=\"true\" title=\"Click to talk · drag...\" class=\"pointer-events-auto ...\" style=\"left:22.499999999999...\">",
+          "html": "<button type=\"button\" aria-label=\"Talk to Pip\" aria-expanded=\"false\" title=\"Click to talk · drag...\" class=\"pointer-events-auto ...\" style=\"left:22.499999999999...\">",
           "target": [
-            ".touch-none"
+            ".pointer-events-auto"
           ]
         },
         {
@@ -1983,79 +1839,7 @@
           "impact": null,
           "html": "<p aria-live=\"polite\" class=\"sr-only\"></p>",
           "target": [
-            ".sr-only[aria-live=\"polite\"]"
-          ]
-        },
-        {
-          "any": [],
-          "all": [
-            {
-              "id": "aria-conditional-attr",
-              "data": null,
-              "relatedNodes": [],
-              "impact": "serious",
-              "message": "ARIA attribute is allowed"
-            }
-          ],
-          "none": [],
-          "impact": null,
-          "html": "<div role=\"dialog\" aria-modal=\"false\" aria-label=\"Pip\" class=\"bubble-panel surface...\" style=\"transform-origin: 10...\">",
-          "target": [
-            ".bubble-panel"
-          ]
-        },
-        {
-          "any": [],
-          "all": [
-            {
-              "id": "aria-conditional-attr",
-              "data": null,
-              "relatedNodes": [],
-              "impact": "serious",
-              "message": "ARIA attribute is allowed"
-            }
-          ],
-          "none": [],
-          "impact": null,
-          "html": "<button type=\"button\" aria-label=\"Pip settings\" title=\"Pip settings\" aria-busy=\"false\" class=\"grid shrink-0 select...\">",
-          "target": [
-            "button[aria-label=\"Pip settings\"]"
-          ]
-        },
-        {
-          "any": [],
-          "all": [
-            {
-              "id": "aria-conditional-attr",
-              "data": null,
-              "relatedNodes": [],
-              "impact": "serious",
-              "message": "ARIA attribute is allowed"
-            }
-          ],
-          "none": [],
-          "impact": null,
-          "html": "<button type=\"button\" aria-label=\"Dismiss\" title=\"Dismiss\" aria-busy=\"false\" class=\"grid shrink-0 select...\">",
-          "target": [
-            "button[aria-label=\"Dismiss\"]"
-          ]
-        },
-        {
-          "any": [],
-          "all": [
-            {
-              "id": "aria-conditional-attr",
-              "data": null,
-              "relatedNodes": [],
-              "impact": "serious",
-              "message": "ARIA attribute is allowed"
-            }
-          ],
-          "none": [],
-          "impact": null,
-          "html": "<div class=\"pr-14\" aria-live=\"polite\"><p class=\"text-sm leading-relaxed break-words\"><span class=\"block\">This is </span><span class=\"sr-only\">This is the merchant view: how shoppers use me, what they ask, and where product info is missing.</span></p></div>",
-          "target": [
-            ".pr-14"
+            "p[aria-live=\"polite\"]"
           ]
         },
         {
@@ -2254,24 +2038,6 @@
             }
           ],
           "impact": null,
-          "html": "<div role=\"dialog\" aria-modal=\"false\" aria-label=\"Pip\" class=\"bubble-panel surface...\" style=\"transform-origin: 10...\">",
-          "target": [
-            ".bubble-panel"
-          ]
-        },
-        {
-          "any": [],
-          "all": [],
-          "none": [
-            {
-              "id": "deprecatedrole",
-              "data": null,
-              "relatedNodes": [],
-              "impact": "minor",
-              "message": "ARIA role is not deprecated"
-            }
-          ],
-          "impact": null,
           "html": "<div aria-live=\"assertive\" id=\"__next-route-announcer__\" role=\"alert\" style=\"position: absolute; border: 0px; height: 1px; margin: -1px; padding: 0px; width: 1px; clip: rect(0px, 0px, 0px, 0px); overflow: hidden; white-space: nowrap; overflow-wrap: normal;\"></div>",
           "target": [
             [
@@ -2367,7 +2133,7 @@
           "impact": null,
           "html": "<span aria-hidden=\"true\" class=\"relative grid size-7 place-items-center rounded-full bg-accent shadow-[0_0_24px_-4px_var(--accent)]\">",
           "target": [
-            ".shadow-\\[0_0_24px_-4px_var\\(--accent\\)\\]"
+            ".size-7"
           ]
         },
         {
@@ -3325,137 +3091,9 @@
           ],
           "none": [],
           "impact": null,
-          "html": "<div aria-hidden=\"true\" class=\"pointer-events-none fixed left-0 top-0 z-[55] transition-opacity duration-300 data-[compact=true]:hidden\" style=\"opacity: 0; transform: translate3d(1208.95px, 662.658px, 0px) translateX(-50%);\" data-compact=\"false\">",
+          "html": "<div aria-hidden=\"true\" class=\"pointer-events-none fixed left-0 top-0 z-[55] transition-opacity duration-300 data-[compact=true]:hidden\" style=\"opacity: 0; transform: translate3d(1196px, 650.4px, 0px) translateX(-50%);\" data-compact=\"false\">",
           "target": [
             ".data-\\[compact\\=true\\]\\:hidden"
-          ]
-        },
-        {
-          "any": [],
-          "all": [
-            {
-              "id": "focusable-modal-open",
-              "data": null,
-              "relatedNodes": [],
-              "impact": "serious",
-              "message": "No focusable elements while a modal is open"
-            },
-            {
-              "id": "focusable-disabled",
-              "data": null,
-              "relatedNodes": [],
-              "impact": "serious",
-              "message": "No focusable elements contained within element"
-            },
-            {
-              "id": "focusable-not-tabbable",
-              "data": null,
-              "relatedNodes": [],
-              "impact": "serious",
-              "message": "No focusable elements contained within element"
-            }
-          ],
-          "none": [],
-          "impact": null,
-          "html": "<span aria-hidden=\"true\" class=\"bubble-tail absolute size-3.5 rotate-45 rounded-xs\" style=\"top: 19.95px; right: -6px;\"></span>",
-          "target": [
-            ".bubble-tail"
-          ]
-        },
-        {
-          "any": [],
-          "all": [
-            {
-              "id": "focusable-modal-open",
-              "data": null,
-              "relatedNodes": [],
-              "impact": "serious",
-              "message": "No focusable elements while a modal is open"
-            },
-            {
-              "id": "focusable-disabled",
-              "data": null,
-              "relatedNodes": [],
-              "impact": "serious",
-              "message": "No focusable elements contained within element"
-            },
-            {
-              "id": "focusable-not-tabbable",
-              "data": null,
-              "relatedNodes": [],
-              "impact": "serious",
-              "message": "No focusable elements contained within element"
-            }
-          ],
-          "none": [],
-          "impact": null,
-          "html": "<svg xmlns=\"http://www.w3.org/2000/svg\" width=\"24\" height=\"24\" viewBox=\"0 0 24 24\" fill=\"none\" stroke=\"currentColor\" stroke-width=\"2\" stroke-linecap=\"round\" stroke-linejoin=\"round\" class=\"lucide lucide-ellipsis lucide-more-horizontal size-4\" aria-hidden=\"true\">",
-          "target": [
-            ".lucide-ellipsis"
-          ]
-        },
-        {
-          "any": [],
-          "all": [
-            {
-              "id": "focusable-modal-open",
-              "data": null,
-              "relatedNodes": [],
-              "impact": "serious",
-              "message": "No focusable elements while a modal is open"
-            },
-            {
-              "id": "focusable-disabled",
-              "data": null,
-              "relatedNodes": [],
-              "impact": "serious",
-              "message": "No focusable elements contained within element"
-            },
-            {
-              "id": "focusable-not-tabbable",
-              "data": null,
-              "relatedNodes": [],
-              "impact": "serious",
-              "message": "No focusable elements contained within element"
-            }
-          ],
-          "none": [],
-          "impact": null,
-          "html": "<svg xmlns=\"http://www.w3.org/2000/svg\" width=\"24\" height=\"24\" viewBox=\"0 0 24 24\" fill=\"none\" stroke=\"currentColor\" stroke-width=\"2\" stroke-linecap=\"round\" stroke-linejoin=\"round\" class=\"lucide lucide-x size-3.5\" aria-hidden=\"true\"><path d=\"M18 6 6 18\"></path><path d=\"m6 6 12 12\"></path></svg>",
-          "target": [
-            ".size-3\\.5.lucide-x.lucide"
-          ]
-        },
-        {
-          "any": [],
-          "all": [
-            {
-              "id": "focusable-modal-open",
-              "data": null,
-              "relatedNodes": [],
-              "impact": "serious",
-              "message": "No focusable elements while a modal is open"
-            },
-            {
-              "id": "focusable-disabled",
-              "data": null,
-              "relatedNodes": [],
-              "impact": "serious",
-              "message": "No focusable elements contained within element"
-            },
-            {
-              "id": "focusable-not-tabbable",
-              "data": null,
-              "relatedNodes": [],
-              "impact": "serious",
-              "message": "No focusable elements contained within element"
-            }
-          ],
-          "none": [],
-          "impact": null,
-          "html": "<span aria-hidden=\"true\" class=\"absolute inset-x-4 bottom-1 h-px origin-left rounded-full opacity-70\" style=\"background: rgb(198, 255, 61); translate: none; rotate: none; scale: none; transform: translate3d(0px, 0px, 0px) scale(0.9356, 1);\"></span>",
-          "target": [
-            ".inset-x-4"
           ]
         },
         {
@@ -3552,6 +3190,38 @@
           "html": "<li aria-hidden=\"true\" class=\"hidden size-10 rounded-full border border-dashed border-border-strong sm:block\"></li>",
           "target": [
             ".border.border-dashed.border-border-strong:nth-child(3)"
+          ]
+        },
+        {
+          "any": [],
+          "all": [
+            {
+              "id": "focusable-modal-open",
+              "data": null,
+              "relatedNodes": [],
+              "impact": "serious",
+              "message": "No focusable elements while a modal is open"
+            },
+            {
+              "id": "focusable-disabled",
+              "data": null,
+              "relatedNodes": [],
+              "impact": "serious",
+              "message": "No focusable elements contained within element"
+            },
+            {
+              "id": "focusable-not-tabbable",
+              "data": null,
+              "relatedNodes": [],
+              "impact": "serious",
+              "message": "No focusable elements contained within element"
+            }
+          ],
+          "none": [],
+          "impact": null,
+          "html": "<li aria-hidden=\"true\" class=\"hidden size-10 rounded-full border border-dashed border-border-strong sm:block\"></li>",
+          "target": [
+            ".border.border-dashed.border-border-strong:nth-child(4)"
           ]
         },
         {
@@ -3679,7 +3349,7 @@
           "impact": null,
           "html": "<div aria-hidden=\"true\" class=\"absolute inset-0 bg-overlay transition-opacity duration-300 opacity-0\"></div>",
           "target": [
-            ".z-modal > .bg-overlay.transition-opacity.duration-300"
+            ".z-modal.fixed[inert=\"\"]:nth-child(22) > .bg-overlay.transition-opacity.duration-300"
           ]
         },
         {
@@ -3775,7 +3445,7 @@
           "impact": null,
           "html": "<div aria-hidden=\"true\" class=\"absolute inset-0 bg-overlay transition-opacity duration-300 opacity-0\"></div>",
           "target": [
-            ".z-drawer.fixed[inert=\"\"]:nth-child(24) > .bg-overlay.transition-opacity.duration-300"
+            ".z-drawer > .bg-overlay.transition-opacity.duration-300"
           ]
         },
         {
@@ -3903,7 +3573,7 @@
           "impact": null,
           "html": "<div aria-hidden=\"true\" class=\"absolute inset-0 bg-overlay transition-opacity duration-300 opacity-0\"></div>",
           "target": [
-            ".z-drawer.fixed[inert=\"\"]:nth-child(25) > .bg-overlay.transition-opacity.duration-300"
+            ".z-modal.fixed[inert=\"\"]:nth-child(24) > .bg-overlay.transition-opacity.duration-300"
           ]
         },
         {
@@ -4149,7 +3819,7 @@
             }
           ],
           "impact": null,
-          "html": "<section data-pip-anchor=\"merchant-funnel\" data-pip-topic=\"merchant-funnel\" aria-labelledby=\"funnel-h\" class=\"rounded-card bg-surface p-5 hairline\" style=\"translate: none; rotate: none; scale: none; transform: translate(0px, 0px); opacity: 1; visibility: inherit;\">",
+          "html": "<section data-pip-anchor=\"merchant-funnel\" data-pip-topic=\"merchant-funnel\" aria-labelledby=\"funnel-h\" class=\"rounded-card bg-surface p-5 hairline\">",
           "target": [
             "section[data-pip-anchor=\"merchant-funnel\"]"
           ]
@@ -4167,7 +3837,7 @@
             }
           ],
           "impact": null,
-          "html": "<section data-pip-anchor=\"merchant-session\" data-pip-topic=\"merchant-session\" aria-labelledby=\"merchant-session-h\" class=\"flex min-w-0 flex-col rounded-card bg-surface p-5 hairline\" ...>",
+          "html": "<section data-pip-anchor=\"merchant-session\" data-pip-topic=\"merchant-session\" aria-labelledby=\"merchant-session-h\" class=\"flex min-w-0 flex-col rounded-card bg-surface p-5 hairline\">",
           "target": [
             "section[data-pip-anchor=\"merchant-session\"]"
           ]
@@ -4185,7 +3855,7 @@
             }
           ],
           "impact": null,
-          "html": "<section data-pip-anchor=\"merchant-questions\" data-pip-topic=\"merchant-questions\" aria-labelledby=\"merchant-questions-h\" class=\"flex min-w-0 flex-co...\" style=\"translate: none; rot...\">",
+          "html": "<section data-pip-anchor=\"merchant-questions\" data-pip-topic=\"merchant-questions\" aria-labelledby=\"merchant-questions-h\" class=\"flex min-w-0 flex-col rounded-card bg-surface p-5 hairline\">",
           "target": [
             "section[data-pip-anchor=\"merchant-questions\"]"
           ]
@@ -4203,7 +3873,7 @@
             }
           ],
           "impact": null,
-          "html": "<section data-pip-anchor=\"merchant-missing\" data-pip-topic=\"merchant-missing\" aria-labelledby=\"merchant-missing-h\" class=\"flex min-w-0 flex-col rounded-card bg-surface p-5 hairline\" ...>",
+          "html": "<section data-pip-anchor=\"merchant-missing\" data-pip-topic=\"merchant-missing\" aria-labelledby=\"merchant-missing-h\" class=\"flex min-w-0 flex-col rounded-card bg-surface p-5 hairline\">",
           "target": [
             "section[data-pip-anchor=\"merchant-missing\"]"
           ]
@@ -4221,7 +3891,7 @@
             }
           ],
           "impact": null,
-          "html": "<section data-pip-anchor=\"merchant-friction\" data-pip-topic=\"merchant-friction\" aria-labelledby=\"merchant-friction-h\" class=\"flex min-w-0 flex-co...\" style=\"translate: none; rot...\">",
+          "html": "<section data-pip-anchor=\"merchant-friction\" data-pip-topic=\"merchant-friction\" aria-labelledby=\"merchant-friction-h\" class=\"flex min-w-0 flex-col rounded-card bg-surface p-5 hairline\">",
           "target": [
             "section[data-pip-anchor=\"merchant-friction\"]"
           ]
@@ -4257,9 +3927,9 @@
             }
           ],
           "impact": null,
-          "html": "<button type=\"button\" aria-label=\"Talk to Pip\" aria-expanded=\"true\" title=\"Click to talk · drag...\" class=\"pointer-events-auto ...\" style=\"left:22.499999999999...\">",
+          "html": "<button type=\"button\" aria-label=\"Talk to Pip\" aria-expanded=\"false\" title=\"Click to talk · drag...\" class=\"pointer-events-auto ...\" style=\"left:22.499999999999...\">",
           "target": [
-            ".touch-none"
+            ".pointer-events-auto"
           ]
         },
         {
@@ -4277,79 +3947,7 @@
           "impact": null,
           "html": "<p aria-live=\"polite\" class=\"sr-only\"></p>",
           "target": [
-            ".sr-only[aria-live=\"polite\"]"
-          ]
-        },
-        {
-          "any": [],
-          "all": [],
-          "none": [
-            {
-              "id": "aria-prohibited-attr",
-              "data": null,
-              "relatedNodes": [],
-              "impact": "serious",
-              "message": "ARIA attribute is allowed"
-            }
-          ],
-          "impact": null,
-          "html": "<div role=\"dialog\" aria-modal=\"false\" aria-label=\"Pip\" class=\"bubble-panel surface...\" style=\"transform-origin: 10...\">",
-          "target": [
-            ".bubble-panel"
-          ]
-        },
-        {
-          "any": [],
-          "all": [],
-          "none": [
-            {
-              "id": "aria-prohibited-attr",
-              "data": null,
-              "relatedNodes": [],
-              "impact": "serious",
-              "message": "ARIA attribute is allowed"
-            }
-          ],
-          "impact": null,
-          "html": "<button type=\"button\" aria-label=\"Pip settings\" title=\"Pip settings\" aria-busy=\"false\" class=\"grid shrink-0 select...\">",
-          "target": [
-            "button[aria-label=\"Pip settings\"]"
-          ]
-        },
-        {
-          "any": [],
-          "all": [],
-          "none": [
-            {
-              "id": "aria-prohibited-attr",
-              "data": null,
-              "relatedNodes": [],
-              "impact": "serious",
-              "message": "ARIA attribute is allowed"
-            }
-          ],
-          "impact": null,
-          "html": "<button type=\"button\" aria-label=\"Dismiss\" title=\"Dismiss\" aria-busy=\"false\" class=\"grid shrink-0 select...\">",
-          "target": [
-            "button[aria-label=\"Dismiss\"]"
-          ]
-        },
-        {
-          "any": [],
-          "all": [],
-          "none": [
-            {
-              "id": "aria-prohibited-attr",
-              "data": null,
-              "relatedNodes": [],
-              "impact": "serious",
-              "message": "ARIA attribute is allowed"
-            }
-          ],
-          "impact": null,
-          "html": "<div class=\"pr-14\" aria-live=\"polite\"><p class=\"text-sm leading-relaxed break-words\"><span class=\"block\">This is </span><span class=\"sr-only\">This is the merchant view: how shoppers use me, what they ask, and where product info is missing.</span></p></div>",
-          "target": [
-            ".pr-14"
+            "p[aria-live=\"polite\"]"
           ]
         },
         {
@@ -4533,24 +4131,6 @@
           "html": "<div role=\"img\" aria-label=\"Pip, idle\" class=\"absolute inset-0\">",
           "target": [
             "div[aria-label=\"Pip, idle\"]"
-          ]
-        },
-        {
-          "any": [
-            {
-              "id": "aria-required-attr",
-              "data": null,
-              "relatedNodes": [],
-              "impact": "critical",
-              "message": "All required ARIA attributes are present"
-            }
-          ],
-          "all": [],
-          "none": [],
-          "impact": null,
-          "html": "<div role=\"dialog\" aria-modal=\"false\" aria-label=\"Pip\" class=\"bubble-panel surface...\" style=\"transform-origin: 10...\">",
-          "target": [
-            ".bubble-panel"
           ]
         },
         {
@@ -4846,38 +4426,6 @@
           "html": "<div role=\"img\" aria-label=\"Pip, idle\" class=\"absolute inset-0\">",
           "target": [
             "div[aria-label=\"Pip, idle\"]"
-          ]
-        },
-        {
-          "any": [],
-          "all": [],
-          "none": [
-            {
-              "id": "invalidrole",
-              "data": null,
-              "relatedNodes": [],
-              "impact": "critical",
-              "message": "ARIA role is valid"
-            },
-            {
-              "id": "abstractrole",
-              "data": null,
-              "relatedNodes": [],
-              "impact": "critical",
-              "message": "Abstract roles are not used"
-            },
-            {
-              "id": "unsupportedrole",
-              "data": null,
-              "relatedNodes": [],
-              "impact": "critical",
-              "message": "ARIA role is supported"
-            }
-          ],
-          "impact": null,
-          "html": "<div role=\"dialog\" aria-modal=\"false\" aria-label=\"Pip\" class=\"bubble-panel surface...\" style=\"transform-origin: 10...\">",
-          "target": [
-            ".bubble-panel"
           ]
         },
         {
@@ -5350,7 +4898,7 @@
           ],
           "none": [],
           "impact": null,
-          "html": "<section data-pip-anchor=\"merchant-funnel\" data-pip-topic=\"merchant-funnel\" aria-labelledby=\"funnel-h\" class=\"rounded-card bg-surface p-5 hairline\" style=\"translate: none; rotate: none; scale: none; transform: translate(0px, 0px); opacity: 1; visibility: inherit;\">",
+          "html": "<section data-pip-anchor=\"merchant-funnel\" data-pip-topic=\"merchant-funnel\" aria-labelledby=\"funnel-h\" class=\"rounded-card bg-surface p-5 hairline\">",
           "target": [
             "section[data-pip-anchor=\"merchant-funnel\"]"
           ]
@@ -5382,7 +4930,7 @@
           ],
           "none": [],
           "impact": null,
-          "html": "<section data-pip-anchor=\"merchant-session\" data-pip-topic=\"merchant-session\" aria-labelledby=\"merchant-session-h\" class=\"flex min-w-0 flex-col rounded-card bg-surface p-5 hairline\" ...>",
+          "html": "<section data-pip-anchor=\"merchant-session\" data-pip-topic=\"merchant-session\" aria-labelledby=\"merchant-session-h\" class=\"flex min-w-0 flex-col rounded-card bg-surface p-5 hairline\">",
           "target": [
             "section[data-pip-anchor=\"merchant-session\"]"
           ]
@@ -5414,7 +4962,7 @@
           ],
           "none": [],
           "impact": null,
-          "html": "<section data-pip-anchor=\"merchant-questions\" data-pip-topic=\"merchant-questions\" aria-labelledby=\"merchant-questions-h\" class=\"flex min-w-0 flex-co...\" style=\"translate: none; rot...\">",
+          "html": "<section data-pip-anchor=\"merchant-questions\" data-pip-topic=\"merchant-questions\" aria-labelledby=\"merchant-questions-h\" class=\"flex min-w-0 flex-col rounded-card bg-surface p-5 hairline\">",
           "target": [
             "section[data-pip-anchor=\"merchant-questions\"]"
           ]
@@ -5446,7 +4994,7 @@
           ],
           "none": [],
           "impact": null,
-          "html": "<section data-pip-anchor=\"merchant-missing\" data-pip-topic=\"merchant-missing\" aria-labelledby=\"merchant-missing-h\" class=\"flex min-w-0 flex-col rounded-card bg-surface p-5 hairline\" ...>",
+          "html": "<section data-pip-anchor=\"merchant-missing\" data-pip-topic=\"merchant-missing\" aria-labelledby=\"merchant-missing-h\" class=\"flex min-w-0 flex-col rounded-card bg-surface p-5 hairline\">",
           "target": [
             "section[data-pip-anchor=\"merchant-missing\"]"
           ]
@@ -5478,7 +5026,7 @@
           ],
           "none": [],
           "impact": null,
-          "html": "<section data-pip-anchor=\"merchant-friction\" data-pip-topic=\"merchant-friction\" aria-labelledby=\"merchant-friction-h\" class=\"flex min-w-0 flex-co...\" style=\"translate: none; rot...\">",
+          "html": "<section data-pip-anchor=\"merchant-friction\" data-pip-topic=\"merchant-friction\" aria-labelledby=\"merchant-friction-h\" class=\"flex min-w-0 flex-col rounded-card bg-surface p-5 hairline\">",
           "target": [
             "section[data-pip-anchor=\"merchant-friction\"]"
           ]
@@ -5542,9 +5090,9 @@
           ],
           "none": [],
           "impact": null,
-          "html": "<button type=\"button\" aria-label=\"Talk to Pip\" aria-expanded=\"true\" title=\"Click to talk · drag...\" class=\"pointer-events-auto ...\" style=\"left:22.499999999999...\">",
+          "html": "<button type=\"button\" aria-label=\"Talk to Pip\" aria-expanded=\"false\" title=\"Click to talk · drag...\" class=\"pointer-events-auto ...\" style=\"left:22.499999999999...\">",
           "target": [
-            ".touch-none"
+            ".pointer-events-auto"
           ]
         },
         {
@@ -5576,135 +5124,7 @@
           "impact": null,
           "html": "<p aria-live=\"polite\" class=\"sr-only\"></p>",
           "target": [
-            ".sr-only[aria-live=\"polite\"]"
-          ]
-        },
-        {
-          "any": [],
-          "all": [
-            {
-              "id": "aria-valid-attr-value",
-              "data": null,
-              "relatedNodes": [],
-              "impact": "critical",
-              "message": "ARIA attribute values are valid"
-            },
-            {
-              "id": "aria-errormessage",
-              "data": null,
-              "relatedNodes": [],
-              "impact": "critical",
-              "message": "aria-errormessage exists and references elements visible to screen readers that use a supported aria-errormessage technique"
-            },
-            {
-              "id": "aria-level",
-              "data": null,
-              "relatedNodes": [],
-              "impact": "critical",
-              "message": "aria-level values are valid"
-            }
-          ],
-          "none": [],
-          "impact": null,
-          "html": "<div role=\"dialog\" aria-modal=\"false\" aria-label=\"Pip\" class=\"bubble-panel surface...\" style=\"transform-origin: 10...\">",
-          "target": [
-            ".bubble-panel"
-          ]
-        },
-        {
-          "any": [],
-          "all": [
-            {
-              "id": "aria-valid-attr-value",
-              "data": null,
-              "relatedNodes": [],
-              "impact": "critical",
-              "message": "ARIA attribute values are valid"
-            },
-            {
-              "id": "aria-errormessage",
-              "data": null,
-              "relatedNodes": [],
-              "impact": "critical",
-              "message": "aria-errormessage exists and references elements visible to screen readers that use a supported aria-errormessage technique"
-            },
-            {
-              "id": "aria-level",
-              "data": null,
-              "relatedNodes": [],
-              "impact": "critical",
-              "message": "aria-level values are valid"
-            }
-          ],
-          "none": [],
-          "impact": null,
-          "html": "<button type=\"button\" aria-label=\"Pip settings\" title=\"Pip settings\" aria-busy=\"false\" class=\"grid shrink-0 select...\">",
-          "target": [
-            "button[aria-label=\"Pip settings\"]"
-          ]
-        },
-        {
-          "any": [],
-          "all": [
-            {
-              "id": "aria-valid-attr-value",
-              "data": null,
-              "relatedNodes": [],
-              "impact": "critical",
-              "message": "ARIA attribute values are valid"
-            },
-            {
-              "id": "aria-errormessage",
-              "data": null,
-              "relatedNodes": [],
-              "impact": "critical",
-              "message": "aria-errormessage exists and references elements visible to screen readers that use a supported aria-errormessage technique"
-            },
-            {
-              "id": "aria-level",
-              "data": null,
-              "relatedNodes": [],
-              "impact": "critical",
-              "message": "aria-level values are valid"
-            }
-          ],
-          "none": [],
-          "impact": null,
-          "html": "<button type=\"button\" aria-label=\"Dismiss\" title=\"Dismiss\" aria-busy=\"false\" class=\"grid shrink-0 select...\">",
-          "target": [
-            "button[aria-label=\"Dismiss\"]"
-          ]
-        },
-        {
-          "any": [],
-          "all": [
-            {
-              "id": "aria-valid-attr-value",
-              "data": null,
-              "relatedNodes": [],
-              "impact": "critical",
-              "message": "ARIA attribute values are valid"
-            },
-            {
-              "id": "aria-errormessage",
-              "data": null,
-              "relatedNodes": [],
-              "impact": "critical",
-              "message": "aria-errormessage exists and references elements visible to screen readers that use a supported aria-errormessage technique"
-            },
-            {
-              "id": "aria-level",
-              "data": null,
-              "relatedNodes": [],
-              "impact": "critical",
-              "message": "aria-level values are valid"
-            }
-          ],
-          "none": [],
-          "impact": null,
-          "html": "<div class=\"pr-14\" aria-live=\"polite\"><p class=\"text-sm leading-relaxed break-words\"><span class=\"block\">This is </span><span class=\"sr-only\">This is the merchant view: how shoppers use me, what they ask, and where product info is missing.</span></p></div>",
-          "target": [
-            ".pr-14"
+            "p[aria-live=\"polite\"]"
           ]
         },
         {
@@ -5953,7 +5373,7 @@
           "all": [],
           "none": [],
           "impact": null,
-          "html": "<section data-pip-anchor=\"merchant-funnel\" data-pip-topic=\"merchant-funnel\" aria-labelledby=\"funnel-h\" class=\"rounded-card bg-surface p-5 hairline\" style=\"translate: none; rotate: none; scale: none; transform: translate(0px, 0px); opacity: 1; visibility: inherit;\">",
+          "html": "<section data-pip-anchor=\"merchant-funnel\" data-pip-topic=\"merchant-funnel\" aria-labelledby=\"funnel-h\" class=\"rounded-card bg-surface p-5 hairline\">",
           "target": [
             "section[data-pip-anchor=\"merchant-funnel\"]"
           ]
@@ -5971,7 +5391,7 @@
           "all": [],
           "none": [],
           "impact": null,
-          "html": "<section data-pip-anchor=\"merchant-session\" data-pip-topic=\"merchant-session\" aria-labelledby=\"merchant-session-h\" class=\"flex min-w-0 flex-col rounded-card bg-surface p-5 hairline\" ...>",
+          "html": "<section data-pip-anchor=\"merchant-session\" data-pip-topic=\"merchant-session\" aria-labelledby=\"merchant-session-h\" class=\"flex min-w-0 flex-col rounded-card bg-surface p-5 hairline\">",
           "target": [
             "section[data-pip-anchor=\"merchant-session\"]"
           ]
@@ -5989,7 +5409,7 @@
           "all": [],
           "none": [],
           "impact": null,
-          "html": "<section data-pip-anchor=\"merchant-questions\" data-pip-topic=\"merchant-questions\" aria-labelledby=\"merchant-questions-h\" class=\"flex min-w-0 flex-co...\" style=\"translate: none; rot...\">",
+          "html": "<section data-pip-anchor=\"merchant-questions\" data-pip-topic=\"merchant-questions\" aria-labelledby=\"merchant-questions-h\" class=\"flex min-w-0 flex-col rounded-card bg-surface p-5 hairline\">",
           "target": [
             "section[data-pip-anchor=\"merchant-questions\"]"
           ]
@@ -6007,7 +5427,7 @@
           "all": [],
           "none": [],
           "impact": null,
-          "html": "<section data-pip-anchor=\"merchant-missing\" data-pip-topic=\"merchant-missing\" aria-labelledby=\"merchant-missing-h\" class=\"flex min-w-0 flex-col rounded-card bg-surface p-5 hairline\" ...>",
+          "html": "<section data-pip-anchor=\"merchant-missing\" data-pip-topic=\"merchant-missing\" aria-labelledby=\"merchant-missing-h\" class=\"flex min-w-0 flex-col rounded-card bg-surface p-5 hairline\">",
           "target": [
             "section[data-pip-anchor=\"merchant-missing\"]"
           ]
@@ -6025,7 +5445,7 @@
           "all": [],
           "none": [],
           "impact": null,
-          "html": "<section data-pip-anchor=\"merchant-friction\" data-pip-topic=\"merchant-friction\" aria-labelledby=\"merchant-friction-h\" class=\"flex min-w-0 flex-co...\" style=\"translate: none; rot...\">",
+          "html": "<section data-pip-anchor=\"merchant-friction\" data-pip-topic=\"merchant-friction\" aria-labelledby=\"merchant-friction-h\" class=\"flex min-w-0 flex-col rounded-card bg-surface p-5 hairline\">",
           "target": [
             "section[data-pip-anchor=\"merchant-friction\"]"
           ]
@@ -6061,9 +5481,9 @@
           "all": [],
           "none": [],
           "impact": null,
-          "html": "<button type=\"button\" aria-label=\"Talk to Pip\" aria-expanded=\"true\" title=\"Click to talk · drag...\" class=\"pointer-events-auto ...\" style=\"left:22.499999999999...\">",
+          "html": "<button type=\"button\" aria-label=\"Talk to Pip\" aria-expanded=\"false\" title=\"Click to talk · drag...\" class=\"pointer-events-auto ...\" style=\"left:22.499999999999...\">",
           "target": [
-            ".touch-none"
+            ".pointer-events-auto"
           ]
         },
         {
@@ -6081,79 +5501,7 @@
           "impact": null,
           "html": "<p aria-live=\"polite\" class=\"sr-only\"></p>",
           "target": [
-            ".sr-only[aria-live=\"polite\"]"
-          ]
-        },
-        {
-          "any": [
-            {
-              "id": "aria-valid-attr",
-              "data": null,
-              "relatedNodes": [],
-              "impact": "critical",
-              "message": "ARIA attribute name is valid"
-            }
-          ],
-          "all": [],
-          "none": [],
-          "impact": null,
-          "html": "<div role=\"dialog\" aria-modal=\"false\" aria-label=\"Pip\" class=\"bubble-panel surface...\" style=\"transform-origin: 10...\">",
-          "target": [
-            ".bubble-panel"
-          ]
-        },
-        {
-          "any": [
-            {
-              "id": "aria-valid-attr",
-              "data": null,
-              "relatedNodes": [],
-              "impact": "critical",
-              "message": "ARIA attribute name is valid"
-            }
-          ],
-          "all": [],
-          "none": [],
-          "impact": null,
-          "html": "<button type=\"button\" aria-label=\"Pip settings\" title=\"Pip settings\" aria-busy=\"false\" class=\"grid shrink-0 select...\">",
-          "target": [
-            "button[aria-label=\"Pip settings\"]"
-          ]
-        },
-        {
-          "any": [
-            {
-              "id": "aria-valid-attr",
-              "data": null,
-              "relatedNodes": [],
-              "impact": "critical",
-              "message": "ARIA attribute name is valid"
-            }
-          ],
-          "all": [],
-          "none": [],
-          "impact": null,
-          "html": "<button type=\"button\" aria-label=\"Dismiss\" title=\"Dismiss\" aria-busy=\"false\" class=\"grid shrink-0 select...\">",
-          "target": [
-            "button[aria-label=\"Dismiss\"]"
-          ]
-        },
-        {
-          "any": [
-            {
-              "id": "aria-valid-attr",
-              "data": null,
-              "relatedNodes": [],
-              "impact": "critical",
-              "message": "ARIA attribute name is valid"
-            }
-          ],
-          "all": [],
-          "none": [],
-          "impact": null,
-          "html": "<div class=\"pr-14\" aria-live=\"polite\"><p class=\"text-sm leading-relaxed break-words\"><span class=\"block\">This is </span><span class=\"sr-only\">This is the merchant view: how shoppers use me, what they ask, and where product info is missing.</span></p></div>",
-          "target": [
-            ".pr-14"
+            "p[aria-live=\"polite\"]"
           ]
         },
         {
@@ -6175,855 +5523,6 @@
               "next-route-announcer",
               "#__next-route-announcer__"
             ]
-          ]
-        }
-      ]
-    },
-    {
-      "id": "avoid-inline-spacing",
-      "impact": null,
-      "tags": [
-        "cat.structure",
-        "wcag21aa",
-        "wcag1412",
-        "EN-301-549",
-        "EN-9.1.4.12",
-        "ACT"
-      ],
-      "description": "Ensure that text spacing set through style attributes can be adjusted with custom stylesheets",
-      "help": "Inline text spacing must be adjustable with custom stylesheets",
-      "helpUrl": "https://dequeuniversity.com/rules/axe/4.14/avoid-inline-spacing?application=playwright",
-      "nodes": [
-        {
-          "any": [],
-          "all": [
-            {
-              "id": "important-letter-spacing",
-              "data": null,
-              "relatedNodes": [],
-              "impact": "serious",
-              "message": "Letter-spacing in the style attribute is not set to !important, or meets the minimum"
-            },
-            {
-              "id": "important-word-spacing",
-              "data": null,
-              "relatedNodes": [],
-              "impact": "serious",
-              "message": "word-spacing in the style attribute is not set to !important, or meets the minimum"
-            },
-            {
-              "id": "important-line-height",
-              "data": null,
-              "relatedNodes": [],
-              "impact": "serious",
-              "message": "line-height in the style attribute is not set to !important, or meets the minimum"
-            }
-          ],
-          "none": [],
-          "impact": null,
-          "html": "<article data-pip-anchor=\"kpi:assisted\" data-pip-topic=\"merchant-kpi\" data-kpi=\"true\" class=\"flex flex-col justify-between gap-4 rounded-card bg-surface p-5 hairline\" style=\"translate: none; rotate: none; scale: none; transform: translate(0px, 0px); opacity: 1; visibility: inherit;\">",
-          "target": [
-            "article[data-pip-anchor=\"kpi:assisted\"]"
-          ]
-        },
-        {
-          "any": [],
-          "all": [
-            {
-              "id": "important-letter-spacing",
-              "data": null,
-              "relatedNodes": [],
-              "impact": "serious",
-              "message": "Letter-spacing in the style attribute is not set to !important, or meets the minimum"
-            },
-            {
-              "id": "important-word-spacing",
-              "data": null,
-              "relatedNodes": [],
-              "impact": "serious",
-              "message": "word-spacing in the style attribute is not set to !important, or meets the minimum"
-            },
-            {
-              "id": "important-line-height",
-              "data": null,
-              "relatedNodes": [],
-              "impact": "serious",
-              "message": "line-height in the style attribute is not set to !important, or meets the minimum"
-            }
-          ],
-          "none": [],
-          "impact": null,
-          "html": "<article data-pip-anchor=\"kpi:completion\" data-pip-topic=\"merchant-kpi\" data-kpi=\"true\" class=\"flex flex-col justify-between gap-4 rounded-card bg-surface p-5 hairline\" style=\"translate: none; rotate: none; scale: none; transform: translate(0px, 0px); opacity: 1; visibility: inherit;\">",
-          "target": [
-            "article[data-pip-anchor=\"kpi:completion\"]"
-          ]
-        },
-        {
-          "any": [],
-          "all": [
-            {
-              "id": "important-letter-spacing",
-              "data": null,
-              "relatedNodes": [],
-              "impact": "serious",
-              "message": "Letter-spacing in the style attribute is not set to !important, or meets the minimum"
-            },
-            {
-              "id": "important-word-spacing",
-              "data": null,
-              "relatedNodes": [],
-              "impact": "serious",
-              "message": "word-spacing in the style attribute is not set to !important, or meets the minimum"
-            },
-            {
-              "id": "important-line-height",
-              "data": null,
-              "relatedNodes": [],
-              "impact": "serious",
-              "message": "line-height in the style attribute is not set to !important, or meets the minimum"
-            }
-          ],
-          "none": [],
-          "impact": null,
-          "html": "<article data-pip-anchor=\"kpi:verified\" data-pip-topic=\"merchant-kpi\" data-kpi=\"true\" class=\"flex flex-col justify-between gap-4 rounded-card bg-surface p-5 hairline\" style=\"translate: none; rotate: none; scale: none; transform: translate(0px, 0px); opacity: 1; visibility: inherit;\">",
-          "target": [
-            "article[data-pip-anchor=\"kpi:verified\"]"
-          ]
-        },
-        {
-          "any": [],
-          "all": [
-            {
-              "id": "important-letter-spacing",
-              "data": null,
-              "relatedNodes": [],
-              "impact": "serious",
-              "message": "Letter-spacing in the style attribute is not set to !important, or meets the minimum"
-            },
-            {
-              "id": "important-word-spacing",
-              "data": null,
-              "relatedNodes": [],
-              "impact": "serious",
-              "message": "word-spacing in the style attribute is not set to !important, or meets the minimum"
-            },
-            {
-              "id": "important-line-height",
-              "data": null,
-              "relatedNodes": [],
-              "impact": "serious",
-              "message": "line-height in the style attribute is not set to !important, or meets the minimum"
-            }
-          ],
-          "none": [],
-          "impact": null,
-          "html": "<article data-pip-anchor=\"kpi:tips\" data-pip-topic=\"merchant-kpi\" data-kpi=\"true\" class=\"flex flex-col justify-between gap-4 rounded-card bg-surface p-5 hairline\" style=\"translate: none; rotate: none; scale: none; transform: translate(0px, 0px); opacity: 1; visibility: inherit;\">",
-          "target": [
-            "article[data-pip-anchor=\"kpi:tips\"]"
-          ]
-        },
-        {
-          "any": [],
-          "all": [
-            {
-              "id": "important-letter-spacing",
-              "data": null,
-              "relatedNodes": [],
-              "impact": "serious",
-              "message": "Letter-spacing in the style attribute is not set to !important, or meets the minimum"
-            },
-            {
-              "id": "important-word-spacing",
-              "data": null,
-              "relatedNodes": [],
-              "impact": "serious",
-              "message": "word-spacing in the style attribute is not set to !important, or meets the minimum"
-            },
-            {
-              "id": "important-line-height",
-              "data": null,
-              "relatedNodes": [],
-              "impact": "serious",
-              "message": "line-height in the style attribute is not set to !important, or meets the minimum"
-            }
-          ],
-          "none": [],
-          "impact": null,
-          "html": "<section data-pip-anchor=\"merchant-funnel\" data-pip-topic=\"merchant-funnel\" aria-labelledby=\"funnel-h\" class=\"rounded-card bg-surface p-5 hairline\" style=\"translate: none; rotate: none; scale: none; transform: translate(0px, 0px); opacity: 1; visibility: inherit;\">",
-          "target": [
-            "section[data-pip-anchor=\"merchant-funnel\"]"
-          ]
-        },
-        {
-          "any": [],
-          "all": [
-            {
-              "id": "important-letter-spacing",
-              "data": null,
-              "relatedNodes": [],
-              "impact": "serious",
-              "message": "Letter-spacing in the style attribute is not set to !important, or meets the minimum"
-            },
-            {
-              "id": "important-word-spacing",
-              "data": null,
-              "relatedNodes": [],
-              "impact": "serious",
-              "message": "word-spacing in the style attribute is not set to !important, or meets the minimum"
-            },
-            {
-              "id": "important-line-height",
-              "data": null,
-              "relatedNodes": [],
-              "impact": "serious",
-              "message": "line-height in the style attribute is not set to !important, or meets the minimum"
-            }
-          ],
-          "none": [],
-          "impact": null,
-          "html": "<section data-pip-anchor=\"merchant-session\" data-pip-topic=\"merchant-session\" aria-labelledby=\"merchant-session-h\" class=\"flex min-w-0 flex-col rounded-card bg-surface p-5 hairline\" ...>",
-          "target": [
-            "section[data-pip-anchor=\"merchant-session\"]"
-          ]
-        },
-        {
-          "any": [],
-          "all": [
-            {
-              "id": "important-letter-spacing",
-              "data": null,
-              "relatedNodes": [],
-              "impact": "serious",
-              "message": "Letter-spacing in the style attribute is not set to !important, or meets the minimum"
-            },
-            {
-              "id": "important-word-spacing",
-              "data": null,
-              "relatedNodes": [],
-              "impact": "serious",
-              "message": "word-spacing in the style attribute is not set to !important, or meets the minimum"
-            },
-            {
-              "id": "important-line-height",
-              "data": null,
-              "relatedNodes": [],
-              "impact": "serious",
-              "message": "line-height in the style attribute is not set to !important, or meets the minimum"
-            }
-          ],
-          "none": [],
-          "impact": null,
-          "html": "<section data-pip-anchor=\"merchant-questions\" data-pip-topic=\"merchant-questions\" aria-labelledby=\"merchant-questions-h\" class=\"flex min-w-0 flex-co...\" style=\"translate: none; rot...\">",
-          "target": [
-            "section[data-pip-anchor=\"merchant-questions\"]"
-          ]
-        },
-        {
-          "any": [],
-          "all": [
-            {
-              "id": "important-letter-spacing",
-              "data": null,
-              "relatedNodes": [],
-              "impact": "serious",
-              "message": "Letter-spacing in the style attribute is not set to !important, or meets the minimum"
-            },
-            {
-              "id": "important-word-spacing",
-              "data": null,
-              "relatedNodes": [],
-              "impact": "serious",
-              "message": "word-spacing in the style attribute is not set to !important, or meets the minimum"
-            },
-            {
-              "id": "important-line-height",
-              "data": null,
-              "relatedNodes": [],
-              "impact": "serious",
-              "message": "line-height in the style attribute is not set to !important, or meets the minimum"
-            }
-          ],
-          "none": [],
-          "impact": null,
-          "html": "<li data-list-row=\"true\" class=\"relative overflow-hidden rounded-lg\" style=\"translate: none; rotate: none; scale: none; transform: translate(0px, 0px); opacity: 1; visibility: inherit;\">",
-          "target": [
-            "section[data-pip-anchor=\"merchant-questions\"] > .space-y-1\\.5 > .overflow-hidden[data-list-row=\"true\"]:nth-child(1)"
-          ]
-        },
-        {
-          "any": [],
-          "all": [
-            {
-              "id": "important-letter-spacing",
-              "data": null,
-              "relatedNodes": [],
-              "impact": "serious",
-              "message": "Letter-spacing in the style attribute is not set to !important, or meets the minimum"
-            },
-            {
-              "id": "important-word-spacing",
-              "data": null,
-              "relatedNodes": [],
-              "impact": "serious",
-              "message": "word-spacing in the style attribute is not set to !important, or meets the minimum"
-            },
-            {
-              "id": "important-line-height",
-              "data": null,
-              "relatedNodes": [],
-              "impact": "serious",
-              "message": "line-height in the style attribute is not set to !important, or meets the minimum"
-            }
-          ],
-          "none": [],
-          "impact": null,
-          "html": "<li data-list-row=\"true\" class=\"relative overflow-hidden rounded-lg\" style=\"translate: none; rotate: none; scale: none; transform: translate(0px, 0px); opacity: 1; visibility: inherit;\">",
-          "target": [
-            "section[data-pip-anchor=\"merchant-questions\"] > .space-y-1\\.5 > .overflow-hidden[data-list-row=\"true\"]:nth-child(2)"
-          ]
-        },
-        {
-          "any": [],
-          "all": [
-            {
-              "id": "important-letter-spacing",
-              "data": null,
-              "relatedNodes": [],
-              "impact": "serious",
-              "message": "Letter-spacing in the style attribute is not set to !important, or meets the minimum"
-            },
-            {
-              "id": "important-word-spacing",
-              "data": null,
-              "relatedNodes": [],
-              "impact": "serious",
-              "message": "word-spacing in the style attribute is not set to !important, or meets the minimum"
-            },
-            {
-              "id": "important-line-height",
-              "data": null,
-              "relatedNodes": [],
-              "impact": "serious",
-              "message": "line-height in the style attribute is not set to !important, or meets the minimum"
-            }
-          ],
-          "none": [],
-          "impact": null,
-          "html": "<li data-list-row=\"true\" class=\"relative overflow-hidden rounded-lg\" style=\"translate: none; rotate: none; scale: none; transform: translate(0px, 0px); opacity: 1; visibility: inherit;\">",
-          "target": [
-            "section[data-pip-anchor=\"merchant-questions\"] > .space-y-1\\.5 > .overflow-hidden[data-list-row=\"true\"]:nth-child(3)"
-          ]
-        },
-        {
-          "any": [],
-          "all": [
-            {
-              "id": "important-letter-spacing",
-              "data": null,
-              "relatedNodes": [],
-              "impact": "serious",
-              "message": "Letter-spacing in the style attribute is not set to !important, or meets the minimum"
-            },
-            {
-              "id": "important-word-spacing",
-              "data": null,
-              "relatedNodes": [],
-              "impact": "serious",
-              "message": "word-spacing in the style attribute is not set to !important, or meets the minimum"
-            },
-            {
-              "id": "important-line-height",
-              "data": null,
-              "relatedNodes": [],
-              "impact": "serious",
-              "message": "line-height in the style attribute is not set to !important, or meets the minimum"
-            }
-          ],
-          "none": [],
-          "impact": null,
-          "html": "<li data-list-row=\"true\" class=\"relative overflow-hidden rounded-lg\" style=\"translate: none; rotate: none; scale: none; transform: translate(0px, 0px); opacity: 1; visibility: inherit;\">",
-          "target": [
-            "section[data-pip-anchor=\"merchant-questions\"] > .space-y-1\\.5 > .overflow-hidden[data-list-row=\"true\"]:nth-child(4)"
-          ]
-        },
-        {
-          "any": [],
-          "all": [
-            {
-              "id": "important-letter-spacing",
-              "data": null,
-              "relatedNodes": [],
-              "impact": "serious",
-              "message": "Letter-spacing in the style attribute is not set to !important, or meets the minimum"
-            },
-            {
-              "id": "important-word-spacing",
-              "data": null,
-              "relatedNodes": [],
-              "impact": "serious",
-              "message": "word-spacing in the style attribute is not set to !important, or meets the minimum"
-            },
-            {
-              "id": "important-line-height",
-              "data": null,
-              "relatedNodes": [],
-              "impact": "serious",
-              "message": "line-height in the style attribute is not set to !important, or meets the minimum"
-            }
-          ],
-          "none": [],
-          "impact": null,
-          "html": "<li data-list-row=\"true\" class=\"relative overflow-hidden rounded-lg\" style=\"translate: none; rotate: none; scale: none; transform: translate(0px, 0px); opacity: 1; visibility: inherit;\">",
-          "target": [
-            ".overflow-hidden[data-list-row=\"true\"]:nth-child(5)"
-          ]
-        },
-        {
-          "any": [],
-          "all": [
-            {
-              "id": "important-letter-spacing",
-              "data": null,
-              "relatedNodes": [],
-              "impact": "serious",
-              "message": "Letter-spacing in the style attribute is not set to !important, or meets the minimum"
-            },
-            {
-              "id": "important-word-spacing",
-              "data": null,
-              "relatedNodes": [],
-              "impact": "serious",
-              "message": "word-spacing in the style attribute is not set to !important, or meets the minimum"
-            },
-            {
-              "id": "important-line-height",
-              "data": null,
-              "relatedNodes": [],
-              "impact": "serious",
-              "message": "line-height in the style attribute is not set to !important, or meets the minimum"
-            }
-          ],
-          "none": [],
-          "impact": null,
-          "html": "<li data-list-row=\"true\" class=\"relative overflow-hidden rounded-lg\" style=\"translate: none; rotate: none; scale: none; transform: translate(0px, 0px); opacity: 1; visibility: inherit;\">",
-          "target": [
-            ".overflow-hidden[data-list-row=\"true\"]:nth-child(6)"
-          ]
-        },
-        {
-          "any": [],
-          "all": [
-            {
-              "id": "important-letter-spacing",
-              "data": null,
-              "relatedNodes": [],
-              "impact": "serious",
-              "message": "Letter-spacing in the style attribute is not set to !important, or meets the minimum"
-            },
-            {
-              "id": "important-word-spacing",
-              "data": null,
-              "relatedNodes": [],
-              "impact": "serious",
-              "message": "word-spacing in the style attribute is not set to !important, or meets the minimum"
-            },
-            {
-              "id": "important-line-height",
-              "data": null,
-              "relatedNodes": [],
-              "impact": "serious",
-              "message": "line-height in the style attribute is not set to !important, or meets the minimum"
-            }
-          ],
-          "none": [],
-          "impact": null,
-          "html": "<section data-pip-anchor=\"merchant-missing\" data-pip-topic=\"merchant-missing\" aria-labelledby=\"merchant-missing-h\" class=\"flex min-w-0 flex-col rounded-card bg-surface p-5 hairline\" ...>",
-          "target": [
-            "section[data-pip-anchor=\"merchant-missing\"]"
-          ]
-        },
-        {
-          "any": [],
-          "all": [
-            {
-              "id": "important-letter-spacing",
-              "data": null,
-              "relatedNodes": [],
-              "impact": "serious",
-              "message": "Letter-spacing in the style attribute is not set to !important, or meets the minimum"
-            },
-            {
-              "id": "important-word-spacing",
-              "data": null,
-              "relatedNodes": [],
-              "impact": "serious",
-              "message": "word-spacing in the style attribute is not set to !important, or meets the minimum"
-            },
-            {
-              "id": "important-line-height",
-              "data": null,
-              "relatedNodes": [],
-              "impact": "serious",
-              "message": "line-height in the style attribute is not set to !important, or meets the minimum"
-            }
-          ],
-          "none": [],
-          "impact": null,
-          "html": "<li data-list-row=\"true\" class=\"flex items-center gap-3 py-2.5 first:pt-0 last:pb-0\" style=\"translate: none; rotate: none; scale: none; transform: translate(0px, 0px); opacity: 1; visibility: inherit;\">",
-          "target": [
-            ".py-2\\.5.first\\:pt-0.last\\:pb-0:nth-child(1)"
-          ]
-        },
-        {
-          "any": [],
-          "all": [
-            {
-              "id": "important-letter-spacing",
-              "data": null,
-              "relatedNodes": [],
-              "impact": "serious",
-              "message": "Letter-spacing in the style attribute is not set to !important, or meets the minimum"
-            },
-            {
-              "id": "important-word-spacing",
-              "data": null,
-              "relatedNodes": [],
-              "impact": "serious",
-              "message": "word-spacing in the style attribute is not set to !important, or meets the minimum"
-            },
-            {
-              "id": "important-line-height",
-              "data": null,
-              "relatedNodes": [],
-              "impact": "serious",
-              "message": "line-height in the style attribute is not set to !important, or meets the minimum"
-            }
-          ],
-          "none": [],
-          "impact": null,
-          "html": "<li data-list-row=\"true\" class=\"flex items-center gap-3 py-2.5 first:pt-0 last:pb-0\" style=\"translate: none; rotate: none; scale: none; transform: translate(0px, 0px); opacity: 1; visibility: inherit;\">",
-          "target": [
-            ".py-2\\.5.first\\:pt-0.last\\:pb-0:nth-child(2)"
-          ]
-        },
-        {
-          "any": [],
-          "all": [
-            {
-              "id": "important-letter-spacing",
-              "data": null,
-              "relatedNodes": [],
-              "impact": "serious",
-              "message": "Letter-spacing in the style attribute is not set to !important, or meets the minimum"
-            },
-            {
-              "id": "important-word-spacing",
-              "data": null,
-              "relatedNodes": [],
-              "impact": "serious",
-              "message": "word-spacing in the style attribute is not set to !important, or meets the minimum"
-            },
-            {
-              "id": "important-line-height",
-              "data": null,
-              "relatedNodes": [],
-              "impact": "serious",
-              "message": "line-height in the style attribute is not set to !important, or meets the minimum"
-            }
-          ],
-          "none": [],
-          "impact": null,
-          "html": "<li data-list-row=\"true\" class=\"flex items-center gap-3 py-2.5 first:pt-0 last:pb-0\" style=\"translate: none; rotate: none; scale: none; transform: translate(0px, 0px); opacity: 1; visibility: inherit;\">",
-          "target": [
-            ".py-2\\.5.first\\:pt-0.last\\:pb-0:nth-child(3)"
-          ]
-        },
-        {
-          "any": [],
-          "all": [
-            {
-              "id": "important-letter-spacing",
-              "data": null,
-              "relatedNodes": [],
-              "impact": "serious",
-              "message": "Letter-spacing in the style attribute is not set to !important, or meets the minimum"
-            },
-            {
-              "id": "important-word-spacing",
-              "data": null,
-              "relatedNodes": [],
-              "impact": "serious",
-              "message": "word-spacing in the style attribute is not set to !important, or meets the minimum"
-            },
-            {
-              "id": "important-line-height",
-              "data": null,
-              "relatedNodes": [],
-              "impact": "serious",
-              "message": "line-height in the style attribute is not set to !important, or meets the minimum"
-            }
-          ],
-          "none": [],
-          "impact": null,
-          "html": "<li data-list-row=\"true\" class=\"flex items-center gap-3 py-2.5 first:pt-0 last:pb-0\" style=\"translate: none; rotate: none; scale: none; transform: translate(0px, 0px); opacity: 1; visibility: inherit;\">",
-          "target": [
-            ".py-2\\.5.first\\:pt-0.last\\:pb-0:nth-child(4)"
-          ]
-        },
-        {
-          "any": [],
-          "all": [
-            {
-              "id": "important-letter-spacing",
-              "data": null,
-              "relatedNodes": [],
-              "impact": "serious",
-              "message": "Letter-spacing in the style attribute is not set to !important, or meets the minimum"
-            },
-            {
-              "id": "important-word-spacing",
-              "data": null,
-              "relatedNodes": [],
-              "impact": "serious",
-              "message": "word-spacing in the style attribute is not set to !important, or meets the minimum"
-            },
-            {
-              "id": "important-line-height",
-              "data": null,
-              "relatedNodes": [],
-              "impact": "serious",
-              "message": "line-height in the style attribute is not set to !important, or meets the minimum"
-            }
-          ],
-          "none": [],
-          "impact": null,
-          "html": "<li data-list-row=\"true\" class=\"flex items-center gap-3 py-2.5 first:pt-0 last:pb-0\" style=\"translate: none; rotate: none; scale: none; transform: translate(0px, 0px); opacity: 1; visibility: inherit;\">",
-          "target": [
-            ".py-2\\.5.first\\:pt-0.last\\:pb-0:nth-child(5)"
-          ]
-        },
-        {
-          "any": [],
-          "all": [
-            {
-              "id": "important-letter-spacing",
-              "data": null,
-              "relatedNodes": [],
-              "impact": "serious",
-              "message": "Letter-spacing in the style attribute is not set to !important, or meets the minimum"
-            },
-            {
-              "id": "important-word-spacing",
-              "data": null,
-              "relatedNodes": [],
-              "impact": "serious",
-              "message": "word-spacing in the style attribute is not set to !important, or meets the minimum"
-            },
-            {
-              "id": "important-line-height",
-              "data": null,
-              "relatedNodes": [],
-              "impact": "serious",
-              "message": "line-height in the style attribute is not set to !important, or meets the minimum"
-            }
-          ],
-          "none": [],
-          "impact": null,
-          "html": "<section data-pip-anchor=\"merchant-friction\" data-pip-topic=\"merchant-friction\" aria-labelledby=\"merchant-friction-h\" class=\"flex min-w-0 flex-co...\" style=\"translate: none; rot...\">",
-          "target": [
-            "section[data-pip-anchor=\"merchant-friction\"]"
-          ]
-        },
-        {
-          "any": [],
-          "all": [
-            {
-              "id": "important-letter-spacing",
-              "data": null,
-              "relatedNodes": [],
-              "impact": "serious",
-              "message": "Letter-spacing in the style attribute is not set to !important, or meets the minimum"
-            },
-            {
-              "id": "important-word-spacing",
-              "data": null,
-              "relatedNodes": [],
-              "impact": "serious",
-              "message": "word-spacing in the style attribute is not set to !important, or meets the minimum"
-            },
-            {
-              "id": "important-line-height",
-              "data": null,
-              "relatedNodes": [],
-              "impact": "serious",
-              "message": "line-height in the style attribute is not set to !important, or meets the minimum"
-            }
-          ],
-          "none": [],
-          "impact": null,
-          "html": "<li data-list-row=\"true\" class=\"relative overflow-hidden rounded-lg\" style=\"translate: none; rotate: none; scale: none; transform: translate(0px, 0px); opacity: 1; visibility: inherit;\">",
-          "target": [
-            "section[data-pip-anchor=\"merchant-friction\"] > .space-y-1\\.5 > .overflow-hidden[data-list-row=\"true\"]:nth-child(1)"
-          ]
-        },
-        {
-          "any": [],
-          "all": [
-            {
-              "id": "important-letter-spacing",
-              "data": null,
-              "relatedNodes": [],
-              "impact": "serious",
-              "message": "Letter-spacing in the style attribute is not set to !important, or meets the minimum"
-            },
-            {
-              "id": "important-word-spacing",
-              "data": null,
-              "relatedNodes": [],
-              "impact": "serious",
-              "message": "word-spacing in the style attribute is not set to !important, or meets the minimum"
-            },
-            {
-              "id": "important-line-height",
-              "data": null,
-              "relatedNodes": [],
-              "impact": "serious",
-              "message": "line-height in the style attribute is not set to !important, or meets the minimum"
-            }
-          ],
-          "none": [],
-          "impact": null,
-          "html": "<li data-list-row=\"true\" class=\"relative overflow-hidden rounded-lg\" style=\"translate: none; rotate: none; scale: none; transform: translate(0px, 0px); opacity: 1; visibility: inherit;\">",
-          "target": [
-            "section[data-pip-anchor=\"merchant-friction\"] > .space-y-1\\.5 > .overflow-hidden[data-list-row=\"true\"]:nth-child(2)"
-          ]
-        },
-        {
-          "any": [],
-          "all": [
-            {
-              "id": "important-letter-spacing",
-              "data": null,
-              "relatedNodes": [],
-              "impact": "serious",
-              "message": "Letter-spacing in the style attribute is not set to !important, or meets the minimum"
-            },
-            {
-              "id": "important-word-spacing",
-              "data": null,
-              "relatedNodes": [],
-              "impact": "serious",
-              "message": "word-spacing in the style attribute is not set to !important, or meets the minimum"
-            },
-            {
-              "id": "important-line-height",
-              "data": null,
-              "relatedNodes": [],
-              "impact": "serious",
-              "message": "line-height in the style attribute is not set to !important, or meets the minimum"
-            }
-          ],
-          "none": [],
-          "impact": null,
-          "html": "<li data-list-row=\"true\" class=\"relative overflow-hidden rounded-lg\" style=\"translate: none; rotate: none; scale: none; transform: translate(0px, 0px); opacity: 1; visibility: inherit;\">",
-          "target": [
-            "section[data-pip-anchor=\"merchant-friction\"] > .space-y-1\\.5 > .overflow-hidden[data-list-row=\"true\"]:nth-child(3)"
-          ]
-        },
-        {
-          "any": [],
-          "all": [
-            {
-              "id": "important-letter-spacing",
-              "data": null,
-              "relatedNodes": [],
-              "impact": "serious",
-              "message": "Letter-spacing in the style attribute is not set to !important, or meets the minimum"
-            },
-            {
-              "id": "important-word-spacing",
-              "data": null,
-              "relatedNodes": [],
-              "impact": "serious",
-              "message": "word-spacing in the style attribute is not set to !important, or meets the minimum"
-            },
-            {
-              "id": "important-line-height",
-              "data": null,
-              "relatedNodes": [],
-              "impact": "serious",
-              "message": "line-height in the style attribute is not set to !important, or meets the minimum"
-            }
-          ],
-          "none": [],
-          "impact": null,
-          "html": "<li data-list-row=\"true\" class=\"relative overflow-hidden rounded-lg\" style=\"translate: none; rotate: none; scale: none; transform: translate(0px, 0px); opacity: 1; visibility: inherit;\">",
-          "target": [
-            "section[data-pip-anchor=\"merchant-friction\"] > .space-y-1\\.5 > .overflow-hidden[data-list-row=\"true\"]:nth-child(4)"
-          ]
-        },
-        {
-          "any": [],
-          "all": [
-            {
-              "id": "important-letter-spacing",
-              "data": null,
-              "relatedNodes": [],
-              "impact": "serious",
-              "message": "Letter-spacing in the style attribute is not set to !important, or meets the minimum"
-            },
-            {
-              "id": "important-word-spacing",
-              "data": null,
-              "relatedNodes": [],
-              "impact": "serious",
-              "message": "word-spacing in the style attribute is not set to !important, or meets the minimum"
-            },
-            {
-              "id": "important-line-height",
-              "data": null,
-              "relatedNodes": [],
-              "impact": "serious",
-              "message": "line-height in the style attribute is not set to !important, or meets the minimum"
-            }
-          ],
-          "none": [],
-          "impact": null,
-          "html": "<div class=\"pointer-events-none fixed left-0 top-0 z-bubble will-change-transform\" style=\"transform: translate3d(782px, 549px, 0px); --pip-color: #c6ff3d;\">",
-          "target": [
-            ".z-bubble"
-          ]
-        },
-        {
-          "any": [],
-          "all": [
-            {
-              "id": "important-letter-spacing",
-              "data": null,
-              "relatedNodes": [],
-              "impact": "serious",
-              "message": "Letter-spacing in the style attribute is not set to !important, or meets the minimum"
-            },
-            {
-              "id": "important-word-spacing",
-              "data": null,
-              "relatedNodes": [],
-              "impact": "serious",
-              "message": "word-spacing in the style attribute is not set to !important, or meets the minimum"
-            },
-            {
-              "id": "important-line-height",
-              "data": null,
-              "relatedNodes": [],
-              "impact": "serious",
-              "message": "line-height in the style attribute is not set to !important, or meets the minimum"
-            }
-          ],
-          "none": [],
-          "impact": null,
-          "html": "<div role=\"dialog\" aria-modal=\"false\" aria-label=\"Pip\" class=\"bubble-panel surface...\" style=\"transform-origin: 10...\">",
-          "target": [
-            ".bubble-panel"
           ]
         }
       ]
@@ -7141,77 +5640,9 @@
           "all": [],
           "none": [],
           "impact": null,
-          "html": "<button type=\"button\" aria-label=\"Talk to Pip\" aria-expanded=\"true\" title=\"Click to talk · drag...\" class=\"pointer-events-auto ...\" style=\"left:22.499999999999...\">",
+          "html": "<button type=\"button\" aria-label=\"Talk to Pip\" aria-expanded=\"false\" title=\"Click to talk · drag...\" class=\"pointer-events-auto ...\" style=\"left:22.499999999999...\">",
           "target": [
-            ".touch-none"
-          ]
-        },
-        {
-          "any": [
-            {
-              "id": "aria-label",
-              "data": null,
-              "relatedNodes": [],
-              "impact": "critical",
-              "message": "aria-label attribute exists and is not empty"
-            },
-            {
-              "id": "non-empty-title",
-              "data": null,
-              "relatedNodes": [],
-              "impact": "critical",
-              "message": "Element has a title attribute"
-            }
-          ],
-          "all": [],
-          "none": [],
-          "impact": null,
-          "html": "<button type=\"button\" aria-label=\"Pip settings\" title=\"Pip settings\" aria-busy=\"false\" class=\"grid shrink-0 select...\">",
-          "target": [
-            "button[aria-label=\"Pip settings\"]"
-          ]
-        },
-        {
-          "any": [
-            {
-              "id": "aria-label",
-              "data": null,
-              "relatedNodes": [],
-              "impact": "critical",
-              "message": "aria-label attribute exists and is not empty"
-            },
-            {
-              "id": "non-empty-title",
-              "data": null,
-              "relatedNodes": [],
-              "impact": "critical",
-              "message": "Element has a title attribute"
-            }
-          ],
-          "all": [],
-          "none": [],
-          "impact": null,
-          "html": "<button type=\"button\" aria-label=\"Dismiss\" title=\"Dismiss\" aria-busy=\"false\" class=\"grid shrink-0 select...\">",
-          "target": [
-            "button[aria-label=\"Dismiss\"]"
-          ]
-        },
-        {
-          "any": [
-            {
-              "id": "button-has-visible-text",
-              "data": null,
-              "relatedNodes": [],
-              "impact": "critical",
-              "message": "Element has inner text that is visible to screen readers"
-            }
-          ],
-          "all": [],
-          "none": [],
-          "impact": null,
-          "html": "<button type=\"button\" class=\"mt-2 text-xs text-muted underline-offset-2 hover:text-text hover:underline\">Reply to Pip</button>",
-          "target": [
-            ".underline-offset-2"
+            ".pointer-events-auto"
           ]
         }
       ]
@@ -8760,7 +7191,7 @@
           "impact": null,
           "html": "<p class=\"mt-4 text-sm leading-relaxed text-muted\">Nothing yet. Ask Pip something in the store (press <kbd class=\"rounded bg-surface-2 px-1 font-mono text-2xs\">/</kbd>) and it shows up here.</p>",
           "target": [
-            ".leading-relaxed.mt-4"
+            ".leading-relaxed"
           ]
         },
         {
@@ -10462,56 +8893,6 @@
           "target": [
             ".pb-36 > p:nth-child(2)"
           ]
-        },
-        {
-          "any": [
-            {
-              "id": "color-contrast",
-              "data": {
-                "fgColor": "#edeef2",
-                "bgColor": "#12141b",
-                "contrastRatio": 15.86,
-                "fontSize": "10.5pt (14px)",
-                "fontWeight": "normal",
-                "expectedContrastRatio": "4.5:1"
-              },
-              "relatedNodes": [],
-              "impact": "serious",
-              "message": "Element has sufficient color contrast of 15.86"
-            }
-          ],
-          "all": [],
-          "none": [],
-          "impact": null,
-          "html": "<span class=\"block\">This is </span>",
-          "target": [
-            ".break-words > .block"
-          ]
-        },
-        {
-          "any": [
-            {
-              "id": "color-contrast",
-              "data": {
-                "fgColor": "#8a8fa3",
-                "bgColor": "#12141b",
-                "contrastRatio": 5.72,
-                "fontSize": "9.0pt (12px)",
-                "fontWeight": "normal",
-                "expectedContrastRatio": "4.5:1"
-              },
-              "relatedNodes": [],
-              "impact": "serious",
-              "message": "Element has sufficient color contrast of 5.72"
-            }
-          ],
-          "all": [],
-          "none": [],
-          "impact": null,
-          "html": "<button type=\"button\" class=\"mt-2 text-xs text-muted underline-offset-2 hover:text-text hover:underline\">Reply to Pip</button>",
-          "target": [
-            ".underline-offset-2"
-          ]
         }
       ]
     },
@@ -11660,7 +10041,7 @@
           "all": [],
           "none": [],
           "impact": null,
-          "html": "<li data-list-row=\"true\" class=\"relative overflow-hidden rounded-lg\" style=\"translate: none; rotate: none; scale: none; transform: translate(0px, 0px); opacity: 1; visibility: inherit;\">",
+          "html": "<li data-list-row=\"true\" class=\"relative overflow-hidden rounded-lg\">",
           "target": [
             "section[data-pip-anchor=\"merchant-questions\"] > .space-y-1\\.5 > .overflow-hidden[data-list-row=\"true\"]:nth-child(1)"
           ]
@@ -11678,7 +10059,7 @@
           "all": [],
           "none": [],
           "impact": null,
-          "html": "<li data-list-row=\"true\" class=\"relative overflow-hidden rounded-lg\" style=\"translate: none; rotate: none; scale: none; transform: translate(0px, 0px); opacity: 1; visibility: inherit;\">",
+          "html": "<li data-list-row=\"true\" class=\"relative overflow-hidden rounded-lg\">",
           "target": [
             "section[data-pip-anchor=\"merchant-questions\"] > .space-y-1\\.5 > .overflow-hidden[data-list-row=\"true\"]:nth-child(2)"
           ]
@@ -11696,7 +10077,7 @@
           "all": [],
           "none": [],
           "impact": null,
-          "html": "<li data-list-row=\"true\" class=\"relative overflow-hidden rounded-lg\" style=\"translate: none; rotate: none; scale: none; transform: translate(0px, 0px); opacity: 1; visibility: inherit;\">",
+          "html": "<li data-list-row=\"true\" class=\"relative overflow-hidden rounded-lg\">",
           "target": [
             "section[data-pip-anchor=\"merchant-questions\"] > .space-y-1\\.5 > .overflow-hidden[data-list-row=\"true\"]:nth-child(3)"
           ]
@@ -11714,7 +10095,7 @@
           "all": [],
           "none": [],
           "impact": null,
-          "html": "<li data-list-row=\"true\" class=\"relative overflow-hidden rounded-lg\" style=\"translate: none; rotate: none; scale: none; transform: translate(0px, 0px); opacity: 1; visibility: inherit;\">",
+          "html": "<li data-list-row=\"true\" class=\"relative overflow-hidden rounded-lg\">",
           "target": [
             "section[data-pip-anchor=\"merchant-questions\"] > .space-y-1\\.5 > .overflow-hidden[data-list-row=\"true\"]:nth-child(4)"
           ]
@@ -11732,7 +10113,7 @@
           "all": [],
           "none": [],
           "impact": null,
-          "html": "<li data-list-row=\"true\" class=\"relative overflow-hidden rounded-lg\" style=\"translate: none; rotate: none; scale: none; transform: translate(0px, 0px); opacity: 1; visibility: inherit;\">",
+          "html": "<li data-list-row=\"true\" class=\"relative overflow-hidden rounded-lg\">",
           "target": [
             ".overflow-hidden[data-list-row=\"true\"]:nth-child(5)"
           ]
@@ -11750,7 +10131,7 @@
           "all": [],
           "none": [],
           "impact": null,
-          "html": "<li data-list-row=\"true\" class=\"relative overflow-hidden rounded-lg\" style=\"translate: none; rotate: none; scale: none; transform: translate(0px, 0px); opacity: 1; visibility: inherit;\">",
+          "html": "<li data-list-row=\"true\" class=\"relative overflow-hidden rounded-lg\">",
           "target": [
             ".overflow-hidden[data-list-row=\"true\"]:nth-child(6)"
           ]
@@ -11768,7 +10149,7 @@
           "all": [],
           "none": [],
           "impact": null,
-          "html": "<li data-list-row=\"true\" class=\"flex items-center gap-3 py-2.5 first:pt-0 last:pb-0\" style=\"translate: none; rotate: none; scale: none; transform: translate(0px, 0px); opacity: 1; visibility: inherit;\">",
+          "html": "<li data-list-row=\"true\" class=\"flex items-center gap-3 py-2.5 first:pt-0 last:pb-0\">",
           "target": [
             ".py-2\\.5.first\\:pt-0.last\\:pb-0:nth-child(1)"
           ]
@@ -11786,7 +10167,7 @@
           "all": [],
           "none": [],
           "impact": null,
-          "html": "<li data-list-row=\"true\" class=\"flex items-center gap-3 py-2.5 first:pt-0 last:pb-0\" style=\"translate: none; rotate: none; scale: none; transform: translate(0px, 0px); opacity: 1; visibility: inherit;\">",
+          "html": "<li data-list-row=\"true\" class=\"flex items-center gap-3 py-2.5 first:pt-0 last:pb-0\">",
           "target": [
             ".py-2\\.5.first\\:pt-0.last\\:pb-0:nth-child(2)"
           ]
@@ -11804,7 +10185,7 @@
           "all": [],
           "none": [],
           "impact": null,
-          "html": "<li data-list-row=\"true\" class=\"flex items-center gap-3 py-2.5 first:pt-0 last:pb-0\" style=\"translate: none; rotate: none; scale: none; transform: translate(0px, 0px); opacity: 1; visibility: inherit;\">",
+          "html": "<li data-list-row=\"true\" class=\"flex items-center gap-3 py-2.5 first:pt-0 last:pb-0\">",
           "target": [
             ".py-2\\.5.first\\:pt-0.last\\:pb-0:nth-child(3)"
           ]
@@ -11822,7 +10203,7 @@
           "all": [],
           "none": [],
           "impact": null,
-          "html": "<li data-list-row=\"true\" class=\"flex items-center gap-3 py-2.5 first:pt-0 last:pb-0\" style=\"translate: none; rotate: none; scale: none; transform: translate(0px, 0px); opacity: 1; visibility: inherit;\">",
+          "html": "<li data-list-row=\"true\" class=\"flex items-center gap-3 py-2.5 first:pt-0 last:pb-0\">",
           "target": [
             ".py-2\\.5.first\\:pt-0.last\\:pb-0:nth-child(4)"
           ]
@@ -11840,7 +10221,7 @@
           "all": [],
           "none": [],
           "impact": null,
-          "html": "<li data-list-row=\"true\" class=\"flex items-center gap-3 py-2.5 first:pt-0 last:pb-0\" style=\"translate: none; rotate: none; scale: none; transform: translate(0px, 0px); opacity: 1; visibility: inherit;\">",
+          "html": "<li data-list-row=\"true\" class=\"flex items-center gap-3 py-2.5 first:pt-0 last:pb-0\">",
           "target": [
             ".py-2\\.5.first\\:pt-0.last\\:pb-0:nth-child(5)"
           ]
@@ -11858,7 +10239,7 @@
           "all": [],
           "none": [],
           "impact": null,
-          "html": "<li data-list-row=\"true\" class=\"relative overflow-hidden rounded-lg\" style=\"translate: none; rotate: none; scale: none; transform: translate(0px, 0px); opacity: 1; visibility: inherit;\">",
+          "html": "<li data-list-row=\"true\" class=\"relative overflow-hidden rounded-lg\">",
           "target": [
             "section[data-pip-anchor=\"merchant-friction\"] > .space-y-1\\.5 > .overflow-hidden[data-list-row=\"true\"]:nth-child(1)"
           ]
@@ -11876,7 +10257,7 @@
           "all": [],
           "none": [],
           "impact": null,
-          "html": "<li data-list-row=\"true\" class=\"relative overflow-hidden rounded-lg\" style=\"translate: none; rotate: none; scale: none; transform: translate(0px, 0px); opacity: 1; visibility: inherit;\">",
+          "html": "<li data-list-row=\"true\" class=\"relative overflow-hidden rounded-lg\">",
           "target": [
             "section[data-pip-anchor=\"merchant-friction\"] > .space-y-1\\.5 > .overflow-hidden[data-list-row=\"true\"]:nth-child(2)"
           ]
@@ -11894,7 +10275,7 @@
           "all": [],
           "none": [],
           "impact": null,
-          "html": "<li data-list-row=\"true\" class=\"relative overflow-hidden rounded-lg\" style=\"translate: none; rotate: none; scale: none; transform: translate(0px, 0px); opacity: 1; visibility: inherit;\">",
+          "html": "<li data-list-row=\"true\" class=\"relative overflow-hidden rounded-lg\">",
           "target": [
             "section[data-pip-anchor=\"merchant-friction\"] > .space-y-1\\.5 > .overflow-hidden[data-list-row=\"true\"]:nth-child(3)"
           ]
@@ -11912,7 +10293,7 @@
           "all": [],
           "none": [],
           "impact": null,
-          "html": "<li data-list-row=\"true\" class=\"relative overflow-hidden rounded-lg\" style=\"translate: none; rotate: none; scale: none; transform: translate(0px, 0px); opacity: 1; visibility: inherit;\">",
+          "html": "<li data-list-row=\"true\" class=\"relative overflow-hidden rounded-lg\">",
           "target": [
             "section[data-pip-anchor=\"merchant-friction\"] > .space-y-1\\.5 > .overflow-hidden[data-list-row=\"true\"]:nth-child(4)"
           ]
@@ -12149,63 +10530,9 @@
           "all": [],
           "none": [],
           "impact": null,
-          "html": "<button type=\"button\" aria-label=\"Talk to Pip\" aria-expanded=\"true\" title=\"Click to talk · drag...\" class=\"pointer-events-auto ...\" style=\"left:22.499999999999...\">",
+          "html": "<button type=\"button\" aria-label=\"Talk to Pip\" aria-expanded=\"false\" title=\"Click to talk · drag...\" class=\"pointer-events-auto ...\" style=\"left:22.499999999999...\">",
           "target": [
-            ".touch-none"
-          ]
-        },
-        {
-          "any": [
-            {
-              "id": "no-focusable-content",
-              "data": null,
-              "relatedNodes": [],
-              "impact": "serious",
-              "message": "Element does not have focusable descendants"
-            }
-          ],
-          "all": [],
-          "none": [],
-          "impact": null,
-          "html": "<button type=\"button\" aria-label=\"Pip settings\" title=\"Pip settings\" aria-busy=\"false\" class=\"grid shrink-0 select...\">",
-          "target": [
-            "button[aria-label=\"Pip settings\"]"
-          ]
-        },
-        {
-          "any": [
-            {
-              "id": "no-focusable-content",
-              "data": null,
-              "relatedNodes": [],
-              "impact": "serious",
-              "message": "Element does not have focusable descendants"
-            }
-          ],
-          "all": [],
-          "none": [],
-          "impact": null,
-          "html": "<button type=\"button\" aria-label=\"Dismiss\" title=\"Dismiss\" aria-busy=\"false\" class=\"grid shrink-0 select...\">",
-          "target": [
-            "button[aria-label=\"Dismiss\"]"
-          ]
-        },
-        {
-          "any": [
-            {
-              "id": "no-focusable-content",
-              "data": null,
-              "relatedNodes": [],
-              "impact": "serious",
-              "message": "Element does not have focusable descendants"
-            }
-          ],
-          "all": [],
-          "none": [],
-          "impact": null,
-          "html": "<button type=\"button\" class=\"mt-2 text-xs text-muted underline-offset-2 hover:text-text hover:underline\">Reply to Pip</button>",
-          "target": [
-            ".underline-offset-2"
+            ".pointer-events-auto"
           ]
         }
       ]

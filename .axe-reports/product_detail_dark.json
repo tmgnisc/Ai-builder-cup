@@ -13,7 +13,7 @@
     "orientationAngle": 0,
     "orientationType": "landscape-primary"
   },
-  "timestamp": "2026-10-16T06:27:02.808Z",
+  "timestamp": "2026-10-16T09:35:12.341Z",
   "url": "http://localhost:3001/product/lenovo-ideapad-slim-5-14",
   "toolOptions": {
     "runOnly": {
@@ -1572,7 +1572,7 @@
           "impact": null,
           "html": "<button type=\"button\" aria-label=\"Talk to Pip\" aria-expanded=\"false\" title=\"Click to talk · drag...\" class=\"pointer-events-auto ...\" style=\"left:22.499999999999...\">",
           "target": [
-            ".touch-none"
+            ".pointer-events-auto"
           ]
         },
         {
@@ -2051,7 +2051,7 @@
           "impact": null,
           "html": "<button type=\"button\" aria-label=\"Talk to Pip\" aria-expanded=\"false\" title=\"Click to talk · drag...\" class=\"pointer-events-auto ...\" style=\"left:22.499999999999...\">",
           "target": [
-            ".touch-none"
+            ".pointer-events-auto"
           ]
         },
         {
@@ -2977,7 +2977,7 @@
           ],
           "none": [],
           "impact": null,
-          "html": "<div aria-hidden=\"true\" class=\"pointer-events-none fixed left-0 top-0 z-[55] transition-opacity duration-300 data-[compact=true]:hidden\" style=\"opacity: 0; transform: translate3d(1205.88px, 661.711px, 0px) translateX(-50%);\" data-compact=\"false\">",
+          "html": "<div aria-hidden=\"true\" class=\"pointer-events-none fixed left-0 top-0 z-[55] transition-opacity duration-300 data-[compact=true]:hidden\" style=\"opacity: 0; transform: translate3d(1196px, 650.4px, 0px) translateX(-50%);\" data-compact=\"false\">",
           "target": [
             ".data-\\[compact\\=true\\]\\:hidden"
           ]
@@ -3076,6 +3076,38 @@
           "html": "<li aria-hidden=\"true\" class=\"hidden size-10 rounded-full border border-dashed border-border-strong sm:block\"></li>",
           "target": [
             "li:nth-child(3)"
+          ]
+        },
+        {
+          "any": [],
+          "all": [
+            {
+              "id": "focusable-modal-open",
+              "data": null,
+              "relatedNodes": [],
+              "impact": "serious",
+              "message": "No focusable elements while a modal is open"
+            },
+            {
+              "id": "focusable-disabled",
+              "data": null,
+              "relatedNodes": [],
+              "impact": "serious",
+              "message": "No focusable elements contained within element"
+            },
+            {
+              "id": "focusable-not-tabbable",
+              "data": null,
+              "relatedNodes": [],
+              "impact": "serious",
+              "message": "No focusable elements contained within element"
+            }
+          ],
+          "none": [],
+          "impact": null,
+          "html": "<li aria-hidden=\"true\" class=\"hidden size-10 rounded-full border border-dashed border-border-strong sm:block\"></li>",
+          "target": [
+            "li:nth-child(4)"
           ]
         },
         {
@@ -3855,7 +3887,7 @@
           "impact": null,
           "html": "<button type=\"button\" aria-label=\"Talk to Pip\" aria-expanded=\"false\" title=\"Click to talk · drag...\" class=\"pointer-events-auto ...\" style=\"left:22.499999999999...\">",
           "target": [
-            ".touch-none"
+            ".pointer-events-auto"
           ]
         },
         {
@@ -5454,7 +5486,7 @@
           "impact": null,
           "html": "<button type=\"button\" aria-label=\"Talk to Pip\" aria-expanded=\"false\" title=\"Click to talk · drag...\" class=\"pointer-events-auto ...\" style=\"left:22.499999999999...\">",
           "target": [
-            ".touch-none"
+            ".pointer-events-auto"
           ]
         },
         {
@@ -5917,7 +5949,7 @@
           "impact": null,
           "html": "<button type=\"button\" aria-label=\"Talk to Pip\" aria-expanded=\"false\" title=\"Click to talk · drag...\" class=\"pointer-events-auto ...\" style=\"left:22.499999999999...\">",
           "target": [
-            ".touch-none"
+            ".pointer-events-auto"
           ]
         },
         {
@@ -5976,38 +6008,6 @@
       "help": "Inline text spacing must be adjustable with custom stylesheets",
       "helpUrl": "https://dequeuniversity.com/rules/axe/4.14/avoid-inline-spacing?application=playwright",
       "nodes": [
-        {
-          "any": [],
-          "all": [
-            {
-              "id": "important-letter-spacing",
-              "data": null,
-              "relatedNodes": [],
-              "impact": "serious",
-              "message": "Letter-spacing in the style attribute is not set to !important, or meets the minimum"
-            },
-            {
-              "id": "important-word-spacing",
-              "data": null,
-              "relatedNodes": [],
-              "impact": "serious",
-              "message": "word-spacing in the style attribute is not set to !important, or meets the minimum"
-            },
-            {
-              "id": "important-line-height",
-              "data": null,
-              "relatedNodes": [],
-              "impact": "serious",
-              "message": "line-height in the style attribute is not set to !important, or meets the minimum"
-            }
-          ],
-          "none": [],
-          "impact": null,
-          "html": "<div data-gallery-main=\"true\" class=\"aspect-[4/3]\" style=\"translate: none; rotate: none; scale: none; transform: translate(0px, 0px); opacity: 1; visibility: inherit;\">",
-          "target": [
-            "div[data-gallery-main=\"true\"]"
-          ]
-        },
         {
           "any": [],
           "all": [
@@ -6293,7 +6293,7 @@
           "impact": null,
           "html": "<button type=\"button\" aria-label=\"Talk to Pip\" aria-expanded=\"false\" title=\"Click to talk · drag...\" class=\"pointer-events-auto ...\" style=\"left:22.499999999999...\">",
           "target": [
-            ".touch-none"
+            ".pointer-events-auto"
           ]
         }
       ]
@@ -8067,7 +8067,7 @@
           "impact": null,
           "html": "<button type=\"button\" aria-label=\"Talk to Pip\" aria-expanded=\"false\" title=\"Click to talk · drag...\" class=\"pointer-events-auto ...\" style=\"left:22.499999999999...\">",
           "target": [
-            ".touch-none"
+            ".pointer-events-auto"
           ]
         }
       ]

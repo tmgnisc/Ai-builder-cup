@@ -7,6 +7,8 @@ import type { Product } from "./schemas";
  * (Phase 4) the `compare_products` agent tool.
  */
 
+export const MAX_COMPARE = 4;
+
 export type CompareKey = "price" | "ram" | "storage" | "battery" | "weight" | "warranty" | "rating";
 export type TextKey = "cpu" | "gpu" | "screen" | "ports" | "connectivity" | "camera";
 

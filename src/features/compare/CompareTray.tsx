@@ -1,6 +1,7 @@
 "use client";
 
 import { GitCompareArrows, X } from "lucide-react";
+import { useRouter } from "next/navigation";
 import { useRef } from "react";
 import { getProduct } from "@/lib/commerce/catalog";
 import { gsap, motion, useGSAP } from "@/lib/motion";
@@ -17,8 +18,8 @@ export function CompareTray() {
   const rejectedAt = useCompare((s) => s.rejectedAt);
   const remove = useCompare((s) => s.remove);
   const clear = useCompare((s) => s.clear);
-  const setOpen = useCompare((s) => s.setOpen);
   const ref = useRef<HTMLDivElement>(null);
+  const router = useRouter();
   const visible = ids.length > 0 && !open;
 
   useGSAP(
@@ -74,7 +75,7 @@ export function CompareTray() {
       <button
         type="button"
         disabled={ids.length < 2}
-        onClick={() => setOpen(true)}
+        onClick={() => router.push(`/compare?ids=${ids.join(",")}`)}
         className="ml-1 inline-flex h-10 items-center gap-2 whitespace-nowrap rounded-full bg-searching px-4 text-sm font-semibold text-bg transition-[filter,opacity] hover:brightness-110 disabled:bg-surface-2 disabled:text-muted"
       >
         <GitCompareArrows className="size-4" aria-hidden />

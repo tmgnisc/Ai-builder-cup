@@ -148,9 +148,13 @@ async function performUI(action: UIAction) {
       else if (action.name === "compare") useCompare.getState().setOpen(true);
       else useChat.getState().setHistoryOpen(true);
       return;
-    case "open_compare":
+    case "open_compare": {
       useCompare.getState().show(action.productIds, { context: action.context, priorities: action.priorities });
+      const targetUrl = `/compare?ids=${encodeURIComponent(action.productIds.join(","))}`;
+      if (navigate) navigate(targetUrl);
+      else window.location.assign(targetUrl);
       return;
+    }
     case "cart_updated": {
       await useCart.getState().refresh();
       if (action.flyProductId) {

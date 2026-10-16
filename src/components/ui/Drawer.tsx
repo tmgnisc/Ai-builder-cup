@@ -93,7 +93,7 @@ export function Drawer({
   if (!mounted) return null;
 
   return createPortal(
-    <div className={cn("fixed inset-0", modal ? "z-modal" : "z-drawer", (!open || !modal) && "pointer-events-none")} inert={!open}>
+    <div className={cn("fixed inset-0", modal ? "z-modal" : "z-drawer", (!open || !modal) && "pointer-events-none", !open && "invisible")} inert={!open}>
       <div
         aria-hidden
         onClick={() => onOpenChange(false)}
@@ -114,7 +114,8 @@ export function Drawer({
         aria-describedby={description ? descId : undefined}
         tabIndex={-1}
         className={cn(
-          "panel-solid pointer-events-auto absolute flex flex-col overflow-hidden rounded-panel transition-transform duration-500 ease-[var(--ease-out-expo)] motion-reduce:transition-none",
+          "panel-solid absolute flex flex-col overflow-hidden rounded-panel transition-transform duration-500 ease-[var(--ease-out-expo)] motion-reduce:transition-none",
+          open ? "pointer-events-auto" : "pointer-events-none invisible",
           PANEL[side].base,
           !open && PANEL[side].closed,
           className,
