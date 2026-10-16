@@ -7,7 +7,8 @@ import { MotionPathPlugin } from "gsap/MotionPathPlugin";
 import { ScrambleTextPlugin } from "gsap/ScrambleTextPlugin";
 import { ScrollTrigger } from "gsap/ScrollTrigger";
 import { SplitText } from "gsap/SplitText";
-import { useSyncExternalStore } from "react";
+import { prefersReducedMotion, useReducedMotion } from "@/hooks/useReducedMotion";
+import { tokens } from "@/styles/tokens";
 
 /**
  * Motion utilities. Every GSAP consumer imports `gsap` from here so plugins are registered
@@ -16,26 +17,10 @@ import { useSyncExternalStore } from "react";
 
 if (typeof window !== "undefined") {
   gsap.registerPlugin(useGSAP, ScrollTrigger, Flip, SplitText, ScrambleTextPlugin, MotionPathPlugin);
-  gsap.defaults({ ease: "expo.out", duration: 0.5 });
+  gsap.defaults({ ease: tokens.easings.out, duration: tokens.durations.deliberate });
 }
 
-export { gsap, useGSAP, Flip, ScrollTrigger, SplitText };
-
-const QUERY = "(prefers-reduced-motion: reduce)";
-
-function subscribe(cb: () => void) {
-  const mql = window.matchMedia(QUERY);
-  mql.addEventListener("change", cb);
-  return () => mql.removeEventListener("change", cb);
-}
-
-export function prefersReducedMotion(): boolean {
-  return typeof window !== "undefined" && window.matchMedia(QUERY).matches;
-}
-
-export function useReducedMotion(): boolean {
-  return useSyncExternalStore(subscribe, prefersReducedMotion, () => false);
-}
+export { gsap, useGSAP, Flip, ScrollTrigger, SplitText, useReducedMotion, prefersReducedMotion };
 
 export const motion = {
   /** Duration in seconds, collapsed to 0 under reduced motion. */
@@ -50,8 +35,8 @@ export const motion = {
     return prefersReducedMotion();
   },
   ease: {
-    out: "expo.out",
-    pop: "back.out(1.7)",
-    inOut: "expo.inOut",
+    out: tokens.easings.out,
+    pop: tokens.easings.pop,
+    inOut: tokens.easings.inOut,
   },
 } as const;

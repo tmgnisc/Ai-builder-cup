@@ -1,0 +1,127 @@
+/* AUTO-GENERATED from src/tokens/definitions.ts — DO NOT EDIT DIRECTLY */
+
+:root {
+  color-scheme: dark;
+
+  --bg: #0a0b0f;
+  --surface: #12141b;
+  --surface-2: #1a1d26;
+  --border: rgb(255 255 255 / 0.08);
+  --border-strong: rgb(255 255 255 / 0.14);
+  --text: #edeef2;
+  --muted: #8a8fa3;
+
+  --accent: #c6ff3d;
+  --accent-text: #c6ff3d;
+  --accent-fg: #0a0b0f;
+
+  --state-listening: #3dffb0;
+  --state-thinking: #ffb23d;
+  --state-searching: #3dd9ff;
+  --state-success: #c6ff3d;
+  --state-error: #ff5a5a;
+
+  --glass: rgb(18 20 27 / 0.62);
+  --glass-border: rgb(255 255 255 / 0.1);
+  --overlay: rgb(5 6 9 / 0.6);
+  --grain-opacity: 0.06;
+  --spotlight: rgb(198 255 61 / 0.08);
+
+  /* Z-Index Scale */
+  --z-base: 0;
+  --z-dock: 10;
+  --z-elevated: 20;
+  --z-sticky: 30;
+  --z-drawer: 40;
+  --z-popover: 50;
+  --z-bubble: 55;
+  --z-modal: 60;
+  --z-toast: 70;
+  --z-spotlight: 80;
+  --z-grain: 100;
+
+  /* Motion */
+  --duration-instant: 0s;
+  --duration-fast: 0.15s;
+  --duration-base: 0.25s;
+  --duration-slow: 0.4s;
+  --duration-deliberate: 0.55s;
+
+  --ease-out-expo: cubic-bezier(0.16, 1, 0.3, 1);
+  --ease-in-out-expo: cubic-bezier(0.87, 0, 0.13, 1);
+  --ease-standard: cubic-bezier(0.2, 0, 0, 1);
+  --ease-pop: back.out(1.7);
+}
+
+:root[data-theme="light"] {
+  color-scheme: light;
+
+  --bg: #f4f5f7;
+  --surface: #ffffff;
+  --surface-2: #eceef3;
+  --border: rgb(10 11 15 / 0.08);
+  --border-strong: rgb(10 11 15 / 0.16);
+  --text: #0e1016;
+  --muted: #5b6070;
+
+  --accent: #c6ff3d;
+  --accent-text: #4a7300;
+  --accent-fg: #0a0b0f;
+
+  --state-listening: #00a86b;
+  --state-thinking: #c77700;
+  --state-searching: #0091b8;
+  --state-success: #4a7300;
+  --state-error: #d93636;
+
+  --glass: rgb(255 255 255 / 0.7);
+  --glass-border: rgb(10 11 15 / 0.08);
+  --overlay: rgb(14 16 22 / 0.35);
+  --grain-opacity: 0.035;
+  --spotlight: rgb(74 115 0 / 0.07);
+}
+
+@theme inline {
+  --color-bg: var(--bg);
+  --color-surface: var(--surface);
+  --color-surface-2: var(--surface-2);
+  --color-border: var(--border);
+  --color-border-strong: var(--border-strong);
+  --color-text: var(--text);
+  --color-muted: var(--muted);
+  --color-accent: var(--accent);
+  --color-accent-text: var(--accent-text);
+  --color-accent-fg: var(--accent-fg);
+  --color-listening: var(--state-listening);
+  --color-thinking: var(--state-thinking);
+  --color-searching: var(--state-searching);
+  --color-success: var(--state-success);
+  --color-danger: var(--state-error);
+  --color-glass: var(--glass);
+  --color-glass-border: var(--glass-border);
+  --color-overlay: var(--overlay);
+
+  --font-display: var(--font-unbounded), ui-sans-serif, system-ui, sans-serif;
+  --font-sans: var(--font-inter), ui-sans-serif, system-ui, sans-serif;
+  --font-mono: var(--font-jetbrains), ui-monospace, monospace;
+
+  --radius-xs: 4px;
+  --radius-sm: 6px;
+  --radius-md: 8px;
+  --radius-lg: 12px;
+  --radius-card: 16px;
+  --radius-panel: 24px;
+  --radius-full: 9999px;
+
+  --ease-out-expo: var(--ease-out-expo);
+  --ease-in-out-expo: var(--ease-in-out-expo);
+  --ease-standard: var(--ease-standard);
+  --ease-pop: var(--ease-pop);
+
+  --text-2xs: 10px;
+  --text-2xs--line-height: 14px;
+}
+
+@utility max-w-page {
+  max-width: 1400px;
+}
