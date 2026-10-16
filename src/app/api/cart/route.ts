@@ -3,6 +3,7 @@ import { addToCart, clearCart, getCart, removeFromCart, setQty, type CartResult 
 import { resolveChaos, rollFailure, simulateLatency } from "@/lib/commerce/chaos";
 import { errorResponse, getSessionId, readJson, transientError } from "@/lib/commerce/http";
 import { AddToCartInputSchema, SetQtyInputSchema } from "@/lib/commerce/schemas";
+import { proxyToBackend } from "@/lib/server/backendProxy";
 
 /**
  * GET    /api/cart                         → Cart
@@ -17,6 +18,9 @@ function respond(result: CartResult) {
 }
 
 export async function GET(req: Request) {
+  const proxied = await proxyToBackend(req, "/api/cart");
+  if (proxied) return proxied;
+
   const sid = await getSessionId();
   const chaos = resolveChaos(req);
   await simulateLatency(chaos);
@@ -25,6 +29,9 @@ export async function GET(req: Request) {
 }
 
 export async function POST(req: Request) {
+  const proxied = await proxyToBackend(req, "/api/cart");
+  if (proxied) return proxied;
+
   const sid = await getSessionId();
   const parsed = AddToCartInputSchema.safeParse(await readJson(req));
   if (!parsed.success) return errorResponse("INVALID_INPUT", "Expected { productId: string, qty?: 1–10 }.");
@@ -37,6 +44,9 @@ export async function POST(req: Request) {
 }
 
 export async function PATCH(req: Request) {
+  const proxied = await proxyToBackend(req, "/api/cart");
+  if (proxied) return proxied;
+
   const sid = await getSessionId();
   const parsed = SetQtyInputSchema.safeParse(await readJson(req));
   if (!parsed.success) return errorResponse("INVALID_INPUT", "Expected { productId: string, qty: 0–10 }.");
@@ -49,6 +59,9 @@ export async function PATCH(req: Request) {
 }
 
 export async function DELETE(req: Request) {
+  const proxied = await proxyToBackend(req, "/api/cart");
+  if (proxied) return proxied;
+
   const sid = await getSessionId();
   const productId = new URL(req.url).searchParams.get("productId");
 

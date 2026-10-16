@@ -15,6 +15,7 @@ CommerceErrorCode = Literal[
     "NOT_IN_CART",
     "INVALID_INPUT",
     "TRANSIENT",
+    "UNAUTHORIZED",
 ]
 
 COMMERCE_STATUS_CODES: dict[str, int] = {
@@ -24,6 +25,7 @@ COMMERCE_STATUS_CODES: dict[str, int] = {
     "NOT_IN_CART": 404,
     "INVALID_INPUT": 400,
     "TRANSIENT": 503,
+    "UNAUTHORIZED": 401,
 }
 
 

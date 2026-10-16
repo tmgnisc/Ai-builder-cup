@@ -36,6 +36,9 @@ export async function POST(req: Request) {
         cookie: `persona_sid=${sessionId}`,
       };
       if (chaosHeader) headers["x-persona-chaos"] = chaosHeader;
+      if (process.env.AGENT_SHARED_SECRET) {
+        headers["x-agent-shared-secret"] = process.env.AGENT_SHARED_SECRET;
+      }
 
       const backendResp = await fetch(backendUrl, {
         method: "POST",
@@ -45,13 +48,21 @@ export async function POST(req: Request) {
       });
 
       if (backendResp.ok && backendResp.body) {
-        return new Response(backendResp.body, {
-          headers: {
-            "content-type": "application/x-ndjson; charset=utf-8",
-            "cache-control": "no-store, no-transform",
-            "x-accel-buffering": "no",
-          },
+        const respHeaders = new Headers({
+          "content-type": "application/x-ndjson; charset=utf-8",
+          "cache-control": "no-store, no-transform",
+          "x-accel-buffering": "no",
         });
+        if (typeof backendResp.headers.getSetCookie === "function") {
+          for (const c of backendResp.headers.getSetCookie()) {
+            respHeaders.append("set-cookie", c);
+          }
+        } else {
+          const sc = backendResp.headers.get("set-cookie");
+          if (sc) respHeaders.set("set-cookie", sc);
+        }
+
+        return new Response(backendResp.body, { headers: respHeaders });
       }
       console.warn(`[agent proxy] backend returned ${backendResp.status}, falling back to mockAgent`);
     } catch (err) {

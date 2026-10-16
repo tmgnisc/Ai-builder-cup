@@ -11,8 +11,10 @@ class Settings(BaseSettings):
     gemini_api_key: str = ""
     gemini_model: str = "gemini-2.5-flash"
     agent_backend: str = "gemini"
+    agent_shared_secret: str = ""
     agent_max_message_length: int = 500
     agent_rate_limit_per_minute: int = 60
+    agent_turn_timeout_seconds: float = 30.0
     cors_origins: str = "http://localhost:3000"
     persona_failure_rate: float = 0.0
     persona_latency_min_ms: int = 200

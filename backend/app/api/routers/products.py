@@ -9,7 +9,7 @@ from ...core.errors import CommerceException
 from ...domain.chaos import resolve_chaos, roll_failure, simulate_latency
 from ...domain.models import Category, Product, ProductQuery, ProductSearchResult, Sort
 from ...services.catalog import CatalogService
-from ..dependencies import get_catalog_service
+from ..dependencies import get_catalog_service, verify_shared_secret
 
 router = APIRouter()
 
@@ -34,6 +34,7 @@ def _parse_list_param(values: list[str] | None) -> list[str] | None:
 async def search_products_endpoint(
     catalog_service: Annotated[CatalogService, Depends(get_catalog_service)],
     settings: Annotated[Settings, Depends(get_settings)],
+    _: Annotated[None, Depends(verify_shared_secret)] = None,
     q: str | None = None,
     category: Category | None = None,
     brand: Annotated[list[str] | None, Query()] = None,
@@ -103,6 +104,7 @@ async def get_product_endpoint(
     product_id: str,
     catalog_service: Annotated[CatalogService, Depends(get_catalog_service)],
     settings: Annotated[Settings, Depends(get_settings)],
+    _: Annotated[None, Depends(verify_shared_secret)] = None,
     chaos: float | None = None,
     latency: int | None = None,
     x_persona_chaos: Annotated[str | None, Header()] = None,

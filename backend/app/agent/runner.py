@@ -89,6 +89,7 @@ async def run_pip_stream(
     agent: LlmAgent,
     session_provider: SessionProvider | None = None,
     app_name: str = "persona_pip",
+    turn_timeout_seconds: float = 30.0,
 ) -> AsyncGenerator[str, None]:
     """Runs a single Pip agent turn and yields NDJSON lines matching the AgentEvent contract."""
     provider = session_provider or InMemorySessionProvider()
@@ -122,39 +123,68 @@ async def run_pip_stream(
         turn_prompt = build_turn_prompt(request.message, request.memory, request.context)
         user_msg = types.Content(role="user", parts=[types.Part.from_text(text=turn_prompt)])
 
-        async for event in runner.run_async(
-            user_id=turn_ctx.session_id,
-            session_id=ephemeral_session_id,
-            new_message=user_msg,
-        ):
-            # Drain tool and UI events that were queued by callbacks
-            while turn_ctx.event_queue:
-                ev = turn_ctx.event_queue.pop(0)
-                yield serialize_event(ev) + "\n"
+        try:
+            async with asyncio.timeout(turn_timeout_seconds):
+                async for event in runner.run_async(
+                    user_id=turn_ctx.session_id,
+                    session_id=ephemeral_session_id,
+                    new_message=user_msg,
+                ):
+                    # Drain tool and UI events that were queued by callbacks
+                    while turn_ctx.event_queue:
+                        ev = turn_ctx.event_queue.pop(0)
+                        yield serialize_event(ev) + "\n"
 
-            # Stream model text deltas
-            if event.content and event.content.parts:
-                for part in event.content.parts:
-                    if part.text:
-                        if not message_started:
-                            message_started = True
-                            yield serialize_event(MessageStartEvent(messageId=message_id)) + "\n"
-                        collected_text += part.text
-                        yield serialize_event(TextDeltaEvent(messageId=message_id, delta=part.text)) + "\n"
+                    # Stream model text deltas
+                    if event.content and event.content.parts:
+                        for part in event.content.parts:
+                            if part.text:
+                                # Guardrail: If verified cart update failed, suppress false success claims
+                                if turn_ctx.last_cart_verified is False and any(
+                                    w in part.text.lower()
+                                    for w in ["added", "placed", "updated", "success", "in your cart", "to your cart"]
+                                ):
+                                    continue
+                                if not message_started:
+                                    message_started = True
+                                    yield serialize_event(MessageStartEvent(messageId=message_id)) + "\n"
+                                collected_text += part.text
+                                yield serialize_event(TextDeltaEvent(messageId=message_id, delta=part.text)) + "\n"
+        except TimeoutError:
+            if not message_started:
+                message_started = True
+                yield serialize_event(MessageStartEvent(messageId=message_id)) + "\n"
+            timeout_msg = "I took too long to complete that request. Please try again with a simpler query."
+            yield serialize_event(TextDeltaEvent(messageId=message_id, delta=timeout_msg)) + "\n"
+            yield serialize_event(StateChangeEvent(state="error", caption="Turn timed out")) + "\n"
+            yield serialize_event(ErrorEvent(message="Turn timed out.")) + "\n"
+            yield serialize_event(DoneEvent()) + "\n"
+            return
 
         # Drain any remaining queued events
         while turn_ctx.event_queue:
             ev = turn_ctx.event_queue.pop(0)
             yield serialize_event(ev) + "\n"
 
-        # Code guardrail: If verified cart update failed, model cannot claim success
+        # Code guardrail: Tool limit reached graceful message
+        if turn_ctx.tool_call_count >= 8 and (not message_started or not collected_text.strip()):
+            message_started = True
+            cap_msg = (
+                "I reached the tool limit for this turn. Here is what I found so far. How would you like to proceed?"
+            )
+            yield serialize_event(MessageStartEvent(messageId=message_id)) + "\n"
+            yield serialize_event(TextDeltaEvent(messageId=message_id, delta=cap_msg)) + "\n"
+            collected_text = cap_msg
+
+        # Code guardrail: If verified cart update failed, replace or suppress model text claiming success
         if turn_ctx.last_cart_verified is False:
-            correction = " Note: The store service could not verify the cart update. Please try again."
-            if not message_started:
+            if not message_started or not collected_text.strip():
                 message_started = True
+                fail_msg = "I couldn't verify that the item was added to your cart. Please try again."
                 yield serialize_event(MessageStartEvent(messageId=message_id)) + "\n"
-                yield serialize_event(TextDeltaEvent(messageId=message_id, delta=correction.strip())) + "\n"
+                yield serialize_event(TextDeltaEvent(messageId=message_id, delta=fail_msg)) + "\n"
             elif any(w in collected_text.lower() for w in ["added", "placed", "updated", "success"]):
+                correction = " Note: The store service could not verify the cart update. Please try again."
                 yield serialize_event(TextDeltaEvent(messageId=message_id, delta=correction)) + "\n"
 
         # Emit updated memory event

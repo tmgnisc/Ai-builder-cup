@@ -9,7 +9,7 @@ from ...core.errors import CommerceException
 from ...domain.chaos import resolve_chaos, roll_failure, simulate_latency
 from ...domain.models import AddToCartInput, Cart, SetQtyInput
 from ...services.cart import CartService
-from ..dependencies import get_cart_service
+from ..dependencies import get_cart_service, verify_shared_secret
 
 router = APIRouter()
 
@@ -40,6 +40,7 @@ async def get_cart_endpoint(
     response: Response,
     cart_service: Annotated[CartService, Depends(get_cart_service)],
     settings: Annotated[Settings, Depends(get_settings)],
+    _: Annotated[None, Depends(verify_shared_secret)] = None,
     persona_sid: Annotated[str | None, Cookie()] = None,
     chaos: float | None = None,
     latency: int | None = None,
@@ -71,6 +72,7 @@ async def add_to_cart_endpoint(
     response: Response,
     cart_service: Annotated[CartService, Depends(get_cart_service)],
     settings: Annotated[Settings, Depends(get_settings)],
+    _: Annotated[None, Depends(verify_shared_secret)] = None,
     persona_sid: Annotated[str | None, Cookie()] = None,
     chaos: float | None = None,
     latency: int | None = None,
@@ -103,6 +105,7 @@ async def set_qty_endpoint(
     response: Response,
     cart_service: Annotated[CartService, Depends(get_cart_service)],
     settings: Annotated[Settings, Depends(get_settings)],
+    _: Annotated[None, Depends(verify_shared_secret)] = None,
     persona_sid: Annotated[str | None, Cookie()] = None,
     chaos: float | None = None,
     latency: int | None = None,
@@ -134,6 +137,7 @@ async def remove_from_cart_endpoint(
     response: Response,
     cart_service: Annotated[CartService, Depends(get_cart_service)],
     settings: Annotated[Settings, Depends(get_settings)],
+    _: Annotated[None, Depends(verify_shared_secret)] = None,
     productId: str | None = None,
     persona_sid: Annotated[str | None, Cookie()] = None,
     chaos: float | None = None,

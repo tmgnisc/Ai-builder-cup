@@ -14,7 +14,7 @@ from ...core.config import Settings, get_settings
 from ...domain.chaos import resolve_chaos
 from ...services.catalog import CatalogService
 from ...services.verified_cart import VerifiedCartService
-from ..dependencies import get_catalog_service, get_verified_cart_service
+from ..dependencies import get_catalog_service, get_verified_cart_service, verify_shared_secret
 
 router = APIRouter(prefix="/api/agent", tags=["agent"])
 logger = logging.getLogger(__name__)
@@ -65,6 +65,7 @@ async def agent_turn(
     cart_service: Annotated[VerifiedCartService, Depends(get_verified_cart_service)] = None,  # type: ignore[assignment]
     model: Annotated[str | BaseLlm, Depends(get_agent_model)] = None,  # type: ignore[assignment]
     settings: Annotated[Settings, Depends(get_settings)] = None,  # type: ignore[assignment]
+    _: Annotated[None, Depends(verify_shared_secret)] = None,
 ) -> Response:
     settings = settings or get_settings()
 
@@ -125,6 +126,7 @@ async def agent_turn(
         turn_ctx=turn_ctx,
         agent=agent,
         session_provider=_session_provider_instance,
+        turn_timeout_seconds=settings.agent_turn_timeout_seconds,
     )
 
     return StreamingResponse(
