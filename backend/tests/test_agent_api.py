@@ -87,3 +87,40 @@ def test_agent_api_streaming_success() -> None:
     assert len(lines) >= 3  # state_change, message_start, text_delta, done
     assert "done" in lines[-1]
     set_agent_model_override(None)
+
+
+def test_agent_api_shared_secret_enforcement() -> None:
+    """When AGENT_SHARED_SECRET is set, requests without matching header get 401."""
+    llm = ScriptedLlm(turns=[[[types.Part.from_text(text="Authorized")]]])
+    set_agent_model_override(llm)
+    secret_settings = Settings(
+        agent_backend="gemini",
+        gemini_api_key="fake",
+        agent_shared_secret="topsecret_token_123",
+    )
+    app = create_app(secret_settings)
+    app.dependency_overrides[get_settings] = lambda: secret_settings
+    client = TestClient(app)
+
+    # 1. Missing header -> 401
+    res1 = client.post("/api/agent", json={"message": "hello"})
+    assert res1.status_code == 401
+    assert res1.json()["error"]["code"] == "UNAUTHORIZED"
+
+    # 2. Invalid header -> 401
+    res2 = client.post(
+        "/api/agent",
+        json={"message": "hello"},
+        headers={"x-agent-shared-secret": "wrong_secret"},
+    )
+    assert res2.status_code == 401
+    assert res2.json()["error"]["code"] == "UNAUTHORIZED"
+
+    # 3. Matching header -> 200 OK
+    res3 = client.post(
+        "/api/agent",
+        json={"message": "hello"},
+        headers={"x-agent-shared-secret": "topsecret_token_123"},
+    )
+    assert res3.status_code == 200
+    set_agent_model_override(None)

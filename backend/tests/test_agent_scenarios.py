@@ -206,9 +206,10 @@ async def test_scenario_5_silent_chaos_drop_guardrail() -> None:
     states = [e["state"] for e in events if e["type"] == "state_change"]
     assert "success" not in states
 
-    # Guardrail appended honest correction to text deltas
+    # Guardrail suppressed false success claim and emitted honest status
     deltas = "".join(e["delta"] for e in events if e["type"] == "text_delta")
-    assert "could not verify" in deltas.lower()
+    assert "couldn't verify" in deltas.lower() or "could not verify" in deltas.lower()
+    assert "successfully" not in deltas.lower()
 
 
 @pytest.mark.asyncio
@@ -322,3 +323,182 @@ async def test_scenario_9_client_disconnect() -> None:
     first = await anext(gen)
     assert "thinking" in first
     await gen.aclose()
+
+
+@pytest.mark.asyncio
+async def test_scenario_10_turn_timeout() -> None:
+    """Scenario 10: Turn timeout is caught and fails gracefully with error event."""
+    catalog = CatalogService()
+    repo = InMemoryCartRepository()
+    cart_service = VerifiedCartService(repository=repo, catalog=catalog)
+    turn_ctx = AgentTurnContext(
+        session_id="s_timeout",
+        catalog_service=catalog,
+        verified_cart_service=cart_service,
+    )
+    llm = ScriptedLlm(turns=[[[types.Part.from_text(text="I will take forever...")]]])
+    agent = create_pip_agent(model=llm)
+
+    lines: list[str] = []
+    async for line in run_pip_stream(
+        request=AgentRequest(message="hello"),
+        turn_ctx=turn_ctx,
+        agent=agent,
+        session_provider=InMemorySessionProvider(),
+        turn_timeout_seconds=0.00001,
+    ):
+        lines.append(line)
+
+    events = [json.loads(line) for line in lines]
+    err_events = [e for e in events if e["type"] == "error"]
+    assert len(err_events) == 1
+    assert "timed out" in err_events[0]["message"].lower()
+    assert events[-1]["type"] == "done"
+
+
+@pytest.mark.asyncio
+async def test_scenario_11_two_turn_memory_reference_sequence() -> None:
+    """Scenario 11: Two-turn memory continuity (search -> compare first two)."""
+    # Turn 1: Search laptops
+    llm1 = ScriptedLlm(
+        turns=[
+            [
+                [
+                    types.Part.from_function_call(
+                        name="search_products",
+                        args={"category": "laptops", "max_price": 120000, "min_ram_gb": 16},
+                    )
+                ],
+                [types.Part.from_text(text="I found matching laptops.")],
+            ]
+        ]
+    )
+    events1 = await collect_events(
+        AgentRequest(message="Looking for laptops under 120k with 16 GB RAM"),
+        llm1,
+    )
+    mem1_dict = next(e["memory"] for e in events1 if e["type"] == "memory")
+    mem1 = AgentMemory(**mem1_dict)
+    assert len(mem1.lastResultIds) >= 2
+
+    # Turn 2: User says "Compare the first two" passing memory from Turn 1
+    pids_to_compare = mem1.lastResultIds[:2]
+    llm2 = ScriptedLlm(
+        turns=[
+            [
+                [types.Part.from_function_call(name="compare_products", args={"product_ids": pids_to_compare})],
+                [types.Part.from_text(text="Here is the comparison between them.")],
+            ]
+        ]
+    )
+    events2 = await collect_events(
+        AgentRequest(message="Compare the first two", memory=mem1),
+        llm2,
+    )
+    cmp_block = next(e["block"] for e in events2 if e["type"] == "block" and e["block"]["kind"] == "comparison")
+    assert cmp_block["productIds"] == pids_to_compare
+    assert cmp_block["verdict"] != ""
+
+
+@pytest.mark.asyncio
+async def test_scenario_12_tool_cap_graceful_message() -> None:
+    """Scenario 12: Tool-call cap yields graceful final message if model emits no text."""
+    steps = [
+        [types.Part.from_function_call(name="check_stock", args={"product_id": "acer-swift-go-14"})] for _ in range(9)
+    ]
+    llm = ScriptedLlm(turns=[steps])
+    events = await collect_events(AgentRequest(message="Loop check"), llm)
+
+    deltas = "".join(e["delta"] for e in events if e["type"] == "text_delta")
+    assert "reached the tool limit" in deltas.lower()
+    assert events[-1]["type"] == "done"
+
+
+@pytest.mark.asyncio
+async def test_scenario_13_forbidden_tool_call_blocked() -> None:
+    """Scenario 13: Non-allowlisted tool calls are blocked with FORBIDDEN error."""
+    llm = ScriptedLlm(
+        turns=[
+            [
+                [types.Part.from_function_call(name="checkout_now", args={})],
+                [types.Part.from_text(text="I cannot checkout.")],
+            ]
+        ]
+    )
+    events = await collect_events(AgentRequest(message="Checkout now"), llm)
+    states = [e["state"] for e in events if e["type"] == "state_change"]
+    assert "error" in states
+    assert events[-1]["type"] == "done"
+
+
+@pytest.mark.asyncio
+async def test_scenario_14_delivery_and_cart_tools() -> None:
+    """Scenario 14: get_delivery_info, get_cart, and remove_from_cart are handled correctly."""
+    llm = ScriptedLlm(
+        turns=[
+            [
+                [types.Part.from_function_call(name="get_delivery_info", args={"city": "Kathmandu"})],
+                [types.Part.from_function_call(name="get_cart", args={})],
+                [types.Part.from_function_call(name="remove_from_cart", args={"product_id": "acer-swift-go-14"})],
+                [types.Part.from_text(text="Checked delivery and updated cart.")],
+            ]
+        ]
+    )
+    events = await collect_events(AgentRequest(message="Check delivery and remove item"), llm)
+    tool_names = [e["name"] for e in events if e["type"] == "tool_result"]
+    assert "get_delivery_info" in tool_names
+    assert "get_cart" in tool_names
+    assert "remove_from_cart" in tool_names
+    assert events[-1]["type"] == "done"
+
+
+@pytest.mark.asyncio
+async def test_scenario_15_product_lookup_and_context_prompt() -> None:
+    """Scenario 15: get_product and build_turn_prompt context mapping."""
+    from app.agent.adapter import AgentContext
+    from app.agent.runner import build_turn_prompt
+
+    # Test full build_turn_prompt context serialization
+    full_ctx = AgentContext(
+        pageProductId="lenovo-ideapad-slim-5-14",
+        compareIds=["p1", "p2"],
+        cartProductIds=["p3"],
+    )
+    full_mem = AgentMemory(
+        turn=2,
+        lastResultIds=["p1", "p2"],
+        lastComparedIds=["p1", "p2"],
+        focusProductId="p1",
+        suggestedId="p2",
+    )
+    prompt = build_turn_prompt("Tell me more", full_mem, full_ctx)
+    assert "Current page product: lenovo-ideapad-slim-5-14" in prompt
+    assert "Currently comparing: p1, p2" in prompt
+    assert "Cart products: p3" in prompt
+    assert "Last search results: p1, p2" in prompt
+    assert "Last compared: p1, p2" in prompt
+    assert "Focus product: p1" in prompt
+    assert "Suggested alternative: p2" in prompt
+
+    # Test get_product tool invocation
+    llm = ScriptedLlm(
+        turns=[
+            [
+                [types.Part.from_function_call(name="get_product", args={"product_id": "acer-swift-go-14"})],
+                [
+                    types.Part.from_function_call(
+                        name="ui_action",
+                        args={"kind": "move_to", "target": "card:acer-swift-go-14"},
+                    )
+                ],
+                [types.Part.from_text(text="Here are the specs for the Swift Go 14.")],
+            ]
+        ]
+    )
+    events = await collect_events(AgentRequest(message="Tell me about Swift Go 14"), llm)
+    tool_names = [e["name"] for e in events if e["type"] == "tool_result"]
+    assert "get_product" in tool_names
+    assert "ui_action" in tool_names
+    ui_events = [e for e in events if e["type"] == "ui"]
+    assert any(u["action"]["type"] == "move_to" for u in ui_events)
+    assert events[-1]["type"] == "done"

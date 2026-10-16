@@ -167,14 +167,15 @@ async def run_pip_stream(
             yield serialize_event(ev) + "\n"
 
         # Code guardrail: Tool limit reached graceful message
-        if turn_ctx.tool_call_count >= 8 and (not message_started or not collected_text.strip()):
-            message_started = True
-            cap_msg = (
-                "I reached the tool limit for this turn. Here is what I found so far. How would you like to proceed?"
-            )
-            yield serialize_event(MessageStartEvent(messageId=message_id)) + "\n"
-            yield serialize_event(TextDeltaEvent(messageId=message_id, delta=cap_msg)) + "\n"
-            collected_text = cap_msg
+        if turn_ctx.tool_call_count >= 8:
+            cap_msg = " I reached the tool limit for this turn. Here is what I found so far."
+            if not message_started:
+                message_started = True
+                yield serialize_event(MessageStartEvent(messageId=message_id)) + "\n"
+                yield serialize_event(TextDeltaEvent(messageId=message_id, delta=cap_msg.strip())) + "\n"
+            else:
+                yield serialize_event(TextDeltaEvent(messageId=message_id, delta=cap_msg)) + "\n"
+            collected_text += cap_msg
 
         # Code guardrail: If verified cart update failed, replace or suppress model text claiming success
         if turn_ctx.last_cart_verified is False:

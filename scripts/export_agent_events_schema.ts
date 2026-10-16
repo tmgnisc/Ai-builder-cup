@@ -6,15 +6,24 @@ import { PIP_STATES } from "../src/components/companion/states";
 const outDir = path.resolve(__dirname, "../backend/tests/fixtures");
 fs.mkdirSync(outDir, { recursive: true });
 
+interface ZodFieldSchema {
+  isOptional?: () => boolean;
+  safeParse: (v: unknown) => { success: boolean };
+  value?: string;
+}
+
+interface ZodOptionSchema {
+  shape: Record<string, ZodFieldSchema>;
+}
+
 // Extract metadata from Zod schema definitions
-const eventSchemas = AgentEventSchema.def.options.map((option: any) => {
+const eventSchemas = (AgentEventSchema.def.options as ZodOptionSchema[]).map((option) => {
   const shape = option.shape;
-  const typeLiteral = shape.type.value;
+  const typeLiteral = shape.type.value ?? "";
   const properties: Record<string, { required: boolean; type?: string }> = {};
 
   for (const [key, value] of Object.entries(shape)) {
-    const val = value as any;
-    const isOptional = typeof val.isOptional === "function" ? val.isOptional() : val.safeParse(undefined).success;
+    const isOptional = typeof value.isOptional === "function" ? value.isOptional() : value.safeParse(undefined).success;
     properties[key] = {
       required: !isOptional,
     };
@@ -23,7 +32,7 @@ const eventSchemas = AgentEventSchema.def.options.map((option: any) => {
   return {
     type: typeLiteral,
     required: Object.entries(properties)
-      .filter(([_, v]) => v.required)
+      .filter(([, v]) => v.required)
       .map(([k]) => k),
     properties: Object.keys(properties),
   };
@@ -31,7 +40,7 @@ const eventSchemas = AgentEventSchema.def.options.map((option: any) => {
 
 const schemaContract = {
   discriminator: AgentEventSchema.def.discriminator,
-  eventTypes: eventSchemas.map((s: any) => s.type),
+  eventTypes: eventSchemas.map((s) => s.type),
   events: eventSchemas,
   pipStates: PIP_STATES,
   blockKinds: ["product_carousel", "comparison", "cart_action", "clarify"],

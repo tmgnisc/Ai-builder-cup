@@ -2,7 +2,7 @@ import fs from "node:fs";
 import path from "node:path";
 import { products } from "../src/data/products";
 import { searchProducts } from "../src/lib/commerce/catalog";
-import { compareProducts } from "../src/lib/commerce/compare";
+import { compareProducts, type CompareKey } from "../src/lib/commerce/compare";
 import type { Product, ProductQuery } from "../src/lib/commerce/schemas";
 
 const outDir = path.resolve(__dirname, "../backend/tests/fixtures");
@@ -90,7 +90,7 @@ const comparisonCases = [
   {
     name: "ideapad_vs_swift_weight_priority",
     productIds: ["lenovo-ideapad-slim-5-14", "acer-swift-go-14"],
-    options: { priorities: ["weight", "price"] as any },
+    options: { priorities: ["weight", "price"] as CompareKey[] },
   },
   {
     name: "three_way_cross_category",
