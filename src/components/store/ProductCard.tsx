@@ -47,8 +47,8 @@ export function ProductCard({ product }: { product: Product }) {
       className={cn(
         "group relative flex flex-col overflow-hidden rounded-[var(--radius-card)] bg-surface transition-[transform,box-shadow] duration-500 ease-[var(--ease-out-expo)] hover:-translate-y-1.5 motion-reduce:hover:translate-y-0",
         rank >= 0
-          ? "shadow-[inset_0_0_0_1.5px_var(--accent-text),0_0_0_4px_color-mix(in_oklab,var(--accent)_18%,transparent),0_24px_48px_-24px_rgb(0_0_0/0.6)]"
-          : "hairline hover:shadow-[inset_0_0_0_1px_var(--border-strong),0_24px_48px_-24px_rgb(0_0_0/0.6)]",
+          ? "shadow-[inset_0_0_0_1.5px_var(--accent-text),0_0_0_4px_color-mix(in_oklab,var(--accent)_18%,transparent),0_24px_48px_-24px_var(--overlay)]"
+          : "hairline hover:shadow-[inset_0_0_0_1px_var(--border-strong),0_24px_48px_-24px_var(--overlay)]",
       )}
     >
       {/* Cursor spotlight */}

@@ -19,11 +19,11 @@ interface Box {
 }
 
 const COLORS: Record<Box["kind"], string> = {
-  anchor: "rgb(61 217 255 / 0.8)",
-  ok: "rgb(198 255 61 / 0.7)",
-  chosen: "rgb(198 255 61 / 1)",
-  bad: "rgb(255 90 90 / 0.7)",
-  avoid: "rgb(255 178 61 / 0.8)",
+  anchor: "var(--color-searching)",
+  ok: "var(--color-success)",
+  chosen: "var(--color-accent)",
+  bad: "var(--color-danger)",
+  avoid: "var(--color-thinking)",
 };
 
 export function AnchorDebug() {

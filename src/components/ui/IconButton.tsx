@@ -8,7 +8,7 @@ export type IconButtonSize = "sm" | "md" | "lg";
 
 const VARIANT: Record<IconButtonVariant, string> = {
   primary:
-    "bg-accent text-accent-fg font-semibold hover:brightness-110 active:brightness-95 shadow-[0_0_0_1px_rgb(0_0_0/0.1),0_8px_24px_-8px_var(--accent)]",
+    "bg-accent text-accent-fg font-semibold hover:brightness-110 active:brightness-95 shadow-[0_0_0_1px_var(--border-strong),0_8px_24px_-8px_var(--accent)]",
   secondary: "bg-surface-2 text-text hairline hover:bg-[color-mix(in_oklab,var(--surface-2),var(--text)_6%)]",
   ghost: "text-muted hover:text-text hover:bg-surface-2",
   outline: "text-text shadow-[inset_0_0_0_1px_var(--border-strong)] hover:shadow-[inset_0_0_0_1px_var(--text)]",

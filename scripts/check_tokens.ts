@@ -12,18 +12,29 @@ const ALLOWLIST = [
   // Documented allowlist: Pip 3D Canvas internals and WebGL shader code
   "src/components/companion/PipCanvas.tsx",
   "src/components/companion/PipRenderer.tsx",
+  "src/components/companion/PipScene.tsx",
+  "src/components/companion/states.ts",
+  // Single source of truth & generated files
   "src/tokens/definitions.ts",
   "src/styles/tokens.css",
   "src/styles/tokens.ts",
+  // Global stylesheet containing base layer definitions
+  "src/styles/globals.css",
 ];
 
-const SCAN_DIRS = ["src/components", "src/app", "src/styles"];
+const SCAN_DIRS = ["src/components", "src/app", "src/styles", "src/lib"];
 
 // Hex color regex: matches #abc, #aabbcc, #aabbccdd, bg-[#...], text-[#...]
 const HEX_REGEX = /#(?:[0-9a-fA-F]{3,8})\b/;
 
 // Arbitrary pixel utility classes: text-[12px], rounded-[8px], size-[18px], h-[24px], etc.
 const ARBITRARY_PX_REGEX = /\b(?:text|rounded|size|gap|p|px|py|pl|pr|pt|pb|m|mx|my|ml|mr|mt|mb|h|w|min-h|min-w|max-h|max-w|top|bottom|left|right|inset)-\[\d+px\]/;
+
+// rgb/rgba/hsl/hsla function calls
+const RGB_HSL_REGEX = /\b(?:rgb|rgba|hsl|hsla)\s*\(/i;
+
+// Hardcoded named color strings in inline style attributes or scripts
+const INLINE_COLOR_REGEX = /\b(?:color|backgroundColor|borderColor|fill|stroke)\s*:\s*["'](?!var\(|currentColor|transparent|inherit|none)[a-zA-Z]{3,}["']/i;
 
 function isAllowlisted(relPath: string): boolean {
   const norm = relPath.replace(/\\/g, "/");
@@ -60,6 +71,28 @@ function scanFile(filePath: string): Violation[] {
         line: lineNum,
         match: pxMatch[0],
         type: "arbitrary-pixel",
+      });
+    }
+
+    // Check rgb/rgba/hsl/hsla function call
+    const rgbHslMatch = lineText.match(RGB_HSL_REGEX);
+    if (rgbHslMatch && !lineText.includes("allowlist-token-ok")) {
+      violations.push({
+        file: relPath,
+        line: lineNum,
+        match: rgbHslMatch[0],
+        type: "raw-rgb-hsl",
+      });
+    }
+
+    // Check inline color literal
+    const inlineMatch = lineText.match(INLINE_COLOR_REGEX);
+    if (inlineMatch && !lineText.includes("allowlist-token-ok")) {
+      violations.push({
+        file: relPath,
+        line: lineNum,
+        match: inlineMatch[0],
+        type: "inline-color",
       });
     }
   });

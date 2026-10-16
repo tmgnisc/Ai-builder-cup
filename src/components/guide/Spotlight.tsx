@@ -96,7 +96,7 @@ export function Spotlight() {
           <rect ref={holeRef} fill="black" />
         </mask>
       </defs>
-      {shown.dim && <rect width="100%" height="100%" fill="rgb(5 6 9 / 0.38)" mask="url(#pip-spotlight-mask)" />}
+      {shown.dim && <rect width="100%" height="100%" fill="var(--overlay)" mask="url(#pip-spotlight-mask)" />}
       <rect
         ref={ringRef}
         fill="none"

@@ -42,7 +42,7 @@ export function CartDrawer() {
       gsap.fromTo(
         row,
         { backgroundColor: "color-mix(in oklab, var(--accent) 22%, transparent)" },
-        { backgroundColor: "rgba(0,0,0,0)", duration: motion.dur(1.4), ease: "power2.out", clearProps: "backgroundColor" },
+        { backgroundColor: "transparent", duration: motion.dur(1.4), ease: "power2.out", clearProps: "backgroundColor" },
       );
     },
     { dependencies: [lastAddedId, peeking, cart?.updatedAt] },

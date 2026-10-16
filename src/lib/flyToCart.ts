@@ -48,7 +48,7 @@ export function flyToCart(source: Element | null): Promise<void> {
     pointerEvents: "none",
     borderRadius: "16px",
     overflow: "hidden",
-    boxShadow: "0 20px 50px -10px rgb(0 0 0 / 0.6), 0 0 0 1px rgb(255 255 255 / 0.12)",
+    boxShadow: "0 20px 50px -10px var(--overlay), 0 0 0 1px var(--border-strong)",
     transformOrigin: "50% 50%",
     willChange: "transform, opacity",
   });
