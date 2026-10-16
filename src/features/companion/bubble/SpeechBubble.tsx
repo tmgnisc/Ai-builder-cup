@@ -2,15 +2,15 @@
 
 import { ArrowUp, Square, X } from "lucide-react";
 import { useEffect, useMemo, useRef, useState } from "react";
-import { Markdown } from "@/components/chat/Markdown";
-import { MicButton } from "@/components/chat/MicButton";
-import { CartActionCard } from "@/components/chat/blocks/CartActionCard";
-import * as pilot from "@/components/companion/pilot";
-import { STATES } from "@/components/companion/states";
+import { Markdown } from "../chat/Markdown";
+import { MicButton } from "../chat/MicButton";
+import { CartActionCard } from "../chat/blocks/CartActionCard";
+import * as pilot from "../pilot";
+import { STATES } from "../states";
 import { IconButton } from "@/components/ui/IconButton";
 import { cn } from "@/lib/cn";
 import { gsap, motion, useReducedMotion } from "@/lib/motion";
-import { useSpotlight } from "@/components/guide/Spotlight";
+import { useSpotlight } from "../guide/Spotlight";
 import { useBubble, type BubbleChip, type BubbleContent } from "@/store/useBubble";
 import { useChat, type ChatMessage } from "@/store/useChat";
 import { useCompanion } from "@/store/useCompanion";

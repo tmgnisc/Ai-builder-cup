@@ -1,7 +1,7 @@
 "use client";
 
 import { create } from "zustand";
-import { STATES, type PipState } from "@/components/companion/states";
+import { STATES, type PipState } from "@/features/companion";
 
 /**
  * Pip's agent-state machine. `state` changes ONLY through `dispatch()` with an event.

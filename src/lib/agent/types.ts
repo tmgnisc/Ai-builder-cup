@@ -1,5 +1,5 @@
 import { z } from "zod";
-import { PIP_STATES } from "@/components/companion/states";
+import { PIP_STATES } from "@/features/companion";
 import { CartLineSchema, CategorySchema } from "@/lib/commerce/schemas";
 
 /**

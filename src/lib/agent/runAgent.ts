@@ -1,4 +1,4 @@
-import type { PipState } from "@/components/companion/states";
+import type { PipState } from "@/features/companion";
 import type { Cart, CartLine } from "@/lib/commerce/schemas";
 import { executeTool, type ToolContext, type ToolInput, type ToolName, type ToolOutcome } from "./tools";
 import type { AgentEvent, AgentMemory, AgentRequest, Block, UIAction } from "./types";

@@ -1,10 +1,6 @@
 import type { Metadata, Viewport } from "next";
 import { Inter, JetBrains_Mono, Unbounded } from "next/font/google";
-import { BubbleLayer } from "@/components/bubble/BubbleLayer";
-import { Spotlight } from "@/components/guide/Spotlight";
-import { AnchorDebug } from "@/components/guide/AnchorDebug";
-import { GuideLayer } from "@/components/guide/GuideLayer";
-import { CompanionLayer } from "@/components/companion/CompanionLayer";
+import { AnchorDebug, BubbleLayer, CompanionLayer, GuideLayer, Spotlight } from "@/features/companion";
 import { ClientBootstrap } from "@/components/layout/ClientBootstrap";
 import { Footer } from "@/components/layout/Footer";
 import { Header } from "@/components/layout/Header";

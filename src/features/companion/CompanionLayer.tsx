@@ -7,7 +7,7 @@ import { ScrambleText } from "@/components/ui/ScrambleText";
 import { gsap } from "@/lib/motion";
 import { startAnchorRegistry } from "@/lib/guide/anchors";
 import { placeCenter } from "@/lib/guide/placement";
-import { openPipPrompt } from "@/components/bubble/BubbleLayer";
+import { openPipPrompt } from "./bubble/BubbleLayer";
 import { useBubble } from "@/store/useBubble";
 import { useCompanion } from "@/store/useCompanion";
 import { findAnchor, usePipPosition } from "@/store/usePipPosition";
@@ -52,7 +52,7 @@ export function CompanionLayer() {
   // Dev-only handle for the playground and browser tests.
   useEffect(() => {
     if (process.env.NODE_ENV === "production") return;
-    void Promise.all([import("@/lib/guide/anchors"), import("@/components/guide/Spotlight"), import("@/lib/guide/placement"), import("@/store/useGuide")]).then(([anchors, spot, placement, guide]) => {
+    void Promise.all([import("@/lib/guide/anchors"), import("./guide/Spotlight"), import("@/lib/guide/placement"), import("@/store/useGuide")]).then(([anchors, spot, placement, guide]) => {
       (window as unknown as { __pip: unknown }).__pip = { position: usePipPosition, spotlight: spot.useSpotlight, anchors, placement, pilot, guide: guide.useGuide };
     });
   }, []);

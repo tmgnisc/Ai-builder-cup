@@ -1,7 +1,7 @@
 import fs from "node:fs";
 import path from "node:path";
 import { AgentEventSchema } from "../src/lib/agent/types";
-import { PIP_STATES } from "../src/components/companion/states";
+import { PIP_STATES } from "../src/features/companion";
 
 const outDir = path.resolve(__dirname, "../backend/tests/fixtures");
 fs.mkdirSync(outDir, { recursive: true });

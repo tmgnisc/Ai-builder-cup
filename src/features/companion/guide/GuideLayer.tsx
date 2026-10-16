@@ -2,8 +2,8 @@
 
 import { usePathname } from "next/navigation";
 import { useEffect } from "react";
-import * as pilot from "@/components/companion/pilot";
-import { pip, pipRuntime } from "@/components/companion/runtime";
+import * as pilot from "../pilot";
+import { pip, pipRuntime } from "../runtime";
 import { getProduct } from "@/lib/commerce/catalog";
 import { anchorAt, getAnchors, mostVisibleAnchor, startAnchorRegistry, subscribeAnchors, type AnchorInfo } from "@/lib/guide/anchors";
 import { afterClose, afterShow, decide, GUIDE_CONFIG, type GuideDecision, type Trigger } from "@/lib/guide/engine";

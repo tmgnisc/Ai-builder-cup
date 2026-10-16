@@ -2,7 +2,7 @@
 
 import { MessageCircle } from "lucide-react";
 import { useRef } from "react";
-import { pip } from "@/components/companion/runtime";
+import { pip } from "@/features/companion";
 import { useChat } from "@/store/useChat";
 
 /** "Ask Pip about this": opens the chat with this product as context (the agent reads the page product). */

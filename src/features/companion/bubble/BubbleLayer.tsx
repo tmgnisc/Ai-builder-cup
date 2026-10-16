@@ -3,7 +3,7 @@
 import { RotateCcw } from "lucide-react";
 import { usePathname, useRouter } from "next/navigation";
 import { useEffect } from "react";
-import { MessageList } from "@/components/chat/MessageList";
+import { MessageList } from "../chat/MessageList";
 import { Drawer } from "@/components/ui/Drawer";
 import { IconButton } from "@/components/ui/IconButton";
 import { suggestionsFor, useBubble } from "@/store/useBubble";

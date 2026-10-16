@@ -3,8 +3,10 @@
 import { Leva, folder, useControls } from "leva";
 import { Copy, Pause, Play, RotateCcw } from "lucide-react";
 import { useEffect, useMemo, useRef, useState } from "react";
-import { pip, pipRuntime, type Reaction } from "@/components/companion/runtime";
 import {
+  pip,
+  pipRuntime,
+  type Reaction,
   BASE_PARAMS,
   EYE_SHAPES,
   PIP_STATES,
@@ -13,7 +15,7 @@ import {
   type EyeShape,
   type PipParams,
   type PipState,
-} from "@/components/companion/states";
+} from "@/features/companion";
 import { Button } from "@/components/ui/Button";
 import { tokenDefinitions } from "@/tokens/definitions";
 import { cn } from "@/lib/cn";

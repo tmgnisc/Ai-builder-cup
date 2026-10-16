@@ -1,7 +1,7 @@
 "use client";
 
 import { create } from "zustand";
-import { pip } from "@/components/companion/runtime";
+import { pip } from "@/features/companion";
 import { startMicMeter } from "@/lib/audio";
 import { isRecognitionSupported, listen, speak } from "@/lib/speech";
 import { useCompanion } from "./useCompanion";

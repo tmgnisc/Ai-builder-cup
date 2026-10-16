@@ -2,8 +2,7 @@
 
 import { useAnchors } from "@/lib/guide/anchors";
 import { ProductImage } from "@/features/catalog";
-import { useDebugOverlay } from "@/components/guide/AnchorDebug";
-import { startTour } from "@/components/guide/tour";
+import { useDebugOverlay, startTour } from "@/features/companion";
 import { Button } from "@/components/ui/Button";
 import { getProduct } from "@/lib/commerce/catalog";
 import { formatNPR } from "@/lib/commerce/format";

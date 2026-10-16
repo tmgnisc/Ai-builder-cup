@@ -1,7 +1,7 @@
 "use client";
 
-import { useSpotlight } from "@/components/guide/Spotlight";
-import { pip } from "@/components/companion/runtime";
+import { useSpotlight } from "./Spotlight";
+import { pip } from "../runtime";
 import { motion } from "@/lib/motion";
 import { useBubble } from "@/store/useBubble";
 import { markTourDone, useGuide } from "@/store/useGuide";

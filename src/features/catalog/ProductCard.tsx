@@ -3,7 +3,7 @@
 import { Loader2, Plus, Sparkles } from "lucide-react";
 import Link from "next/link";
 import { useRef } from "react";
-import { pip } from "@/components/companion/runtime";
+import { pip } from "@/features/companion";
 import { StockBadge } from "@/components/ui/Badge";
 import { cn } from "@/lib/cn";
 import { formatNPR, keySpecs } from "@/lib/commerce/format";

@@ -2,7 +2,7 @@
 
 import { useEffect, useRef, useState } from "react";
 import { create } from "zustand";
-import { pip } from "@/components/companion/runtime";
+import { pip } from "../runtime";
 import { gsap, motion } from "@/lib/motion";
 
 /**

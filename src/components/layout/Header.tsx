@@ -1,7 +1,7 @@
 import Link from "next/link";
 import { CATEGORIES } from "@/lib/commerce/schemas";
 import { CartButton } from "@/features/cart";
-import { PipHeaderControls } from "./PipHeaderControls";
+import { PipHeaderControls } from "@/features/companion";
 import { ThemeToggle } from "./ThemeToggle";
 
 export function Logo() {

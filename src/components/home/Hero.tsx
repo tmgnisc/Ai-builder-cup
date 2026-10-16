@@ -2,7 +2,7 @@
 
 import { ArrowUp } from "lucide-react";
 import { useRef, useState } from "react";
-import { MicButton } from "@/components/chat/MicButton";
+import { MicButton } from "@/features/companion";
 import { useChat } from "@/store/useChat";
 import { gsap, motion, SplitText, useGSAP } from "@/lib/motion";
 import { useMagnetic } from "@/lib/useMagnetic";

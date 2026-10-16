@@ -1,6 +1,6 @@
 "use client";
 
-import { STATES } from "@/components/companion/states";
+import { STATES } from "../states";
 import { cn } from "@/lib/cn";
 import { useCompanion } from "@/store/useCompanion";
 

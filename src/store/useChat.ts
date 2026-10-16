@@ -3,7 +3,7 @@
 import { create } from "zustand";
 import { streamAgent } from "@/lib/agent/client";
 import { EMPTY_MEMORY, type AgentEvent, type AgentMemory, type Block, type UIAction } from "@/lib/agent/types";
-import { useSpotlight } from "@/components/guide/Spotlight";
+import { useSpotlight } from "@/features/companion";
 import { flyToCart } from "@/lib/flyToCart";
 import { motion } from "@/lib/motion";
 import { useBubble } from "./useBubble";

@@ -10,10 +10,10 @@ interface Violation {
 
 const ALLOWLIST = [
   // Documented allowlist: Pip 3D Canvas internals and WebGL shader code
-  "src/components/companion/PipCanvas.tsx",
-  "src/components/companion/PipRenderer.tsx",
-  "src/components/companion/PipScene.tsx",
-  "src/components/companion/states.ts",
+  "src/features/companion/PipCanvas.tsx",
+  "src/features/companion/PipRenderer.tsx",
+  "src/features/companion/PipScene.tsx",
+  "src/features/companion/states.ts",
   // Single source of truth & generated files
   "src/tokens/definitions.ts",
   "src/styles/tokens.css",
@@ -22,7 +22,7 @@ const ALLOWLIST = [
   "src/styles/globals.css",
 ];
 
-const SCAN_DIRS = ["src/components", "src/app", "src/styles", "src/lib"];
+const SCAN_DIRS = ["src/features", "src/components", "src/app", "src/styles", "src/lib"];
 
 // Hex color regex: matches #abc, #aabbcc, #aabbccdd, bg-[#...], text-[#...]
 const HEX_REGEX = /#(?:[0-9a-fA-F]{3,8})\b/;
