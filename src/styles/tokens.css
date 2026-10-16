@@ -33,11 +33,14 @@
   --z-elevated: 20;
   --z-sticky: 30;
   --z-drawer: 40;
-  --z-popover: 50;
-  --z-bubble: 55;
-  --z-modal: 60;
-  --z-toast: 70;
-  --z-spotlight: 80;
+  --z-modal: 50;
+  --z-orb: 55;
+  --z-popover: 60;
+  --z-bubble: 65;
+  --z-dialog: 70;
+  --z-tooltip: 75;
+  --z-toast: 80;
+  --z-spotlight: 85;
   --z-grain: 100;
 
   /* Motion */
@@ -68,11 +71,11 @@
   --accent-text: #4a7300;
   --accent-fg: #0a0b0f;
 
-  --state-listening: #00a86b;
-  --state-thinking: #c77700;
-  --state-searching: #0091b8;
+  --state-listening: #047857;
+  --state-thinking: #92400e;
+  --state-searching: #075985;
   --state-success: #4a7300;
-  --state-error: #d93636;
+  --state-error: #b91c1c;
 
   --glass: rgb(255 255 255 / 0.7);
   --glass-border: rgb(10 11 15 / 0.08);
@@ -127,21 +130,22 @@
 }
 
 @utility hero-headline {
-  font-size: clamp(2.4rem, 6vw, 4.75rem);
-  line-height: 1.02;
+  font-size: clamp(2rem, 5vw, 3.5rem);
+  line-height: 1.1;
   letter-spacing: -0.03em;
 }
 
 @utility grid-cols-hero {
-  grid-template-columns: 1.1fr 0.9fr;
+  grid-template-columns: 1fr 280px;
 }
 
 @utility product-detail-grid {
-  grid-template-columns: 1.15fr 1fr;
+  grid-template-columns: 1fr 380px;
 }
 
 @utility product-detail-title {
-  font-size: clamp(1.8rem, 3.5vw, 2.75rem);
+  font-size: clamp(1.5rem, 3vw, 2.25rem);
+  line-height: 1.2;
   letter-spacing: -0.02em;
 }
 
@@ -181,12 +185,8 @@
   transform: translateY(calc(100% + 24px));
 }
 
-@utility max-w-chat-user {
-  max-width: 85%;
-}
-
 @utility compare-tray-w-mobile {
-  max-width: calc(100vw - 160px);
+  max-width: calc(100vw - 32px);
 }
 
 @utility compare-tray-w-desktop {
@@ -194,19 +194,27 @@
 }
 
 @utility compare-grid-2 {
-  grid-template-columns: auto 1fr 1fr;
+  grid-template-columns: minmax(72px, 96px) 1fr 1fr;
 }
 
 @utility compare-grid-3 {
-  grid-template-columns: auto 1fr 1fr 1fr;
+  grid-template-columns: minmax(72px, 96px) 1fr 1fr 1fr;
 }
 
 @utility compare-card-grid-2 {
-  grid-template-columns: 72px 1fr 1fr;
+  grid-template-columns: minmax(72px, 96px) 1fr 1fr;
 }
 
 @utility compare-card-grid-3 {
-  grid-template-columns: 72px 1fr 1fr 1fr;
+  grid-template-columns: minmax(72px, 96px) 1fr 1fr 1fr;
+}
+
+@utility compare-grid-4 {
+  grid-template-columns: minmax(72px, 96px) 1fr 1fr 1fr 1fr;
+}
+
+@utility compare-card-grid-4 {
+  grid-template-columns: minmax(72px, 96px) 1fr 1fr 1fr 1fr;
 }
 
 @utility compare-col {
@@ -225,3 +233,62 @@
   grid-template-columns: 3fr 2fr;
 }
 
+@utility max-w-chat-user {
+  max-width: 82%;
+}
+
+@utility z-base {
+  z-index: var(--z-base);
+}
+
+@utility z-dock {
+  z-index: var(--z-dock);
+}
+
+@utility z-elevated {
+  z-index: var(--z-elevated);
+}
+
+@utility z-sticky {
+  z-index: var(--z-sticky);
+}
+
+@utility z-drawer {
+  z-index: var(--z-drawer);
+}
+
+@utility z-modal {
+  z-index: var(--z-modal);
+}
+
+@utility z-orb {
+  z-index: var(--z-orb);
+}
+
+@utility z-popover {
+  z-index: var(--z-popover);
+}
+
+@utility z-bubble {
+  z-index: var(--z-bubble);
+}
+
+@utility z-dialog {
+  z-index: var(--z-dialog);
+}
+
+@utility z-tooltip {
+  z-index: var(--z-tooltip);
+}
+
+@utility z-toast {
+  z-index: var(--z-toast);
+}
+
+@utility z-spotlight {
+  z-index: var(--z-spotlight);
+}
+
+@utility z-grain {
+  z-index: var(--z-grain);
+}

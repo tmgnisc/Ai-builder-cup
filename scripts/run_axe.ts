@@ -1,7 +1,11 @@
 import { chromium, type Page } from "playwright";
 import AxeBuilder from "@axe-core/playwright";
+import fs from "node:fs";
+import path from "node:path";
 
-const baseUrl = process.env.BASE_URL || "http://localhost:3000";
+const baseUrl = process.env.BASE_URL || "http://localhost:3001";
+const reportsDir = path.resolve(process.cwd(), ".axe-reports");
+fs.mkdirSync(reportsDir, { recursive: true });
 
 interface PageAudit {
   name: string;
@@ -13,6 +17,13 @@ const PAGES: PageAudit[] = [
   {
     name: "Home",
     path: "/",
+    prepare: async (page) => {
+      // Ensure Pip tour bubble is open during home audit
+      await page.evaluate(() => {
+        (window as unknown as Record<string, () => void>).__offerTour?.();
+      });
+      await page.waitForTimeout(500);
+    },
   },
   {
     name: "Product Detail",
@@ -22,18 +33,24 @@ const PAGES: PageAudit[] = [
     name: "Compare Drawer",
     path: "/",
     prepare: async (page) => {
-      const compareButtons = page.locator("button[title='Compare']");
-      const count = await compareButtons.count();
-      if (count >= 2) {
-        await compareButtons.nth(0).click({ force: true });
-        await page.waitForTimeout(200);
-        await compareButtons.nth(1).click({ force: true });
-        await page.waitForTimeout(400);
-        const openCompare = page.locator("button:has-text('Compare 2')");
-        if (await openCompare.count()) {
-          await openCompare.click({ force: true, timeout: 5000 });
-          await page.waitForTimeout(500);
-        }
+      // Open compare drawer and Pip bubble over drawer
+      await page.evaluate(() => {
+        (window as unknown as Record<string, { getState: () => { show: (ids: string[]) => void } }>).__useCompare?.getState().show(["lenovo-ideapad-slim-5-14", "acer-swift-go-14"]);
+        (window as unknown as Record<string, () => void>).__offerTour?.();
+      });
+      await page.waitForSelector("[role='dialog']", { state: "visible", timeout: 8000 }).catch(() => {});
+      await page.waitForTimeout(600);
+    },
+  },
+  {
+    name: "Cart Drawer",
+    path: "/",
+    prepare: async (page) => {
+      const cartBtn = page.locator("#cart-button");
+      if (await cartBtn.count()) {
+        await cartBtn.click({ force: true });
+        await page.waitForSelector("[role='dialog']", { state: "visible", timeout: 8000 }).catch(() => {});
+        await page.waitForTimeout(500);
       }
     },
   },
@@ -92,10 +109,13 @@ async function run() {
 
         const axe = new AxeBuilder({ page })
           .withTags(["wcag2a", "wcag2aa", "wcag21a", "wcag21aa"])
-          .exclude('[data-pip-canvas]') // Exclude 3D WebGL canvas internals which don't have DOM semantics
-          .disableRules(["color-contrast"]); // Contrast is token-controlled and verified via design system
+          .exclude("[data-pip-canvas]"); // Exclude 3D WebGL canvas internals which don't have DOM semantics
 
         const results = await axe.analyze();
+
+        // Save raw JSON result
+        const jsonFileName = `${p.name.replace(/\s+/g, "_").toLowerCase()}_${theme}.json`;
+        fs.writeFileSync(path.join(reportsDir, jsonFileName), JSON.stringify(results, null, 2), "utf-8");
 
         const counts = {
           critical: results.violations.filter((v) => v.impact === "critical").length,

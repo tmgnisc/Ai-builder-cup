@@ -319,12 +319,15 @@ function TypedText({ text }: { text: string }) {
   const reduced = useReducedMotion();
   const [n, setN] = useState(reduced ? text.length : 0);
   useEffect(() => {
-    if (reduced) return;
-    const id = window.setInterval(() => setN((v) => (v >= text.length ? (window.clearInterval(id), v) : v + 2)), 16);
+    if (reduced) {
+      setN(text.length);
+      return;
+    }
+    const id = window.setInterval(() => setN((v) => (v >= text.length ? (window.clearInterval(id), v) : v + 4)), 16);
     return () => window.clearInterval(id);
   }, [text, reduced]);
   return (
-    <p className="text-sm leading-relaxed">
+    <p className="text-sm leading-relaxed break-words">
       <Markdown text={text.slice(0, n)} />
       <span className="sr-only">{text.replace(/\*\*/g, "")}</span>
     </p>

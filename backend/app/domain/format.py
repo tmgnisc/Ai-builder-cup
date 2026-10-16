@@ -29,17 +29,18 @@ def format_npr(amount: float, prefix: bool = True) -> str:
     return f"NPR {formatted}" if prefix else formatted
 
 
-def format_weight(grams: int) -> str:
-    if grams >= 1000:
+def format_weight(grams: int | float, unit: Literal["kg", "g"] | None = None) -> str:
+    if unit == "kg" or (unit is None and grams >= 1000):
         val = f"{grams / 1000:.2f}".rstrip("0").rstrip(".")
         return f"{val} kg"
-    return f"{grams} g"
+    return f"{int(round(grams))} g"
 
 
-def format_storage(gb: int) -> str:
-    if gb >= 1000:
-        return f"{int(round(gb / 1000))} TB"
-    return f"{gb} GB"
+def format_storage(gb: int | float, unit: Literal["TB", "GB"] | None = None) -> str:
+    if unit == "TB" or (unit is None and gb >= 1000):
+        val = f"{gb / 1000:.1f}".rstrip("0").rstrip(".")
+        return f"{val} TB"
+    return f"{int(round(gb))} GB"
 
 
 def format_warranty(months: int) -> str:

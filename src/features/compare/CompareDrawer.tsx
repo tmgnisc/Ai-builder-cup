@@ -1,6 +1,6 @@
 "use client";
 
-import { Loader2, Plus, Trophy, X } from "lucide-react";
+import { Check, Loader2, Plus, Trophy, X } from "lucide-react";
 import Link from "next/link";
 import { useRef } from "react";
 import { StockBadge } from "@/components/ui/Badge";
@@ -41,16 +41,9 @@ export function CompareDrawer() {
     () => {
       if (!open || !tableRef.current || motion.reduced) return;
       const rows = tableRef.current.querySelectorAll("[data-row]");
-      const winners = tableRef.current.querySelectorAll("[data-winner]");
       const tl = gsap.timeline({ delay: 0.25 });
       tl.from("[data-verdict]", { autoAlpha: 0, y: 12, duration: 0.6, ease: "expo.out" })
-        .from(rows, { autoAlpha: 0, x: -14, duration: 0.5, ease: "expo.out", stagger: 0.06 }, 0.1)
-        .fromTo(
-          winners,
-          { backgroundColor: "color-mix(in oklab, var(--accent) 45%, transparent)" },
-          { backgroundColor: "color-mix(in oklab, var(--accent) 12%, transparent)", duration: 0.9, ease: "power2.out", stagger: 0.06 },
-          0.35,
-        );
+        .from(rows, { autoAlpha: 0, x: -14, duration: 0.5, ease: "expo.out", stagger: 0.05 }, 0.1);
     },
     { dependencies: [open, ids.join(",")], scope: tableRef, revertOnUpdate: true },
   );
@@ -106,13 +99,20 @@ export function CompareDrawer() {
                           role="cell"
                           data-winner={win ? "" : undefined}
                           className={cn(
-                            "min-w-0 break-words rounded-lg px-2 py-1 font-mono text-xs",
-                            win && "bg-accent/12 font-semibold text-accent-text",
+                            "min-w-0 break-words rounded-md px-2 py-1 font-mono text-xs transition-colors",
+                            win
+                              ? "bg-accent/8 font-semibold text-accent-text shadow-[inset_0_0_0_1px_color-mix(in_oklab,var(--accent)_20%,transparent)]"
+                              : "text-text",
                             !row.numeric && "text-xs leading-snug text-muted",
                           )}
                         >
                           {row.values[p.id]}
-                          {win && <span className="sr-only"> (best)</span>}
+                          {win && (
+                            <span className="ml-1 inline-flex items-center gap-0.5 align-middle">
+                              <Check className="size-3 text-accent-text" aria-hidden />
+                              <span className="sr-only"> (best value)</span>
+                            </span>
+                          )}
                         </span>
                       );
                     })}
@@ -133,7 +133,7 @@ function ProductHeader({ product, isWinner, onRemove }: { product: Product; isWi
   const busy = useCart((s) => s.pending.includes(product.id));
   const out = product.stock === 0;
   return (
-    <div role="columnheader" className="relative flex min-w-0 compare-col flex-col gap-2">
+    <div role="columnheader" className="relative flex min-w-0 flex-col gap-2">
       <div ref={imgRef} className="relative h-28 overflow-hidden rounded-xl hairline">
         <ProductImage product={product} variant="compare" />
         {isWinner && (
@@ -153,19 +153,19 @@ function ProductHeader({ product, isWinner, onRemove }: { product: Product; isWi
       </div>
       <div className="min-w-0">
         <p className="text-xs text-muted">{product.brand}</p>
-        <Link href={`/product/${product.id}`} className="line-clamp-1 font-display text-sm font-medium hover:underline">
+        <Link href={`/product/${product.id}`} className="font-display text-sm font-medium hover:underline break-words">
           {product.name}
         </Link>
       </div>
       <div className="flex items-center justify-between gap-2">
-        <StockBadge stock={product.stock} />
+        <StockBadge stock={product.stock} className="whitespace-nowrap shrink-0" />
         <IconButton
           size="sm"
           variant="primary"
           disabled={out || busy}
           onClick={() => addWithFeedback(product.id, imgRef.current)}
           aria-label={out ? `${product.name} is out of stock` : `Add ${product.name} to cart (${formatNPR(product.price)})`}
-          className="size-8"
+          className="size-8 shrink-0"
         >
           {busy ? <Loader2 className="size-3.5 animate-spin" aria-hidden /> : <Plus className="size-3.5" aria-hidden />}
         </IconButton>

@@ -65,7 +65,7 @@ class GetProductInput(BaseModel):
 
 
 class CompareProductsInput(BaseModel):
-    productIds: list[str] = Field(min_length=2, max_length=3)
+    productIds: list[str] = Field(min_length=2, max_length=4)
     priorities: list[CompareKey] | None = None
     context: str | None = None
 

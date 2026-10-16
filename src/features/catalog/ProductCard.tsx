@@ -54,7 +54,7 @@ export function ProductCard({ product }: { product: Product }) {
       {/* Cursor spotlight */}
       <span
         aria-hidden
-        className="pointer-events-none absolute inset-0 z-[1] opacity-0 transition-opacity duration-300 group-hover:opacity-100"
+        className="pointer-events-none absolute inset-0 z-base opacity-0 transition-opacity duration-300 group-hover:opacity-100"
         style={{ background: "radial-gradient(420px circle at var(--mx, 50%) var(--my, 50%), var(--spotlight), transparent 45%)" }}
       />
 

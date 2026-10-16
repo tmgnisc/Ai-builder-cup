@@ -43,9 +43,12 @@ function generateCSS(): string {
   --z-elevated: ${zIndex.elevated};
   --z-sticky: ${zIndex.sticky};
   --z-drawer: ${zIndex.drawer};
+  --z-modal: ${zIndex.modal};
+  --z-orb: ${zIndex.orb};
   --z-popover: ${zIndex.popover};
   --z-bubble: ${zIndex.bubble};
-  --z-modal: ${zIndex.modal};
+  --z-dialog: ${zIndex.dialog};
+  --z-tooltip: ${zIndex.tooltip};
   --z-toast: ${zIndex.toast};
   --z-spotlight: ${zIndex.spotlight};
   --z-grain: ${zIndex.grain};
@@ -135,6 +138,170 @@ function generateCSS(): string {
 @utility max-w-page {
   max-width: ${tokenDefinitions.layout.container};
 }
+
+@utility hero-headline {
+  font-size: clamp(2rem, 5vw, 3.5rem);
+  line-height: 1.1;
+  letter-spacing: -0.03em;
+}
+
+@utility grid-cols-hero {
+  grid-template-columns: 1fr 280px;
+}
+
+@utility product-detail-grid {
+  grid-template-columns: 1fr 380px;
+}
+
+@utility product-detail-title {
+  font-size: clamp(1.5rem, 3vw, 2.25rem);
+  line-height: 1.2;
+  letter-spacing: -0.02em;
+}
+
+@utility store-grid {
+  grid-template-columns: 240px minmax(0, 1fr);
+}
+
+@utility grid-cols-checkout {
+  grid-template-columns: 1fr 300px;
+}
+
+@utility bubble-width {
+  width: min(340px, calc(100vw - 24px));
+}
+
+@utility bubble-max-h {
+  max-height: 62dvh;
+}
+
+@utility drawer-width {
+  width: min(420px, calc(100vw - 24px));
+}
+
+@utility drawer-bottom-h {
+  max-height: min(80dvh, 720px);
+}
+
+@utility drawer-closed-right {
+  transform: translateX(calc(100% + 24px));
+}
+
+@utility drawer-closed-left {
+  transform: translateX(calc(-100% - 24px));
+}
+
+@utility drawer-closed-bottom {
+  transform: translateY(calc(100% + 24px));
+}
+
+@utility compare-tray-w-mobile {
+  max-width: calc(100vw - 32px);
+}
+
+@utility compare-tray-w-desktop {
+  max-width: calc(100vw - 260px);
+}
+
+@utility compare-grid-2 {
+  grid-template-columns: minmax(72px, 96px) 1fr 1fr;
+}
+
+@utility compare-grid-3 {
+  grid-template-columns: minmax(72px, 96px) 1fr 1fr 1fr;
+}
+
+@utility compare-card-grid-2 {
+  grid-template-columns: minmax(72px, 96px) 1fr 1fr;
+}
+
+@utility compare-card-grid-3 {
+  grid-template-columns: minmax(72px, 96px) 1fr 1fr 1fr;
+}
+
+@utility compare-grid-4 {
+  grid-template-columns: minmax(72px, 96px) 1fr 1fr 1fr 1fr;
+}
+
+@utility compare-card-grid-4 {
+  grid-template-columns: minmax(72px, 96px) 1fr 1fr 1fr 1fr;
+}
+
+@utility compare-col {
+  min-width: 140px;
+}
+
+@utility funnel-grid-desktop {
+  grid-template-columns: minmax(0, 9.5rem) 1fr 4.5rem;
+}
+
+@utility funnel-grid-mobile {
+  grid-template-columns: minmax(0, 7rem) 1fr 3.75rem;
+}
+
+@utility merchant-dashboard-grid {
+  grid-template-columns: 3fr 2fr;
+}
+
+@utility max-w-chat-user {
+  max-width: 82%;
+}
+
+@utility z-base {
+  z-index: var(--z-base);
+}
+
+@utility z-dock {
+  z-index: var(--z-dock);
+}
+
+@utility z-elevated {
+  z-index: var(--z-elevated);
+}
+
+@utility z-sticky {
+  z-index: var(--z-sticky);
+}
+
+@utility z-drawer {
+  z-index: var(--z-drawer);
+}
+
+@utility z-modal {
+  z-index: var(--z-modal);
+}
+
+@utility z-orb {
+  z-index: var(--z-orb);
+}
+
+@utility z-popover {
+  z-index: var(--z-popover);
+}
+
+@utility z-bubble {
+  z-index: var(--z-bubble);
+}
+
+@utility z-dialog {
+  z-index: var(--z-dialog);
+}
+
+@utility z-tooltip {
+  z-index: var(--z-tooltip);
+}
+
+@utility z-toast {
+  z-index: var(--z-toast);
+}
+
+@utility z-spotlight {
+  z-index: var(--z-spotlight);
+}
+
+@utility z-grain {
+  z-index: var(--z-grain);
+}
 `;
 }
 
@@ -172,17 +339,18 @@ export const tokens = {
     },
   },
   zIndex: {
-    base: 0,
-    dock: 10,
-    elevated: 20,
-    sticky: 30,
-    drawer: 40,
-    popover: 50,
-    bubble: 55,
-    modal: 60,
-    toast: 70,
-    spotlight: 80,
-    grain: 100,
+    base: ${tokenDefinitions.zIndex.base},
+    dock: ${tokenDefinitions.zIndex.dock},
+    elevated: ${tokenDefinitions.zIndex.elevated},
+    sticky: ${tokenDefinitions.zIndex.sticky},
+    drawer: ${tokenDefinitions.zIndex.drawer},
+    modal: ${tokenDefinitions.zIndex.modal},
+    orb: ${tokenDefinitions.zIndex.orb},
+    popover: ${tokenDefinitions.zIndex.popover},
+    bubble: ${tokenDefinitions.zIndex.bubble},
+    toast: ${tokenDefinitions.zIndex.toast},
+    spotlight: ${tokenDefinitions.zIndex.spotlight},
+    grain: ${tokenDefinitions.zIndex.grain},
   },
   durations: {
     instant: 0,

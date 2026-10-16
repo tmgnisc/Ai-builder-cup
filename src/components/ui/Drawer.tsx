@@ -93,7 +93,7 @@ export function Drawer({
   if (!mounted) return null;
 
   return createPortal(
-    <div className={cn("fixed inset-0", modal ? "z-60" : "z-40", (!open || !modal) && "pointer-events-none")} inert={!open}>
+    <div className={cn("fixed inset-0", modal ? "z-modal" : "z-drawer", (!open || !modal) && "pointer-events-none")} inert={!open}>
       <div
         aria-hidden
         onClick={() => onOpenChange(false)}
@@ -106,7 +106,8 @@ export function Drawer({
         ref={panelRef}
         role="dialog"
         aria-modal={modal}
-        data-drawer-open={open}
+        data-drawer-open={open ? "true" : "false"}
+        data-sheet-open={open ? "true" : "false"}
         onPointerEnter={onPanelPointerEnter}
         onPointerDown={onPanelPointerDown}
         aria-labelledby={titleId}

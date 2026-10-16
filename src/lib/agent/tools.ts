@@ -92,9 +92,9 @@ export const TOOLS = {
   }),
 
   compare_products: tool({
-    description: "Compare 2–3 products attribute by attribute using catalog values only, with a grounded verdict.",
+    description: "Compare 2–4 products attribute by attribute using catalog values only, with a grounded verdict.",
     input: z.object({
-      productIds: z.array(z.string()).min(2).max(3),
+      productIds: z.array(z.string()).min(2).max(4),
       priorities: z.array(CompareKeySchema).optional(),
       context: z.string().optional(),
     }),

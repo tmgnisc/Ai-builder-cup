@@ -83,6 +83,10 @@ export const useBubble = create<BubbleState>()((set, get) => ({
   setInputOpen: (inputOpen) => set({ inputOpen }),
 }));
 
+if (typeof window !== "undefined") {
+  (window as unknown as Record<string, unknown>).__useBubble = useBubble;
+}
+
 /** Contextual suggestions when the user opens Pip on a given page. */
 export function suggestionsFor(pathname: string): string[] {
   if (pathname.startsWith("/product/")) return ["Is this good for coding?", "Compare specs with similar models", "Check Valley delivery & stock"];

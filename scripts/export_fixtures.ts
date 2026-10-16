@@ -108,6 +108,11 @@ const comparisonCases = [
     options: {},
   },
   {
+    name: "thinkpad_vs_macbook_oos_winner",
+    productIds: ["lenovo-thinkpad-e14-g6", "apple-macbook-air-m3-13"],
+    options: {},
+  },
+  {
     name: "single_product",
     productIds: ["lenovo-ideapad-slim-5-14"],
     options: {},

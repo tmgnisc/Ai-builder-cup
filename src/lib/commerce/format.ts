@@ -8,12 +8,18 @@ export function formatNPR(amount: number, { prefix = true }: { prefix?: boolean 
   return prefix ? `NPR ${n}` : n;
 }
 
-export function formatWeight(grams: number): string {
-  return grams >= 1000 ? `${(grams / 1000).toFixed(2).replace(/\.?0+$/, "")} kg` : `${grams} g`;
+export function formatWeight(grams: number, { unit }: { unit?: "kg" | "g" } = {}): string {
+  if (unit === "kg" || (!unit && grams >= 1000)) {
+    return `${(grams / 1000).toFixed(2).replace(/\.?0+$/, "")} kg`;
+  }
+  return `${grams} g`;
 }
 
-export function formatStorage(gb: number): string {
-  return gb >= 1000 ? `${Math.round(gb / 1000)} TB` : `${gb} GB`;
+export function formatStorage(gb: number, { unit }: { unit?: "TB" | "GB" } = {}): string {
+  if (unit === "TB" || (!unit && gb >= 1000)) {
+    return `${(gb / 1000).toFixed(1).replace(/\.0$/, "")} TB`;
+  }
+  return `${gb} GB`;
 }
 
 export function formatWarranty(months: number): string {

@@ -131,7 +131,7 @@ TOOLS: dict[str, ToolDefinition[Any, Any]] = {
     ),
     "compare_products": ToolDefinition(
         name="compare_products",
-        description=("Compare 2–3 products attribute by attribute using catalog values only, with a grounded verdict."),
+        description=("Compare 2–4 products attribute by attribute using catalog values only, with a grounded verdict."),
         input_model=CompareProductsInput,
         output_model=CompareProductsOutput,
         handler=handle_compare_products,

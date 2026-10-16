@@ -146,6 +146,12 @@ def compare_products(
         i = prios.index(k)
         return 3.0 + (len(prios) - i) * 0.25
 
+    categories: list[str] = []
+    for p in products:
+        if p.category not in categories:
+            categories.append(p.category)
+    is_cross_category = len(categories) > 1
+
     for attr in NUMERIC_ATTR_DEFS:
         vals = [_get_numeric_val(p, attr.key) for p in products]
         if all(v is None for v in vals):
@@ -160,10 +166,19 @@ def compare_products(
             else [products[i].id for i, v in enumerate(vals) if v is not None and abs(v - best) < attr.epsilon]
         )
 
+        use_kg = attr.key == "weight" and any(v >= 1000 for v in present)
+        use_tb = attr.key == "storage" and any(v >= 1000 for v in present)
         row_values: dict[str, str] = {}
         for i, p in enumerate(products):
             val = vals[i]
-            row_values[p.id] = "—" if val is None else _format_numeric_val(val, attr.key)
+            if val is None:
+                row_values[p.id] = "—"
+            elif attr.key == "weight":
+                row_values[p.id] = format_weight(val, unit="kg" if use_kg else "g")
+            elif attr.key == "storage":
+                row_values[p.id] = format_storage(val, unit="TB" if use_tb else "GB")
+            else:
+                row_values[p.id] = _format_numeric_val(val, attr.key)
 
         rows.append(
             CompareRow(
@@ -217,14 +232,62 @@ def compare_products(
     for pid in ids:
         advantages[pid].sort(key=lambda a: float(a["weight"]), reverse=True)
 
+    # --------------------------------------------------------------------------
+    # VERDICT SCORING SCALE & DECISION RULES:
+    #
+    # 1. Point Scale:
+    #    - Each numeric attribute won awards points based on priority:
+    #      - Non-prioritized attribute: 1.0 point
+    #      - Prioritized attribute (rank i in priorities of length N):
+    #        weight = 3.0 + (N - i) * 0.25
+    #        (e.g., for default [price, battery, weight]: price = 3.75, battery = 3.5, weight = 3.25)
+    #    - Total score is cumulative sum of weighted attribute wins.
+    #
+    # 2. Ranking & Ties:
+    #    - Products are ranked in descending order of total score.
+    #    - If |score[top] - score[second]| < 0.5, declared a genuine tie (winner_id = None).
+    #
+    # 3. Cross-Category Guard:
+    #    - Comparing across multiple categories invalidates ranking (winner_id = None).
+    #
+    # 4. Out-of-Stock (OOS) Winner & 2.0 Margin Rule:
+    #    - When top-scoring product is out of stock (stock == 0):
+    #      a. In-Stock Preference (margin <= 2.0):
+    #         If runner-up is in stock (stock > 0) and margin <= 2.0 (e.g. 2.0, 1.0),
+    #         in-stock runner-up is crowned winner (winner_id = second).
+    #      b. Spec Superiority Maintained (margin > 2.0):
+    #         If margin > 2.0, top product remains winner_id on specs, but verdict
+    #         explicitly notes "(currently out of stock)".
+    #      c. All Out of Stock:
+    #         If all products are out of stock, highest scoring product wins with
+    #         "(currently out of stock)".
+    # --------------------------------------------------------------------------
     ranked = sorted(ids, key=lambda pid: scores[pid], reverse=True)
     top = ranked[0] if ranked else None
     second = ranked[1] if len(ranked) > 1 else None
     tie = not top or not second or abs(scores[top] - scores[second]) < 0.5
-    winner_id = None if tie else top
+
+    winner_id: str | None = None
+    preferred_in_stock = False
+
+    if not is_cross_category and top:
+        top_prod = by_id[top]
+        second_prod = by_id[second] if second else None
+        margin = scores[top] - scores[second] if second else 0.0
+
+        if top_prod.stock == 0 and second_prod and second_prod.stock > 0 and margin <= 2.0:
+            winner_id = second
+            preferred_in_stock = True
+        elif not tie:
+            winner_id = top
 
     if len(products) < 2:
         verdict = "Add another product to compare."
+    elif is_cross_category:
+        verdict = (
+            f"Comparing across different categories ({join_list(categories)}): "
+            "products serve different purposes and cannot be directly ranked against each other."
+        )
     elif not winner_id:
         a = by_id[ranked[0]]
         b = by_id[ranked[1]]
@@ -237,14 +300,24 @@ def compare_products(
             return f"the {short_name(prod)} {join_list(p_list)}" if p_list else f"the {short_name(prod)} matches it"
 
         verdict = f"It's a close call: {side(a)}, while {side(b)}."
+    elif preferred_in_stock:
+        top_prod = by_id[top]  # type: ignore[index]
+        w_prod = by_id[winner_id]
+        reasons = [str(x["text"]) for x in advantages[winner_id][:3]]
+        reason_text = f": {', '.join(reasons)}" if reasons else ""
+        verdict = (
+            f"While the {short_name(top_prod)} scores slightly higher on specs, it is currently out of stock; "
+            f"the in-stock {short_name(w_prod)} is the recommended pick{reason_text}."
+        )
     else:
         w_prod = by_id[winner_id]
         reasons = [str(x["text"]) for x in advantages[winner_id][:3]]
         same_text = [SAME_LABEL[k] for k in sames[:1]]
+        oos_suffix = " (currently out of stock)" if w_prod.stock == 0 else ""
         lead = (
-            f"For {context}, the {short_name(w_prod)} is the better fit"
+            f"For {context}, the {short_name(w_prod)} is the better fit{oos_suffix}"
             if context
-            else f"The {short_name(w_prod)} is the better all-round pick"
+            else f"The {short_name(w_prod)} is the better all-round pick{oos_suffix}"
         )
         combined_reasons = reasons + same_text
         verdict = f"{lead}: {', '.join(combined_reasons)}."

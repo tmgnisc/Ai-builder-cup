@@ -39,7 +39,7 @@
           "label": "Storage",
           "values": {
             "lenovo-ideapad-slim-5-14": "1 TB",
-            "acer-swift-go-14": "512 GB"
+            "acer-swift-go-14": "0.5 TB"
           },
           "winners": [
             "lenovo-ideapad-slim-5-14"
@@ -205,7 +205,7 @@
           "label": "Storage",
           "values": {
             "lenovo-ideapad-slim-5-14": "1 TB",
-            "acer-swift-go-14": "512 GB"
+            "acer-swift-go-14": "0.5 TB"
           },
           "winners": [
             "lenovo-ideapad-slim-5-14"
@@ -374,7 +374,7 @@
           "label": "Storage",
           "values": {
             "lenovo-ideapad-slim-5-14": "1 TB",
-            "acer-swift-go-14": "512 GB"
+            "acer-swift-go-14": "0.5 TB"
           },
           "winners": [
             "lenovo-ideapad-slim-5-14"
@@ -545,7 +545,7 @@
           "label": "Storage",
           "values": {
             "lenovo-ideapad-slim-5-14": "1 TB",
-            "acer-swift-go-14": "512 GB",
+            "acer-swift-go-14": "0.5 TB",
             "sony-wh-1000xm5": "—"
           },
           "winners": [
@@ -572,7 +572,7 @@
           "values": {
             "lenovo-ideapad-slim-5-14": "1.46 kg",
             "acer-swift-go-14": "1.32 kg",
-            "sony-wh-1000xm5": "250 g"
+            "sony-wh-1000xm5": "0.25 kg"
           },
           "winners": [
             "sony-wh-1000xm5"
@@ -695,8 +695,8 @@
         "acer-swift-go-14": 0,
         "sony-wh-1000xm5": 12.25
       },
-      "winnerId": "sony-wh-1000xm5",
-      "verdict": "The WH-1000XM5 is the better all-round pick: NPR 49,501 cheaper, 18 h more battery, 1.07 kg lighter. The IdeaPad Slim 5 14 has double the storage."
+      "winnerId": null,
+      "verdict": "Comparing across different categories (laptops and headphones): products serve different purposes and cannot be directly ranked against each other."
     }
   },
   {
@@ -738,7 +738,7 @@
           "key": "storage",
           "label": "Storage",
           "values": {
-            "apple-macbook-air-m3-13": "256 GB",
+            "apple-macbook-air-m3-13": "0.3 TB",
             "lenovo-ideapad-slim-5-14": "1 TB"
           },
           "winners": [
@@ -1021,6 +1021,174 @@
       },
       "winnerId": "samsung-galaxy-s24-fe",
       "verdict": "The Galaxy S24 FE is the better all-round pick: NPR 1,09,901 cheaper, 1 h more battery, same RAM. The iPhone 16 Pro is better rated (4.8 vs 4.5)."
+    }
+  },
+  {
+    "name": "thinkpad_vs_macbook_oos_winner",
+    "productIds": [
+      "lenovo-thinkpad-e14-g6",
+      "apple-macbook-air-m3-13"
+    ],
+    "options": {},
+    "result": {
+      "productIds": [
+        "lenovo-thinkpad-e14-g6",
+        "apple-macbook-air-m3-13"
+      ],
+      "rows": [
+        {
+          "key": "price",
+          "label": "Price",
+          "values": {
+            "lenovo-thinkpad-e14-g6": "NPR 1,18,500",
+            "apple-macbook-air-m3-13": "NPR 1,64,900"
+          },
+          "winners": [
+            "lenovo-thinkpad-e14-g6"
+          ],
+          "numeric": true
+        },
+        {
+          "key": "ram",
+          "label": "Memory",
+          "values": {
+            "lenovo-thinkpad-e14-g6": "24 GB",
+            "apple-macbook-air-m3-13": "16 GB"
+          },
+          "winners": [
+            "lenovo-thinkpad-e14-g6"
+          ],
+          "numeric": true
+        },
+        {
+          "key": "storage",
+          "label": "Storage",
+          "values": {
+            "lenovo-thinkpad-e14-g6": "512 GB",
+            "apple-macbook-air-m3-13": "256 GB"
+          },
+          "winners": [
+            "lenovo-thinkpad-e14-g6"
+          ],
+          "numeric": true
+        },
+        {
+          "key": "battery",
+          "label": "Battery",
+          "values": {
+            "lenovo-thinkpad-e14-g6": "10 h",
+            "apple-macbook-air-m3-13": "18 h"
+          },
+          "winners": [
+            "apple-macbook-air-m3-13"
+          ],
+          "numeric": true
+        },
+        {
+          "key": "weight",
+          "label": "Weight",
+          "values": {
+            "lenovo-thinkpad-e14-g6": "1.41 kg",
+            "apple-macbook-air-m3-13": "1.24 kg"
+          },
+          "winners": [
+            "apple-macbook-air-m3-13"
+          ],
+          "numeric": true
+        },
+        {
+          "key": "warranty",
+          "label": "Warranty",
+          "values": {
+            "lenovo-thinkpad-e14-g6": "3 yr",
+            "apple-macbook-air-m3-13": "1 yr"
+          },
+          "winners": [
+            "lenovo-thinkpad-e14-g6"
+          ],
+          "numeric": true
+        },
+        {
+          "key": "rating",
+          "label": "Rating",
+          "values": {
+            "lenovo-thinkpad-e14-g6": "4.7 ★",
+            "apple-macbook-air-m3-13": "4.8 ★"
+          },
+          "winners": [],
+          "numeric": true
+        },
+        {
+          "key": "cpu",
+          "label": "Processor",
+          "values": {
+            "lenovo-thinkpad-e14-g6": "AMD Ryzen 7 7735HS (8C/16T)",
+            "apple-macbook-air-m3-13": "Apple M3 (8-core CPU)"
+          },
+          "winners": [],
+          "numeric": false
+        },
+        {
+          "key": "gpu",
+          "label": "Graphics",
+          "values": {
+            "lenovo-thinkpad-e14-g6": "AMD Radeon 680M (integrated)",
+            "apple-macbook-air-m3-13": "Apple M3 8-core GPU"
+          },
+          "winners": [],
+          "numeric": false
+        },
+        {
+          "key": "screen",
+          "label": "Display",
+          "values": {
+            "lenovo-thinkpad-e14-g6": "14\" WUXGA IPS, 300 nits",
+            "apple-macbook-air-m3-13": "13.6\" Liquid Retina, 60 Hz"
+          },
+          "winners": [],
+          "numeric": false
+        },
+        {
+          "key": "ports",
+          "label": "Ports",
+          "values": {
+            "lenovo-thinkpad-e14-g6": "2× USB-C, 2× USB-A, HDMI 2.1, RJ45",
+            "apple-macbook-air-m3-13": "2× Thunderbolt / USB 4, MagSafe 3"
+          },
+          "winners": [],
+          "numeric": false
+        }
+      ],
+      "advantages": {
+        "lenovo-thinkpad-e14-g6": [
+          "NPR 46,400 cheaper",
+          "8 GB more RAM",
+          "double the storage",
+          "2 yr longer warranty"
+        ],
+        "apple-macbook-air-m3-13": [
+          "8 h more battery",
+          "170 g lighter"
+        ]
+      },
+      "predicates": {
+        "lenovo-thinkpad-e14-g6": [
+          "is NPR 46,400 cheaper",
+          "has 8 GB more RAM",
+          "has double the storage",
+          "has 2 yr longer warranty"
+        ],
+        "apple-macbook-air-m3-13": [
+          "has 8 h more battery",
+          "is 170 g lighter"
+        ]
+      },
+      "scores": {
+        "lenovo-thinkpad-e14-g6": 9.25,
+        "apple-macbook-air-m3-13": 7.25
+      },
+      "winnerId": "apple-macbook-air-m3-13",
+      "verdict": "While the ThinkPad E14 Gen 6 scores slightly higher on specs, it is currently out of stock; the in-stock MacBook Air 13\" (M3) is the recommended pick: 8 h more battery, 170 g lighter."
     }
   },
   {

@@ -3,7 +3,7 @@
 import { create } from "zustand";
 import type { CompareKey } from "@/lib/commerce/compare";
 
-export const MAX_COMPARE = 3;
+export const MAX_COMPARE = 4;
 
 interface CompareState {
   ids: string[];
@@ -11,7 +11,7 @@ interface CompareState {
   /** Optional context from Pip ("Docker + travel") and priorities used for the verdict. */
   context: string | null;
   priorities: CompareKey[] | null;
-  /** Set when the user tries to add a 4th item, so the tray can explain. */
+  /** Set when the user tries to add a 5th item, so the tray can explain. */
   rejectedAt: number;
   toggle: (id: string) => void;
   remove: (id: string) => void;
@@ -46,3 +46,7 @@ export const useCompare = create<CompareState>()((set, get) => ({
   show: (ids, opts) =>
     set({ ids: ids.slice(0, MAX_COMPARE), open: ids.length >= 2, context: opts?.context ?? null, priorities: opts?.priorities ?? null }),
 }));
+
+if (typeof window !== "undefined") {
+  (window as unknown as Record<string, unknown>).__useCompare = useCompare;
+}

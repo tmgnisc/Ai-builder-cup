@@ -76,7 +76,7 @@ export function offerTour() {
     kind: "tip",
     id: "tour:offer",
     source: "system",
-    text: "Need a quick 20-second walk-through of specs, trade-offs, and valley delivery?",
+    text: "Want a 20-second tour of specs, trade-offs, and valley delivery?",
     chips: [
       { label: "Yes, show me", primary: true, run: () => void goToStop(0) },
       { label: "Skip", run: () => endTour("skipped") },
@@ -94,4 +94,8 @@ export function offerTour() {
 
 export function startTour() {
   void goToStop(0);
+}
+
+if (typeof window !== "undefined") {
+  (window as unknown as Record<string, unknown>).__offerTour = offerTour;
 }

@@ -71,7 +71,7 @@ export function Modal({
   if (!mounted || !open) return null;
 
   return createPortal(
-    <div className="fixed inset-0 z-50 flex items-center justify-center p-4">
+    <div className="fixed inset-0 z-dialog flex items-center justify-center p-4">
       <div
         aria-hidden
         onClick={() => onOpenChange(false)}
@@ -81,6 +81,7 @@ export function Modal({
         ref={dialogRef}
         role="dialog"
         aria-modal="true"
+        data-modal-open="true"
         aria-labelledby={titleId}
         aria-describedby={description ? descId : undefined}
         tabIndex={-1}

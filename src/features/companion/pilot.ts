@@ -113,7 +113,52 @@ export function clampToViewport(p: Point, size: number): Point {
   const top = HEADER_H + MARGIN + r * 0.6;
   let x = Math.min(window.innerWidth - MARGIN - r, Math.max(MARGIN + r, p.x));
   if (isMobile()) x = p.x < window.innerWidth / 2 ? MARGIN + r : window.innerWidth - MARGIN - r;
-  const bottom = window.innerHeight - MARGIN - r - (isMobile() ? avoidBottom : 0);
+  let bottom = window.innerHeight - MARGIN - r - (isMobile() ? avoidBottom : 0);
+
+  // If a drawer is open, ensure Pip orb does not cover drawer controls or text
+  if (typeof document !== "undefined") {
+    const openDrawer = document.querySelector("[data-drawer-open='true']");
+    if (openDrawer) {
+      const b = openDrawer.getBoundingClientRect();
+      if (b.width > 0 && b.height > 0) {
+        if (!isMobile()) {
+          // Desktop: drawer is on the right. Keep Pip to the left of the drawer.
+          if (b.left > window.innerWidth / 2) {
+            x = Math.min(x, b.left - MARGIN - r);
+          }
+        } else {
+          // Mobile: drawer is on the bottom. Keep Pip above the drawer.
+          if (b.top < window.innerHeight) {
+            bottom = Math.min(bottom, Math.max(top, b.top - MARGIN - r));
+          }
+        }
+      }
+    }
+
+    // If a modal or blocking dialog is open, ensure Pip orb never covers modal controls or bounds
+    const openModal = document.querySelector("[data-modal-open='true']");
+    if (openModal) {
+      const mb = openModal.getBoundingClientRect();
+      if (mb.width > 0 && mb.height > 0) {
+        const overlapsX = x + r > mb.left - MARGIN && x - r < mb.right + MARGIN;
+        const overlapsY = p.y + r > mb.top - MARGIN && p.y - r < mb.bottom + MARGIN;
+        if (overlapsX && overlapsY) {
+          if (!isMobile()) {
+            if (mb.right + MARGIN + r <= window.innerWidth - MARGIN) {
+              x = mb.right + MARGIN + r;
+            } else {
+              x = Math.max(MARGIN + r, mb.left - MARGIN - r);
+            }
+          } else {
+            if (mb.top - MARGIN - r >= top) {
+              bottom = Math.min(bottom, mb.top - MARGIN - r);
+            }
+          }
+        }
+      }
+    }
+  }
+
   return { x, y: Math.min(bottom, Math.max(top, p.y)) };
 }
 

@@ -6,7 +6,7 @@ const target = process.argv[2] || "baseline";
 const outputDir = path.resolve(process.cwd(), ".screenshots", target);
 fs.mkdirSync(outputDir, { recursive: true });
 
-const baseUrl = process.env.BASE_URL || "http://localhost:3000";
+const baseUrl = process.env.BASE_URL || "http://localhost:3001";
 
 const VIEWPORTS = [
   { name: "desktop", width: 1280, height: 800 },
@@ -73,22 +73,21 @@ async function run() {
       // 4. Compare Drawer
       console.log(`Capturing compare drawer (${vp.name}, ${theme})...`);
       await preparePage("/");
-      // Click compare on first two products
-      const compareButtons = page.locator("button[title='Compare']");
-      const count = await compareButtons.count();
-      if (count >= 2) {
-        await compareButtons.nth(0).click({ force: true });
-        await page.waitForTimeout(300);
-        await compareButtons.nth(1).click({ force: true });
-        await page.waitForTimeout(500);
-        // Click compare tray open button
-        const openCompare = page.locator("button:has-text('Compare 2')");
-        if (await openCompare.count()) {
-          await openCompare.click({ force: true, timeout: 5000 });
-          await page.waitForTimeout(600);
-        }
-      }
+      // Open compare drawer with first two products
+      await page.evaluate(() => {
+        (window as unknown as Record<string, { getState: () => { show: (ids: string[]) => void } }>).__useCompare?.getState().show(["lenovo-ideapad-slim-5-14", "acer-swift-go-14"]);
+      });
+      await page.waitForSelector("[role='dialog']", { state: "visible", timeout: 8000 }).catch(() => {});
+      await page.waitForTimeout(800);
       await page.screenshot({ path: path.join(outputDir, `compare_drawer_${vp.name}_${theme}.png`), fullPage: false });
+
+      // 4b. Tour bubble over drawer
+      console.log(`Capturing tour over drawer (${vp.name}, ${theme})...`);
+      await page.evaluate(() => {
+        (window as unknown as Record<string, () => void>).__offerTour?.();
+      });
+      await page.waitForTimeout(800);
+      await page.screenshot({ path: path.join(outputDir, `tour_over_drawer_${vp.name}_${theme}.png`), fullPage: false });
 
       // 5. Merchant
       console.log(`Capturing merchant (${vp.name}, ${theme})...`);

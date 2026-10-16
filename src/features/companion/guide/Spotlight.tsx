@@ -89,7 +89,7 @@ export function Spotlight() {
   if (!shown) return null;
 
   return (
-    <svg ref={rootRef} aria-hidden className="pointer-events-none fixed inset-0 z-[54] h-full w-full" style={{ opacity: 0 }}>
+    <svg ref={rootRef} aria-hidden className="pointer-events-none fixed inset-0 z-spotlight h-full w-full" style={{ opacity: 0 }}>
       <defs>
         <mask id="pip-spotlight-mask">
           <rect width="100%" height="100%" fill="white" />

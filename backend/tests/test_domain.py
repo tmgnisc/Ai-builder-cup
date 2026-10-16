@@ -177,3 +177,156 @@ def test_compare_helpers() -> None:
 
     single_res = compare_products([p1])
     assert single_res.verdict == "Add another product to compare."
+
+
+def test_compare_boundary_margin_exactly_2() -> None:
+    from app.domain.models import Product, ProductSpecs
+
+    p1 = Product(
+        id="oos-1",
+        name="Laptop 1",
+        brand="BrandX",
+        category="laptops",
+        price=100000,
+        rating=4.5,
+        reviewCount=10,
+        blurb="Test laptop 1",
+        palette=("#000000", "#ffffff"),
+        stock=0,
+        tags=["laptop"],
+        specs=ProductSpecs(ramGB=32, warrantyMonths=24, storageGB=512, batteryHours=10, weightGrams=1400, screen='14"', cpu="i7"),
+    )
+    p2 = Product(
+        id="in-2",
+        name="Laptop 2",
+        brand="BrandX",
+        category="laptops",
+        price=100000,
+        rating=4.5,
+        reviewCount=10,
+        blurb="Test laptop 2",
+        palette=("#000000", "#ffffff"),
+        stock=5,
+        tags=["laptop"],
+        specs=ProductSpecs(ramGB=16, warrantyMonths=12, storageGB=512, batteryHours=10, weightGrams=1400, screen='14"', cpu="i7"),
+    )
+    # p1 wins ram (1.0 pt) and warranty (1.0 pt) with priorities=[] -> score 2.0 vs 0.0, margin = 2.0
+    r = compare_products([p1, p2], priorities=[])
+    assert r.scores["oos-1"] == 2.0
+    assert r.scores["in-2"] == 0.0
+    assert r.winnerId == "in-2"
+    assert "currently out of stock; the in-stock Laptop 2 is the recommended pick" in r.verdict
+
+
+def test_compare_boundary_margin_just_over_2() -> None:
+    from app.domain.models import Product, ProductSpecs
+
+    p1 = Product(
+        id="oos-1",
+        name="Laptop 1",
+        brand="BrandX",
+        category="laptops",
+        price=100000,
+        rating=4.5,
+        reviewCount=10,
+        blurb="Test laptop 1",
+        palette=("#000000", "#ffffff"),
+        stock=0,
+        tags=["laptop"],
+        specs=ProductSpecs(ramGB=32, warrantyMonths=24, storageGB=1000, batteryHours=10, weightGrams=1400, screen='14"', cpu="i7"),
+    )
+    p2 = Product(
+        id="in-2",
+        name="Laptop 2",
+        brand="BrandX",
+        category="laptops",
+        price=100000,
+        rating=4.5,
+        reviewCount=10,
+        blurb="Test laptop 2",
+        palette=("#000000", "#ffffff"),
+        stock=5,
+        tags=["laptop"],
+        specs=ProductSpecs(ramGB=16, warrantyMonths=12, storageGB=512, batteryHours=10, weightGrams=1400, screen='14"', cpu="i7"),
+    )
+    # p1 wins ram (1 pt) + warranty (1 pt) + storage (1 pt) = 3.0 pts vs 0.0 pts. Margin = 3.0 > 2.0
+    r = compare_products([p1, p2], priorities=[])
+    assert r.scores["oos-1"] == 3.0
+    assert r.scores["in-2"] == 0.0
+    assert r.winnerId == "oos-1"
+    assert "(currently out of stock)" in r.verdict
+
+
+def test_compare_3_to_4_products_and_storage_normalization() -> None:
+    from app.domain.models import Product, ProductSpecs
+
+    def make_laptop(pid: str, **kwargs: object) -> Product:
+        specs_dict = dict(ramGB=16, storageGB=512, batteryHours=10, weightGrams=1400, warrantyMonths=12, screen='14"', cpu="i7")
+        if "specs" in kwargs:
+            specs_dict.update(kwargs.pop("specs"))  # type: ignore[arg-type]
+        d = dict(
+            id=pid,
+            name=f"Laptop {pid}",
+            brand="BrandX",
+            category="laptops",
+            price=100000,
+            rating=4.5,
+            reviewCount=10,
+            blurb=f"Blurb {pid}",
+            palette=("#000000", "#ffffff"),
+            stock=5,
+            tags=["laptop"],
+            specs=ProductSpecs(**specs_dict),
+        )
+        d.update(kwargs)
+        return Product(**d)
+
+    p1 = make_laptop("l1", price=80000)
+    p2 = make_laptop("l2", price=90000, specs=dict(batteryHours=15))
+    p3 = make_laptop("l3", price=100000, specs=dict(weightGrams=1100))
+    p4 = make_laptop("l4", price=110000, specs=dict(ramGB=32, storageGB=1000))
+
+    r = compare_products([p1, p2, p3, p4])
+    assert len(r.productIds) == 4
+    assert r.productIds == ["l1", "l2", "l3", "l4"]
+
+    # Storage row normalizes to TB since p4 has 1000 GB
+    storage_row = next(row for row in r.rows if row.key == "storage")
+    assert storage_row.values["l1"] == "0.5 TB"
+    assert storage_row.values["l4"] == "1 TB"
+
+
+def test_compare_all_out_of_stock() -> None:
+    from app.domain.models import Product, ProductSpecs
+
+    p1 = Product(
+        id="oos-1",
+        name="Laptop 1",
+        brand="BrandX",
+        category="laptops",
+        price=80000,
+        rating=4.5,
+        reviewCount=10,
+        blurb="Test laptop 1",
+        palette=("#000000", "#ffffff"),
+        stock=0,
+        tags=["laptop"],
+        specs=ProductSpecs(ramGB=16, warrantyMonths=12, storageGB=512, batteryHours=10, weightGrams=1400, screen='14"', cpu="i7"),
+    )
+    p2 = Product(
+        id="oos-2",
+        name="Laptop 2",
+        brand="BrandX",
+        category="laptops",
+        price=100000,
+        rating=4.5,
+        reviewCount=10,
+        blurb="Test laptop 2",
+        palette=("#000000", "#ffffff"),
+        stock=0,
+        tags=["laptop"],
+        specs=ProductSpecs(ramGB=16, warrantyMonths=12, storageGB=512, batteryHours=10, weightGrams=1400, screen='14"', cpu="i7"),
+    )
+    r = compare_products([p1, p2])
+    assert r.winnerId == "oos-1"
+    assert "(currently out of stock)" in r.verdict
