@@ -5,21 +5,8 @@
  * "motion" weights such as `blink` or `follow`, so behaviours fade in and out smoothly.
  */
 
-export const PIP_STATES = [
-  "idle",
-  "greeting",
-  "listening",
-  "thinking",
-  "searching",
-  "presenting",
-  "comparing",
-  "speaking",
-  "acting",
-  "success",
-  "error",
-  "sleeping",
-] as const;
-export type PipState = (typeof PIP_STATES)[number];
+import { PIP_STATES, type PipState } from "@/lib/agent/types";
+export { PIP_STATES, type PipState };
 
 /** Eye shapes, blended by weight in the shader. Order matters: it maps to two vec3 uniforms. */
 export const EYE_SHAPES = ["capsule", "narrow", "happy", "wide", "cross", "closed"] as const;
@@ -161,7 +148,7 @@ export const STATES: Record<PipState, StateDef> = {
     duration: 0.6,
   },
   greeting: {
-    caption: "Pip on bench. What hardware are we looking at?",
+    caption: "What hardware are we looking at?",
     color: PIP_COLORS.accent,
     params: {
       eyes: { happy: 1 },
@@ -289,7 +276,7 @@ export const STATES: Record<PipState, StateDef> = {
     duration: 0.4,
   },
   acting: {
-    caption: "Updating store cart…",
+    caption: "Updating cart…",
     color: PIP_COLORS.thinking,
     params: {
       eyes: { narrow: 1 },
@@ -309,7 +296,7 @@ export const STATES: Record<PipState, StateDef> = {
     duration: 0.4,
   },
   success: {
-    caption: "Reserved & verified in cart ✓",
+    caption: "Added to cart, stock confirmed",
     color: PIP_COLORS.success,
     params: {
       eyes: { happy: 1 },
@@ -327,7 +314,7 @@ export const STATES: Record<PipState, StateDef> = {
     settle: { afterMs: 2600, to: "idle" },
   },
   error: {
-    caption: "Store inventory check failed.",
+    caption: "Service unavailable",
     color: PIP_COLORS.error,
     params: {
       eyes: { cross: 1 },

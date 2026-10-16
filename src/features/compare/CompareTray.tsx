@@ -47,7 +47,7 @@ export function CompareTray() {
       ref={ref}
       role="region"
       aria-label="Comparison tray"
-      className="glass invisible fixed bottom-4 left-4 z-40 flex max-w-[calc(100vw-160px)] items-center gap-2 rounded-full p-1.5 pl-2 opacity-0 md:bottom-6 md:left-6 md:max-w-[calc(100vw-260px)]"
+      className="glass invisible fixed bottom-4 left-4 z-40 flex compare-tray-w-mobile items-center gap-2 rounded-full p-1.5 pl-2 opacity-0 md:bottom-6 md:left-6 md:compare-tray-w-desktop"
     >
       <ul className="flex items-center gap-1.5">
         {ids.map((id) => {

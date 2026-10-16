@@ -38,7 +38,7 @@ async def execute_tool(name: str, raw_input: Any, ctx: ToolContext) -> ToolOutco
             ok=False,
             error={"code": "INVALID_INPUT", "message": msg or "Invalid input."},
             durationMs=duration_ms(),
-            summary="invalid input",
+            summary="invalid request",
         )
 
     await simulate_latency(ctx.chaos)
@@ -48,9 +48,9 @@ async def execute_tool(name: str, raw_input: Any, ctx: ToolContext) -> ToolOutco
         if fail:
             return ToolOutcome(
                 ok=False,
-                error={"code": "TRANSIENT", "message": "The store service hiccuped."},
+                error={"code": "TRANSIENT", "message": "Store service unavailable."},
                 durationMs=duration_ms(),
-                summary="transient error",
+                summary="service unavailable",
             )
 
     try:
@@ -70,7 +70,16 @@ async def execute_tool(name: str, raw_input: Any, ctx: ToolContext) -> ToolOutco
         )
     except ToolError as te:
         code = te.code
-        summary = "out of stock" if code == "OUT_OF_STOCK" else code.lower().replace("_", " ")
+        if code == "OUT_OF_STOCK":
+            summary = "out of stock"
+        elif code == "NOT_FOUND":
+            summary = "not found"
+        elif code == "TRANSIENT":
+            summary = "service unavailable"
+        elif code == "INVALID_INPUT":
+            summary = "invalid request"
+        else:
+            summary = code.lower().replace("_", " ")
         return ToolOutcome(
             ok=False,
             error={"code": code, "message": te.message},

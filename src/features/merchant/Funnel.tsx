@@ -16,7 +16,7 @@ export function Funnel({ steps }: { steps: FunnelStep[] }) {
   for (let i = 2; i < rest.length; i++) if (rest[i].value / rest[i - 1].value < rest[worst].value / rest[worst - 1].value) worst = i;
 
   return (
-    <section data-pip-anchor="merchant-funnel" data-pip-topic="merchant-funnel" aria-labelledby="funnel-h" className="rounded-[var(--radius-card)] bg-surface p-5 hairline">
+    <section data-pip-anchor="merchant-funnel" data-pip-topic="merchant-funnel" aria-labelledby="funnel-h" className="rounded-card bg-surface p-5 hairline">
       <div className="flex flex-wrap items-baseline justify-between gap-2">
         <h2 id="funnel-h" className="font-display text-base font-semibold tracking-tight">
           Assisted funnel
@@ -30,7 +30,7 @@ export function Funnel({ steps }: { steps: FunnelStep[] }) {
           const conv = i === 0 ? null : s.value / rest[i - 1].value;
           const isWorst = i === worst;
           return (
-            <li key={s.key} data-funnel-row className="grid grid-cols-[minmax(0,9.5rem)_1fr_4.5rem] items-center gap-3 max-sm:grid-cols-[minmax(0,7rem)_1fr_3.75rem]">
+            <li key={s.key} data-funnel-row className="grid funnel-grid-desktop items-center gap-3 max-sm:funnel-grid-mobile">
               <span className="text-sm leading-tight text-muted">{s.label}</span>
               <span className="relative flex h-9 items-center justify-center">
                 <span

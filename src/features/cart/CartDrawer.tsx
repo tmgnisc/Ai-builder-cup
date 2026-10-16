@@ -81,7 +81,7 @@ export function CartDrawer() {
           >
             Review &amp; checkout
           </Link>
-          <p className="mt-2 text-center text-xs text-muted">You confirm all orders yourself at checkout. Pip reserves and verifies items only.</p>
+          <p className="mt-2 text-center text-xs text-muted">Items stay in your cart until you check out; stock is confirmed at checkout.</p>
         </div>
       }
     >
@@ -91,7 +91,7 @@ export function CartDrawer() {
             <EmptyState
               icon={<ShoppingBag className="size-6 text-muted" aria-hidden />}
               title="Your cart is empty"
-              description="Tell Pip what hardware you need or browse the catalog to reserve items."
+              description="Tell Pip what hardware you need or browse the catalog to add items."
             />
           </div>
         ) : (

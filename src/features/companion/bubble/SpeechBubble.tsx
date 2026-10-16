@@ -97,7 +97,7 @@ export function SpeechBubble() {
         aria-modal="false"
         aria-label="Pip"
         onKeyDown={(e) => e.key === "Escape" && close("user")}
-        className="bubble-panel surface-solid pointer-events-auto relative w-[min(340px,calc(100vw-24px))] rounded-panel p-3.5 pr-3"
+        className="bubble-panel surface-solid pointer-events-auto relative bubble-width rounded-panel p-3.5 pr-3"
       >
         <span ref={tailRef} aria-hidden className="bubble-tail absolute size-3.5 rotate-45 rounded-xs" />
         <BubbleBody content={rendered.content} contentKey={rendered.key} />
@@ -223,7 +223,7 @@ function BubbleBody({ content, contentKey }: { content: BubbleContent; contentKe
       onPointerLeave={() => setHover(false)}
       onFocus={() => setFocused(true)}
       onBlur={() => setFocused(false)}
-      className="max-md:max-h-[62dvh] max-md:overflow-y-auto max-md:overscroll-contain"
+      className="max-md:bubble-max-h max-md:overflow-y-auto max-md:overscroll-contain"
       data-hover={hover}
       data-focused={focused}
       data-actions={view.hasActions}

@@ -171,10 +171,10 @@ class Handlers {
   // ── Small talk ──
 
   private async greet() {
-    this.io.state("greeting", "Pip on bench. What hardware are we looking at?");
+    this.io.state("greeting", "What hardware are we looking at?");
     await this.io.say(
       this.msg,
-      "Pip on bench. Tell me your workload, budget in lakhs, or what you're replacing. I search catalog specs, compare trade-offs, and check Valley delivery. You'll see every tool step I take.",
+      "Tell me your workload, budget in lakhs, or what you're replacing. I search catalog specs, compare trade-offs, and check Valley delivery. You'll see every tool step I take.",
     );
     this.chips(EXAMPLES);
   }

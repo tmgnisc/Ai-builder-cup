@@ -11,7 +11,7 @@ export function KpiCard({ kpi }: { kpi: Kpi }) {
   const up = kpi.delta >= 0;
   const unit = kpi.format === "pct" ? " pts" : "%";
   return (
-    <article data-pip-anchor={`kpi:${kpi.key}`} data-pip-topic="merchant-kpi" data-kpi className="flex flex-col justify-between gap-4 rounded-[var(--radius-card)] bg-surface p-5 hairline">
+    <article data-pip-anchor={`kpi:${kpi.key}`} data-pip-topic="merchant-kpi" data-kpi className="flex flex-col justify-between gap-4 rounded-card bg-surface p-5 hairline">
       <div>
         <h3 className="text-xs font-medium uppercase tracking-wider text-muted">{kpi.label}</h3>
         <p className="mt-2 font-display text-3xl font-semibold tracking-tight tabular">

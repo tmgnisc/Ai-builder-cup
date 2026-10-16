@@ -74,7 +74,7 @@ function StoreSectionInner({ initialCategory }: { initialCategory: Category | nu
         <CategoryStrip />
       </div>
 
-      <div className="mt-8 grid gap-8 lg:grid-cols-[240px_minmax(0,1fr)]">
+      <div className="mt-8 grid gap-8 lg:store-grid">
         <aside aria-label="Filters" className="hidden lg:block">
           <div className="sticky top-24">
             <Filters />

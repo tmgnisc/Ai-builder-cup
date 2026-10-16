@@ -81,7 +81,7 @@ def handle_get_delivery_info(inp: GetDeliveryInfoInput, ctx: ToolContext) -> Del
 async def handle_add_to_cart(inp: AddToCartToolInput, ctx: ToolContext) -> CartOutput:
     failure = roll_failure(ctx.chaos, mutation=True)
     if failure == "transient":
-        raise ToolError("TRANSIENT", "The store service hiccuped.")
+        raise ToolError("TRANSIENT", "Store service unavailable.")
     try:
         cart = await ctx.cart_service.add_to_cart(
             ctx.session_id,
@@ -96,7 +96,7 @@ async def handle_add_to_cart(inp: AddToCartToolInput, ctx: ToolContext) -> CartO
 async def handle_remove_from_cart(inp: RemoveFromCartToolInput, ctx: ToolContext) -> CartOutput:
     failure = roll_failure(ctx.chaos, mutation=True)
     if failure == "transient":
-        raise ToolError("TRANSIENT", "The store service hiccuped.")
+        raise ToolError("TRANSIENT", "Store service unavailable.")
     try:
         cart = await ctx.cart_service.remove_from_cart(ctx.session_id, inp.productId, drop_write=(failure == "silent"))
         return CartOutput(cart=cart)
@@ -162,7 +162,7 @@ TOOLS: dict[str, ToolDefinition[Any, Any]] = {
         input_model=AddToCartToolInput,
         output_model=CartOutput,
         handler=handle_add_to_cart,
-        summarize=lambda _o: "store accepted",
+        summarize=lambda _o: "Added to cart, stock confirmed",
         mutation=True,
     ),
     "remove_from_cart": ToolDefinition(
@@ -173,7 +173,7 @@ TOOLS: dict[str, ToolDefinition[Any, Any]] = {
         input_model=RemoveFromCartToolInput,
         output_model=CartOutput,
         handler=handle_remove_from_cart,
-        summarize=lambda _o: "store accepted",
+        summarize=lambda _o: "Removed from cart",
         mutation=True,
     ),
     "get_cart": ToolDefinition(

@@ -265,7 +265,7 @@ export function PlaygroundClient() {
               className="relative mt-6 grid aspect-square w-full max-w-xl cursor-crosshair place-items-center rounded-panel bg-surface hairline"
               onClick={(e) => pip.glanceAt(e.clientX, e.clientY, 1400)}
             >
-              <div data-pip-anchor="stage" className="aspect-square w-[82%]" aria-hidden />
+              <div data-pip-anchor="stage" className="aspect-square w-4/5" aria-hidden />
             </div>
 
             <section aria-labelledby="states-h" className="mt-8">
@@ -303,7 +303,7 @@ export function PlaygroundClient() {
 
           {/* Fixed, independently scrolling column: leva calls scrollIntoView on folder resize, which must not scroll the page. */}
           <aside className="mt-8 flex flex-col gap-6 pb-10 lg:fixed lg:bottom-4 lg:right-6 lg:top-20 lg:z-20 lg:mt-0 lg:w-90 lg:overflow-y-auto lg:pb-4">
-            <section className="rounded-[var(--radius-card)] bg-surface p-4 hairline">
+            <section className="rounded-card bg-surface p-4 hairline">
               <h2 className="text-sm font-semibold">Reactions (do not change state)</h2>
               <div className="mt-3 flex flex-wrap gap-2">
                 <Button size="sm" variant="secondary" onClick={() => react("hop")}>Hop</Button>
@@ -312,7 +312,7 @@ export function PlaygroundClient() {
               </div>
             </section>
 
-            <section className="rounded-[var(--radius-card)] bg-surface p-4 hairline">
+            <section className="rounded-card bg-surface p-4 hairline">
               <h2 className="text-sm font-semibold">Audio inputs (simulated)</h2>
               <label className="mt-3 flex items-center gap-3 text-sm">
                 <span className="w-24 text-muted">Mic level</span>
@@ -328,7 +328,7 @@ export function PlaygroundClient() {
               </label>
             </section>
 
-            <section className="rounded-[var(--radius-card)] bg-surface p-4 hairline">
+            <section className="rounded-card bg-surface p-4 hairline">
               <div className="flex items-center justify-between">
                 <h2 className="text-sm font-semibold">Uniforms</h2>
                 <div className="flex gap-1">

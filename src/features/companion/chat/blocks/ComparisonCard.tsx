@@ -26,9 +26,11 @@ export function ComparisonCard({
   const products = productIds.map(getProduct).filter((p): p is Product => !!p);
   const rows = useMemo(() => compareProducts(products, { priorities, context }).rows.filter((r) => r.numeric && r.key !== "rating"), [products, priorities, context]);
 
+  const gridClass = products.length === 2 ? "compare-card-grid-2" : "compare-card-grid-3";
+
   return (
     <div className="mt-2.5 overflow-hidden rounded-2xl bg-surface hairline">
-      <div className="grid gap-2 px-3 pt-3" style={{ gridTemplateColumns: `72px repeat(${products.length}, minmax(0,1fr))` }}>
+      <div className={cn("grid gap-2 px-3 pt-3", gridClass)}>
         <span />
         {products.map((p) => (
           <span key={p.id} className="min-w-0">
@@ -41,7 +43,7 @@ export function ComparisonCard({
       </div>
       <dl className="mt-1.5 px-3 pb-2">
         {rows.map((r) => (
-          <div key={r.key} className="grid items-center gap-2 border-t border-border py-1" style={{ gridTemplateColumns: `72px repeat(${products.length}, minmax(0,1fr))` }}>
+          <div key={r.key} className={cn("grid items-center gap-2 border-t border-border py-1", gridClass)}>
             <dt className="text-xs text-muted">{r.label}</dt>
             {products.map((p) => (
               <dd key={p.id} className={cn("truncate font-mono text-xs", r.winners.includes(p.id) && "font-semibold text-accent-text")}>

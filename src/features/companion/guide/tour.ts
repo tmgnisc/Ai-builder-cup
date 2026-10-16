@@ -76,7 +76,7 @@ export function offerTour() {
     kind: "tip",
     id: "tour:offer",
     source: "system",
-    text: "Pip on bench. Need a quick 20-second walk-through of specs, trade-offs, and valley delivery?",
+    text: "Need a quick 20-second walk-through of specs, trade-offs, and valley delivery?",
     chips: [
       { label: "Yes, show me", primary: true, run: () => void goToStop(0) },
       { label: "Skip", run: () => endTour("skipped") },

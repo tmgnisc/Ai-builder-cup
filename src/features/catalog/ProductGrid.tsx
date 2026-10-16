@@ -83,10 +83,10 @@ export function ProductGrid() {
 
   if (products.length === 0) {
     return (
-      <div className="grid place-items-center rounded-[var(--radius-panel)] bg-surface px-6 py-20 text-center hairline">
+      <div className="grid place-items-center rounded-panel bg-surface px-6 py-20 text-center hairline">
         <SearchX className="size-8 text-muted" aria-hidden />
         <p className="mt-3 font-display text-lg font-semibold">No products match these filters</p>
-        <p className="mt-1 max-w-sm text-sm text-muted">Try widening the price range, clearing spec constraints, or ask Pip on bench to search alternative hardware.</p>
+        <p className="mt-1 max-w-sm text-sm text-muted">Try widening the price range, clearing spec constraints, or ask Pip to search alternative hardware.</p>
         <Button variant="secondary" className="mt-5" onClick={() => resetFilters({ category: filters.category })}>
           Reset filters
         </Button>

@@ -29,7 +29,7 @@ export function ProductGallery({ product }: { product: Product }) {
 
   return (
     <div {...anchor} className="flex flex-col gap-3 lg:sticky lg:top-24 lg:self-start">
-      <div className="overflow-hidden rounded-[var(--radius-panel)] hairline">
+      <div className="overflow-hidden rounded-panel hairline">
         <div ref={mainRef} data-gallery-main className="aspect-[4/3]">
           <ProductImage product={product} variant="hero" view={view} className={product.stock === 0 ? "grayscale-[35%]" : undefined} />
         </div>

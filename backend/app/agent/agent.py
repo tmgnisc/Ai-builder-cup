@@ -115,7 +115,7 @@ def create_pip_agent(model: str | BaseLlm) -> LlmAgent:
 
             if verified:
                 summary = "verified ✓ · store accepted"
-                turn_ctx.event_queue.append(StateChangeEvent(state="success", caption="Added & verified ✓"))
+                turn_ctx.event_queue.append(StateChangeEvent(state="success", caption="Added to cart, stock confirmed"))
                 turn_ctx.event_queue.append(
                     BlockEvent(
                         messageId=turn_ctx.message_id,

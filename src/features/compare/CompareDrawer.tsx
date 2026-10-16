@@ -55,9 +55,8 @@ export function CompareDrawer() {
     { dependencies: [open, ids.join(",")], scope: tableRef, revertOnUpdate: true },
   );
 
-  // Equal product columns regardless of content length; gracefully scrolls horizontally when > 2 products.
-  const cols = `minmax(84px, 0.5fr) repeat(${products.length}, minmax(120px, 1fr))`;
-  const minWidth = products.length <= 2 ? "100%" : `${84 + products.length * 140}px`;
+  // Equal product columns with tokenized grid utilities.
+  const colsClass = products.length === 2 ? "compare-grid-2" : "compare-grid-3";
 
   return (
     <Drawer
@@ -84,8 +83,8 @@ export function CompareDrawer() {
           </div>
 
           <div className="no-scrollbar mt-5 overflow-x-auto">
-            <div role="table" aria-label="Product comparison" className="w-full" style={{ minWidth }}>
-              <div role="row" className="grid items-end gap-3 px-3 pb-3" style={{ gridTemplateColumns: cols }}>
+            <div role="table" aria-label="Product comparison" className="w-full">
+              <div role="row" className={cn("grid items-end gap-3 px-3 pb-3", colsClass)}>
                 <span role="columnheader">
                   <span className="sr-only">Attribute</span>
                 </span>
@@ -95,7 +94,7 @@ export function CompareDrawer() {
               </div>
               <div role="rowgroup" className="divide-y divide-border overflow-hidden rounded-2xl bg-surface-2/60 hairline">
                 {result.rows.map((row: CompareRow) => (
-                  <div key={row.key} role="row" data-row className="grid items-center gap-3 px-3 py-2.5 odd:bg-surface/40" style={{ gridTemplateColumns: cols }}>
+                  <div key={row.key} role="row" data-row className={cn("grid items-center gap-3 px-3 py-2.5 odd:bg-surface/40", colsClass)}>
                     <span role="rowheader" className="text-xs text-muted">
                       {row.label}
                     </span>
@@ -134,7 +133,7 @@ function ProductHeader({ product, isWinner, onRemove }: { product: Product; isWi
   const busy = useCart((s) => s.pending.includes(product.id));
   const out = product.stock === 0;
   return (
-    <div role="columnheader" className="relative flex flex-col gap-2">
+    <div role="columnheader" className="relative flex min-w-0 compare-col flex-col gap-2">
       <div ref={imgRef} className="relative h-28 overflow-hidden rounded-xl hairline">
         <ProductImage product={product} variant="compare" />
         {isWinner && (

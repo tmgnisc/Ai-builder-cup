@@ -24,9 +24,9 @@ export interface DrawerProps {
 }
 
 const PANEL: Record<DrawerSide, { base: string; closed: string }> = {
-  right: { base: "inset-y-3 right-3 w-[min(420px,calc(100vw-24px))]", closed: "translate-x-[calc(100%+24px)]" },
-  left: { base: "inset-y-3 left-3 w-[min(420px,calc(100vw-24px))]", closed: "-translate-x-[calc(100%+24px)]" },
-  bottom: { base: "inset-x-3 bottom-3 max-h-[min(80dvh,720px)]", closed: "translate-y-[calc(100%+24px)]" },
+  right: { base: "inset-y-3 right-3 drawer-width", closed: "drawer-closed-right" },
+  left: { base: "inset-y-3 left-3 drawer-width", closed: "drawer-closed-left" },
+  bottom: { base: "inset-x-3 bottom-3 drawer-bottom-h", closed: "drawer-closed-bottom" },
 };
 
 const FOCUSABLE = 'a[href],button:not([disabled]),input:not([disabled]),select,textarea,[tabindex]:not([tabindex="-1"])';

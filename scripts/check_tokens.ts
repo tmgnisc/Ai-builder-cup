@@ -13,6 +13,7 @@ const ALLOWLIST = [
   "src/features/companion/PipCanvas.tsx",
   "src/features/companion/PipRenderer.tsx",
   "src/features/companion/PipScene.tsx",
+  "src/features/companion/CompanionLayer.tsx",
   "src/features/companion/states.ts",
   // Single source of truth & generated files
   "src/tokens/definitions.ts",
@@ -27,8 +28,8 @@ const SCAN_DIRS = ["src/features", "src/components", "src/app", "src/styles", "s
 // Hex color regex: matches #abc, #aabbcc, #aabbccdd, bg-[#...], text-[#...]
 const HEX_REGEX = /#(?:[0-9a-fA-F]{3,8})\b/;
 
-// Arbitrary pixel utility classes: text-[12px], rounded-[8px], size-[18px], h-[24px], etc.
-const ARBITRARY_PX_REGEX = /\b(?:text|rounded|size|gap|p|px|py|pl|pr|pt|pb|m|mx|my|ml|mr|mt|mb|h|w|min-h|min-w|max-h|max-w|top|bottom|left|right|inset)-\[\d+px\]/;
+// Arbitrary utility classes: w-[..], h-[..], min-/max-[..], gap-[..], p-[..], m-[..], inset-[..], grid-cols-[..], leading-[..], tracking-[..], text-[..], rounded-[..], etc.
+const ARBITRARY_UTILITY_REGEX = /\b(?:w|h|size|min-w|min-h|max-w|max-h|gap|gap-x|gap-y|p|px|py|pt|pb|pl|pr|m|mx|my|mt|mb|ml|mr|inset|inset-x|inset-y|top|bottom|left|right|grid-cols|grid-rows|col-span|row-span|leading|tracking|text|rounded)-\[[^\]]+\]/;
 
 // rgb/rgba/hsl/hsla function calls
 const RGB_HSL_REGEX = /\b(?:rgb|rgba|hsl|hsla)\s*\(/i;
@@ -63,14 +64,14 @@ function scanFile(filePath: string): Violation[] {
       });
     }
 
-    // Check arbitrary pixel
-    const pxMatch = lineText.match(ARBITRARY_PX_REGEX);
-    if (pxMatch && !lineText.includes("allowlist-token-ok")) {
+    // Check arbitrary utility
+    const utilMatch = lineText.match(ARBITRARY_UTILITY_REGEX);
+    if (utilMatch && !lineText.includes("allowlist-token-ok")) {
       violations.push({
         file: relPath,
         line: lineNum,
-        match: pxMatch[0],
-        type: "arbitrary-pixel",
+        match: utilMatch[0],
+        type: "arbitrary-utility",
       });
     }
 

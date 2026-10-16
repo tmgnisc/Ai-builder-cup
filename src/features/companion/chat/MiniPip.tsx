@@ -16,7 +16,7 @@ export function MiniPip({ live = false, size = 26, className }: { live?: boolean
       className={cn("grid shrink-0 place-items-center rounded-full bg-bg transition-shadow duration-500", className)}
       style={{ width: size, height: size, boxShadow: `inset 0 0 0 1.5px ${color}, 0 0 14px -4px ${color}` }}
     >
-      <span className="flex gap-[18%]" style={{ width: "50%", justifyContent: "center" }}>
+      <span className="flex gap-1" style={{ width: "50%", justifyContent: "center" }}>
         {[0, 1].map((i) => (
           <span
             key={i}

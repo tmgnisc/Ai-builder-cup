@@ -14,7 +14,7 @@ const INTENT_TONE: Record<TopQuestion["intent"], BadgeTone> = { search: "info", 
 
 function Panel({ id, topic, title, icon, aside, children }: { id: string; topic: string; title: string; icon: React.ReactNode; aside?: React.ReactNode; children: React.ReactNode }) {
   return (
-    <section data-pip-anchor={id} data-pip-topic={topic} aria-labelledby={`${id}-h`} className="flex min-w-0 flex-col rounded-[var(--radius-card)] bg-surface p-5 hairline">
+    <section data-pip-anchor={id} data-pip-topic={topic} aria-labelledby={`${id}-h`} className="flex min-w-0 flex-col rounded-card bg-surface p-5 hairline">
       <div className="mb-4 flex items-center gap-2">
         <span aria-hidden className="text-muted">
           {icon}

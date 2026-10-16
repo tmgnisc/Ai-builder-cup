@@ -22,7 +22,7 @@ export function ProductDetailView({ product }: { product: Product }) {
         <ArrowLeft className="size-4" aria-hidden /> Back to store
       </Link>
 
-      <div className="mt-6 grid gap-10 lg:grid-cols-[1.15fr_1fr]">
+      <div className="mt-6 grid gap-10 lg:product-detail-grid">
         <ProductGallery product={product} />
 
         <div>
@@ -35,7 +35,7 @@ export function ProductDetailView({ product }: { product: Product }) {
             ))}
           </div>
           <p className="mt-5 text-sm text-muted">{product.brand}</p>
-          <h1 className="mt-1 font-display text-[clamp(1.8rem,3.5vw,2.75rem)] font-semibold leading-tight tracking-[-0.02em]">
+          <h1 className="mt-1 font-display product-detail-title font-semibold leading-tight">
             {product.name}
           </h1>
           <p className="mt-3 flex items-center gap-1.5 text-sm text-muted">

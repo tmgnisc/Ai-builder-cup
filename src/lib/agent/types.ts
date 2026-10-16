@@ -1,6 +1,21 @@
 import { z } from "zod";
-import { PIP_STATES } from "@/features/companion";
 import { CartLineSchema, CategorySchema } from "@/lib/commerce/schemas";
+
+export const PIP_STATES = [
+  "idle",
+  "greeting",
+  "listening",
+  "thinking",
+  "searching",
+  "presenting",
+  "comparing",
+  "speaking",
+  "acting",
+  "success",
+  "error",
+  "sleeping",
+] as const;
+export type PipState = (typeof PIP_STATES)[number];
 
 /**
  * Agent wire protocol. The server streams these as NDJSON; the client validates every

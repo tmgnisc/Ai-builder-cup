@@ -55,7 +55,7 @@ export function MerchantDashboard() {
         ))}
       </div>
 
-      <div className="mt-4 grid grid-cols-1 gap-4 lg:grid-cols-[3fr_2fr]">
+      <div className="mt-4 grid grid-cols-1 gap-4 lg:merchant-dashboard-grid">
         <Funnel steps={FUNNEL} />
         <SessionPanel />
       </div>
