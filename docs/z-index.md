@@ -12,6 +12,7 @@ Persona enforces a strictly tokenized, single-source-of-truth z-index scale defi
 | `dock` | `z-dock` | `10` | Subtle resting docks, bottom trays in idle states. |
 | `elevated` | `z-elevated` | `20` | Hover states, card hover lift, floating compare tray. |
 | `sticky` | `z-sticky` | `30` | Sticky navigation bar, sticky comparison table headers and first column. |
+| `spotlight` | `z-spotlight` | `35` | Onboarding tour highlight cutouts and element rings. Sits on content, below drawers, orb, and bubble. |
 | `drawer` | `z-drawer` | `40` | Side drawers (cart, history) and peek modes. Below modals and blocking overlays. |
 | `modal` | `z-modal` | `50` | Full-screen modal backdrops, standard dialog scrims. |
 | `orb` | `z-orb` | `55` | Pip's Three.js WebGL orb container. Sits above drawers and standard modals. |
@@ -20,7 +21,6 @@ Persona enforces a strictly tokenized, single-source-of-truth z-index scale defi
 | `dialog` | `z-dialog` | `70` | Critical blocking dialogs and confirmations that require user input. |
 | `tooltip` | `z-tooltip` | `75` | Micro-help hover and focus tooltips. |
 | `toast` | `z-toast` | `80` | Transient system notifications and action confirmations. |
-| `spotlight` | `z-spotlight` | `85` | Onboarding tour highlight cutouts and spotlights. |
 | `grain` | `z-grain` | `100` | Atmospheric background noise and film grain texture overlay (`pointer-events-none`). |
 
 ---

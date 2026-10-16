@@ -1,5 +1,5 @@
 import type { Metadata, Viewport } from "next";
-import { Inter, JetBrains_Mono, Unbounded } from "next/font/google";
+import { Inter } from "next/font/google";
 import { AnchorDebug, BubbleLayer, CompanionLayer, GuideLayer, Spotlight } from "@/features/companion";
 import { ClientBootstrap } from "@/components/layout/ClientBootstrap";
 import { Footer } from "@/components/layout/Footer";
@@ -10,9 +10,7 @@ import { CompareDrawer, CompareTray } from "@/features/compare";
 import { tokenDefinitions } from "@/tokens/definitions";
 import "@/styles/globals.css";
 
-const display = Unbounded({ subsets: ["latin"], variable: "--font-unbounded", display: "swap" });
-const sans = Inter({ subsets: ["latin"], variable: "--font-inter", display: "swap" });
-const mono = JetBrains_Mono({ subsets: ["latin"], variable: "--font-jetbrains", display: "swap" });
+const inter = Inter({ subsets: ["latin"], variable: "--font-inter", display: "swap" });
 
 export const metadata: Metadata = {
   title: { default: "Persona: shopping, with someone who gets it", template: "%s · Persona" },
@@ -28,7 +26,7 @@ export const viewport: Viewport = {
 
 export default function RootLayout({ children }: Readonly<{ children: React.ReactNode }>) {
   return (
-    <html lang="en" data-theme="dark" className={`${display.variable} ${sans.variable} ${mono.variable}`} suppressHydrationWarning>
+    <html lang="en" data-theme="dark" className={inter.variable} suppressHydrationWarning>
       <head>
         <ThemeScript />
       </head>

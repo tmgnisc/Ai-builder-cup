@@ -15,6 +15,7 @@ import { useBubble, type BubbleChip, type BubbleContent } from "@/store/useBubbl
 import { useChat, type ChatMessage } from "@/store/useChat";
 import { useCompanion } from "@/store/useCompanion";
 import { useCompare } from "@/store/useCompare";
+import { findAnchor, usePipPosition } from "@/store/usePipPosition";
 import { useVoice } from "@/store/useVoice";
 import { Chips, MiniCards, TraceLine } from "./BubbleParts";
 import { PipMenu } from "./PipMenu";
@@ -129,28 +130,73 @@ function position(root: HTMLDivElement | null, panel: HTMLDivElement | null, tai
   } else {
     const clampY = (v: number) => Math.max(HEADER + EDGE, Math.min(vh - H - EDGE, v));
     const clampX = (v: number) => Math.max(EDGE, Math.min(vw - W - EDGE, v));
+
+    // Target elements Pip must strictly never occlude
+    const anchorId = usePipPosition.getState().anchorId;
+    const anchorEl = anchorId ? findAnchor(anchorId) : null;
+    const avoidTargets = [
+      anchorEl,
+      useSpotlight.getState().target,
+      ...document.querySelectorAll("[data-sheet-open='true']"),
+    ].filter((el): el is Element => !!el && !el.contains(root));
+
+    const avoid = avoidTargets
+      .map((el) => el.getBoundingClientRect())
+      .filter((b) => b.width > 0 && b.height > 0);
+
+    const anchorBox = anchorEl?.getBoundingClientRect();
+
     const spot: Record<Side, [number, number]> = {
       right: [px + r + GAP, clampY(py - Math.min(H * 0.35, 60))],
       left: [px - r - GAP - W, clampY(py - Math.min(H * 0.35, 60))],
-      top: [clampX(px - W / 2), Math.max(HEADER + EDGE, py - r - GAP - H)],
-      bottom: [clampX(px - W / 2), py + r + GAP],
+      top: [
+        clampX(px - W / 2),
+        anchorBox && anchorBox.top - H - GAP >= HEADER + EDGE
+          ? anchorBox.top - H - GAP
+          : Math.max(HEADER + EDGE, py - r - GAP - H),
+      ],
+      bottom: [
+        clampX(px - W / 2),
+        anchorBox && anchorBox.bottom + GAP + H <= vh - EDGE
+          ? anchorBox.bottom + GAP
+          : py + r + GAP,
+      ],
     };
-    // Don't cover what Pip is pointing at, or a drawer Pip isn't part of.
-    const avoid = [useSpotlight.getState().target, ...document.querySelectorAll("[data-sheet-open='true']")]
-      .filter((el): el is Element => !!el && !el.contains(root))
-      .map((el) => el.getBoundingClientRect())
-      .filter((b) => b.width > 0 && !(b.left <= px && px <= b.right && b.top <= py && py <= b.bottom));
-    const clear = (s: Side) => avoid.every((b) => spot[s][0] >= b.right || spot[s][0] + W <= b.left || spot[s][1] >= b.bottom || spot[s][1] + H <= b.top);
+
+    const overlapsBox = (bx: number, by: number, bw: number, bh: number, b: DOMRect) =>
+      !(bx >= b.right || bx + bw <= b.left || by >= b.bottom || by + bh <= b.top);
+
+    const clear = (s: Side) => {
+      const [sx, sy] = spot[s];
+      return avoid.every((b) => !overlapsBox(sx, sy, W, H, b));
+    };
+
     const inView: Record<Side, boolean> = {
-      right: px + r + GAP + W <= vw - EDGE,
-      left: px - r - GAP - W >= EDGE,
-      top: py - r - GAP - H >= HEADER + EDGE,
-      bottom: py + r + GAP + H <= vh - EDGE,
+      right: spot.right[0] + W <= vw - EDGE && spot.right[0] >= EDGE,
+      left: spot.left[0] >= EDGE && spot.left[0] + W <= vw - EDGE,
+      top: spot.top[1] >= HEADER + EDGE && spot.top[1] + H <= vh - EDGE,
+      bottom: spot.bottom[1] + H <= vh - EDGE && spot.bottom[1] >= HEADER + EDGE,
     };
-    const space: Record<Side, number> = { right: vw - px - r, left: px - r, top: (py - r - HEADER) * 1.6, bottom: (vh - py - r) * 1.6 };
-    const sides = (["right", "left", "top", "bottom"] as Side[]).filter((s) => inView[s]).sort((a, b) => space[b] - space[a]);
+
+    const space: Record<Side, number> = {
+      right: vw - px - r,
+      left: px - r,
+      top: (py - r - HEADER) * 1.6,
+      bottom: (vh - py - r) * 1.6,
+    };
+
+    const sides = (["right", "left", "top", "bottom"] as Side[])
+      .filter((s) => inView[s])
+      .sort((a, b) => space[b] - space[a]);
+
     const prev = sideRef.current;
-    side = prev && inView[prev] && clear(prev) ? prev : (sides.find(clear) ?? (prev && inView[prev] ? prev : sides[0]) ?? "top");
+    // Prefer previous side if still clear; otherwise choose first clear side, or fallback to top/bottom which clears the card
+    const clearSide = sides.find(clear);
+    side =
+      prev && inView[prev] && clear(prev)
+        ? prev
+        : (clearSide ?? (inView.top && clear("top") ? "top" : inView.bottom && clear("bottom") ? "bottom" : (sides[0] ?? "top")));
+
     [x, y] = spot[side];
   }
   sideRef.current = side;

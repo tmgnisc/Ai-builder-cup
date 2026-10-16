@@ -43,7 +43,7 @@ export const tokens = {
     dialog: 70,
     tooltip: 75,
     toast: 80,
-    spotlight: 85,
+    spotlight: 35,
     grain: 100,
   },
   durations: {

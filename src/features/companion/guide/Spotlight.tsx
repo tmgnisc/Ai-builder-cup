@@ -102,7 +102,7 @@ export function Spotlight() {
         fill="none"
         stroke="var(--accent)"
         strokeWidth={2}
-        style={{ filter: "drop-shadow(0 0 10px var(--accent))" }}
+        className="opacity-90"
       />
     </svg>
   );

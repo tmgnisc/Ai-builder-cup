@@ -324,7 +324,7 @@ export const useChat = create<ChatState>()((set, get) => {
   };
 });
 
-if (typeof window !== "undefined") {
+if (typeof window !== "undefined" && process.env.NODE_ENV !== "production") {
   (window as unknown as Record<string, unknown>).__useChat = useChat;
   (window as unknown as Record<string, unknown>).useChat = useChat;
 }

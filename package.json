@@ -10,6 +10,7 @@
     "test": "vitest run",
     "typecheck": "tsc --noEmit",
     "check:tokens": "tsx scripts/check_tokens.ts --fail",
+    "check:contrast": "tsx scripts/check_contrast.ts",
     "test:axe": "tsx scripts/run_axe.ts"
   },
   "dependencies": {

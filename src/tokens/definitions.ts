@@ -53,9 +53,9 @@ export const tokenDefinitions = {
   },
   typography: {
     fontFamilies: {
-      display: "var(--font-unbounded), ui-sans-serif, system-ui, sans-serif",
+      display: "var(--font-inter), ui-sans-serif, system-ui, sans-serif",
       sans: "var(--font-inter), ui-sans-serif, system-ui, sans-serif",
-      mono: "var(--font-jetbrains), ui-monospace, monospace",
+      mono: "var(--font-inter), ui-sans-serif, system-ui, sans-serif",
     },
     fontSize: {
       "2xs": ["10px", "14px"],
@@ -96,6 +96,7 @@ export const tokenDefinitions = {
     dock: 10,
     elevated: 20,
     sticky: 30,
+    spotlight: 35,
     drawer: 40,
     modal: 50,
     orb: 55,
@@ -104,7 +105,6 @@ export const tokenDefinitions = {
     dialog: 70,
     tooltip: 75,
     toast: 80,
-    spotlight: 85,
     grain: 100,
   },
   motion: {

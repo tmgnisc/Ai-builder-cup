@@ -95,14 +95,27 @@ export function placeBeside(anchor: Element, size: number): Point | null {
   }
 
   const avoid = avoidZones();
+  const BUBBLE_W = 340;
   const evaluated = ORDER.map((side) => {
     const p = candidate(side, r, R);
     const box = { left: p.x - R, right: p.x + R, top: p.y - R, bottom: p.y + R };
     const fit = fits(p, R);
     const clash = avoid.reduce((s, z) => s + (overlaps(box, z) ? area(box, z) : 0), 0);
-    return { side, p, box, ok: fit && clash === 0, fit, clash };
+
+    // Ensure placing Pip on a side leaves room for its speech bubble so it doesn't flip over the target card
+    let bubbleFits = true;
+    if (side === "right" && p.x + R + BUBBLE_W > window.innerWidth - MARGIN) {
+      bubbleFits = false;
+    } else if (side === "left" && p.x - R - BUBBLE_W < MARGIN) {
+      bubbleFits = false;
+    }
+
+    return { side, p, box, ok: fit && clash === 0 && bubbleFits, fit, clash, bubbleFits };
   });
-  const choice = evaluated.find((c) => c.ok) ?? evaluated.filter((c) => c.fit).sort((a, b) => a.clash - b.clash)[0];
+  const choice =
+    evaluated.find((c) => c.ok) ??
+    evaluated.find((c) => c.fit && c.clash === 0) ??
+    evaluated.filter((c) => c.fit).sort((a, b) => a.clash - b.clash)[0];
 
   lastPlacement.candidates = evaluated.map(({ side, box, ok }) => ({ side, box, ok }));
   lastPlacement.avoid = avoid;

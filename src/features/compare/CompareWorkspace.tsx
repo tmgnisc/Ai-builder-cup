@@ -123,13 +123,28 @@ export function CompareWorkspace({
   );
   const sections = useMemo(() => groupRowsBySection(visibleRows), [visibleRows]);
 
-  // Emit missing_info events for merchant dashboard when specs are absent
+const CATEGORY_APPLICABLE_SPECS: Record<Product["category"], Set<string>> = {
+  laptops: new Set(["price", "rating", "cpu", "gpu", "ram", "storage", "battery", "weight", "screen", "camera", "ports", "connectivity", "warranty"]),
+  phones: new Set(["price", "rating", "cpu", "ram", "storage", "battery", "weight", "screen", "camera", "connectivity", "warranty"]),
+  headphones: new Set(["price", "rating", "battery", "weight", "connectivity", "warranty"]),
+  accessories: new Set(["price", "rating", "battery", "weight", "connectivity", "warranty"]),
+};
+
+  const [replacingCategory, setReplacingCategory] = useState<Product["category"] | null>(null);
+  const recordedMissingRef = useRef<Set<string>>(new Set());
+
+  // Emit missing_info events for merchant dashboard when applicable specs are absent (deduped)
   useEffect(() => {
     if (!result || products.length === 0) return;
     for (const row of allRows) {
       for (const p of products) {
+        const applies = CATEGORY_APPLICABLE_SPECS[p.category]?.has(row.key);
+        if (!applies) continue;
+
         const val = row.values[p.id];
-        if (!val || val === "—") {
+        const dedupeKey = `${p.id}:${row.key}`;
+        if ((!val || val === "—") && !recordedMissingRef.current.has(dedupeKey)) {
+          recordedMissingRef.current.add(dedupeKey);
           useMerchantSession.getState().recordMissingInfo({
             productId: p.id,
             field: row.key,
@@ -168,25 +183,27 @@ export function CompareWorkspace({
       .filter((p) => p.category === targetCategory)
       .map((p) => p.id);
 
-    // If fewer than 2 items remain in this category, replenish from available catalog products of the same category
-    if (kept.length < 2) {
-      const candidates = allCatalog.filter(
-        (p) => p.category === targetCategory && !kept.includes(p.id)
-      );
-      for (const cand of candidates) {
-        if (kept.length >= 2) break;
-        kept.push(cand.id);
-      }
-    }
-
     if (kept.length >= 2) {
+      setReplacingCategory(null);
       setIds(kept);
       useCompare.setState({ ids: kept, open: false });
       router.replace(buildCompareUrl(kept), { scroll: false });
     } else {
-      // If no other products in this category exist, navigate to catalog category filter
-      router.push(`/?category=${encodeURIComponent(targetCategory)}#store`);
+      // Suggest replacement products to the user instead of silently adding one
+      setReplacingCategory(targetCategory);
     }
+  };
+
+  const handlePickReplacement = (replacementId: string) => {
+    if (!replacingCategory) return;
+    const kept = products
+      .filter((p) => p.category === replacingCategory)
+      .map((p) => p.id);
+    const next = [...kept, replacementId];
+    setReplacingCategory(null);
+    setIds(next);
+    useCompare.setState({ ids: next, open: false });
+    router.replace(buildCompareUrl(next), { scroll: false });
   };
 
   const handleQuickAdd = (productId: string) => {
@@ -395,6 +412,45 @@ export function CompareWorkspace({
               );
             })}
           </div>
+          {replacingCategory && (
+            <div className="mt-3 w-full rounded-xl bg-surface/80 p-3 hairline">
+              <p className="text-xs font-medium text-text">
+                Comparing {CATEGORY_NAMES[replacingCategory] ?? replacingCategory} requires at least 2 products. Pick a comparable product to add:
+              </p>
+              <div className="mt-2 flex flex-wrap gap-2">
+                {allCatalog
+                  .filter((p) => p.category === replacingCategory && !ids.includes(p.id))
+                  .slice(0, 4)
+                  .map((cand) => (
+                    <Button
+                      key={cand.id}
+                      size="sm"
+                      variant="secondary"
+                      onClick={() => handlePickReplacement(cand.id)}
+                      className="text-xs"
+                      aria-label={`Compare with ${cand.name}`}
+                    >
+                      <Plus className="mr-1 size-3" aria-hidden="true" />
+                      {cand.brand} {cand.name} ({formatNPR(cand.price)})
+                    </Button>
+                  ))}
+                <Link
+                  href={`/?category=${encodeURIComponent(replacingCategory)}#store`}
+                  className={buttonClasses({ variant: "ghost", size: "sm", className: "text-xs" })}
+                >
+                  Browse catalog →
+                </Link>
+                <Button
+                  size="sm"
+                  variant="ghost"
+                  onClick={() => setReplacingCategory(null)}
+                  className="text-xs text-muted"
+                >
+                  Cancel
+                </Button>
+              </div>
+            </div>
+          )}
         </div>
       )}
 

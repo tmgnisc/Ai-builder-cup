@@ -40,7 +40,7 @@
   --z-dialog: 70;
   --z-tooltip: 75;
   --z-toast: 80;
-  --z-spotlight: 85;
+  --z-spotlight: 35;
   --z-grain: 100;
 
   /* Motion */
@@ -104,9 +104,9 @@
   --color-glass-border: var(--glass-border);
   --color-overlay: var(--overlay);
 
-  --font-display: var(--font-unbounded), ui-sans-serif, system-ui, sans-serif;
+  --font-display: var(--font-inter), ui-sans-serif, system-ui, sans-serif;
   --font-sans: var(--font-inter), ui-sans-serif, system-ui, sans-serif;
-  --font-mono: var(--font-jetbrains), ui-monospace, monospace;
+  --font-mono: var(--font-inter), ui-sans-serif, system-ui, sans-serif;
 
   --radius-xs: 4px;
   --radius-sm: 6px;
