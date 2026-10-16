@@ -41,7 +41,7 @@ export function MessageList({ messages, busy }: { messages: ChatMessage[]; busy:
           if (m.role === "user") {
             return (
               <li key={m.id} className="flex justify-end">
-                <p className="max-w-[85%] rounded-[18px] rounded-br-md bg-text px-3.5 py-2 text-[14px] leading-snug text-bg">{m.text}</p>
+                <p className="max-w-[85%] rounded-card rounded-br-md bg-text px-3.5 py-2 text-sm leading-snug text-bg">{m.text}</p>
               </li>
             );
           }
@@ -52,7 +52,7 @@ export function MessageList({ messages, busy }: { messages: ChatMessage[]; busy:
               <MiniPip live={latest} className="mt-0.5" />
               <div className="min-w-0 flex-1">
                 {(m.text || streaming) && (
-                  <div className={cn("text-[14px] leading-relaxed text-text/90", m.status === "error" && "text-danger")}>
+                  <div className={cn("text-sm leading-relaxed text-text/90", m.status === "error" && "text-danger")}>
                     <Markdown text={m.text} />
                     {streaming && <span aria-hidden className="caret text-accent-text" />}
                   </div>

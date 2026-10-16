@@ -12,6 +12,7 @@ import { ThemeScript } from "@/components/layout/ThemeScript";
 import { CartDrawer } from "@/components/store/CartDrawer";
 import { CompareDrawer } from "@/components/store/CompareDrawer";
 import { CompareTray } from "@/components/store/CompareTray";
+import { tokenDefinitions } from "@/tokens/definitions";
 import "@/styles/globals.css";
 
 const display = Unbounded({ subsets: ["latin"], variable: "--font-unbounded", display: "swap" });
@@ -25,8 +26,8 @@ export const metadata: Metadata = {
 
 export const viewport: Viewport = {
   themeColor: [
-    { media: "(prefers-color-scheme: dark)", color: "#0a0b0f" },
-    { media: "(prefers-color-scheme: light)", color: "#f4f5f7" },
+    { media: "(prefers-color-scheme: dark)", color: tokenDefinitions.colors.dark.bg },
+    { media: "(prefers-color-scheme: light)", color: tokenDefinitions.colors.light.bg },
   ],
 };
 

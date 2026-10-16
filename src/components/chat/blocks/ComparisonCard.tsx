@@ -32,7 +32,7 @@ export function ComparisonCard({
         <span />
         {products.map((p) => (
           <span key={p.id} className="min-w-0">
-            <span className="flex items-center gap-1 truncate text-[12px] font-medium">
+            <span className="flex items-center gap-1 truncate text-xs font-medium">
               {winnerId === p.id && <Trophy className="size-3 shrink-0 text-accent-text" aria-label="Better fit" />}
               <span className="truncate">{p.name}</span>
             </span>
@@ -42,9 +42,9 @@ export function ComparisonCard({
       <dl className="mt-1.5 px-3 pb-2">
         {rows.map((r) => (
           <div key={r.key} className="grid items-center gap-2 border-t border-border py-1" style={{ gridTemplateColumns: `72px repeat(${products.length}, minmax(0,1fr))` }}>
-            <dt className="text-[11px] text-muted">{r.label}</dt>
+            <dt className="text-xs text-muted">{r.label}</dt>
             {products.map((p) => (
-              <dd key={p.id} className={cn("truncate font-mono text-[11px]", r.winners.includes(p.id) && "font-semibold text-accent-text")}>
+              <dd key={p.id} className={cn("truncate font-mono text-xs", r.winners.includes(p.id) && "font-semibold text-accent-text")}>
                 {r.values[p.id]}
               </dd>
             ))}

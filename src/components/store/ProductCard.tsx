@@ -69,7 +69,7 @@ export function ProductCard({ product }: { product: Product }) {
         <div className="flex flex-col items-start gap-1.5">
           <StockBadge stock={product.stock} />
           {rank >= 0 && (
-            <span className="inline-flex items-center gap-1 rounded-full bg-accent px-2.5 py-1 text-[11px] font-semibold text-accent-fg">
+            <span className="inline-flex items-center gap-1 rounded-full bg-accent px-2.5 py-1 text-2xs font-semibold text-accent-fg">
               <Sparkles className="size-3" aria-hidden /> Pip&apos;s pick #{rank + 1}
             </span>
           )}
@@ -80,7 +80,7 @@ export function ProductCard({ product }: { product: Product }) {
       <div className="flex flex-1 flex-col gap-3 p-4">
         <div>
           <p className="text-xs text-muted">{product.brand}</p>
-          <h3 className="mt-0.5 line-clamp-1 font-display text-[15px] font-medium tracking-tight">
+          <h3 className="mt-0.5 line-clamp-1 font-display text-base font-medium tracking-tight">
             <Link href={`/product/${product.id}`} className="after:absolute after:inset-0 focus-visible:outline-none">
               {product.name}
             </Link>
@@ -89,7 +89,7 @@ export function ProductCard({ product }: { product: Product }) {
         <dl className="grid grid-cols-3 gap-2">
           {specs.map((s) => (
             <div key={s.key} className="min-w-0 rounded-lg bg-surface-2 px-2 py-1.5">
-              <dt className="truncate text-[10px] uppercase tracking-wider text-muted">{s.label}</dt>
+              <dt className="truncate text-2xs uppercase tracking-wider text-muted">{s.label}</dt>
               <dd className="truncate font-mono text-xs">{s.value}</dd>
             </div>
           ))}
@@ -101,7 +101,7 @@ export function ProductCard({ product }: { product: Product }) {
             disabled={out || busy}
             onClick={() => addWithFeedback(product.id, imageRef.current)}
             aria-label={out ? `${product.name} is out of stock` : `Add ${product.brand} ${product.name} to cart`}
-            className="relative z-10 grid size-9 place-items-center rounded-full bg-accent text-accent-fg transition-[filter,opacity] hover:brightness-110 disabled:bg-surface-2 disabled:text-muted"
+            className="focus-ring relative z-10 grid size-9 place-items-center rounded-full bg-accent text-accent-fg transition-[filter,opacity] hover:brightness-110 disabled:bg-surface-2 disabled:text-muted"
           >
             {busy ? <Loader2 className="size-4 animate-spin" aria-hidden /> : <Plus className="size-4" aria-hidden />}
           </button>

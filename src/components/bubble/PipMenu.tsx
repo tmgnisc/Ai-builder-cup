@@ -2,18 +2,19 @@
 
 import { BellOff, Bell, History, MousePointer2, MoreHorizontal, Pause, Play, RotateCcw, Shield, Volume2, VolumeX } from "lucide-react";
 import { usePipPosition } from "@/store/usePipPosition";
-import { useEffect, useRef, useState } from "react";
+import { useEffect, useState } from "react";
 import { cn } from "@/lib/cn";
 import { useChat } from "@/store/useChat";
 import { usePrefs } from "@/store/usePrefs";
 import { useSignals } from "@/store/useSignals";
 import { useVoice } from "@/store/useVoice";
+import { Popover } from "@/components/ui/Popover";
+import { IconButton } from "@/components/ui/IconButton";
 
 /** Pip's settings menu (inside the bubble): history, voice, quiet, pause, privacy, reset. */
 export function PipMenu({ onOpenChange }: { onOpenChange?: (open: boolean) => void }) {
   const [open, setOpen] = useState(false);
   const [privacy, setPrivacy] = useState(false);
-  const ref = useRef<HTMLDivElement>(null);
   const muted = usePrefs((s) => s.voiceMuted);
   const setMuted = usePrefs((s) => s.setVoiceMuted);
   const paused = useSignals((s) => s.paused);
@@ -27,38 +28,31 @@ export function PipMenu({ onOpenChange }: { onOpenChange?: (open: boolean) => vo
   const setFollow = usePipPosition((s) => s.setFollow);
 
   useEffect(() => onOpenChange?.(open), [open, onOpenChange]);
-  useEffect(() => {
-    if (!open) return;
-    const onDown = (e: PointerEvent) => !ref.current?.contains(e.target as Node) && setOpen(false);
-    const onKey = (e: KeyboardEvent) => e.key === "Escape" && (e.stopPropagation(), setOpen(false));
-    document.addEventListener("pointerdown", onDown);
-    document.addEventListener("keydown", onKey, true);
-    return () => {
-      document.removeEventListener("pointerdown", onDown);
-      document.removeEventListener("keydown", onKey, true);
-    };
-  }, [open]);
 
-  const item = "flex w-full items-center gap-2.5 rounded-lg px-2.5 py-2 text-left text-[13px] hover:bg-surface-2";
+  const item = "flex w-full items-center gap-2.5 rounded-lg px-2.5 py-2 text-left text-sm hover:bg-surface-2 transition-colors";
   const close = () => {
     setOpen(false);
     setPrivacy(false);
   };
 
   return (
-    <div ref={ref} className="relative">
-      <button
-        type="button"
-        onClick={() => setOpen((o) => !o)}
-        aria-expanded={open}
-        aria-haspopup="menu"
-        aria-label="Pip settings"
-        className="grid size-7 place-items-center rounded-full text-muted hover:bg-surface-2 hover:text-text"
-      >
-        <MoreHorizontal className="size-4" />
-      </button>
-      {open && (
-        <div role="menu" aria-label="Pip settings" className="absolute right-0 top-8 z-10 w-60 rounded-2xl bg-surface p-1.5 shadow-2xl hairline">
+    <Popover
+      open={open}
+      onOpenChange={setOpen}
+      side="bottom"
+      className="w-60 rounded-2xl p-1.5 shadow-2xl"
+      trigger={
+        <IconButton
+          size="sm"
+          variant="ghost"
+          aria-label="Pip settings"
+          className="size-7"
+        >
+          <MoreHorizontal className="size-4" />
+        </IconButton>
+      }
+      content={
+        <div role="menu" aria-label="Pip settings" className="flex flex-col gap-0.5">
           <button role="menuitem" type="button" className={item} onClick={() => (setHistoryOpen(true), close())}>
             <History className="size-4 text-muted" /> Conversation history
           </button>
@@ -87,7 +81,7 @@ export function PipMenu({ onOpenChange }: { onOpenChange?: (open: boolean) => vo
             <Shield className="size-4 text-muted" /> What Pip knows
           </button>
           {privacy && (
-            <div className="mx-1 mb-1 rounded-xl bg-surface-2 p-3 text-[11.5px] leading-relaxed text-muted">
+            <div className="mx-1 mb-1 rounded-xl bg-surface-2 p-3 text-xs leading-relaxed text-muted">
               <p>
                 <span className="text-text">Your messages</span> and a short memory of the conversation go to this store&apos;s server only when you talk to Pip.
               </p>
@@ -104,7 +98,7 @@ export function PipMenu({ onOpenChange }: { onOpenChange?: (open: boolean) => vo
             <RotateCcw className="size-4" /> Reset memory
           </button>
         </div>
-      )}
-    </div>
+      }
+    />
   );
 }

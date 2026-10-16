@@ -31,7 +31,7 @@ export default async function ProductPage({ params }: Params) {
   const rows = specRows(product);
 
   return (
-    <div className="mx-auto max-w-[1400px] px-4 pt-8 sm:px-6">
+    <div className="mx-auto max-w-page px-4 pt-8 sm:px-6">
       <ProductViewTracker productId={product.id} />
       <Link href="/#store" className="inline-flex items-center gap-1.5 rounded-full text-sm text-muted hover:text-text">
         <ArrowLeft className="size-4" aria-hidden /> Back to store
@@ -82,14 +82,14 @@ export default async function ProductPage({ params }: Params) {
             <h2 id="specs-heading" className="font-display text-lg font-semibold tracking-tight">
               Specifications
             </h2>
-            <table className="mt-4 w-full overflow-hidden rounded-[var(--radius-card)] text-sm hairline">
+            <table className="mt-4 w-full overflow-hidden rounded-card text-sm hairline">
               <tbody className="divide-y divide-border">
                 {rows.map((r) => (
                   <tr key={r.key} className="bg-surface" data-pip-anchor={`spec:${r.key}`} data-pip-topic={`spec-${r.key}`} data-pip-product={product.id}>
                     <th scope="row" className="w-40 px-4 py-3 text-left font-normal text-muted">
                       {r.label}
                     </th>
-                    <td className="px-4 py-3 font-mono text-[13px]">{r.value}</td>
+                    <td className="px-4 py-3 font-mono text-sm">{r.value}</td>
                   </tr>
                 ))}
               </tbody>

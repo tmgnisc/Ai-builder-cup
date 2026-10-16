@@ -328,8 +328,8 @@ function PipStandIn() {
         aria-hidden
         className="relative grid size-[52%] place-items-center rounded-full"
         style={{
-          background: "radial-gradient(circle at 50% 45%, color-mix(in oklab, var(--pip-color, #c6ff3d), black 70%) 0%, #05060a 75%)",
-          boxShadow: "inset 0 0 0 1.5px color-mix(in oklab, var(--pip-color, #c6ff3d), transparent 40%), 0 0 40px -10px var(--pip-color, #c6ff3d)",
+          background: "radial-gradient(circle at 50% 45%, color-mix(in oklab, var(--pip-color, var(--accent)), black 70%) 0%, var(--bg) 75%)",
+          boxShadow: "inset 0 0 0 1.5px color-mix(in oklab, var(--pip-color, var(--accent)), transparent 40%), 0 0 40px -10px var(--pip-color, var(--accent))",
         }}
       >
         <span className="flex -translate-y-[6%] gap-[18%]" style={{ width: "40%", justifyContent: "center" }}>

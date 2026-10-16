@@ -95,7 +95,7 @@ export function Hero() {
   }
 
   return (
-    <section ref={root} className="relative mx-auto grid max-w-[1400px] items-center gap-10 px-4 pb-16 pt-12 sm:px-6 md:pt-20 lg:grid-cols-[1.1fr_0.9fr]">
+    <section ref={root} className="relative mx-auto grid max-w-page items-center gap-10 px-4 pb-16 pt-12 sm:px-6 md:pt-20 lg:grid-cols-[1.1fr_0.9fr]">
       <div>
         <p data-hero-fade className="mb-5 inline-flex items-center gap-2 rounded-full bg-surface px-3 py-1.5 text-xs text-muted hairline">
           <span className="size-1.5 rounded-full bg-accent shadow-[0_0_10px_var(--accent)]" aria-hidden />
@@ -125,7 +125,7 @@ export function Hero() {
               onChange={(e) => setPrompt(e.target.value)}
               placeholder="Tell Pip what you need…"
               autoComplete="off"
-              className="h-11 min-w-0 flex-1 bg-transparent text-[15px] placeholder:text-muted focus:outline-none"
+              className="h-11 min-w-0 flex-1 bg-transparent text-base placeholder:text-muted focus:outline-none"
             />
             <MicButton size={44} />
             <span ref={sendRef} className="inline-flex">
@@ -134,7 +134,7 @@ export function Hero() {
                 aria-label="Send to Pip"
                 className="grid size-11 place-items-center rounded-full bg-accent text-accent-fg shadow-[0_8px_24px_-8px_var(--accent)] transition-[filter] hover:brightness-110"
               >
-                <ArrowUp className="size-[18px]" />
+                <ArrowUp className="size-4.5" />
               </button>
             </span>
           </div>
@@ -168,7 +168,7 @@ export function Hero() {
       </div>
 
       {/* Pip's hero anchor: the fixed companion layer flies Pip from here into the dock on scroll. */}
-      <div data-pip-anchor="hero" data-pip-topic="hero" aria-hidden className="relative mx-auto hidden aspect-square w-full max-w-[460px] lg:block" />
+      <div data-pip-anchor="hero" data-pip-topic="hero" aria-hidden className="relative mx-auto hidden aspect-square w-full max-w-md lg:block" />
     </section>
   );
 }

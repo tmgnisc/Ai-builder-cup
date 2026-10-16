@@ -22,7 +22,7 @@ export function KpiCard({ kpi }: { kpi: Kpi }) {
         <p className="mt-1.5 text-xs leading-snug text-muted">{kpi.hint}</p>
       </div>
       <div className="flex items-end justify-between gap-3">
-        <span className={cn("inline-flex items-center gap-0.5 rounded-full px-2 py-0.5 text-[11px] font-semibold", up ? "bg-listening/12 text-listening" : "bg-danger/12 text-danger")}>
+        <span className={cn("inline-flex items-center gap-0.5 rounded-full px-2 py-0.5 text-2xs font-semibold", up ? "bg-listening/12 text-listening" : "bg-danger/12 text-danger")}>
           {up ? <ArrowUpRight className="size-3" aria-hidden /> : <ArrowDownRight className="size-3" aria-hidden />}
           {up ? "+" : ""}
           {kpi.delta}

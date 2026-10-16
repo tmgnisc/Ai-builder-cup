@@ -139,7 +139,7 @@ export function RoamingPanel() {
                 <div className="p-2.5">
                   <p className="truncate text-sm font-medium">{p.name}</p>
                   <p className="font-mono text-xs text-muted">{formatNPR(p.price)}</p>
-                  <p data-pip-anchor={`pg:battery:${id}`} data-pip-topic="spec-battery" data-pip-product={id} className="mt-1 w-fit rounded bg-surface-2 px-1.5 font-mono text-[11px]">
+                  <p data-pip-anchor={`pg:battery:${id}`} data-pip-topic="spec-battery" data-pip-product={id} className="mt-1 w-fit rounded bg-surface-2 px-1.5 font-mono text-2xs">
                     Battery {p.specs.batteryHours} h
                   </p>
                 </div>

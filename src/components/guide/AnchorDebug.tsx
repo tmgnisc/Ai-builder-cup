@@ -57,7 +57,7 @@ export function AnchorDebug() {
           className="absolute rounded-md"
           style={{ left: b.left, top: b.top, width: b.width, height: b.height, outline: `1.5px ${b.kind === "anchor" ? "dashed" : "solid"} ${COLORS[b.kind]}` }}
         >
-          <span className="absolute -top-4 left-0 whitespace-nowrap rounded bg-black/80 px-1 font-mono text-[9px] text-white">{b.label}</span>
+          <span className="absolute -top-4 left-0 whitespace-nowrap rounded bg-black/80 px-1 font-mono text-2xs text-white">{b.label}</span>
         </div>
       ))}
     </div>

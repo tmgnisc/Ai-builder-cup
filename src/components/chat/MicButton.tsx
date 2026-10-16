@@ -39,7 +39,7 @@ export function MicButton({ className, size = 36 }: { className?: string; size?:
         style={{ width: size, height: size }}
       >
         {listening && <span aria-hidden className="absolute inset-0 animate-ping rounded-full bg-listening/40 motion-reduce:animate-none" />}
-        {!supported ? <MicOff className="size-4" /> : listening ? <Square className="relative size-3.5 fill-current" /> : <Mic className="size-[18px]" />}
+        {!supported ? <MicOff className="size-4" /> : listening ? <Square className="relative size-3.5 fill-current" /> : <Mic className="size-4.5" />}
       </button>
     </span>
   );

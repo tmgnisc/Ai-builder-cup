@@ -31,18 +31,18 @@ export function Funnel({ steps }: { steps: FunnelStep[] }) {
           const isWorst = i === worst;
           return (
             <li key={s.key} data-funnel-row className="grid grid-cols-[minmax(0,9.5rem)_1fr_4.5rem] items-center gap-3 max-sm:grid-cols-[minmax(0,7rem)_1fr_3.75rem]">
-              <span className="text-[13px] leading-tight text-muted">{s.label}</span>
+              <span className="text-sm leading-tight text-muted">{s.label}</span>
               <span className="relative flex h-9 items-center justify-center">
                 <span
                   data-funnel-bar
                   className={cn("block h-full rounded-lg", isWorst ? "bg-thinking/30 shadow-[inset_0_0_0_1px_var(--state-thinking)]" : "bg-accent/25 shadow-[inset_0_0_0_1px_color-mix(in_oklab,var(--accent)_45%,transparent)]")}
                   style={{ width: `${Math.max(6, (s.value / top) * 100)}%` }}
                 />
-                <span className="absolute font-mono text-[13px] font-semibold tabular">{fmt(s.value)}</span>
+                <span className="absolute font-mono text-sm font-semibold tabular">{fmt(s.value)}</span>
               </span>
               <span className={cn("text-right font-mono text-xs tabular", isWorst ? "text-thinking" : "text-muted")}>
                 {conv === null ? "100%" : pct(conv)}
-                {isWorst && <span className="block text-[10px] font-sans font-medium">biggest drop</span>}
+                {isWorst && <span className="block text-2xs font-sans font-medium">biggest drop</span>}
               </span>
             </li>
           );

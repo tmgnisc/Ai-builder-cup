@@ -37,7 +37,7 @@ export function ToolTrace({ trace, defaultOpen }: { trace: TraceEntry[]; default
   const failed = trace.some((t) => t.status === "error");
 
   return (
-    <div className="mt-2 font-mono text-[11px] text-muted">
+    <div className="mt-2 font-mono text-2xs text-muted">
       <button
         type="button"
         onClick={() => setOpen((o) => !o)}

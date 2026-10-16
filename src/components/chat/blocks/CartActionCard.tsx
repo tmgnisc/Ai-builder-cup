@@ -42,15 +42,15 @@ export function CartActionCard({
         <ProductImage product={p} variant="cart-action" showInitials={false} />
       </div>
       <div className="min-w-0 flex-1">
-        <p className="truncate text-[13px] font-medium">{p.name}</p>
-        {status === "pending" && <p className="text-[11px] text-muted">{verb} and checking the cart…</p>}
+        <p className="truncate text-sm font-medium">{p.name}</p>
+        {status === "pending" && <p className="text-xs text-muted">{verb} and checking the cart…</p>}
         {status === "verified" && action === "add" && line && (
-          <p className="font-mono text-[11px] text-success">
+          <p className="font-mono text-xs text-success">
             In cart: {line.qty} × {formatNPR(line.unitPrice)} = {formatNPR(line.lineTotal)}
           </p>
         )}
-        {status === "verified" && action === "remove" && <p className="text-[11px] text-success">Removed. Cart re-checked.</p>}
-        {status === "failed" && <p className="text-[11px] text-danger">{message ?? "Didn't go through."}</p>}
+        {status === "verified" && action === "remove" && <p className="text-xs text-success">Removed. Cart re-checked.</p>}
+        {status === "failed" && <p className="text-xs text-danger">{message ?? "Didn't go through."}</p>}
       </div>
       <span
         className={cn(

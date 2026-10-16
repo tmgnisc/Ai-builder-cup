@@ -15,6 +15,7 @@ import {
   type PipState,
 } from "@/components/companion/states";
 import { Button } from "@/components/ui/Button";
+import { tokenDefinitions } from "@/tokens/definitions";
 import { cn } from "@/lib/cn";
 import { useCompanion } from "@/store/useCompanion";
 import { RoamingPanel } from "./RoamingPanel";
@@ -141,7 +142,7 @@ export function PlaygroundClient() {
     }
     return {
       override: { value: false, label: "override tween" },
-      rimColor: { value: "#c6ff3d", label: "rim colour" },
+      rimColor: { value: tokenDefinitions.colors.dark.accent, label: "rim colour" },
       ...groups,
     };
   }, []);
@@ -216,7 +217,7 @@ export function PlaygroundClient() {
   }
 
   return (
-    <div className="mx-auto max-w-[1400px] px-4 pt-8 sm:px-6 lg:pr-[408px]">
+    <div className="mx-auto max-w-page px-4 pt-8 sm:px-6 lg:pr-96">
       <div>
         <div className="flex items-baseline justify-between">
           <h1 className="font-display text-2xl font-semibold tracking-tight">Pip playground</h1>
@@ -227,7 +228,7 @@ export function PlaygroundClient() {
         <p className="mt-1 text-sm text-muted">Click anywhere on the stage to make Pip glance there. Move the pointer to test gaze-follow (returns to drift after 4 s idle).</p>
 
         <div
-          className="relative mt-6 grid aspect-square w-full max-w-[560px] cursor-crosshair place-items-center rounded-[var(--radius-panel)] bg-surface hairline"
+          className="relative mt-6 grid aspect-square w-full max-w-xl cursor-crosshair place-items-center rounded-panel bg-surface hairline"
           onClick={(e) => pip.glanceAt(e.clientX, e.clientY, 1400)}
         >
           <div data-pip-anchor="stage" className="aspect-square w-[82%]" aria-hidden />
@@ -267,7 +268,7 @@ export function PlaygroundClient() {
       </div>
 
       {/* Fixed, independently scrolling column: leva calls scrollIntoView on folder resize, which must not scroll the page. */}
-      <aside className="mt-8 flex flex-col gap-6 pb-10 lg:fixed lg:bottom-4 lg:right-6 lg:top-20 lg:z-20 lg:mt-0 lg:w-[360px] lg:overflow-y-auto lg:pb-4">
+      <aside className="mt-8 flex flex-col gap-6 pb-10 lg:fixed lg:bottom-4 lg:right-6 lg:top-20 lg:z-20 lg:mt-0 lg:w-90 lg:overflow-y-auto lg:pb-4">
         <section className="rounded-[var(--radius-card)] bg-surface p-4 hairline">
           <h2 className="text-sm font-semibold">Reactions (do not change state)</h2>
           <div className="mt-3 flex flex-wrap gap-2">

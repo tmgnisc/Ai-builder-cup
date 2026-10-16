@@ -40,7 +40,7 @@ export function ProductImage({ product, className, variant = "card", showInitial
       role="img"
       aria-label={`${product.brand} ${product.name}`}
       className={cn("relative size-full overflow-hidden", className)}
-      style={{ background: `linear-gradient(135deg, ${b}, #0a0b0f)` }}
+      style={{ background: `linear-gradient(135deg, ${b}, var(--bg))` }}
     >
       <svg viewBox="0 0 100 100" preserveAspectRatio="xMidYMid meet" className="absolute inset-0 size-full" aria-hidden>
         <defs>

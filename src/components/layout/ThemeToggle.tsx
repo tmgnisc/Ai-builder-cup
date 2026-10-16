@@ -16,7 +16,7 @@ export function ThemeToggle() {
         aria-label={`Switch to ${next} theme`}
         className="grid size-10 place-items-center rounded-full text-muted transition-colors hover:bg-surface-2 hover:text-text"
       >
-        {theme === "dark" ? <Sun className="size-[18px]" /> : <Moon className="size-[18px]" />}
+        {theme === "dark" ? <Sun className="size-4.5" /> : <Moon className="size-4.5" />}
       </button>
     </Tooltip>
   );

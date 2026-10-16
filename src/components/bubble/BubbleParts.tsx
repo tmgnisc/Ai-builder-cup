@@ -4,6 +4,8 @@ import { ChevronDown, Loader2, Plus } from "lucide-react";
 import Link from "next/link";
 import { useState } from "react";
 import { ProductImage } from "@/components/store/ProductImage";
+import { IconButton } from "@/components/ui/IconButton";
+import { Chip } from "@/components/ui/Chip";
 import { cn } from "@/lib/cn";
 import { getProduct } from "@/lib/commerce/catalog";
 import { formatNPR, keySpecs, stockLabel } from "@/lib/commerce/format";
@@ -27,12 +29,12 @@ export function MiniCards({ productIds, interactive }: { productIds: string[]; i
               <ProductImage product={p} variant={`bubble-${i}`} showInitials={false} className={p.stock === 0 ? "opacity-60 grayscale-[40%]" : undefined} />
             </span>
             {productIds.length > 1 && (
-              <span className="absolute left-0.5 top-0.5 grid size-4 place-items-center rounded-full bg-black/60 font-mono text-[9px] font-bold text-white">{i + 1}</span>
+              <span className="absolute left-0.5 top-0.5 grid size-4 place-items-center rounded-full bg-black/60 font-mono text-2xs font-bold text-white">{i + 1}</span>
             )}
           </Link>
           <div className="min-w-0 flex-1">
-            <p className="truncate text-[13px] font-medium leading-tight">{p.name}</p>
-            <p className="truncate font-mono text-[10.5px] text-muted">
+            <p className="truncate text-sm font-medium leading-tight">{p.name}</p>
+            <p className="truncate font-mono text-2xs text-muted">
               {formatNPR(p.price)} ·{" "}
               {p.stock === 0 ? (
                 <span className="text-danger">{stockLabel(p.stock)}</span>
@@ -44,15 +46,16 @@ export function MiniCards({ productIds, interactive }: { productIds: string[]; i
               )}
             </p>
           </div>
-          <button
-            type="button"
+          <IconButton
+            size="sm"
+            variant="primary"
             disabled={!interactive || p.stock === 0}
             onClick={() => send(`Add the ${p.name} to my cart`)}
             aria-label={`Ask Pip to add the ${p.name} to the cart`}
-            className="grid size-7 shrink-0 place-items-center rounded-full bg-accent text-accent-fg hover:brightness-110 disabled:bg-surface-2 disabled:text-muted"
+            className="size-7 shrink-0"
           >
             {pending.includes(p.id) ? <Loader2 className="size-3.5 animate-spin" /> : <Plus className="size-3.5" />}
-          </button>
+          </IconButton>
         </li>
       ))}
     </ul>
@@ -63,17 +66,13 @@ export function Chips({ chips, onPick }: { chips: BubbleChip[]; onPick: (c: Bubb
   return (
     <div className="mt-2.5 flex flex-wrap gap-1.5">
       {chips.map((c) => (
-        <button
+        <Chip
           key={c.label}
-          type="button"
+          active={c.primary}
           onClick={() => onPick(c)}
-          className={cn(
-            "rounded-full px-3 py-1.5 text-left text-xs transition-colors",
-            c.primary ? "bg-accent font-semibold text-accent-fg hover:brightness-110" : "bg-surface text-text hairline hover:bg-accent hover:text-accent-fg",
-          )}
         >
           {c.label}
-        </button>
+        </Chip>
       ))}
     </div>
   );
@@ -87,7 +86,7 @@ export function TraceLine({ trace }: { trace: TraceEntry[] }) {
   const main = running ?? trace.find((t) => t.name !== "get_cart") ?? trace[0];
   const verify = trace.find((t) => t.name === "get_cart" && t.summary?.includes("verified"));
   return (
-    <div className="mt-2 font-mono text-[10.5px] text-muted">
+    <div className="mt-2 font-mono text-2xs text-muted">
       <button type="button" onClick={() => setOpen((o) => !o)} aria-expanded={open} className="flex max-w-full items-center gap-1 hover:text-text">
         {running && <Loader2 className="size-3 shrink-0 animate-spin" aria-hidden />}
         <span className="truncate">

@@ -2,7 +2,7 @@
 
 import { SlidersHorizontal } from "lucide-react";
 import { useEffect, useMemo, useState } from "react";
-import { Sheet } from "@/components/ui/Sheet";
+import { Drawer } from "@/components/ui/Drawer";
 import { Ticker } from "@/components/ui/Ticker";
 import { CATEGORIES, type Category, type Sort } from "@/lib/commerce/schemas";
 import { InitialCategoryContext, activeFilterCount, applyFilters, useCatalogUI, useFilters } from "@/store/useCatalogUI";
@@ -33,7 +33,7 @@ function StoreSectionInner({ initialCategory }: { initialCategory: Category | nu
   const count = activeFilterCount(filters);
 
   return (
-    <section id="store" className="mx-auto max-w-[1400px] scroll-mt-20 px-4 sm:px-6" aria-labelledby="store-heading">
+    <section id="store" className="mx-auto max-w-page scroll-mt-20 px-4 sm:px-6" aria-labelledby="store-heading">
       <div className="flex flex-wrap items-end justify-between gap-4">
         <div>
           <h2 id="store-heading" className="font-display text-2xl font-semibold tracking-tight">
@@ -50,7 +50,7 @@ function StoreSectionInner({ initialCategory }: { initialCategory: Category | nu
             className="inline-flex h-10 items-center gap-2 rounded-full bg-surface px-4 text-sm hairline lg:hidden"
           >
             <SlidersHorizontal className="size-4" aria-hidden /> Filters
-            {count > 0 && <span className="rounded-full bg-accent px-1.5 font-mono text-[10px] text-accent-fg">{count}</span>}
+            {count > 0 && <span className="rounded-full bg-accent px-1.5 font-mono text-2xs text-accent-fg">{count}</span>}
           </button>
           <label className="sr-only" htmlFor="sort">
             Sort by
@@ -83,9 +83,9 @@ function StoreSectionInner({ initialCategory }: { initialCategory: Category | nu
         <ProductGrid />
       </div>
 
-      <Sheet open={sheetOpen} onOpenChange={setSheetOpen} title="Filters" side="bottom" description={`${total} matching products`}>
+      <Drawer open={sheetOpen} onOpenChange={setSheetOpen} title="Filters" side="bottom" description={`${total} matching products`}>
         <Filters className="px-5 py-5" inSheet />
-      </Sheet>
+      </Drawer>
     </section>
   );
 }

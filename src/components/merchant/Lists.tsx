@@ -43,21 +43,21 @@ export function QuestionsList({ items }: { items: TopQuestion[] }) {
           <li key={q.text} data-list-row className="relative overflow-hidden rounded-lg">
             <Meter share={q.count / max} />
             <div className="relative flex items-center gap-3 px-3 py-2">
-              <span className="min-w-0 flex-1 truncate text-[13px]" title={q.text}>
+              <span className="min-w-0 flex-1 truncate text-sm" title={q.text}>
                 {q.text}
               </span>
               <Badge tone={INTENT_TONE[q.intent]} className="shrink-0 max-sm:hidden">
                 {q.intent}
               </Badge>
               <span className="w-10 shrink-0 text-right font-mono text-xs tabular">{q.count}</span>
-              <span className="w-12 shrink-0 text-right font-mono text-[11px] text-muted tabular" title="Resolved">
+              <span className="w-12 shrink-0 text-right font-mono text-2xs text-muted tabular" title="Resolved">
                 {Math.round(q.resolved * 100)}%
               </span>
             </div>
           </li>
         ))}
       </ol>
-      <p className="mt-3 text-[11px] text-muted">Asks · share resolved (task done in that conversation)</p>
+      <p className="mt-3 text-2xs text-muted">Asks · share resolved (task done in that conversation)</p>
     </Panel>
   );
 }
@@ -72,7 +72,7 @@ export function MissingInfoList({ items }: { items: MissingInfo[] }) {
       topic="merchant-missing"
       title="Missing product info"
       icon={<MessageSquareWarning className="size-4" />}
-      aside={<span className="text-[11px] text-muted">Pip had to say “not listed”</span>}
+      aside={<span className="text-2xs text-muted">Pip had to say “not listed”</span>}
     >
       <ul className="divide-y divide-border">
         {combined.map((m, idx) => {
@@ -82,7 +82,7 @@ export function MissingInfoList({ items }: { items: MissingInfo[] }) {
             <li key={`${m.productId}-${m.field}-${idx}`} data-list-row className="flex items-center gap-3 py-2.5 first:pt-0 last:pb-0">
               <div className="min-w-0 flex-1">
                 <div className="flex items-center gap-2">
-                  <p className="text-[13px] font-medium">{m.field}</p>
+                  <p className="text-sm font-medium">{m.field}</p>
                   {isLive && <Badge tone="accent">live</Badge>}
                 </div>
                 <p className="truncate text-xs text-muted" title={m.example}>
@@ -90,7 +90,7 @@ export function MissingInfoList({ items }: { items: MissingInfo[] }) {
                 </p>
               </div>
               {p && (
-                <Link href={`/product/${p.id}`} className="inline-flex shrink-0 items-center gap-0.5 rounded-full bg-surface-2 px-2.5 py-1 text-[11px] hover:text-text max-sm:hidden">
+                <Link href={`/product/${p.id}`} className="inline-flex shrink-0 items-center gap-0.5 rounded-full bg-surface-2 px-2.5 py-1 text-2xs hover:text-text max-sm:hidden">
                   {p.name}
                   <ArrowUpRight className="size-3" aria-hidden />
                 </Link>
@@ -111,12 +111,12 @@ export function FrictionList({ items }: { items: FrictionTheme[] }) {
   const live = useFeedback((s) => s.entries);
   const max = items[0]?.count ?? 1;
   return (
-    <Panel id="merchant-friction" topic="merchant-friction" title="What's getting in the way" icon={<MessageSquareWarning className="size-4" />} aside={<span className="text-[11px] text-muted">from Pip&apos;s check-ins</span>}>
+    <Panel id="merchant-friction" topic="merchant-friction" title="What's getting in the way" icon={<MessageSquareWarning className="size-4" />} aside={<span className="text-2xs text-muted">from Pip&apos;s check-ins</span>}>
       <ol className="space-y-1.5">
         {live.map((f, i) => (
           <li key={`live-${i}`} className="relative overflow-hidden rounded-lg bg-accent/10 shadow-[inset_0_0_0_1px_color-mix(in_oklab,var(--accent)_35%,transparent)]">
             <div className="relative flex items-center gap-3 px-3 py-2">
-              <span className="min-w-0 flex-1 truncate text-[13px]">{f.text}</span>
+              <span className="min-w-0 flex-1 truncate text-sm">{f.text}</span>
               <Badge tone="accent" className="shrink-0">
                 you, just now
               </Badge>
@@ -127,10 +127,10 @@ export function FrictionList({ items }: { items: FrictionTheme[] }) {
           <li key={f.text} data-list-row className="relative overflow-hidden rounded-lg">
             <Meter share={f.count / max} />
             <div className="relative flex items-center gap-3 px-3 py-2">
-              <span className="min-w-0 flex-1 truncate text-[13px]" title={f.text}>
+              <span className="min-w-0 flex-1 truncate text-sm" title={f.text}>
                 {f.text}
               </span>
-              <span className="shrink-0 text-[11px] text-muted max-sm:hidden">{f.page}</span>
+              <span className="shrink-0 text-2xs text-muted max-sm:hidden">{f.page}</span>
               <span className="w-8 shrink-0 text-right font-mono text-xs tabular">{f.count}</span>
             </div>
           </li>
@@ -166,7 +166,7 @@ export function SessionPanel() {
           ["Feedback", feedback],
         ].map(([k, v]) => (
           <div key={k} className="flex flex-col-reverse rounded-xl bg-surface-2 px-2 py-3">
-            <dt className="mt-0.5 text-[11px] text-muted">{k}</dt>
+            <dt className="mt-0.5 text-2xs text-muted">{k}</dt>
             <dd className="font-display text-xl font-semibold tabular">{v}</dd>
           </div>
         ))}
@@ -175,14 +175,14 @@ export function SessionPanel() {
       {stats.questions.length ? (
         <ol className="mt-4 space-y-1">
           {stats.questions.slice(-5).reverse().map((q, i) => (
-            <li key={`${i}-${q}`} className="truncate rounded-lg px-2 py-1.5 text-[13px] odd:bg-surface-2/60" title={q}>
+            <li key={`${i}-${q}`} className="truncate rounded-lg px-2 py-1.5 text-sm odd:bg-surface-2/60" title={q}>
               “{q}”
             </li>
           ))}
         </ol>
       ) : (
-        <p className="mt-4 text-[13px] leading-relaxed text-muted">
-          Nothing yet. Ask Pip something in the store (press <kbd className="rounded bg-surface-2 px-1 font-mono text-[11px]">/</kbd>) and it shows up here.
+        <p className="mt-4 text-sm leading-relaxed text-muted">
+          Nothing yet. Ask Pip something in the store (press <kbd className="rounded bg-surface-2 px-1 font-mono text-2xs">/</kbd>) and it shows up here.
         </p>
       )}
     </Panel>

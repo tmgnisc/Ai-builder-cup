@@ -7,6 +7,7 @@ import { MicButton } from "@/components/chat/MicButton";
 import { CartActionCard } from "@/components/chat/blocks/CartActionCard";
 import * as pilot from "@/components/companion/pilot";
 import { STATES } from "@/components/companion/states";
+import { IconButton } from "@/components/ui/IconButton";
 import { cn } from "@/lib/cn";
 import { gsap, motion, useReducedMotion } from "@/lib/motion";
 import { useSpotlight } from "@/components/guide/Spotlight";
@@ -87,7 +88,7 @@ export function SpeechBubble() {
   return (
     <div
       ref={rootRef}
-      className="pointer-events-none fixed left-0 top-0 z-[56] will-change-transform"
+      className="pointer-events-none fixed left-0 top-0 z-bubble will-change-transform"
       style={{ transform: "translate3d(-999px,-999px,0)", ["--pip-color" as string]: STATES[pipState].color }}
     >
       <div
@@ -96,9 +97,9 @@ export function SpeechBubble() {
         aria-modal="false"
         aria-label="Pip"
         onKeyDown={(e) => e.key === "Escape" && close("user")}
-        className="bubble-panel surface-solid pointer-events-auto relative w-[min(340px,calc(100vw-24px))] rounded-[20px] p-3.5 pr-3"
+        className="bubble-panel surface-solid pointer-events-auto relative w-[min(340px,calc(100vw-24px))] rounded-panel p-3.5 pr-3"
       >
-        <span ref={tailRef} aria-hidden className="bubble-tail absolute size-3.5 rotate-45 rounded-[3px]" />
+        <span ref={tailRef} aria-hidden className="bubble-tail absolute size-3.5 rotate-45 rounded-xs" />
         <BubbleBody content={rendered.content} contentKey={rendered.key} />
       </div>
     </div>
@@ -230,14 +231,14 @@ function BubbleBody({ content, contentKey }: { content: BubbleContent; contentKe
     >
       <div className="absolute right-2 top-2 flex items-center gap-0.5">
         <PipMenu onOpenChange={setMenuOpen} />
-        <button type="button" onClick={() => close("user")} aria-label="Dismiss" className="grid size-7 place-items-center rounded-full text-muted hover:bg-surface-2 hover:text-text">
+        <IconButton size="sm" variant="ghost" onClick={() => close("user")} aria-label="Dismiss" className="size-7">
           <X className="size-3.5" />
-        </button>
+        </IconButton>
       </div>
 
       <div className="pr-14" aria-live="polite">
-        {userLine && <p className="mb-1 truncate text-[11px] text-muted">You: {userLine}</p>}
-        {content.kind === "prompt" && <p className="text-[14px] leading-relaxed">What can I help with? Ask me anything about this page, or try:</p>}
+        {userLine && <p className="mb-1 truncate text-xs text-muted">You: {userLine}</p>}
+        {content.kind === "prompt" && <p className="text-sm leading-relaxed">What can I help with? Ask me anything about this page, or try:</p>}
         {content.kind === "tip" && <TypedText key={contentKey} text={content.text} />}
         {message && <AgentText message={message} />}
       </div>
@@ -251,7 +252,7 @@ function BubbleBody({ content, contentKey }: { content: BubbleContent; contentKe
       {inputOpen || content.kind !== "tip" ? (
         <ReplyInput draft={draft} setDraft={setDraft} autoFocus={content.kind === "prompt"} busy={busy} />
       ) : (
-        <button type="button" onClick={() => setInputOpen(true)} className="mt-2 text-[11px] text-muted underline-offset-2 hover:text-text hover:underline">
+        <button type="button" onClick={() => setInputOpen(true)} className="mt-2 text-xs text-muted underline-offset-2 hover:text-text hover:underline">
           Reply to Pip
         </button>
       )}
@@ -283,7 +284,7 @@ function AgentText({ message }: { message: ChatMessage }) {
     );
   }
   return (
-    <div className={cn("text-[14px] leading-relaxed", message.status === "error" && "text-danger")}>
+    <div className={cn("text-sm leading-relaxed", message.status === "error" && "text-danger")}>
       <Markdown text={message.text} />
       {streaming && <span aria-hidden className="caret text-accent-text" />}
     </div>
@@ -323,7 +324,7 @@ function TypedText({ text }: { text: string }) {
     return () => window.clearInterval(id);
   }, [text, reduced]);
   return (
-    <p className="text-[14px] leading-relaxed">
+    <p className="text-sm leading-relaxed">
       <Markdown text={text.slice(0, n)} />
       <span className="sr-only">{text.replace(/\*\*/g, "")}</span>
     </p>
@@ -364,7 +365,7 @@ function ReplyInput({ draft, setDraft, autoFocus, busy }: { draft: string; setDr
           placeholder={listening ? "Listening…" : "Reply, or hold V to talk"}
           maxLength={500}
           autoComplete="off"
-          className="h-8 min-w-0 flex-1 bg-transparent text-[13px] placeholder:text-muted focus:outline-none"
+          className="h-8 min-w-0 flex-1 bg-transparent text-sm placeholder:text-muted focus:outline-none"
         />
         <MicButton size={32} />
         {busy ? (
@@ -378,7 +379,7 @@ function ReplyInput({ draft, setDraft, autoFocus, busy }: { draft: string; setDr
         )}
       </div>
       {voiceError && (
-        <p role="alert" className="mt-1.5 px-1 text-[11px] text-danger">
+        <p role="alert" className="mt-1.5 px-1 text-xs text-danger">
           {voiceError}
         </p>
       )}

@@ -24,6 +24,8 @@ export interface OrbUniforms {
   uGlitch: { value: number };
 }
 
+import { tokens } from "@/styles/tokens";
+
 export function createOrbUniforms(): OrbUniforms {
   return {
     uTime: { value: 0 },
@@ -32,7 +34,7 @@ export function createOrbUniforms(): OrbUniforms {
     uNoiseSpeed: { value: 0.25 },
     uSquashY: { value: 1 },
     uSplit: { value: 0 },
-    uRim: { value: new Color("#c6ff3d") },
+    uRim: { value: new Color(tokens.colors.dark.accent) },
     uRimIntensity: { value: 0.75 },
     uCore: { value: 0.4 },
     uSaturation: { value: 1 },

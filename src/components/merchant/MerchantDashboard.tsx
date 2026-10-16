@@ -35,7 +35,7 @@ export function MerchantDashboard() {
   );
 
   return (
-    <div ref={root} className="mx-auto max-w-[1400px] px-4 pb-20 pt-10 sm:px-6">
+    <div ref={root} className="mx-auto max-w-page px-4 pb-20 pt-10 sm:px-6">
       <header className="flex flex-wrap items-end justify-between gap-4">
         <div>
           <p className="text-xs font-medium uppercase tracking-wider text-accent-text">Merchant</p>

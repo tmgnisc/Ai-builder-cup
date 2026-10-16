@@ -25,13 +25,15 @@ export type PipState = (typeof PIP_STATES)[number];
 export const EYE_SHAPES = ["capsule", "narrow", "happy", "wide", "cross", "closed"] as const;
 export type EyeShape = (typeof EYE_SHAPES)[number];
 
+import { tokenDefinitions } from "@/tokens/definitions";
+
 export const PIP_COLORS = {
-  accent: "#c6ff3d",
-  listening: "#3dffb0",
-  thinking: "#ffb23d",
-  searching: "#3dd9ff",
-  success: "#c6ff3d",
-  error: "#ff5a5a",
+  accent: tokenDefinitions.colors.dark.accent,
+  listening: tokenDefinitions.colors.dark.listening,
+  thinking: tokenDefinitions.colors.dark.thinking,
+  searching: tokenDefinitions.colors.dark.searching,
+  success: tokenDefinitions.colors.dark.success,
+  error: tokenDefinitions.colors.dark.danger,
 } as const;
 
 /** Flat, tweenable parameter set. These map 1:1 onto uniforms or per-frame motion. */

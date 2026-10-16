@@ -2,22 +2,23 @@
 
 import { Loader2, Plus, Trophy, X } from "lucide-react";
 import Link from "next/link";
-import { useMemo, useRef } from "react";
+import { useRef } from "react";
 import { StockBadge } from "@/components/ui/Badge";
-import { Sheet } from "@/components/ui/Sheet";
+import { Drawer } from "@/components/ui/Drawer";
+import { IconButton } from "@/components/ui/IconButton";
 import { cn } from "@/lib/cn";
-import { getProduct } from "@/lib/commerce/catalog";
-import { compareProducts } from "@/lib/commerce/compare";
 import { formatNPR } from "@/lib/commerce/format";
 import type { Product } from "@/lib/commerce/schemas";
+import type { CompareRow } from "@/lib/commerce/compare";
 import { gsap, motion, useGSAP } from "@/lib/motion";
 import { useCart } from "@/store/useCart";
 import { useBubble } from "@/store/useBubble";
 import { useCompare } from "@/store/useCompare";
+import { useCompareWinner } from "@/hooks/useCompareWinner";
 import { ProductImage } from "./ProductImage";
 
 /**
- * Bottom comparison drawer. Every value and the verdict come from `compareProducts`
+ * Bottom comparison drawer. Every value and the verdict come from `useCompareWinner`
  * over catalog data. Rows reveal in sequence; winning cells flash lime.
  */
 export function CompareDrawer() {
@@ -31,11 +32,10 @@ export function CompareDrawer() {
   // While Pip is talking, the drawer is non-modal so the bubble stays usable.
   const pipTalking = useBubble((s) => s.content !== null);
 
-  const products = useMemo(() => ids.map(getProduct).filter((p): p is Product => !!p), [ids]);
-  const result = useMemo(
-    () => (products.length >= 2 ? compareProducts(products, { context: context ?? undefined, priorities: priorities ?? undefined }) : null),
-    [products, context, priorities],
-  );
+  const { products, result, isWinner, isRowWinner, verdict } = useCompareWinner(ids, {
+    context,
+    priorities,
+  });
 
   useGSAP(
     () => {
@@ -60,7 +60,7 @@ export function CompareDrawer() {
   const minWidth = 120 + products.length * 190;
 
   return (
-    <Sheet
+    <Drawer
       open={open && !!result}
       onOpenChange={setOpen}
       side="bottom"
@@ -71,44 +71,43 @@ export function CompareDrawer() {
       {result && (
         <div ref={tableRef} className="px-5 pb-6 pt-4">
           <div data-verdict data-pip-anchor="compare-verdict" data-pip-topic="compare-verdict" className="flex gap-3 rounded-2xl bg-accent/10 p-4 shadow-[inset_0_0_0_1px_color-mix(in_oklab,var(--accent)_30%,transparent)]">
-            <span aria-hidden className="mt-0.5 grid size-7 shrink-0 place-items-center rounded-full bg-[#05060a] shadow-[inset_0_0_0_1.5px_var(--accent),0_0_16px_-4px_var(--accent)]">
-              <span className="flex gap-[3px]">
-                <span className="h-2 w-[3px] rounded-full bg-white" />
-                <span className="h-2 w-[3px] rounded-full bg-white" />
+            <span aria-hidden className="mt-0.5 grid size-7 shrink-0 place-items-center rounded-full bg-bg shadow-[inset_0_0_0_1.5px_var(--accent),0_0_16px_-4px_var(--accent)]">
+              <span className="flex gap-0.5">
+                <span className="h-2 w-0.5 rounded-full bg-text" />
+                <span className="h-2 w-0.5 rounded-full bg-text" />
               </span>
             </span>
             <div>
-              <p className="text-[11px] font-medium uppercase tracking-wider text-accent-text">Pip&apos;s verdict</p>
-              <p className="mt-1 text-[15px] leading-relaxed">{result.verdict}</p>
+              <p className="text-xs font-semibold uppercase tracking-wider text-accent-text">Pip&apos;s verdict</p>
+              <p className="mt-1 text-sm leading-relaxed">{verdict}</p>
             </div>
           </div>
 
           <div className="no-scrollbar mt-5 overflow-x-auto">
             <div role="table" aria-label="Product comparison" className="w-full" style={{ minWidth }}>
               <div role="row" className="grid items-end gap-3 px-3 pb-3" style={{ gridTemplateColumns: cols }}>
-                {/* Must occupy a grid cell, so only its text is visually hidden. */}
                 <span role="columnheader">
                   <span className="sr-only">Attribute</span>
                 </span>
                 {products.map((p) => (
-                  <ProductHeader key={p.id} product={p} isWinner={result.winnerId === p.id} onRemove={() => remove(p.id)} />
+                  <ProductHeader key={p.id} product={p} isWinner={isWinner(p.id)} onRemove={() => remove(p.id)} />
                 ))}
               </div>
               <div role="rowgroup" className="divide-y divide-border overflow-hidden rounded-2xl bg-surface-2/60 hairline">
-                {result.rows.map((row) => (
+                {result.rows.map((row: CompareRow) => (
                   <div key={row.key} role="row" data-row className="grid items-center gap-3 px-3 py-2.5 odd:bg-surface/40" style={{ gridTemplateColumns: cols }}>
                     <span role="rowheader" className="text-xs text-muted">
                       {row.label}
                     </span>
                     {products.map((p) => {
-                      const win = row.winners.includes(p.id);
+                      const win = isRowWinner(row.key, p.id);
                       return (
                         <span
                           key={p.id}
                           role="cell"
                           data-winner={win ? "" : undefined}
                           className={cn(
-                            "min-w-0 break-words rounded-lg px-2 py-1 font-mono text-[13px]",
+                            "min-w-0 break-words rounded-lg px-2 py-1 font-mono text-xs",
                             win && "bg-accent/12 font-semibold text-accent-text",
                             !row.numeric && "text-xs leading-snug text-muted",
                           )}
@@ -125,7 +124,7 @@ export function CompareDrawer() {
           </div>
         </div>
       )}
-    </Sheet>
+    </Drawer>
   );
 }
 
@@ -139,36 +138,38 @@ function ProductHeader({ product, isWinner, onRemove }: { product: Product; isWi
       <div ref={imgRef} className="relative h-28 overflow-hidden rounded-xl hairline">
         <ProductImage product={product} variant="compare" />
         {isWinner && (
-          <span className="absolute left-2 top-2 inline-flex items-center gap-1 rounded-full bg-accent px-2 py-0.5 text-[10px] font-semibold text-accent-fg">
+          <span className="absolute left-2 top-2 inline-flex items-center gap-1 rounded-full bg-accent px-2 py-0.5 text-2xs font-semibold text-accent-fg">
             <Trophy className="size-3" aria-hidden /> Better fit
           </span>
         )}
-        <button
-          type="button"
+        <IconButton
+          size="sm"
+          variant="secondary"
           onClick={onRemove}
           aria-label={`Remove ${product.name} from comparison`}
-          className="absolute right-2 top-2 grid size-7 place-items-center rounded-full bg-black/45 text-white backdrop-blur hover:bg-black/65"
+          className="absolute right-2 top-2 size-7 bg-black/45 text-white backdrop-blur hover:bg-black/65"
         >
           <X className="size-3.5" />
-        </button>
+        </IconButton>
       </div>
       <div className="min-w-0">
-        <p className="text-[11px] text-muted">{product.brand}</p>
+        <p className="text-xs text-muted">{product.brand}</p>
         <Link href={`/product/${product.id}`} className="line-clamp-1 font-display text-sm font-medium hover:underline">
           {product.name}
         </Link>
       </div>
       <div className="flex items-center justify-between gap-2">
         <StockBadge stock={product.stock} />
-        <button
-          type="button"
+        <IconButton
+          size="sm"
+          variant="primary"
           disabled={out || busy}
           onClick={() => addWithFeedback(product.id, imgRef.current)}
           aria-label={out ? `${product.name} is out of stock` : `Add ${product.name} to cart (${formatNPR(product.price)})`}
-          className="grid size-8 place-items-center rounded-full bg-accent text-accent-fg hover:brightness-110 disabled:bg-surface-2 disabled:text-muted"
+          className="size-8"
         >
           {busy ? <Loader2 className="size-3.5 animate-spin" aria-hidden /> : <Plus className="size-3.5" aria-hidden />}
-        </button>
+        </IconButton>
       </div>
     </div>
   );

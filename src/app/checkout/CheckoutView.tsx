@@ -77,7 +77,7 @@ export function CheckoutView() {
             <Button size="lg" className="mt-5 w-full" onClick={() => setPlaced(true)}>
               <Lock className="size-4" aria-hidden /> Place order
             </Button>
-            <p className="mt-2 text-center text-[11px] text-muted">Demo only. No payment is taken.</p>
+            <p className="mt-2 text-center text-xs text-muted">Demo only. No payment is taken.</p>
           </aside>
         </div>
       )}

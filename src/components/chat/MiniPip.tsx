@@ -13,14 +13,14 @@ export function MiniPip({ live = false, size = 26, className }: { live?: boolean
   return (
     <span
       aria-hidden
-      className={cn("grid shrink-0 place-items-center rounded-full bg-[#05060a] transition-shadow duration-500", className)}
+      className={cn("grid shrink-0 place-items-center rounded-full bg-bg transition-shadow duration-500", className)}
       style={{ width: size, height: size, boxShadow: `inset 0 0 0 1.5px ${color}, 0 0 14px -4px ${color}` }}
     >
       <span className="flex gap-[18%]" style={{ width: "50%", justifyContent: "center" }}>
         {[0, 1].map((i) => (
           <span
             key={i}
-            className={cn("bg-white transition-all duration-300", happy ? "h-[3px] rounded-t-full" : closed ? "h-[1.5px]" : "rounded-full")}
+            className={cn("bg-white transition-all duration-300", happy ? "h-0.5 rounded-t-full" : closed ? "h-px" : "rounded-full")}
             style={{ width: size * 0.12, height: happy || closed ? undefined : size * 0.26 }}
           />
         ))}

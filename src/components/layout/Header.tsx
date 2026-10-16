@@ -8,12 +8,12 @@ export function Logo() {
   return (
     <Link href="/" className="group flex items-center gap-2.5 rounded-full" aria-label="Persona home">
       <span aria-hidden className="relative grid size-7 place-items-center rounded-full bg-accent shadow-[0_0_24px_-4px_var(--accent)]">
-        <span className="flex gap-[3px]">
-          <span className="h-2 w-[3px] rounded-full bg-accent-fg transition-transform duration-300 group-hover:scale-y-[0.2]" />
-          <span className="h-2 w-[3px] rounded-full bg-accent-fg transition-transform duration-300 group-hover:scale-y-[0.2]" />
+        <span className="flex gap-0.5">
+          <span className="h-2 w-0.5 rounded-full bg-accent-fg transition-transform duration-300 group-hover:scale-y-[0.2]" />
+          <span className="h-2 w-0.5 rounded-full bg-accent-fg transition-transform duration-300 group-hover:scale-y-[0.2]" />
         </span>
       </span>
-      <span className="font-display text-[15px] font-semibold tracking-tight">Persona</span>
+      <span className="font-display text-base font-semibold tracking-tight">Persona</span>
     </Link>
   );
 }
@@ -27,7 +27,7 @@ export function Header() {
       >
         Skip to content
       </a>
-      <div className="mx-auto flex h-16 max-w-[1400px] items-center gap-6 px-4 sm:px-6">
+      <div className="mx-auto flex h-16 max-w-page items-center gap-6 px-4 sm:px-6">
         <Logo />
         <nav aria-label="Primary" className="hidden flex-1 items-center gap-1 md:flex">
           {CATEGORIES.map((c) => (

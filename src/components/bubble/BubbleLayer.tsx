@@ -4,7 +4,8 @@ import { RotateCcw } from "lucide-react";
 import { usePathname, useRouter } from "next/navigation";
 import { useEffect } from "react";
 import { MessageList } from "@/components/chat/MessageList";
-import { Sheet } from "@/components/ui/Sheet";
+import { Drawer } from "@/components/ui/Drawer";
+import { IconButton } from "@/components/ui/IconButton";
 import { suggestionsFor, useBubble } from "@/store/useBubble";
 import { registerNavigator, useChat } from "@/store/useChat";
 import { useVoice } from "@/store/useVoice";
@@ -83,23 +84,22 @@ export function BubbleLayer() {
   return (
     <>
       <SpeechBubble />
-      <Sheet
+      <Drawer
         open={historyOpen}
         onOpenChange={setHistoryOpen}
         side="left"
         title="Conversation with Pip"
         description="Everything Pip said and did, with every tool step."
         headerExtra={
-          <button
-            type="button"
+          <IconButton
+            size="sm"
+            variant="ghost"
             onClick={reset}
             disabled={!messages.length}
             aria-label="Reset memory"
-            title="Reset memory"
-            className="grid size-8 place-items-center rounded-full text-muted hover:bg-surface-2 hover:text-text disabled:opacity-40"
           >
             <RotateCcw className="size-4" />
-          </button>
+          </IconButton>
         }
       >
         {messages.length ? (
@@ -107,7 +107,7 @@ export function BubbleLayer() {
         ) : (
           <p className="px-5 py-10 text-center text-sm text-muted">Nothing yet. Click Pip, press “/” or hold V to talk.</p>
         )}
-      </Sheet>
+      </Drawer>
     </>
   );
 }
