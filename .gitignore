@@ -12,7 +12,8 @@
 
 # testing
 /coverage
-/.screenshots
+/.screenshots/*
+!/.screenshots/baseline
 
 # next.js
 /.next/

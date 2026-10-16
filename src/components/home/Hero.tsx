@@ -150,7 +150,6 @@ export function Hero() {
                   inputRef.current?.focus();
                 }}
                 className="inline-flex min-h-8 items-center rounded-full bg-surface px-3 py-1.5 text-xs text-muted transition-colors hairline hover:text-text"
-                aria-label={`Use example: ${ex}`}
               >
                 {/* The invisible copy reserves the full width, so typing never reflows the page. */}
                 <span className="inline-grid">
