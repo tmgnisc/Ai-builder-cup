@@ -1,5 +1,5 @@
 import type { Metadata } from "next";
-import { MerchantDashboard } from "@/components/merchant/MerchantDashboard";
+import { MerchantDashboard } from "@/features/merchant";
 
 export const metadata: Metadata = { title: "Merchant" };
 
