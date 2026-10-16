@@ -21,7 +21,7 @@ const STOPS: Stop[] = [
   { anchor: () => findAnchor("hero-prompt"), text: "Tell me what you need right here. You can also press **/** anywhere, or hold **V** and just talk." },
   { anchor: () => findAnchor("categories"), text: "Browse by category. When you pause on something, I'll tell you what stands out." },
   { anchor: () => findAnchor("filter-price"), text: "Filters narrow things down. If you keep juggling the price, I'll ask what matters most." },
-  { anchor: () => document.querySelector('[data-pip-topic="product-card"]'), text: "Every product card is fair game: I'll compare, check stock, and give you real numbers, never guesses." },
+  { anchor: () => document.querySelector('[data-pip-topic="product-card"]'), text: "Every product card has verified specs: I'll compare hardware trade-offs, check stock, and give you real numbers, never guesses." },
   { anchor: () => findAnchor("cart-button"), text: "When I add something, I re-check your cart so “added” always means added. Checkout is always your call." },
 ];
 
@@ -76,7 +76,7 @@ export function offerTour() {
     kind: "tip",
     id: "tour:offer",
     source: "system",
-    text: "Hi, I'm **Pip**, your shopping companion! Want a 20-second tour?",
+    text: "Pip on bench. Need a quick 20-second walk-through of specs, trade-offs, and valley delivery?",
     chips: [
       { label: "Yes, show me", primary: true, run: () => void goToStop(0) },
       { label: "Skip", run: () => endTour("skipped") },

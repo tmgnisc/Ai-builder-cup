@@ -85,8 +85,8 @@ export const useBubble = create<BubbleState>()((set, get) => ({
 
 /** Contextual suggestions when the user opens Pip on a given page. */
 export function suggestionsFor(pathname: string): string[] {
-  if (pathname.startsWith("/product/")) return ["Is this good for coding?", "Compare it with similar ones", "Add it to my cart"];
-  if (pathname.startsWith("/checkout")) return ["What's the delivery fee?", "What's in my cart?", "Remove the last item"];
-  if (pathname.startsWith("/merchant")) return ["What can Pip do for shoppers?", "Show me laptops", "Help"];
-  return ["A laptop under 1.2 lakh for coding", "Noise-cancelling headphones for flights", "Best camera phone below 90k"];
+  if (pathname.startsWith("/product/")) return ["Is this good for coding?", "Compare specs with similar models", "Check Valley delivery & stock"];
+  if (pathname.startsWith("/checkout")) return ["What's the Kathmandu delivery time?", "Verify my cart items", "Remove the last item"];
+  if (pathname.startsWith("/merchant")) return ["What can Pip do for shoppers?", "Show me laptops under 1.5 lakh", "Help"];
+  return ["Coding laptop under 1.5 lakh with 16GB", "ANC headphones for noisy commutes", "Lightweight ultrabook for TU engineering"];
 }

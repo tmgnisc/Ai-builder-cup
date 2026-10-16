@@ -28,6 +28,17 @@ const ICON: Record<string, LucideIcon> = {
   get_cart: ShoppingCart,
 };
 
+const TOOL_LABELS: Record<string, string> = {
+  search_products: "Searching catalog",
+  get_product: "Checking product specs",
+  compare_products: "Comparing trade-offs",
+  check_stock: "Checking shelf stock",
+  get_delivery_info: "Checking valley delivery",
+  add_to_cart: "Adding to cart",
+  remove_from_cart: "Updating cart",
+  get_cart: "Verifying cart",
+};
+
 /** Compact, collapsible list of the agent's tool calls, so its steps are visible. */
 export function ToolTrace({ trace, defaultOpen }: { trace: TraceEntry[]; defaultOpen: boolean }) {
   const [open, setOpen] = useState(defaultOpen);
@@ -57,7 +68,7 @@ export function ToolTrace({ trace, defaultOpen }: { trace: TraceEntry[]; default
             return (
               <li key={t.callId} className={cn("flex items-center gap-1.5", t.status === "error" && "text-danger")}>
                 {t.status === "running" ? <Loader2 className="size-3 shrink-0 animate-spin" aria-hidden /> : <Icon className="size-3 shrink-0" aria-hidden />}
-                <span className="text-text/80">{t.name}</span>
+                <span className="text-text/80">{TOOL_LABELS[t.name] ?? t.name}</span>
                 {t.summary && <span>· {t.summary}</span>}
                 {t.durationMs !== undefined && <span className="opacity-70">· {t.durationMs}ms</span>}
               </li>

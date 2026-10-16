@@ -76,7 +76,7 @@ export const TOOLS = {
       const searched = searchProducts({ category: input.category }).total;
       return { ...res, searched };
     },
-    summarize: (o) => `${o.total} result${o.total === 1 ? "" : "s"} of ${o.searched}`,
+    summarize: (o) => `${o.total} matched of ${o.searched} catalog items`,
   }),
 
   get_product: tool({
@@ -113,7 +113,7 @@ export const TOOLS = {
       const r = compareProducts(products, { priorities, context });
       return { productIds: r.productIds, winnerId: r.winnerId, verdict: r.verdict, advantages: r.advantages };
     },
-    summarize: (o) => `${o.productIds.length} products · ${o.winnerId ? "winner found" : "close call"}`,
+    summarize: (o) => `${o.productIds.length} products · ${o.winnerId ? "clear fit identified" : "comparable trade-offs"}`,
   }),
 
   check_stock: tool({
@@ -125,7 +125,7 @@ export const TOOLS = {
       if (!p) throw new ToolError("NOT_FOUND", `No product with id "${productId}".`);
       return { productId, inStock: p.stock > 0, quantity: p.stock };
     },
-    summarize: (o) => (o.inStock ? `in stock (${o.quantity})` : "out of stock"),
+    summarize: (o) => (o.inStock ? `${o.quantity} units in stock` : "out of stock"),
   }),
 
   get_delivery_info: tool({
@@ -143,7 +143,7 @@ export const TOOLS = {
     output: z.object({ cart: CartSchema }),
     handler: (input, ctx) => {
       const failure = rollFailure(ctx.chaos, { mutation: true });
-      if (failure === "transient") throw new ToolError("TRANSIENT", "The store service hiccuped.");
+      if (failure === "transient") throw new ToolError("TRANSIENT", "Store inventory service timed out.");
       const r = addToCart(ctx.sessionId, input, { dropWrite: failure === "silent" });
       if (!r.ok) throw new ToolError(r.code, r.message);
       return { cart: r.cart };
@@ -158,7 +158,7 @@ export const TOOLS = {
     output: z.object({ cart: CartSchema }),
     handler: ({ productId }, ctx) => {
       const failure = rollFailure(ctx.chaos, { mutation: true });
-      if (failure === "transient") throw new ToolError("TRANSIENT", "The store service hiccuped.");
+      if (failure === "transient") throw new ToolError("TRANSIENT", "Store inventory service timed out.");
       const r = removeFromCart(ctx.sessionId, productId, { dropWrite: failure === "silent" });
       if (!r.ok) throw new ToolError(r.code, r.message);
       return { cart: r.cart };
@@ -202,7 +202,7 @@ export async function executeTool<N extends ToolName>(name: N, rawInput: unknown
 
   await simulateLatency(ctx.chaos);
   if (!def.mutation && rollFailure(ctx.chaos, { mutation: false })) {
-    return done({ ok: false, error: { code: "TRANSIENT", message: "The store service hiccuped." }, summary: "transient error" });
+    return done({ ok: false, error: { code: "TRANSIENT", message: "Store inventory service timed out." }, summary: "transient error" });
   }
 
   try {

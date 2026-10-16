@@ -12,7 +12,7 @@ export interface ErrorStateProps {
 }
 
 export function ErrorState({
-  title = "Something went wrong",
+  title = "Unable to load catalog data",
   message,
   onRetry,
   className,

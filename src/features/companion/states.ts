@@ -161,7 +161,7 @@ export const STATES: Record<PipState, StateDef> = {
     duration: 0.6,
   },
   greeting: {
-    caption: "Hey! Looking for something?",
+    caption: "Pip on bench. What hardware are we looking at?",
     color: PIP_COLORS.accent,
     params: {
       eyes: { happy: 1 },
@@ -219,7 +219,7 @@ export const STATES: Record<PipState, StateDef> = {
     duration: 0.55,
   },
   searching: {
-    caption: "Searching products…",
+    caption: "Checking catalog & shelf stock…",
     color: PIP_COLORS.searching,
     params: {
       eyes: { capsule: 0.75, narrow: 0.25 },
@@ -241,7 +241,7 @@ export const STATES: Record<PipState, StateDef> = {
     duration: 0.4,
   },
   presenting: {
-    caption: "Here's what I found",
+    caption: "Inventory matches",
     color: PIP_COLORS.accent,
     params: {
       leanY: -0.32,
@@ -258,7 +258,7 @@ export const STATES: Record<PipState, StateDef> = {
     duration: 0.55,
   },
   comparing: {
-    caption: "Comparing…",
+    caption: "Weighing hardware trade-offs…",
     color: PIP_COLORS.searching,
     params: {
       split: 1,
@@ -289,7 +289,7 @@ export const STATES: Record<PipState, StateDef> = {
     duration: 0.4,
   },
   acting: {
-    caption: "Adding to cart…",
+    caption: "Updating store cart…",
     color: PIP_COLORS.thinking,
     params: {
       eyes: { narrow: 1 },
@@ -309,7 +309,7 @@ export const STATES: Record<PipState, StateDef> = {
     duration: 0.4,
   },
   success: {
-    caption: "Added & verified ✓",
+    caption: "Reserved & verified in cart ✓",
     color: PIP_COLORS.success,
     params: {
       eyes: { happy: 1 },
@@ -327,7 +327,7 @@ export const STATES: Record<PipState, StateDef> = {
     settle: { afterMs: 2600, to: "idle" },
   },
   error: {
-    caption: "Couldn't do that.",
+    caption: "Store inventory check failed.",
     color: PIP_COLORS.error,
     params: {
       eyes: { cross: 1 },

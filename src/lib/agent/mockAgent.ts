@@ -98,7 +98,11 @@ const RELAXATIONS: { label: (q: ParsedQuery) => string; apply: (q: ParsedQuery) 
   },
 ];
 
-const EXAMPLES = ["A laptop under 1.2 lakh for coding", "Noise-cancelling headphones for flights", "Best camera phone below 90k"];
+const EXAMPLES = [
+  "Coding laptop under 1.5 lakh with 16GB",
+  "ANC headphones for noisy commutes",
+  "Lightweight ultrabook for TU engineering",
+];
 
 export const mockAgent: Agent = {
   name: "mock",
@@ -167,8 +171,11 @@ class Handlers {
   // ── Small talk ──
 
   private async greet() {
-    this.io.state("greeting", "Hey! Looking for something?");
-    await this.io.say(this.msg, "Hey! I'm **Pip**. Tell me what you need, with a budget and what you'll use it for, and I'll search, compare and add to your cart. You'll see every step I take.");
+    this.io.state("greeting", "Pip on bench. What hardware are we looking at?");
+    await this.io.say(
+      this.msg,
+      "Pip on bench. Tell me your workload, budget in lakhs, or what you're replacing. I search catalog specs, compare trade-offs, and check Valley delivery. You'll see every tool step I take.",
+    );
     this.chips(EXAMPLES);
   }
 
@@ -210,7 +217,7 @@ class Handlers {
     const { io, msg } = this;
     if (!query.category && !query.tags?.length && !hasConstraints(query)) {
       io.state("speaking");
-      await io.say(msg, "Happy to help! What are you shopping for?");
+      await io.say(msg, "What hardware are we looking at? Tell me your budget or workload.");
       this.chips(["Laptops", "Phones", "Headphones", "Accessories"]);
       return;
     }

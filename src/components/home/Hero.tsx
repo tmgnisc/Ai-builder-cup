@@ -8,9 +8,9 @@ import { gsap, motion, SplitText, useGSAP } from "@/lib/motion";
 import { useMagnetic } from "@/lib/useMagnetic";
 
 const EXAMPLES = [
-  "A laptop under 1.2 lakh for coding",
-  "Noise-cancelling headphones for flights",
-  "Best camera phone below 90k",
+  "Coding laptop under 1.5 lakh with 16GB",
+  "ANC headphones for noisy commutes",
+  "Lightweight ultrabook for TU engineering",
 ];
 
 /**
@@ -99,22 +99,21 @@ export function Hero() {
       <div>
         <p data-hero-fade className="mb-5 inline-flex items-center gap-2 rounded-full bg-surface px-3 py-1.5 text-xs text-muted hairline">
           <span className="size-1.5 rounded-full bg-accent shadow-[0_0_10px_var(--accent)]" aria-hidden />
-          Meet Pip, your shopping companion
+          Kathmandu electronics &amp; hardware · Pip on bench
         </p>
         <h1
           data-split
           className="font-display text-[clamp(2.4rem,6vw,4.75rem)] font-semibold leading-[1.02] tracking-[-0.03em] [&_.char]:inline-block"
         >
-          Shopping, with someone who <span className="text-accent-text">gets it.</span>
+          Honest hardware. <span className="text-accent-text">Direct advice.</span>
         </h1>
         <p data-hero-rise className="mt-5 max-w-xl text-lg text-muted">
-          Tell Pip what you need in plain words. It searches the catalog, compares the trade-offs and adds to your cart, and
-          you can see every step it takes.
+          Curated electronics with verified specs and Kathmandu Valley delivery. Tell Pip your workload or budget — it weighs the trade-offs without sales talk.
         </p>
 
         <form data-hero-fade data-pip-anchor="hero-prompt" data-pip-topic="hero-prompt" className="mt-8 max-w-xl" onSubmit={onSubmit}>
           <label htmlFor="hero-prompt" className="sr-only">
-            Tell Pip what you need
+            Ask about specs, budget in lakhs, or valley delivery
           </label>
           <div className="flex items-center gap-2 rounded-full bg-surface p-1.5 pl-5 hairline transition-shadow focus-within:shadow-[inset_0_0_0_1px_var(--accent-text),0_0_0_4px_color-mix(in_oklab,var(--accent)_15%,transparent)]">
             <input
@@ -123,7 +122,7 @@ export function Hero() {
               name="prompt"
               value={prompt}
               onChange={(e) => setPrompt(e.target.value)}
-              placeholder="Tell Pip what you need…"
+              placeholder="Ask about specs, budget in lakhs, or valley delivery…"
               autoComplete="off"
               className="h-11 min-w-0 flex-1 bg-transparent text-base placeholder:text-muted focus:outline-none"
             />
