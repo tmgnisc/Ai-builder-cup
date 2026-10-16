@@ -20,22 +20,21 @@ const PAGES: PageAudit[] = [
   },
   {
     name: "Compare Drawer",
-    path: "/?compare=lenovo-ideapad-slim-5-14,apple-macbook-air-13-m3",
+    path: "/",
     prepare: async (page) => {
-      // Find compare tray button or trigger compare drawer
-      try {
-        const compareBtn = page.locator('button:has-text("Compare")').first();
-        if (await compareBtn.isVisible({ timeout: 2000 })) {
-          await compareBtn.click({ force: true });
-          await page.waitForSelector('[role="dialog"]', { timeout: 3000 });
+      const compareButtons = page.locator("button[title='Compare']");
+      const count = await compareButtons.count();
+      if (count >= 2) {
+        await compareButtons.nth(0).click({ force: true });
+        await page.waitForTimeout(200);
+        await compareButtons.nth(1).click({ force: true });
+        await page.waitForTimeout(400);
+        const openCompare = page.locator("button:has-text('Compare 2')");
+        if (await openCompare.count()) {
+          await openCompare.click({ force: true, timeout: 5000 });
+          await page.waitForTimeout(500);
         }
-      } catch {
-        // Fallback: trigger compare drawer via store/event
-        await page.evaluate(() => {
-          window.dispatchEvent(new CustomEvent("open-compare-drawer"));
-        });
       }
-      await page.waitForTimeout(500);
     },
   },
   {
@@ -52,7 +51,15 @@ async function run() {
   });
 
   let totalViolations = 0;
-  const summary: Array<{ page: string; theme: string; violations: number }> = [];
+  const summary: Array<{
+    page: string;
+    theme: string;
+    critical: number;
+    serious: number;
+    moderate: number;
+    minor: number;
+    total: number;
+  }> = [];
 
   try {
     for (const theme of ["dark", "light"] as const) {
@@ -90,10 +97,21 @@ async function run() {
 
         const results = await axe.analyze();
 
+        const counts = {
+          critical: results.violations.filter((v) => v.impact === "critical").length,
+          serious: results.violations.filter((v) => v.impact === "serious").length,
+          moderate: results.violations.filter((v) => v.impact === "moderate").length,
+          minor: results.violations.filter((v) => v.impact === "minor").length,
+        };
+
         summary.push({
           page: p.name,
           theme,
-          violations: results.violations.length,
+          critical: counts.critical,
+          serious: counts.serious,
+          moderate: counts.moderate,
+          minor: counts.minor,
+          total: results.violations.length,
         });
 
         if (results.violations.length > 0) {
