@@ -21,7 +21,7 @@ export async function GET(req: Request) {
   const proxied = await proxyToBackend(req, "/api/cart");
   if (proxied) return proxied;
 
-  const sid = await getSessionId();
+  const sid = await getSessionId(req);
   const chaos = resolveChaos(req);
   await simulateLatency(chaos);
   if (rollFailure(chaos, { mutation: false })) return transientError();
@@ -32,7 +32,7 @@ export async function POST(req: Request) {
   const proxied = await proxyToBackend(req, "/api/cart");
   if (proxied) return proxied;
 
-  const sid = await getSessionId();
+  const sid = await getSessionId(req);
   const parsed = AddToCartInputSchema.safeParse(await readJson(req));
   if (!parsed.success) return errorResponse("INVALID_INPUT", "Expected { productId: string, qty?: 1–10 }.");
 
@@ -47,7 +47,7 @@ export async function PATCH(req: Request) {
   const proxied = await proxyToBackend(req, "/api/cart");
   if (proxied) return proxied;
 
-  const sid = await getSessionId();
+  const sid = await getSessionId(req);
   const parsed = SetQtyInputSchema.safeParse(await readJson(req));
   if (!parsed.success) return errorResponse("INVALID_INPUT", "Expected { productId: string, qty: 0–10 }.");
 
@@ -62,7 +62,7 @@ export async function DELETE(req: Request) {
   const proxied = await proxyToBackend(req, "/api/cart");
   if (proxied) return proxied;
 
-  const sid = await getSessionId();
+  const sid = await getSessionId(req);
   const productId = new URL(req.url).searchParams.get("productId");
 
   const chaos = resolveChaos(req);

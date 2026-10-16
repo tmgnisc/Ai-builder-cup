@@ -11,6 +11,8 @@ from .core.middleware import RequestIDMiddleware
 def create_app(settings: Settings | None = None) -> FastAPI:
     """App factory: builds a configured FastAPI app with layered architecture."""
     settings = settings or get_settings()
+    if settings.environment.lower() == "production" and not settings.agent_shared_secret:
+        raise RuntimeError("AGENT_SHARED_SECRET must be configured when running in production")
     setup_logging(level=settings.log_level)
 
     app = FastAPI(title="Persona API", version="0.1.0")

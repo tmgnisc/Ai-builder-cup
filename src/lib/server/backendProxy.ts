@@ -27,7 +27,7 @@ export async function proxyToBackend(
       targetUrl.searchParams.set(key, val);
     });
 
-    const sessionId = await getSessionId();
+    const sessionId = await getSessionId(req);
 
     const headers = new Headers();
     const incomingCookie = req.headers.get("cookie") ?? "";
@@ -43,11 +43,13 @@ export async function proxyToBackend(
     const contentType = req.headers.get("content-type");
     if (contentType) headers.set("content-type", contentType);
 
-    const chaosHeader = req.headers.get("x-persona-chaos");
-    if (chaosHeader) headers.set("x-persona-chaos", chaosHeader);
+    if (process.env.ALLOW_CHAOS_HEADERS === "1") {
+      const chaosHeader = req.headers.get("x-persona-chaos");
+      if (chaosHeader) headers.set("x-persona-chaos", chaosHeader);
 
-    const latencyHeader = req.headers.get("x-persona-latency");
-    if (latencyHeader) headers.set("x-persona-latency", latencyHeader);
+      const latencyHeader = req.headers.get("x-persona-latency");
+      if (latencyHeader) headers.set("x-persona-latency", latencyHeader);
+    }
 
     // Shared-secret authentication (Step 0d)
     if (process.env.AGENT_SHARED_SECRET) {

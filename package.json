@@ -16,6 +16,7 @@
     "@react-three/fiber": "^9.8.1",
     "@react-three/postprocessing": "^3.2.0",
     "gsap": "^3.15.0",
+    "leva": "^0.10.1",
     "lucide-react": "^1.55.0",
     "next": "15.5.27",
     "postprocessing": "^6.39.5",
@@ -23,8 +24,7 @@
     "react-dom": "19.1.0",
     "three": "^0.186.1",
     "zod": "^4.6.7",
-    "zustand": "^5.0.15",
-    "leva": "^0.10.1"
+    "zustand": "^5.0.15"
   },
   "devDependencies": {
     "@eslint/eslintrc": "^3",
@@ -35,6 +35,7 @@
     "@types/three": "^0.186.0",
     "eslint": "^9",
     "eslint-config-next": "15.5.27",
+    "playwright": "^1.64.1",
     "tailwindcss": "^4",
     "typescript": "^5",
     "vitest": "^5.0.4"

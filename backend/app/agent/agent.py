@@ -57,6 +57,7 @@ def create_pip_agent(model: str | BaseLlm) -> LlmAgent:
         elif tool.name == "compare_products":
             turn_ctx.event_queue.append(StateChangeEvent(state="comparing", caption="Comparing products…"))
         elif tool.name in ("add_to_cart", "remove_from_cart"):
+            turn_ctx.is_cart_mutation_turn = True
             turn_ctx.event_queue.append(StateChangeEvent(state="acting", caption="Updating cart…"))
         elif tool.name == "ui_action":
             turn_ctx.event_queue.append(StateChangeEvent(state="presenting", caption="Here's what I found"))

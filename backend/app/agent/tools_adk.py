@@ -26,6 +26,7 @@ class AgentTurnContext:
     event_queue: list[Any] = field(default_factory=list)
     tool_call_count: int = 0
     message_id: str = "msg_0"
+    is_cart_mutation_turn: bool = False
     last_cart_verified: bool | None = None
     active_cart_block_id: str | None = None
     pending_tool_starts: dict[str, float] = field(default_factory=dict)

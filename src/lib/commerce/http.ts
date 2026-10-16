@@ -22,13 +22,24 @@ export function transientError(): NextResponse<CommerceErrorBody> {
 }
 
 /** Reads the session cookie, creating one if absent. Route handlers only. */
-export async function getSessionId(): Promise<string> {
-  const jar = await cookies();
-  const existing = jar.get(SESSION_COOKIE)?.value;
-  if (existing) return existing;
-  const id = crypto.randomUUID();
-  jar.set(SESSION_COOKIE, id, { httpOnly: true, sameSite: "lax", path: "/", maxAge: 60 * 60 * 24 * 7 });
-  return id;
+export async function getSessionId(req?: Request): Promise<string> {
+  if (req) {
+    const cookieHeader = req.headers.get("cookie");
+    if (cookieHeader) {
+      const match = cookieHeader.match(new RegExp(`(?:^|;\\s*)${SESSION_COOKIE}=([^;]+)`));
+      if (match) return match[1];
+    }
+  }
+  try {
+    const jar = await cookies();
+    const existing = jar.get(SESSION_COOKIE)?.value;
+    if (existing) return existing;
+    const id = crypto.randomUUID();
+    jar.set(SESSION_COOKIE, id, { httpOnly: true, sameSite: "lax", path: "/", maxAge: 60 * 60 * 24 * 7 });
+    return id;
+  } catch {
+    return crypto.randomUUID();
+  }
 }
 
 export async function readJson(req: Request): Promise<unknown> {

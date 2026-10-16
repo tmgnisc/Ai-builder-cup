@@ -101,6 +101,7 @@ async def run_pip_stream(
 
     message_started = False
     collected_text = ""
+    buffered_text_parts: list[str] = []
 
     try:
         # Initial state: thinking
@@ -135,21 +136,43 @@ async def run_pip_stream(
                         ev = turn_ctx.event_queue.pop(0)
                         yield serialize_event(ev) + "\n"
 
-                    # Stream model text deltas
+                    # Stream model text deltas (buffered during cart mutations)
                     if event.content and event.content.parts:
                         for part in event.content.parts:
                             if part.text:
-                                # Guardrail: If verified cart update failed, suppress false success claims
-                                if turn_ctx.last_cart_verified is False and any(
-                                    w in part.text.lower()
-                                    for w in ["added", "placed", "updated", "success", "in your cart", "to your cart"]
-                                ):
-                                    continue
-                                if not message_started:
-                                    message_started = True
-                                    yield serialize_event(MessageStartEvent(messageId=message_id)) + "\n"
-                                collected_text += part.text
-                                yield serialize_event(TextDeltaEvent(messageId=message_id, delta=part.text)) + "\n"
+                                if turn_ctx.is_cart_mutation_turn:
+                                    if turn_ctx.last_cart_verified is None:
+                                        # Hold back text deltas until verification outcome is known
+                                        buffered_text_parts.append(part.text)
+                                    elif turn_ctx.last_cart_verified is True:
+                                        # Released after verification
+                                        if not message_started:
+                                            message_started = True
+                                            yield serialize_event(MessageStartEvent(messageId=message_id)) + "\n"
+                                        while buffered_text_parts:
+                                            b = buffered_text_parts.pop(0)
+                                            collected_text += b
+                                            yield serialize_event(TextDeltaEvent(messageId=message_id, delta=b)) + "\n"
+                                        collected_text += part.text
+                                        yield serialize_event(TextDeltaEvent(messageId=message_id, delta=part.text)) + "\n"
+                                    else:
+                                        # Verification failed: discard false success text
+                                        buffered_text_parts.clear()
+                                        if not any(
+                                            w in part.text.lower()
+                                            for w in ["added", "placed", "updated", "success", "in your cart", "to your cart"]
+                                        ):
+                                            if not message_started:
+                                                message_started = True
+                                                yield serialize_event(MessageStartEvent(messageId=message_id)) + "\n"
+                                            collected_text += part.text
+                                            yield serialize_event(TextDeltaEvent(messageId=message_id, delta=part.text)) + "\n"
+                                else:
+                                    if not message_started:
+                                        message_started = True
+                                        yield serialize_event(MessageStartEvent(messageId=message_id)) + "\n"
+                                    collected_text += part.text
+                                    yield serialize_event(TextDeltaEvent(messageId=message_id, delta=part.text)) + "\n"
         except TimeoutError:
             if not message_started:
                 message_started = True
@@ -165,6 +188,19 @@ async def run_pip_stream(
         while turn_ctx.event_queue:
             ev = turn_ctx.event_queue.pop(0)
             yield serialize_event(ev) + "\n"
+
+        # Release any buffered text if verification succeeded
+        if turn_ctx.is_cart_mutation_turn:
+            if turn_ctx.last_cart_verified is True and buffered_text_parts:
+                if not message_started:
+                    message_started = True
+                    yield serialize_event(MessageStartEvent(messageId=message_id)) + "\n"
+                while buffered_text_parts:
+                    b = buffered_text_parts.pop(0)
+                    collected_text += b
+                    yield serialize_event(TextDeltaEvent(messageId=message_id, delta=b)) + "\n"
+            elif turn_ctx.last_cart_verified is False:
+                buffered_text_parts.clear()
 
         # Code guardrail: Tool limit reached graceful message
         if turn_ctx.tool_call_count >= 8:

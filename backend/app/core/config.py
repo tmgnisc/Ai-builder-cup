@@ -12,6 +12,7 @@ class Settings(BaseSettings):
     gemini_model: str = "gemini-2.5-flash"
     agent_backend: str = "gemini"
     agent_shared_secret: str = ""
+    environment: str = "development"
     agent_max_message_length: int = 500
     agent_rate_limit_per_minute: int = 60
     agent_turn_timeout_seconds: float = 30.0

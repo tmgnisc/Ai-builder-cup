@@ -124,3 +124,17 @@ def test_agent_api_shared_secret_enforcement() -> None:
     )
     assert res3.status_code == 200
     set_agent_model_override(None)
+
+
+def test_production_startup_requires_shared_secret() -> None:
+    from app.core.config import Settings
+    from app.main import create_app
+
+    prod_no_secret = Settings(environment="production", agent_shared_secret="")
+    with pytest.raises(RuntimeError, match="AGENT_SHARED_SECRET must be configured"):
+        create_app(prod_no_secret)
+
+    prod_with_secret = Settings(environment="production", agent_shared_secret="my-prod-secret")
+    app = create_app(prod_with_secret)
+    assert app is not None
+

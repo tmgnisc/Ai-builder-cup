@@ -30,12 +30,16 @@ export async function POST(req: Request) {
   if (process.env.PERSONA_AGENT === "gemini" && process.env.BACKEND_URL) {
     try {
       const backendUrl = `${process.env.BACKEND_URL.replace(/\/+$/, "")}/api/agent`;
-      const chaosHeader = req.headers.get("x-persona-chaos");
       const headers: Record<string, string> = {
         "content-type": "application/json",
         cookie: `persona_sid=${sessionId}`,
       };
-      if (chaosHeader) headers["x-persona-chaos"] = chaosHeader;
+      if (process.env.ALLOW_CHAOS_HEADERS === "1") {
+        const chaosHeader = req.headers.get("x-persona-chaos");
+        if (chaosHeader) headers["x-persona-chaos"] = chaosHeader;
+        const latencyHeader = req.headers.get("x-persona-latency");
+        if (latencyHeader) headers["x-persona-latency"] = latencyHeader;
+      }
       if (process.env.AGENT_SHARED_SECRET) {
         headers["x-agent-shared-secret"] = process.env.AGENT_SHARED_SECRET;
       }
