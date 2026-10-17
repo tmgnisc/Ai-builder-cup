@@ -40,6 +40,7 @@ const CATEGORY_NAMES: Record<string, string> = {
   phones: "Phones",
   headphones: "Headphones",
   accessories: "Accessories",
+  clothing: "Clothing",
 };
 
 const CATEGORY_APPLICABLE_SPECS: Record<Product["category"], Set<string>> = {
@@ -47,6 +48,7 @@ const CATEGORY_APPLICABLE_SPECS: Record<Product["category"], Set<string>> = {
   phones: new Set(["price", "rating", "cpu", "ram", "storage", "battery", "weight", "screen", "camera", "connectivity", "warranty"]),
   headphones: new Set(["price", "rating", "battery", "weight", "connectivity", "warranty"]),
   accessories: new Set(["price", "rating", "battery", "weight", "connectivity", "warranty"]),
+  clothing: new Set(["price", "rating", "weight"]),
 };
 
 export interface CompareWorkspaceProps {

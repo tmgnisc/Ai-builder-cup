@@ -5,7 +5,7 @@ import { z } from "zod";
  * the agent tool registry (Phase 4) reuses them for tool input/output validation.
  */
 
-export const CategorySchema = z.enum(["laptops", "phones", "headphones", "accessories"]);
+export const CategorySchema = z.enum(["laptops", "phones", "headphones", "accessories", "clothing"]);
 export type Category = z.infer<typeof CategorySchema>;
 
 export const CATEGORIES: readonly { id: Category; label: string }[] = [
@@ -13,7 +13,15 @@ export const CATEGORIES: readonly { id: Category; label: string }[] = [
   { id: "phones", label: "Phones" },
   { id: "headphones", label: "Headphones" },
   { id: "accessories", label: "Accessories" },
+  { id: "clothing", label: "Clothing" },
 ];
+
+/** Clothing: how a garment is worn. Drives the virtual try-on rig (which body landmarks it follows). */
+export const GarmentSchema = z.enum(["top", "outerwear", "headwear", "eyewear", "shawl"]);
+export type Garment = z.infer<typeof GarmentSchema>;
+
+export const ColorOptionSchema = z.object({ name: z.string(), hex: z.string().regex(/^#[0-9a-fA-F]{6}$/) });
+export type ColorOption = z.infer<typeof ColorOptionSchema>;
 
 export const ProductSpecsSchema = z.object({
   cpu: z.string().optional(),
@@ -29,6 +37,15 @@ export const ProductSpecsSchema = z.object({
   connectivity: z.string().optional(),
   anc: z.boolean().optional(),
   camera: z.string().optional(),
+  // Clothing
+  material: z.string().optional(),
+  fit: z.string().optional(),
+  sizes: z.array(z.string()).optional(),
+  colors: z.array(ColorOptionSchema).optional(),
+  garment: GarmentSchema.optional(),
+  sleeves: z.enum(["none", "short", "long"]).optional(),
+  length: z.enum(["waist", "hip", "thigh"]).optional(),
+  pattern: z.enum(["solid", "check", "stripe", "dhaka"]).optional(),
 });
 export type ProductSpecs = z.infer<typeof ProductSpecsSchema>;
 

@@ -79,7 +79,7 @@ def search_products(
 
     Args:
         q: Optional search query text
-        category: Category (laptops, phones, headphones, accessories)
+        category: Category (laptops, phones, headphones, accessories, clothing)
         min_price: Minimum price in NPR
         max_price: Maximum price in NPR
         min_ram_gb: Minimum RAM in GB

@@ -210,10 +210,11 @@ const CATEGORY_WORDS: [RegExp, Category][] = [
   [/\b(laptops?|notebooks?|macbooks?|ultrabooks?|thinkpads?|computers?|pc)\b/, "laptops"],
   [/\b(phones?|smartphones?|mobiles?|iphones?|android|handsets?)\b/, "phones"],
   [/\b(headphones?|earbuds?|earphones?|airpods|headsets?|buds|over-ear|iems?)\b/, "headphones"],
+  [/\b(cloth(es|ing)|outfits?|wear|t-?shirts?|tees?|shirts?|polos?|hoodies?|jackets?|puffers?|denim|kurtas?|topis?|caps?|hats?|sunglasses|shades|shawls?|pashminas?|scarf|scarves)\b/, "clothing"],
   [/\b(mouse|mice|keyboards?|chargers?|power ?banks?|ssd|drives?|monitors?|accessor(y|ies)|adapters?|cables?)\b/, "accessories"],
 ];
 
-const DEFAULT_BATTERY: Record<Category, number> = { laptops: 8, phones: 24, headphones: 30, accessories: 8 };
+const DEFAULT_BATTERY: Record<Category, number> = { laptops: 8, phones: 24, headphones: 30, accessories: 8, clothing: 0 };
 
 export function detectCategory(text: string): Category | undefined {
   const t = normalize(text);

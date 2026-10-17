@@ -60,10 +60,14 @@ export function specRows(p: Product): SpecItem[] {
     s.camera ? { key: "camera", label: "Camera", value: s.camera } : null,
     s.batteryHours ? { key: "battery", label: "Battery", value: `${s.batteryHours} h` } : null,
     s.anc !== undefined ? { key: "anc", label: "Noise cancelling", value: s.anc ? "Yes" : "No" } : null,
+    s.material ? { key: "material", label: "Material", value: s.material } : null,
+    s.fit ? { key: "fit", label: "Fit", value: s.fit } : null,
+    s.sizes?.length ? { key: "sizes", label: "Sizes", value: s.sizes.join(", ") } : null,
+    s.colors?.length ? { key: "colors", label: "Colours", value: s.colors.map((c) => c.name).join(", ") } : null,
     { key: "weight", label: "Weight", value: formatWeight(s.weightGrams) },
     s.ports ? { key: "ports", label: "Ports", value: s.ports } : null,
     s.connectivity ? { key: "connectivity", label: "Connectivity", value: s.connectivity } : null,
-    { key: "warranty", label: "Warranty", value: formatWarranty(s.warrantyMonths) },
+    p.category === "clothing" ? null : { key: "warranty", label: "Warranty", value: formatWarranty(s.warrantyMonths) },
   ];
   return rows.filter((r): r is SpecItem => r !== null);
 }
@@ -76,6 +80,7 @@ export function keySpecs(p: Product): SpecItem[] {
     phones: ["storage", "battery", "screen"],
     headphones: ["battery", "anc", "weight"],
     accessories: ["ports", "connectivity", "weight"],
+    clothing: ["material", "fit", "sizes"],
   };
   const wanted = pick[p.category];
   const chosen = wanted.map((k) => all.find((r) => r.key === k)).filter((r): r is SpecItem => !!r);

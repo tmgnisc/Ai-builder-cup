@@ -10,7 +10,7 @@ export function inCategory(category: Category): Product[] {
 }
 
 export function countByCategory(): Record<Category, number> {
-  const out = { laptops: 0, phones: 0, headphones: 0, accessories: 0 } as Record<Category, number>;
+  const out = { laptops: 0, phones: 0, headphones: 0, accessories: 0, clothing: 0 } as Record<Category, number>;
   for (const p of all()) out[p.category]++;
   return out;
 }

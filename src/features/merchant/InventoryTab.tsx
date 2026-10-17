@@ -87,6 +87,7 @@ export function InventoryTab() {
     { id: "phones", label: "Phones" },
     { id: "headphones", label: "Headphones" },
     { id: "accessories", label: "Accessories" },
+    { id: "clothing", label: "Clothing" },
   ];
 
   return (
