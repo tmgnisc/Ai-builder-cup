@@ -144,7 +144,8 @@ export function clampToViewport(p: Point, size: number): Point {
         const overlapsY = p.y + r > mb.top - MARGIN && p.y - r < mb.bottom + MARGIN;
         if (overlapsX && overlapsY) {
           if (!isMobile()) {
-            if (mb.right + MARGIN + r <= window.innerWidth - MARGIN) {
+            // x is Pip's centre: it needs a full diameter of room beside the box.
+            if (mb.right + MARGIN + 2 * r <= window.innerWidth - MARGIN) {
               x = mb.right + MARGIN + r;
             } else {
               x = Math.max(MARGIN + r, mb.left - MARGIN - r);
@@ -169,9 +170,10 @@ export function clampToViewport(p: Point, size: number): Point {
         const overlapsY = p.y + r > b.top - MARGIN && p.y - r < b.bottom + MARGIN;
         if (overlapsX && overlapsY) {
           if (!isMobile()) {
-            if (b.right + MARGIN + r <= window.innerWidth - MARGIN) {
+            // x is Pip's centre: it needs a full diameter of room beside the box.
+            if (b.right + MARGIN + 2 * r <= window.innerWidth - MARGIN) {
               x = b.right + MARGIN + r;
-            } else if (b.left - MARGIN - r >= MARGIN) {
+            } else if (b.left - MARGIN - 2 * r >= MARGIN) {
               x = b.left - MARGIN - r;
             } else {
               top = Math.max(top, b.bottom + MARGIN + r);
@@ -191,6 +193,8 @@ export function clampToViewport(p: Point, size: number): Point {
     }
   }
 
+  // Invariant: whatever the avoidance rules chose, the orb stays fully inside the viewport.
+  x = Math.min(window.innerWidth - MARGIN - r, Math.max(MARGIN + r, x));
   return { x, y: Math.min(bottom, Math.max(top, p.y)) };
 }
 

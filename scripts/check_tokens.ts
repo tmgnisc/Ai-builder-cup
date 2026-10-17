@@ -15,6 +15,8 @@ const ALLOWLIST = [
   "src/features/companion/PipScene.tsx",
   "src/features/companion/CompanionLayer.tsx",
   "src/features/companion/states.ts",
+  // Generated product art: device colours are computed from each product's catalog palette, not theme tokens
+  "src/features/catalog/ProductImage.tsx",
   // Single source of truth & generated files
   "src/tokens/definitions.ts",
   "src/styles/tokens.css",

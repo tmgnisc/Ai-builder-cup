@@ -1,8 +1,8 @@
 import type { Metadata } from "next";
-import { MerchantDashboard } from "@/features/merchant";
+import { OverviewTab } from "@/features/merchant";
 
-export const metadata: Metadata = { title: "Merchant" };
+export const metadata: Metadata = { title: "Overview" };
 
-export default function MerchantPage() {
-  return <MerchantDashboard />;
+export default function MerchantOverviewPage() {
+  return <OverviewTab />;
 }

@@ -45,7 +45,7 @@ describe("UI Kit Primitives", () => {
     expect(html).toContain("h-8");
   });
 
-  it("IconButton renders with required aria-label and accessible title", () => {
+  it("IconButton renders a HeroUI icon-only button with its required aria-label", () => {
     const html = renderToString(
       React.createElement(
         IconButton,
@@ -54,7 +54,7 @@ describe("UI Kit Primitives", () => {
       ),
     );
     expect(html).toContain('aria-label="Close panel"');
-    expect(html).toContain('title="Close panel"');
+    expect(html).toContain('data-slot="button"');
     expect(html).toContain("size-8");
   });
 

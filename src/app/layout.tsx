@@ -1,20 +1,15 @@
 import type { Metadata, Viewport } from "next";
 import { Inter } from "next/font/google";
-import { AnchorDebug, BubbleLayer, CompanionLayer, GuideLayer, Spotlight } from "@/features/companion";
-import { ClientBootstrap } from "@/components/layout/ClientBootstrap";
-import { Footer } from "@/components/layout/Footer";
-import { Header } from "@/components/layout/Header";
 import { ThemeScript } from "@/components/layout/ThemeScript";
-import { CartDrawer } from "@/features/cart";
-import { CompareDrawer, CompareTray } from "@/features/compare";
 import { tokenDefinitions } from "@/tokens/definitions";
 import "@/styles/globals.css";
 
 const inter = Inter({ subsets: ["latin"], variable: "--font-inter", display: "swap" });
 
 export const metadata: Metadata = {
-  title: { default: "Persona: Agentic Commerce Platform", template: "%s · Persona" },
-  description: "An agentic commerce platform with Pip, an AI shopping companion that searches, compares, and verifies cart actions.",
+  title: { default: "Persona: electronics with a second opinion", template: "%s · Persona" },
+  description:
+    "An electronics store for shoppers in Nepal, with Pip: a shopping companion that searches the catalog, compares specs and confirms every cart change. Prices in NPR.",
 };
 
 export const viewport: Viewport = {
@@ -30,24 +25,9 @@ export default function RootLayout({ children }: Readonly<{ children: React.Reac
       <head>
         <ThemeScript />
       </head>
-      <body>
-        <Header />
-        <main id="main" className="relative">
-          {children}
-        </main>
-        <Footer />
-        {/* Persistent across navigations: template.tsx remounts children, never these. */}
-        <CompanionLayer />
-        <BubbleLayer />
-        <GuideLayer />
-        <Spotlight />
-        {process.env.NODE_ENV !== "production" || process.env.NEXT_PUBLIC_PLAYGROUND === "1" ? <AnchorDebug /> : null}
-        <CartDrawer />
-        <CompareTray />
-        <CompareDrawer />
-        <ClientBootstrap />
-        <div aria-hidden className="grain" />
-      </body>
+      {/* Document shell only: the storefront ((store)/layout) and the merchant portal (merchant/layout)
+          each bring their own chrome, so neither leaks into the other. */}
+      <body>{children}</body>
     </html>
   );
 }

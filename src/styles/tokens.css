@@ -157,6 +157,10 @@
   grid-template-columns: 1fr 300px;
 }
 
+@utility grid-cols-merchant {
+  grid-template-columns: 240px minmax(0, 1fr);
+}
+
 @utility bubble-width {
   width: min(340px, calc(100vw - 24px));
 }

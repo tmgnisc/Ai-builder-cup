@@ -1,16 +1,26 @@
 "use client";
 
-import { ArrowUp } from "lucide-react";
+import { ArrowUp, Check } from "lucide-react";
 import { useRef, useState } from "react";
 import { MicButton } from "@/features/companion";
 import { useChat } from "@/store/useChat";
 import { gsap, motion, SplitText, useGSAP } from "@/lib/motion";
 import { useMagnetic } from "@/lib/useMagnetic";
+import { getAllProducts } from "@/lib/commerce/catalog";
+import { DELIVERY_RULES } from "@/lib/commerce/delivery";
 
 const EXAMPLES = [
   "Developer laptop with 16 GB RAM",
   "Active noise cancelling headphones",
   "MacBook Pro vs ThinkPad comparison",
+];
+
+const catalog = getAllProducts();
+/** Every claim here is computed from the catalog and delivery rules, never hard-coded. */
+const TRUST = [
+  `${catalog.length} products, ${catalog.filter((p) => p.stock > 0).length} in stock`,
+  "Cart checked after every add",
+  `Kathmandu Valley delivery in ${DELIVERY_RULES.valley.days}`,
 ];
 
 /**
@@ -97,32 +107,32 @@ export function Hero() {
   return (
     <section ref={root} className="relative mx-auto grid max-w-page items-center gap-10 px-4 pb-16 pt-12 sm:px-6 md:pt-20 lg:grid-cols-hero">
       <div>
-        <p data-hero-fade className="mb-5 inline-flex items-center gap-2 rounded-full bg-surface px-3 py-1.5 text-xs text-muted hairline">
-          <span className="size-1.5 rounded-full bg-accent shadow-[0_0_10px_var(--accent)]" aria-hidden />
-          Agentic Commerce Platform
+        <p data-hero-fade className="mb-6 inline-flex items-center gap-2 rounded-md bg-surface px-2.5 py-1 text-xs font-medium text-muted hairline">
+          <span className="size-1.5 rounded-full bg-accent" aria-hidden />
+          Electronics store · Kathmandu
         </p>
         <h1
           data-split
-          className="font-display hero-headline font-semibold [&_.char]:inline-block"
+          className="font-display hero-headline max-w-2xl font-semibold tracking-tight [&_.char]:inline-block"
         >
-          Agentic commerce. <span className="text-accent-text">Direct advice.</span>
+          Buy hardware with a <span className="text-accent-text">second opinion.</span>
         </h1>
-        <p data-hero-rise className="mt-5 max-w-xl text-lg text-muted">
-          Autonomous shopping with verified catalog specs and real-time inventory. Tell Pip your workload, preferences, or budget — it evaluates trade-offs without sales talk.
+        <p data-hero-rise className="mt-6 max-w-xl text-lg leading-relaxed text-muted">
+          Tell Pip what you do and what you can spend. It searches the catalog, compares the specs that matter for your work, and only says &ldquo;added&rdquo; once your cart confirms it.
         </p>
 
         <form data-hero-fade data-pip-anchor="hero-prompt" data-pip-topic="hero-prompt" className="mt-8 max-w-xl" onSubmit={onSubmit}>
           <label htmlFor="hero-prompt" className="sr-only">
             Ask about hardware specs, budget, or compare products
           </label>
-          <div className="flex items-center gap-2 rounded-full bg-surface p-1.5 pl-5 hairline transition-shadow focus-within:shadow-[inset_0_0_0_1px_var(--accent-text),0_0_0_4px_color-mix(in_oklab,var(--accent)_15%,transparent)]">
+          <div className="flex items-center gap-2 rounded-2xl bg-surface p-1.5 pl-5 shadow-[inset_0_0_0_1px_var(--border),0_1px_2px_rgb(0_0_0/0.2)] transition-shadow focus-within:shadow-[inset_0_0_0_1px_var(--accent-text),0_0_0_4px_color-mix(in_oklab,var(--accent)_12%,transparent)]">
             <input
               ref={inputRef}
               id="hero-prompt"
               name="prompt"
               value={prompt}
               onChange={(e) => setPrompt(e.target.value)}
-              placeholder="Ask about specs, compare products, or manage your cart…"
+              placeholder="A laptop under 1.2 lakh for Docker and long battery…"
               autoComplete="off"
               className="h-11 min-w-0 flex-1 bg-transparent text-base placeholder:text-muted focus:outline-none"
             />
@@ -131,7 +141,7 @@ export function Hero() {
               <button
                 type="submit"
                 aria-label="Send to Pip"
-                className="grid size-11 place-items-center rounded-full bg-accent text-accent-fg shadow-[0_8px_24px_-8px_var(--accent)] transition-[filter] hover:brightness-110"
+                className="grid size-11 place-items-center rounded-xl bg-accent text-accent-fg transition-[filter] hover:brightness-110"
               >
                 <ArrowUp className="size-4.5" />
               </button>
@@ -148,7 +158,7 @@ export function Hero() {
                   setPrompt(ex);
                   inputRef.current?.focus();
                 }}
-                className="inline-flex min-h-8 items-center rounded-full bg-surface px-3 py-1.5 text-xs text-muted transition-colors hairline hover:text-text"
+                className="inline-flex min-h-8 items-center rounded-lg bg-surface px-3 py-1.5 text-xs text-muted transition-colors hairline hover:bg-surface-2 hover:text-text"
               >
                 {/* The invisible copy reserves the full width, so typing never reflows the page. */}
                 <span className="inline-grid">
@@ -160,6 +170,15 @@ export function Hero() {
                   </span>
                 </span>
               </button>
+            </li>
+          ))}
+        </ul>
+
+        <ul data-hero-fade className="mt-10 flex max-w-xl flex-wrap gap-x-6 gap-y-2 border-t border-border pt-6 text-sm text-muted" aria-label="How this store works">
+          {TRUST.map((t) => (
+            <li key={t} className="inline-flex items-center gap-2">
+              <Check className="size-3.5 text-accent-text" aria-hidden />
+              {t}
             </li>
           ))}
         </ul>

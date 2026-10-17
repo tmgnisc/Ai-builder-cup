@@ -5,6 +5,7 @@ import Link from "next/link";
 import { useState } from "react";
 import { ProductImage } from "@/features/catalog";
 import { Button } from "@/components/ui/Button";
+import { buttonClasses } from "@/components/ui/buttonClasses";
 import { Ticker } from "@/components/ui/Ticker";
 import { getProduct } from "@/lib/commerce/catalog";
 import { formatNPR } from "@/lib/commerce/format";
@@ -77,10 +78,8 @@ export function CheckoutView() {
             Your order has been recorded in the store database. Pip verified your cart before submission.
           </p>
           <div className="mt-5">
-            <Link href="/merchant">
-              <Button variant="secondary" size="sm">
-                View in Merchant Dashboard
-              </Button>
+            <Link href="/" className={buttonClasses({ variant: "secondary", size: "sm" })}>
+              Continue shopping
             </Link>
           </div>
         </div>

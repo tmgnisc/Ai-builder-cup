@@ -77,30 +77,7 @@
   }
 }
 
-/* Film grain: fixed, non-interactive, above content at very low opacity. */
-.grain {
-  position: fixed;
-  inset: -50%;
-  z-index: 100;
-  pointer-events: none;
-  opacity: var(--grain-opacity);
-  background-image: url("data:image/svg+xml;utf8,<svg xmlns='http://www.w3.org/2000/svg' width='220' height='220'><filter id='n'><feTurbulence type='fractalNoise' baseFrequency='0.85' numOctaves='3' stitchTiles='stitch'/><feColorMatrix values='0 0 0 0 1  0 0 0 0 1  0 0 0 0 1  0 0 0 0.9 0'/></filter><rect width='100%' height='100%' filter='url(%23n)'/></svg>");
-  animation: grain-shift 1.2s steps(6) infinite;
-}
-
-@keyframes grain-shift {
-  0% { transform: translate(0, 0); }
-  20% { transform: translate(-3%, 2%); }
-  40% { transform: translate(2%, -4%); }
-  60% { transform: translate(-4%, -1%); }
-  80% { transform: translate(3%, 3%); }
-  100% { transform: translate(0, 0); }
-}
-
 @media (prefers-reduced-motion: reduce) {
-  .grain {
-    animation: none;
-  }
   *,
   *::before,
   *::after {
@@ -179,15 +156,16 @@
 
 /* ───────────────────────── Pip's speech bubble ───────────────────────── */
 
+/* Hairline tinted by Pip's state colour; depth from shadow, not glow (design brief: restraint). */
 .bubble-panel {
   box-shadow:
-    inset 0 0 0 1px color-mix(in oklab, var(--pip-color, var(--accent)) 38%, var(--glass-border)),
-    0 0 28px -10px var(--pip-color, var(--accent)),
+    inset 0 0 0 1px color-mix(in oklab, var(--pip-color, var(--accent)) 22%, var(--border-strong)),
+    0 1px 2px rgb(0 0 0 / 0.25),
     0 24px 60px -20px rgb(0 0 0 / 0.55);
   transition: box-shadow 0.5s;
 }
 .bubble-tail {
   z-index: -1;
   background: var(--surface);
-  box-shadow: inset 0 0 0 1px color-mix(in oklab, var(--pip-color, var(--accent)) 38%, var(--glass-border));
+  box-shadow: inset 0 0 0 1px color-mix(in oklab, var(--pip-color, var(--accent)) 22%, var(--border-strong));
 }

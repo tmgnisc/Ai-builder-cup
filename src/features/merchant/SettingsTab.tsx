@@ -6,12 +6,16 @@ import { Button } from "@/components/ui/Button";
 import { Card } from "@/components/ui/Card";
 import { Input } from "@/components/ui/Input";
 import { BRAND } from "@/config/brand";
+import { useMerchantSession } from "@/store/useMerchantSession";
 
 interface SettingsTabProps {
-  onLogout: () => void;
+  /** Defaults to signing out of the merchant session. */
+  onLogout?: () => void;
 }
 
-export function SettingsTab({ onLogout }: SettingsTabProps) {
+export function SettingsTab({ onLogout: onLogoutProp }: SettingsTabProps) {
+  const logout = useMerchantSession((s) => s.logout);
+  const onLogout = onLogoutProp ?? (() => void logout());
   const [pipAutonomous, setPipAutonomous] = useState(true);
   const [strictVerification, setStrictVerification] = useState(true);
   const [lowStockThreshold, setLowStockThreshold] = useState("3");

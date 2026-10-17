@@ -73,7 +73,9 @@ export const usePipPosition = create<PipPositionState>()((set, get) => {
     },
     goHome: async () => {
       set({ anchorId: null, corner: null });
-      const size = pilot.sizeFor("free");
+      // The compare table leaves only a narrow gutter: rest there at the small size so Pip never covers it.
+      const onCompare = window.location.pathname.startsWith("/compare");
+      const size = pilot.sizeFor(onCompare ? "parked" : "free");
       await pilot.flyTo(pilot.homePoint(size), { mode: "free", size });
     },
     setFollow: (on) => {
