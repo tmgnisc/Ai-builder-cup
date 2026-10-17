@@ -12,50 +12,6 @@
 
 ---
 
-## Architecture Overview
-
-```mermaid
-flowchart TD
-    subgraph Client ["Client Layer (Next.js 15 + Three.js + GSAP)"]
-        UI["E-Commerce Web App (/catalog, /compare, /merchant)"]
-        Pip["Pip Spatial Companion (Three.js WebGL Mesh + Flight Pilot)"]
-        EventStream["Streaming NDJSON Reader (useChat & useCompanion)"]
-    end
-
-    subgraph Backend ["Backend Layer (FastAPI Service)"]
-        Router["/api/agent Router (Streaming NDJSON Turn Runtime)"]
-        PipSuper["Pip Supervisor Agent (Google ADK + Gemini 3.5 Flash)"]
-        
-        subgraph SubAgents ["Specialized Sub-Agent Team"]
-            Scout["Product Finder 'Scout' Sub-Agent\n(Concurrent multi-item discovery & bundle pricing)"]
-            Analyst["Comparison Specialist 'Analyst' Sub-Agent\n(Side-by-side spec scoring & trade-off matrices)"]
-            Guard["Cart & Fulfillment 'Guard' Sub-Agent\n(Stock checking, city delivery, verify-after-act)"]
-        end
-        
-        Services["Domain Services (CatalogService, VerifiedCartService)"]
-    end
-
-    subgraph Persistence ["Data & Intelligence Layer"]
-        GeminiAPI["Google AI Studio / Vertex AI (Gemini 3.5 Flash)"]
-        Database[("PostgreSQL 16 (Database Persistence)")]
-        Secrets["Secret Manager / Environment (.env)"]
-    end
-
-    UI --> EventStream
-    EventStream <-->|NDJSON Stream| Router
-    Router --> PipSuper
-    PipSuper --> Scout
-    PipSuper --> Analyst
-    PipSuper --> Guard
-    Scout & Analyst & Guard --> Services
-    Services <--> Database
-    PipSuper <--> GeminiAPI
-    Router -.-> Secrets
-    Pip -.-> UI
-```
-
----
-
 ## Key Capabilities
 
 ### 1. Multi-Agent Orchestration (Google ADK)
