@@ -179,12 +179,26 @@ export const useChat = create<ChatState>()((set, get) => {
   const ERROR_TEXT = "Something went wrong on my side. Please try that again.";
   // Sub-agent events carry no message id; ones that arrive before Pip's reply exists wait here.
   let pendingAgents: SubAgentEvent[] = [];
+  let optimisticId: string | null = null;
   const withAgent = (list: SubAgentEvent[] | undefined, ev: SubAgentEvent) => [...(list ?? []).filter((a) => a.agent !== ev.agent), ev];
-  /** Starts Pip's reply for `id` if it doesn't exist yet. */
+
+  /** Starts Pip's reply for `id` if it doesn't exist yet, or adopts the optimistic placeholder. */
   const ensure = (id: string) => {
-    if (get().messages.some((m) => m.id === id)) return;
+    const msgs = get().messages;
+    if (msgs.some((m) => m.id === id)) return;
     const agents = pendingAgents.length ? pendingAgents : undefined;
     pendingAgents = [];
+
+    if (optimisticId && msgs.some((m) => m.id === optimisticId)) {
+      const oid = optimisticId;
+      optimisticId = null;
+      set({
+        messages: msgs.map((m) => (m.id === oid ? { ...m, id, agents } : m)),
+      });
+      useBubble.getState().show({ kind: "agent", messageId: id });
+      return;
+    }
+
     set((s) => ({ messages: [...s.messages, { id, role: "assistant", text: "", blocks: [], trace: [], status: "streaming", agents }] }));
     // Pip speaks through its bubble: every reply replaces whatever it was saying.
     useBubble.getState().show({ kind: "agent", messageId: id });
@@ -253,7 +267,12 @@ export const useChat = create<ChatState>()((set, get) => {
         });
         return;
       case "done":
-        set((s) => ({ messages: s.messages.map((m) => (m.status === "streaming" ? { ...m, status: "done" } : m)) }));
+        optimisticId = null;
+        set((s) => ({
+          messages: s.messages
+            .filter((m) => !(m.status === "streaming" && !m.text && m.blocks.length === 0))
+            .map((m) => (m.status === "streaming" ? { ...m, status: "done" } : m)),
+        }));
         return;
     }
   }
@@ -267,12 +286,19 @@ export const useChat = create<ChatState>()((set, get) => {
     stop: () => {
       controller?.abort();
       controller = null;
-      set((s) => ({ busy: false, messages: s.messages.map((m) => (m.status === "streaming" ? { ...m, status: "done" } : m)) }));
+      optimisticId = null;
+      set((s) => ({
+        busy: false,
+        messages: s.messages
+          .filter((m) => !(m.status === "streaming" && !m.text && m.blocks.length === 0))
+          .map((m) => (m.status === "streaming" ? { ...m, status: "done" } : m)),
+      }));
       useCompanion.getState().dispatch({ type: "state_change", state: "idle", source: "agent" });
     },
     reset: () => {
       controller?.abort();
       controller = null;
+      optimisticId = null;
       useVoice.getState().hush();
       set({ messages: [], memory: EMPTY_MEMORY, busy: false });
       useSignals.getState().reset();
@@ -287,6 +313,7 @@ export const useChat = create<ChatState>()((set, get) => {
       if (paused) {
         controller?.abort();
         controller = null;
+        optimisticId = null;
         useVoice.getState().hush();
         useVoice.getState().stop();
         set({ busy: false });
@@ -310,10 +337,23 @@ export const useChat = create<ChatState>()((set, get) => {
       const ctrl = new AbortController();
       controller = ctrl;
 
+      const userMsgId = `user_${++userSeq}`;
+      const placeholderId = `pending_${Date.now()}`;
+      optimisticId = placeholderId;
+
+      // Instant 0ms visual feedback: Pip immediately switches to thinking, speech bubble shows active reply
+      useCompanion.getState().dispatch({ type: "state_change", state: "thinking", caption: "Thinking…", source: "agent" });
+
       set((s) => ({
         busy: true,
-        messages: [...s.messages, { id: `user_${++userSeq}`, role: "user", text, blocks: [], trace: [], status: "done" }],
+        messages: [
+          ...s.messages,
+          { id: userMsgId, role: "user", text, blocks: [], trace: [], status: "done" },
+          { id: placeholderId, role: "assistant", text: "", blocks: [], trace: [], status: "streaming" },
+        ],
       }));
+
+      useBubble.getState().show({ kind: "agent", messageId: placeholderId });
 
       const request = {
         message: text,
@@ -333,18 +373,21 @@ export const useChat = create<ChatState>()((set, get) => {
         }
       } catch (err) {
         if (ctrl.signal.aborted) return;
-        const id = `err_${Date.now()}`;
+        const id = optimisticId || `err_${Date.now()}`;
+        optimisticId = null;
         set((s) => ({
           messages: [
-            ...s.messages,
+            ...s.messages.filter((m) => m.id !== id),
             { id, role: "assistant", text: "I couldn't reach the store just now, so I haven't done anything. Please try again.", blocks: [], trace: [], status: "error" },
           ],
         }));
+        useBubble.getState().show({ kind: "agent", messageId: id });
         useCompanion.getState().dispatch({ type: "state_change", state: "error", caption: "Connection problem", source: "agent" });
         console.warn("[agent]", err);
       } finally {
         if (controller === ctrl) {
           controller = null;
+          optimisticId = null;
           set({ busy: false });
           if (opts.voice && !ctrl.signal.aborted) {
             const reply = [...get().messages].reverse().find((m) => m.role === "assistant");

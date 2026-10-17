@@ -53,7 +53,13 @@ export function MessageList({ messages, busy }: { messages: ChatMessage[]; busy:
             <li key={m.id} className="flex gap-2.5">
               <MiniPip live={latest} className="mt-0.5" />
               <div className="min-w-0 flex-1">
-                {(m.text || streaming) && (
+                {!m.text && streaming && !m.blocks.length ? (
+                  <p className="flex h-6 items-center gap-1" aria-label="Pip is thinking">
+                    {[0, 1, 2].map((i) => (
+                      <span key={i} className="size-1.5 animate-bounce rounded-full bg-muted motion-reduce:animate-none" style={{ animationDelay: `${i * 120}ms` }} />
+                    ))}
+                  </p>
+                ) : (m.text || streaming) && (
                   <div className={cn("text-sm leading-relaxed text-text/90", m.status === "error" && "text-danger")}>
                     <Markdown text={m.text} />
                     {streaming && <span aria-hidden className="caret text-accent-text" />}

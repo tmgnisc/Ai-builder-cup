@@ -228,7 +228,7 @@ class Handlers {
     }
 
     io.state("thinking", "Thinking…");
-    await io.pause(700);
+    await io.pause(100);
 
     const pool = query.category ? getAllProducts().filter((p) => p.category === query.category).length : getAllProducts().length;
     const label = query.category ? CATEGORY_LABEL[query.category] : "products";
@@ -318,7 +318,7 @@ class Handlers {
       });
     }
 
-    await io.pause(1100);
+    await io.pause(150);
 
     io.state("speaking");
     await io.say(msg, this.describeResults(q, res.total, top, relaxed));
@@ -407,7 +407,7 @@ class Handlers {
       detail: "Evaluating specs and trade-offs side by side",
     });
     if (this.onGrid()) io.ui({ type: "move_to", between: [`card:${ids[0]}`, `card:${ids[1]}`] });
-    await io.pause(500);
+    await io.pause(80);
 
     const r = await io.call(msg, "compare_products", { productIds: ids, priorities, context });
     if (!r.ok) {
@@ -437,7 +437,7 @@ class Handlers {
     io.ui({ type: "open_compare", productIds: ids, context, priorities });
     io.ui({ type: "move_to", anchorId: "compare-verdict" });
     io.block(msg, { kind: "comparison", id: `${msg}-cmp`, productIds: ids, verdict: r.output.verdict, winnerId: r.output.winnerId, context, priorities });
-    await io.pause(900);
+    await io.pause(100);
 
     io.state("speaking");
     await io.say(msg, r.output.verdict);
@@ -501,7 +501,7 @@ class Handlers {
     }
 
     io.state("comparing", `Comparing ${nextIds.length} products…`);
-    await io.pause(400);
+    await io.pause(60);
 
     const r = await io.call(msg, "compare_products", { productIds: nextIds });
     if (!r.ok) {
@@ -519,7 +519,7 @@ class Handlers {
       verdict: r.output.verdict,
       winnerId: r.output.winnerId,
     });
-    await io.pause(600);
+    await io.pause(80);
 
     io.state("speaking");
     await io.say(msg, `Added **${name(targetProduct)}** to the comparison (${nextIds.length} products):\n\n${r.output.verdict}`);
@@ -553,7 +553,7 @@ class Handlers {
 
     if (nextIds.length >= 2) {
       io.state("comparing", `Comparing ${nextIds.length} products…`);
-      await io.pause(400);
+      await io.pause(60);
       const r = await io.call(msg, "compare_products", { productIds: nextIds });
       io.ui({ type: "open_compare", productIds: nextIds });
       io.state("speaking");
@@ -613,7 +613,7 @@ class Handlers {
       return;
     }
     io.state("thinking", "Thinking…");
-    await io.pause(500);
+    await io.pause(80);
     io.state("searching", cheaper ? "Finding cheaper options…" : "Finding similar…");
     const alts = (await this.findSimilar(base, cheaper)).slice(0, 3);
     if (!alts.length) {
@@ -632,7 +632,7 @@ class Handlers {
       io.ui({ type: "move_to", anchorId: `card:${alts[0].id}`, size: "presenting" });
     }
     io.block(msg, { kind: "product_carousel", id: `${msg}-similar`, productIds: alts.map((p) => p.id), title: cheaper ? "Cheaper picks" : "Similar picks" });
-    await io.pause(900);
+    await io.pause(100);
     io.state("speaking");
     const lines = alts.map((a) => {
       const pred = compareProducts([a, base]).predicates[a.id]?.[0];
@@ -707,7 +707,7 @@ class Handlers {
     let r = await io.call(msg, "add_to_cart", { productId: p.id, qty });
     if (!r.ok && r.error.code === "TRANSIENT") {
       io.state("acting", "Store hiccuped, retrying…");
-      await io.pause(400);
+      await io.pause(60);
       r = await io.call(msg, "add_to_cart", { productId: p.id, qty });
     }
     if (!r.ok) {
@@ -756,7 +756,7 @@ class Handlers {
     io.ui({ type: "cart_updated", flyProductId: p.id });
     io.state("success", "Added & verified ✓");
     io.block(msg, { kind: "cart_action", id: blockId, action: "add", productId: p.id, status: "verified", line });
-    await io.pause(600);
+    await io.pause(100);
     await io.say(
       msg,
       `Done: the **${name(p)}** is in your cart (${line.qty} × ${formatNPR(line.unitPrice)}). I re-checked the cart to confirm. Checkout is up to you, whenever you're ready.`,

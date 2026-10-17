@@ -91,7 +91,7 @@ export async function* runAgent(request: AgentRequest, { agent, ctx, pace = 1, s
       for (const delta of tokens) {
         if (signal.aborted) return;
         push({ type: "text_delta", messageId, delta });
-        await sleep(16 + Math.min(40, delta.length * 4));
+        await sleep(6 + Math.min(12, delta.length * 2));
       }
     },
     call: async (messageId, name, input) => {
