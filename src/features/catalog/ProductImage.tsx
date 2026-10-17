@@ -2,9 +2,12 @@ import type { ReactNode } from "react";
 import { cn } from "@/lib/cn";
 import { initials } from "@/lib/commerce/format";
 import type { Product } from "@/lib/commerce/schemas";
+import { flatLaySvg } from "@/features/tryon";
 
 interface ProductImageProps {
-  product: Pick<Product, "id" | "brand" | "name" | "category" | "palette"> & Partial<Pick<Product, "tags">>;
+  product: Pick<Product, "id" | "brand" | "name" | "category" | "palette"> & Partial<Pick<Product, "tags" | "specs">>;
+  /** Clothing: which colour option to draw (defaults to the first). */
+  color?: string;
   className?: string;
   /** Distinguishes multiple renders of the same product on one page (gradient ids). */
   variant?: string;
@@ -80,7 +83,7 @@ const VIEW: Record<NonNullable<ProductImageProps["view"]>, string> = {
  * Generated product art: a per-category device drawn from the product's brand palette on a theme-aware
  * studio backdrop. Pure SVG (no assets); `meet` with an oversized backdrop so nothing crops at any aspect.
  */
-export function ProductImage({ product, className, variant = "card", showInitials = true, view = "front" }: ProductImageProps) {
+export function ProductImage({ product, className, variant = "card", showInitials = true, view = "front", color }: ProductImageProps) {
   const id = `pi-${product.id}-${variant}-${view}`;
   const f = finishFor(product.palette);
   const kind = deviceKind(product);
@@ -95,6 +98,17 @@ export function ProductImage({ product, className, variant = "card", showInitial
         background: `radial-gradient(120% 90% at 50% 18%, color-mix(in oklab, ${f.accent} 16%, var(--surface-2)), var(--surface) 70%)`,
       }}
     >
+      {product.category === "clothing" && product.specs ? (
+        // eslint-disable-next-line @next/next/no-img-element -- generated inline SVG, nothing to optimise
+        <img
+          alt=""
+          aria-hidden
+          draggable={false}
+          src={`data:image/svg+xml;charset=utf-8,${encodeURIComponent(flatLaySvg({ ...product, tags: product.tags ?? [], specs: product.specs }, color))}`}
+          className="absolute inset-0 size-full object-contain"
+          style={{ transform: view === "detail" ? "scale(1.8) translate(0, 10%)" : view === "angle" ? "rotate(-6deg) scale(0.94)" : undefined }}
+        />
+      ) : (
       <svg viewBox="0 0 400 300" preserveAspectRatio="xMidYMid meet" className="absolute inset-0 size-full" aria-hidden>
         <defs>
           <linearGradient id={`${id}-body`} x1="0" y1="0" x2="0" y2="1">
@@ -121,6 +135,7 @@ export function ProductImage({ product, className, variant = "card", showInitial
         </defs>
         <g transform={VIEW[view]}>{DEVICES[kind]({ f, g })}</g>
       </svg>
+      )}
       {showInitials && (
         <span aria-hidden className="absolute bottom-3 right-3 font-display text-2xs font-semibold uppercase tracking-widest text-muted">
           {initials(product)}

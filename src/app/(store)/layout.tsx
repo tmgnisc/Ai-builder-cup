@@ -4,6 +4,7 @@ import { Footer } from "@/components/layout/Footer";
 import { Header } from "@/components/layout/Header";
 import { CartDrawer } from "@/features/cart";
 import { CompareDrawer, CompareTray } from "@/features/compare";
+import { TryOnLayer } from "@/features/tryon";
 
 /** Storefront chrome: header, footer, Pip, cart and compare. The merchant portal never mounts any of it. */
 export default function StoreLayout({ children }: Readonly<{ children: React.ReactNode }>) {
@@ -23,6 +24,7 @@ export default function StoreLayout({ children }: Readonly<{ children: React.Rea
       <CartDrawer />
       <CompareTray />
       <CompareDrawer />
+      <TryOnLayer />
       <ClientBootstrap />
     </>
   );

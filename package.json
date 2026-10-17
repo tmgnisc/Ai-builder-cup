@@ -11,12 +11,15 @@
     "typecheck": "tsc --noEmit",
     "check:tokens": "tsx scripts/check_tokens.ts --fail",
     "check:contrast": "tsx scripts/check_contrast.ts",
-    "test:axe": "tsx scripts/run_axe.ts"
+    "test:axe": "tsx scripts/run_axe.ts",
+    "predev": "node scripts/copy_mediapipe.mjs",
+    "prebuild": "node scripts/copy_mediapipe.mjs"
   },
   "dependencies": {
     "@gsap/react": "^2.1.2",
     "@heroui/react": "^3.2.6",
     "@heroui/styles": "^3.2.6",
+    "@mediapipe/tasks-vision": "0.10.21",
     "@react-three/drei": "^10.7.9",
     "@react-three/fiber": "^9.8.1",
     "@react-three/postprocessing": "^3.2.0",
