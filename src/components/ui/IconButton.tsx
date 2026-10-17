@@ -45,8 +45,8 @@ export function IconButton({
       // Neutral HeroUI variant: our token classes own the visuals (see Button).
       variant="ghost"
       aria-label={ariaLabel}
-      isDisabled={disabled || loading}
-      aria-busy={loading}
+      isDisabled={disabled}
+      isPending={loading}
       className={buttonClasses({ variant, size: "icon", className: cn("grid place-items-center", SIZE[size], className) })}
       {...props}
     >

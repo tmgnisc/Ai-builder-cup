@@ -96,4 +96,11 @@ describe("UI Kit Primitives", () => {
     expect(combined).toContain(focusRing);
     expect(combined).toContain("custom-interactive-class");
   });
+
+  it("Button loading uses React Aria's pending state (announced, focusable, presses blocked)", () => {
+    const html = renderToString(React.createElement(Button, { loading: true }, "Save"));
+    expect(html).toContain('data-pending="true"');
+    expect(html).toContain('aria-disabled="true"');
+    expect(html).not.toContain(' disabled=""');
+  });
 });

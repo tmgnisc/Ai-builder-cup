@@ -1,6 +1,6 @@
 "use client";
 
-import { AlertCircle, Loader2, ShoppingBag } from "lucide-react";
+import { AlertCircle, ShoppingBag } from "lucide-react";
 import { useRouter } from "next/navigation";
 import { useState } from "react";
 import { Button } from "@/components/ui/Button";
@@ -17,9 +17,12 @@ export function BuyNowButton({
   productIds,
   productName,
   label = "Buy",
+  then = "checkout",
   disabled,
   className,
 }: {
+  /** "checkout" opens checkout after adding; "stay" just adds (verified) and confirms in place. */
+  then?: "checkout" | "stay";
   productId?: string;
   productIds?: string[];
   productName: string;
@@ -31,12 +34,12 @@ export function BuyNowButton({
   const addWithFeedback = useCart((s) => s.addWithFeedback);
   const ids = productIds ?? (productId ? [productId] : []);
   const missing = useCart((s) => ids.filter((id) => !s.cart?.lines.some((l) => l.productId === id)).join(","));
-  const [state, setState] = useState<"idle" | "busy" | "failed">("idle");
+  const [state, setState] = useState<"idle" | "busy" | "failed" | "added">("idle");
 
   async function buy(e: { currentTarget: Element }) {
     if (state === "busy") return;
     const toAdd = missing ? missing.split(",") : [];
-    if (toAdd.length === 0) return router.push("/checkout");
+    if (toAdd.length === 0) return then === "checkout" ? router.push("/checkout") : setState("added");
     setState("busy");
     const source = e.currentTarget.closest("li") ?? e.currentTarget;
     let ok = true;
@@ -47,7 +50,10 @@ export function BuyNowButton({
         break;
       }
     }
-    if (ok) {
+    if (ok && then === "stay") {
+      setState("added");
+      window.setTimeout(() => setState("idle"), 2400);
+    } else if (ok) {
       setState("idle");
       router.push("/checkout");
     } else {
@@ -59,22 +65,21 @@ export function BuyNowButton({
   return (
     <Button
       size="sm"
-      variant={state === "failed" ? "outline" : "primary"}
+      variant={state === "failed" ? "outline" : then === "stay" ? "secondary" : "primary"}
       disabled={disabled}
+      loading={state === "busy"}
       onClick={(e) => void buy(e)}
       aria-label={state === "failed" ? `Couldn't add ${productName}. Try again.` : `${label} ${productName} now`}
       className={cn("h-7 shrink-0 px-2.5 text-2xs", state === "failed" && "border-danger text-danger", className)}
       iconLeft={
-        state === "busy" ? (
-          <Loader2 className="size-3 animate-spin" aria-hidden />
-        ) : state === "failed" ? (
+        state === "failed" ? (
           <AlertCircle className="size-3" aria-hidden />
         ) : (
           <ShoppingBag className="size-3" aria-hidden />
         )
       }
     >
-      {state === "failed" ? "Retry" : label}
+      {state === "failed" ? "Retry" : state === "added" ? "In cart ✓" : label}
     </Button>
   );
 }

@@ -7,6 +7,7 @@ import { CartActionCard } from "./blocks/CartActionCard";
 import { ClarifyChips } from "./blocks/ClarifyChips";
 import { ComparisonCard } from "./blocks/ComparisonCard";
 import { BundleCard } from "./blocks/BundleCard";
+import { SubAgentStatus } from "./SubAgentStatus";
 import { ProductCarousel } from "./blocks/ProductCarousel";
 import { Markdown } from "./Markdown";
 import { MiniPip } from "./MiniPip";
@@ -58,6 +59,7 @@ export function MessageList({ messages, busy }: { messages: ChatMessage[]; busy:
                     {streaming && <span aria-hidden className="caret text-accent-text" />}
                   </div>
                 )}
+                <SubAgentStatus agents={m.agents} />
                 {m.blocks.map((b) => {
                   switch (b.kind) {
                     case "product_carousel":

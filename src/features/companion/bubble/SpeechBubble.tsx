@@ -18,6 +18,7 @@ import { useCompare } from "@/store/useCompare";
 import { findAnchor, usePipPosition } from "@/store/usePipPosition";
 import { useVoice } from "@/store/useVoice";
 import { BundleCard } from "../chat/blocks/BundleCard";
+import { SubAgentStatus } from "../chat/SubAgentStatus";
 import { Chips, MiniCards, TraceLine } from "./BubbleParts";
 import { PipMenu } from "./PipMenu";
 
@@ -343,6 +344,7 @@ function AgentBlocks({ message, busy, onPick }: { message: ChatMessage; busy: bo
   const streaming = message.status === "streaming";
   return (
     <>
+      <SubAgentStatus agents={message.agents} />
       {message.blocks.map((b) => {
         switch (b.kind) {
           case "product_carousel":
