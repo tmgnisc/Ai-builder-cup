@@ -5,7 +5,7 @@
 [![Gemini 3.5 Flash](https://img.shields.io/badge/Model-Gemini_3.5_Flash-8E75C2?logo=googlegemini)](https://ai.google.dev/)
 [![FastAPI](https://img.shields.io/badge/FastAPI-0.141-009688?logo=fastapi)](https://fastapi.tiangolo.com/)
 [![PostgreSQL 16](https://img.shields.io/badge/PostgreSQL-16-336791?logo=postgresql)](https://www.postgresql.org/)
-[![Google Cloud Run](https://img.shields.io/badge/Deploy-GCP_Cloud_Run-4285F4?logo=googlecloud)](https://cloud.google.com/run)
+[![Docker](https://img.shields.io/badge/Docker-Container_Ready-2496ED?logo=docker)](https://www.docker.com/)
 [![Vitest](https://img.shields.io/badge/Frontend_Tests-196_Passed-brightgreen?logo=vitest)](https://vitest.dev/)
 [![Pytest](https://img.shields.io/badge/Backend_Tests-78_Passed_(96%25_cov)-brightgreen?logo=pytest)](https://docs.pytest.org/)
 [![WCAG 2.1 AA](https://img.shields.io/badge/Accessibility-WCAG_2.1_AA-success)](https://www.w3.org/WAI/WCAG21/quickref/)
@@ -24,7 +24,7 @@ flowchart TD
         EventStream["Streaming NDJSON Reader (useChat & useCompanion)"]
     end
 
-    subgraph Backend ["Backend Layer (FastAPI on GCP Cloud Run)"]
+    subgraph Backend ["Backend Layer (FastAPI Service)"]
         Router["/api/agent Router (Streaming NDJSON Turn Runtime)"]
         PipSuper["Pip Supervisor Agent (Google ADK + Gemini 3.5 Flash)"]
         
@@ -39,8 +39,8 @@ flowchart TD
 
     subgraph Persistence ["Data & Intelligence Layer"]
         GeminiAPI["Google AI Studio / Vertex AI (Gemini 3.5 Flash)"]
-        CloudSQL[("PostgreSQL 16 (Cloud SQL via Unix Socket Proxy)")]
-        SecretManager["GCP Secret Manager (API Keys & Credentials)"]
+        Database[("PostgreSQL 16 (Database Persistence)")]
+        Secrets["Secret Manager / Environment (.env)"]
     end
 
     UI --> EventStream
@@ -50,9 +50,9 @@ flowchart TD
     PipSuper --> Analyst
     PipSuper --> Guard
     Scout & Analyst & Guard --> Services
-    Services <--> CloudSQL
+    Services <--> Database
     PipSuper <--> GeminiAPI
-    Router -.-> SecretManager
+    Router -.-> Secrets
     Pip -.-> UI
 ```
 
@@ -207,44 +207,17 @@ AGENT_SHARED_SECRET=your_secret_token_here
 
 ---
 
-## Production Deployment (Google Cloud Run)
+## Deployment
 
-The backend is packaged as a containerized microservice and deployed to **Google Cloud Run** connected to **Cloud SQL (PostgreSQL 16)** in `asia-south1`.
+The backend application is container-ready with Docker:
 
-* **Live Cloud Run Service**: `https://persona-api-684634843408.asia-south1.run.app`
-* **Health Check**: `GET https://persona-api-684634843408.asia-south1.run.app/health`
-  ```json
-  {
-    "status": "ok",
-    "gemini": true,
-    "database": true,
-    "database_error": null
-  }
-  ```
+```bash
+# Build and run backend container
+docker build -t persona-backend ./backend
+docker run -p 8000:8000 --env-file ./backend/.env persona-backend
+```
 
-Automated deployments trigger on push to `main` via [`.github/workflows/deploy-backend.yml`](.github/workflows/deploy-backend.yml) utilizing Google Workload Identity and Cloud Secret Manager.
-
----
-
-## 4-Minute Demo Script
-
-1. **Meet Pip (20s)**: Open `/`. Pip lands with a friendly greeting and offers a spotlighted tour of the store.
-2. **Multi-Agent Bundle Discovery (40s)**: Press `/` or hold `V` and say:
-   > *"I need a lightweight laptop for college and noise-cancelling headphones under 2 lakh 20 thousand."*
-   - Pip delegates to the **Scout Product Finder** sub-agent.
-   - Watch the `subagent` status badge pulse in the chat trace.
-   - Scout returns a curated 2-item package bundle with item cards and total NPR package price.
-3. **Deep Comparison (40s)**: Ask Pip:
-   > *"Compare the MacBook Air M3 with the Acer Swift Go 14 for battery and coding."*
-   - Pip delegates to the **Comparison Analyst** sub-agent.
-   - The `/compare` workspace opens automatically with side-by-side spec evaluation, difference highlighting, and a winner verdict.
-4. **Verified Cart Addition (30s)**: Say:
-   > *"Add both to my cart and check delivery to Pokhara."*
-   - Pip delegates to the **Cart Guard** sub-agent.
-   - Stock is verified, delivery time is checked, and items are committed transactionally.
-   - Pip performs a victory hop only after persistence is verified: *"Added & verified ✓"*.
-5. **Chaos & Failure Integrity (20s)**: Add `?chaos=0.3` to simulate store network drops. Pip detects dropped writes, marks the block `failed ✕`, and explains honestly without hallucinating success.
-6. **Merchant Intelligence (30s)**: Navigate to `/merchant` to inspect live session analytics, drop-off funnels, and missing product data logged during customer conversations.
+CI/CD automation is configured with GitHub Actions in [`.github/workflows/deploy-backend.yml`](.github/workflows/deploy-backend.yml) for automated builds, testing, and deployment to container platforms (such as Google Cloud Run, AWS ECS, or Kubernetes).
 
 ---
 
