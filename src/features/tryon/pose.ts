@@ -10,7 +10,13 @@ let mode: "VIDEO" | "IMAGE" = "VIDEO";
 
 async function create(): Promise<PoseLandmarker> {
   const { FilesetResolver, PoseLandmarker } = await import("@mediapipe/tasks-vision");
-  const fileset = await FilesetResolver.forVisionTasks("/mediapipe/wasm");
+  let fileset;
+  try {
+    fileset = await FilesetResolver.forVisionTasks("/mediapipe/wasm");
+  } catch (err) {
+    console.warn("[tryon] Local mediapipe wasm resolver failed, falling back to CDN:", err);
+    fileset = await FilesetResolver.forVisionTasks("https://cdn.jsdelivr.net/npm/@mediapipe/tasks-vision@0.10.21/wasm");
+  }
   const options = (delegate: "GPU" | "CPU") => ({
     baseOptions: { modelAssetPath: "/mediapipe/pose_landmarker_lite.task", delegate },
     runningMode: mode,

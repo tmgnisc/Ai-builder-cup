@@ -26,11 +26,14 @@ const HINT: Record<RigStatus, string> = {
 };
 
 const svgImage = (svg: string) =>
-  new Promise<HTMLImageElement>((resolve, reject) => {
+  new Promise<HTMLImageElement>((resolve) => {
     const img = new Image();
     img.crossOrigin = "anonymous";
     img.onload = () => resolve(img);
-    img.onerror = reject;
+    img.onerror = () => {
+      console.warn("[tryon] Failed to load garment SVG part");
+      resolve(img);
+    };
     if (svg.startsWith("<svg") || svg.startsWith("<?xml")) {
       img.src = `data:image/svg+xml;charset=utf-8,${encodeURIComponent(svg)}`;
     } else {
@@ -41,26 +44,36 @@ const svgImage = (svg: string) =>
 type PartImages = Partial<Record<Placement["part"], HTMLImageElement>>;
 
 async function loadParts(parts: GarmentParts): Promise<PartImages> {
-  const entries = Object.entries({
-    torso: parts.torso,
-    sleeveUpper: parts.sleeveUpper,
-    sleeveLower: parts.sleeveLower,
-    head: parts.head,
-    eyes: parts.eyes,
-    shawl: parts.shawl,
-  }).filter((e): e is [Placement["part"], string] => !!e[1]);
-  const imgs = await Promise.all(entries.map(([, svg]) => svgImage(svg)));
-  return Object.fromEntries(entries.map(([k], i) => [k, imgs[i]]));
+  try {
+    const entries = Object.entries({
+      torso: parts.torso,
+      sleeveUpper: parts.sleeveUpper,
+      sleeveLower: parts.sleeveLower,
+      head: parts.head,
+      eyes: parts.eyes,
+      shawl: parts.shawl,
+    }).filter((e): e is [Placement["part"], string] => !!e[1]);
+    const imgs = await Promise.all(entries.map(([, svg]) => svgImage(svg)));
+    return Object.fromEntries(entries.map(([k], i) => [k, imgs[i]]));
+  } catch (err) {
+    console.warn("[tryon] loadParts error:", err);
+    return {};
+  }
 }
 
 function drawGarment(ctx: CanvasRenderingContext2D, placements: Placement[], imgs: PartImages) {
-  for (const p of placements) {
-    const img = imgs[p.part];
-    if (!img) continue;
-    ctx.setTransform(p.ax.x, p.ax.y, p.ay.x, p.ay.y, p.origin.x, p.origin.y);
-    ctx.drawImage(img, 0, 0, p.w, p.h);
+  try {
+    for (const p of placements) {
+      const img = imgs[p.part];
+      if (!img || !img.complete || img.naturalWidth === 0) continue;
+      ctx.setTransform(p.ax.x, p.ax.y, p.ay.x, p.ay.y, p.origin.x, p.origin.y);
+      ctx.drawImage(img, 0, 0, p.w, p.h);
+    }
+  } catch (err) {
+    console.warn("[tryon] drawGarment error:", err);
+  } finally {
+    ctx.setTransform(1, 0, 0, 1, 0, 0);
   }
-  ctx.setTransform(1, 0, 0, 1, 0, 0);
 }
 
 /**

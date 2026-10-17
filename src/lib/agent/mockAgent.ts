@@ -41,11 +41,14 @@ function rank(pool: Product[], priorities: CompareKey[]): Product[] {
   };
   const score = new Map<string, number>();
   prios.forEach((k, i) => {
-    const vals = pool.map((p) => get[k](p)).filter((v): v is number => v !== undefined);
+    const fn = get[k];
+    if (!fn) return;
+    const vals = pool.map((p) => fn(p)).filter((v): v is number => v !== undefined);
+    if (!vals.length) return;
     const lo = Math.min(...vals);
     const hi = Math.max(...vals);
     for (const p of pool) {
-      const v = get[k](p);
+      const v = fn(p);
       const norm = v === undefined || hi === lo ? 0.5 : (v - lo) / (hi - lo);
       score.set(p.id, (score.get(p.id) ?? 0) + norm * (prios.length - i));
     }

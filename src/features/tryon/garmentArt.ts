@@ -44,10 +44,10 @@ const WHITE = "#ffffff";
 const BLACK = "#000000";
 
 export function defaultColor(p: GarmentProduct): string {
-  return p.specs.colors?.[0]?.hex ?? p.palette[0];
+  return p.specs?.colors?.[0]?.hex ?? p.palette?.[0] ?? "#4f46e5";
 }
 
-const has = (p: GarmentProduct, ...tags: string[]) => tags.some((t) => p.tags.includes(t));
+const has = (p: GarmentProduct, ...tags: string[]) => tags.some((t) => p.tags?.includes(t));
 
 interface Paint {
   id: string;
@@ -66,13 +66,13 @@ function paintFor(p: GarmentProduct, color: string, uid: string): Paint {
     hi: mix(color, WHITE, light ? 0.35 : 0.18),
     lo: mix(color, BLACK, light ? 0.18 : 0.35),
     line: mix(color, BLACK, light ? 0.3 : 0.5),
-    accent: p.palette[1],
+    accent: p.palette?.[1] ?? p.palette?.[0] ?? "#06b6d4",
   };
 }
 
 /** Fabric fill: shading gradient plus the garment's pattern. */
 function fabricDefs(p: GarmentProduct, k: Paint): string {
-  const pattern = p.specs.pattern ?? "solid";
+  const pattern = p.specs?.pattern ?? "solid";
   let overlay = "";
   if (pattern === "check") {
     const dark = mix(k.base, BLACK, 0.55);

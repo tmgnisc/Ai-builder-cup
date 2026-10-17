@@ -196,7 +196,9 @@ export function resolveRef(
         rating: (p) => p.rating,
         warranty: (p) => p.specs.warrantyMonths,
       };
-      const scored = pool.map((p) => ({ p, v: value[ref.attr](p) })).filter((x): x is { p: Product; v: number } => x.v !== undefined);
+      const fn = value[ref.attr];
+      if (!fn) return [];
+      const scored = pool.map((p) => ({ p, v: fn(p) })).filter((x): x is { p: Product; v: number } => x.v !== undefined);
       if (!scored.length) return [];
       scored.sort((a, b) => b.v - a.v);
       return [scored[0].p.id];

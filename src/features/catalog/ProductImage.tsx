@@ -86,7 +86,7 @@ const VIEW: Record<NonNullable<ProductImageProps["view"]>, string> = {
  */
 export function ProductImage({ product, className, variant = "card", showInitials = true, view = "front", color }: ProductImageProps) {
   const id = `pi-${product.id}-${variant}-${view}`;
-  const f = finishFor(product.palette);
+  const f = finishFor(product.palette ?? ["#4f46e5", "#06b6d4"]);
   const kind = deviceKind(product);
   const g = (name: string) => `url(#${id}-${name})`;
 
@@ -159,7 +159,7 @@ export function ProductImage({ product, className, variant = "card", showInitial
                 <stop offset="1" stopColor="#000000" stopOpacity="0" />
               </radialGradient>
             </defs>
-            <g transform={VIEW[view]}>{DEVICES[kind]({ f, g })}</g>
+            <g transform={VIEW[view] ?? VIEW.front}>{DEVICES[kind]?.({ f, g }) ?? null}</g>
           </svg>
         )}
       </div>
