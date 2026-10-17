@@ -1,6 +1,6 @@
 # Persona Backend (FastAPI & Google ADK)
 
-Production-grade Python API for Pip and the autonomous multi-agent shopping team, commerce catalog, cart engine, and tool execution layer.
+Production-grade Python API for Pip and the autonomous multi-agent shopping team on the Persona agentic e-commerce platform.
 
 ---
 
@@ -88,7 +88,7 @@ Persona uses Google ADK (`google-adk==2.12.0`) to orchestrate a team of autonomo
   * Concurrently queries the catalog for each slot with fallback query relaxation.
   * Constructs a curated package bundle, calculates total package price in NPR, and emits `bundle` blocks.
 * **`analyze_comparison` (Analyst)**:
-  * Evaluates 2–4 products side-by-side across dimensions (Price, Battery, Weight, RAM, Storage, Display, Warranty).
+  * Evaluates 2 to 4 products side-by-side across dimensions (Price, Battery, Weight, RAM, Storage, Display, Warranty).
   * Computes weighted scores based on user priorities and declares a grounded winner.
 * **`batch_cart_with_guard` (Guard)**:
   * Performs pre-mutation stock checks for each requested item.
@@ -122,7 +122,7 @@ Each agent turn streams newline-delimited JSON `AgentEvent` objects:
 
 1. **Verify-After-Act**: Add and remove mutations pass through `VerifiedCartService` which re-reads database persistence. If a write is dropped or rejected, the model is barred from claiming success, and a factual correction is emitted.
 2. **Strictly No Checkout Tool**: Pip cannot complete purchases or charge money. If the user wants to buy, Pip uses `ui_action(kind="navigate", payload={"to": "/checkout"})`.
-3. **Grounded Spec Integrity**: All hardware specifications, stock levels, and NPR prices come strictly from tools. Unknown facts trigger `record_missing_info` rather than hallucinations.
+3. **Grounded Spec Integrity**: All product specifications, stock levels, and NPR prices come strictly from tools. Unknown facts trigger `record_missing_info` rather than hallucinations.
 4. **Tool-Call Cap**: Hard cap of 8 tool invocations per turn to prevent infinite loops. Subagents execute compound multi-item searches within a single tool call slot.
 5. **Read Retry Discipline**: Automated single retry applies exclusively to read operations on `TRANSIENT` errors; mutating cart writes are never blindly retried.
 

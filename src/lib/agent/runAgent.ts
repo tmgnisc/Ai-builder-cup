@@ -30,6 +30,7 @@ export interface AgentIO {
   block(messageId: string, block: Block): void;
   ui(action: UIAction): void;
   remember(memory: AgentMemory): void;
+  subagent?(event: import("./types").SubAgentEvent): void;
   /** Demo pacing so each Pip state is visible; scaled by `pace` (0 in tests). */
   pause(ms: number): Promise<void>;
   readonly signal: AbortSignal;
@@ -140,6 +141,7 @@ export async function* runAgent(request: AgentRequest, { agent, ctx, pace = 1, s
     block: (messageId, block) => push({ type: "block", messageId, block }),
     ui: (action) => push({ type: "ui", action }),
     remember: (memory) => push({ type: "memory", memory }),
+    subagent: (event) => push(event),
     pause: sleep,
   };
 

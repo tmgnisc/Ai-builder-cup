@@ -176,10 +176,10 @@ class Handlers {
   // ── Small talk ──
 
   private async greet() {
-    this.io.state("greeting", "What hardware are we looking at?");
+    this.io.state("greeting", "What are we shopping for?");
     await this.io.say(
       this.msg,
-      "Tell me your workload, budget in lakhs, or what you're replacing. I search catalog specs, compare trade-offs, and check Valley delivery. You'll see every tool step I take.",
+      "Tell me what you need, your budget in NPR, or an outfit to try on. I coordinate specialized sub-agents to discover products, compare trade-offs, and verify every cart update. You will see every tool step I take.",
     );
     this.chips(EXAMPLES);
   }
@@ -188,7 +188,7 @@ class Handlers {
     this.io.state("speaking");
     await this.io.say(
       this.msg,
-      "I can **search** the catalog from a plain description, **compare** products on real specs, check **stock** and **delivery**, and **add or remove** cart items, always double-checking the cart afterwards. I never check out for you; that's always your call.",
+      "I am an agentic shopping companion. I can **search** products across fashion and tech, **compare** items on real specs, check **stock** and **delivery**, and **add or remove** cart items with strict verification. I never check out for you; that is always your call.",
     );
     this.chips(EXAMPLES);
   }
@@ -222,8 +222,8 @@ class Handlers {
     const { io, msg } = this;
     if (!query.category && !query.tags?.length && !hasConstraints(query)) {
       io.state("speaking");
-      await io.say(msg, "What hardware are we looking at? Tell me your budget or workload.");
-      this.chips(["Laptops", "Phones", "Headphones", "Accessories"]);
+      await io.say(msg, "What are we shopping for today? Tell me what you need, your budget, or an outfit to try on.");
+      this.chips(["Laptops", "Clothing & Try-On", "Headphones", "Accessories"]);
       return;
     }
 
@@ -233,6 +233,14 @@ class Handlers {
     const pool = query.category ? getAllProducts().filter((p) => p.category === query.category).length : getAllProducts().length;
     const label = query.category ? CATEGORY_LABEL[query.category] : "products";
     io.state("searching", `Searching ${pool} ${label}…`);
+    io.subagent?.({
+      type: "subagent",
+      agent: "scout",
+      name: "Product Finder (Scout)",
+      status: "searching",
+      task: `Searching catalog for ${label}`,
+      detail: `Scanning ${pool} items across categories`,
+    });
 
     let q = query;
     let res = await this.searchWithRetry(q);
@@ -250,12 +258,30 @@ class Handlers {
     }
 
     if (!res.products.length) {
+      io.subagent?.({
+        type: "subagent",
+        agent: "scout",
+        name: "Product Finder (Scout)",
+        status: "failed",
+        task: `Searching catalog for ${label}`,
+        detail: "No matching items found within current filters",
+      });
       io.state("speaking");
       await io.say(msg, `I couldn't find any ${label}${constraintPhrase(query)}, even after loosening a few filters. Want to adjust the budget or requirements?`);
       this.chips(["Raise the budget", "Show all " + label]);
       this.memory.lastQuery = query;
       return;
     }
+
+    io.subagent?.({
+      type: "subagent",
+      agent: "scout",
+      name: "Product Finder (Scout)",
+      status: "completed",
+      task: `Searching catalog for ${label}`,
+      detail: `Matched ${res.products.length} products`,
+      resultsCount: res.products.length,
+    });
 
     const ranked = rank(res.products, q.priorities);
     const top = ranked.slice(0, 3);
@@ -272,6 +298,26 @@ class Handlers {
       io.ui({ type: "move_to", anchorId: `card:${top[0].id}`, size: "presenting" });
     }
     io.block(msg, { kind: "product_carousel", id: `${msg}-results`, productIds: top.map((p) => p.id), title: `${res.total} match${res.total === 1 ? "" : "es"}` });
+
+    if (/\b(bundle|package|outfit|combo|pair)\b/i.test(this.req.message) && top.length >= 2) {
+      const bundleItems = top.slice(0, 2).map((p, idx) => ({
+        slot: idx === 0 ? "Primary Choice" : "Companion Pick",
+        productId: p.id,
+        name: p.name,
+        price: p.price,
+        brand: p.brand,
+      }));
+      const totalPrice = bundleItems.reduce((sum, item) => sum + item.price, 0);
+      io.block(msg, {
+        kind: "bundle",
+        id: `${msg}-bundle`,
+        title: `Curated ${bundleItems.length}-Item Package`,
+        items: bundleItems,
+        totalPrice,
+        productIds: bundleItems.map((i) => i.productId),
+      });
+    }
+
     await io.pause(1100);
 
     io.state("speaking");
@@ -352,15 +398,40 @@ class Handlers {
     const context = needsLabel(memory.lastQuery);
     const caption = `Comparing ${joinList((priorities ?? ["battery", "weight"]).slice(0, 2).map((k) => KEY_LABEL[k]), "&")}…`;
     io.state("comparing", caption);
+    io.subagent?.({
+      type: "subagent",
+      agent: "analyst",
+      name: "Comparison Analyst",
+      status: "analyzing",
+      task: `Comparing ${ids.length} products`,
+      detail: "Evaluating specs and trade-offs side by side",
+    });
     if (this.onGrid()) io.ui({ type: "move_to", between: [`card:${ids[0]}`, `card:${ids[1]}`] });
     await io.pause(500);
 
     const r = await io.call(msg, "compare_products", { productIds: ids, priorities, context });
     if (!r.ok) {
+      io.subagent?.({
+        type: "subagent",
+        agent: "analyst",
+        name: "Comparison Analyst",
+        status: "failed",
+        task: `Comparing ${ids.length} products`,
+        detail: r.error.message,
+      });
       io.state("error", "Couldn't compare");
       await io.say(msg, `I couldn't run that comparison (${r.error.message}).`);
       return;
     }
+    io.subagent?.({
+      type: "subagent",
+      agent: "analyst",
+      name: "Comparison Analyst",
+      status: "completed",
+      task: `Comparing ${ids.length} products`,
+      detail: r.output.winnerId ? `Winner: ${name(product(r.output.winnerId)!)}` : "Side-by-side spec evaluation complete",
+      resultsCount: ids.length,
+    });
     memory.lastComparedIds = ids;
     memory.focusProductId = null;
     io.ui({ type: "open_compare", productIds: ids, context, priorities });
@@ -617,6 +688,14 @@ class Handlers {
     memory.focusProductId = p.id;
     const blockId = `${msg}-cart`;
     io.state("acting", `Adding ${name(p)} to cart…`);
+    io.subagent?.({
+      type: "subagent",
+      agent: "guard",
+      name: "Cart Guard",
+      status: "verifying",
+      task: `Verifying stock and adding ${name(p)}`,
+      detail: "Double checking stock and database persistence",
+    });
     const productAnchor = this.onGrid() ? `card:${p.id}` : this.req.context.pageProductId === p.id ? "add-to-cart" : null;
     if (productAnchor) io.ui({ type: "move_to", anchorId: productAnchor });
     io.block(msg, { kind: "cart_action", id: blockId, action: "add", productId: p.id, status: "pending" });
@@ -632,6 +711,14 @@ class Handlers {
       r = await io.call(msg, "add_to_cart", { productId: p.id, qty });
     }
     if (!r.ok) {
+      io.subagent?.({
+        type: "subagent",
+        agent: "guard",
+        name: "Cart Guard",
+        status: "failed",
+        task: `Verifying stock and adding ${name(p)}`,
+        detail: r.error.message,
+      });
       if (r.error.code === "OUT_OF_STOCK") return this.outOfStock(p, blockId);
       io.state("error", "Couldn't add that");
       io.block(msg, { kind: "cart_action", id: blockId, action: "add", productId: p.id, status: "failed", message: r.error.message });
@@ -640,12 +727,29 @@ class Handlers {
       return;
     }
     if (!r.verification?.verified) {
+      io.subagent?.({
+        type: "subagent",
+        agent: "guard",
+        name: "Cart Guard",
+        status: "failed",
+        task: `Verifying stock and adding ${name(p)}`,
+        detail: "Cart persistence check failed",
+      });
       io.state("error", "Couldn't verify");
       io.block(msg, { kind: "cart_action", id: blockId, action: "add", productId: p.id, status: "failed", line: r.verification?.line ?? null, message: "The store accepted it, but the item isn't in your cart." });
       await io.say(msg, `The store said the **${name(p)}** was added, but when I checked your cart it isn't there, so I won't call that done. Want me to try again?`);
       this.chips(["Try again", "Show my cart"]);
       return;
     }
+
+    io.subagent?.({
+      type: "subagent",
+      agent: "guard",
+      name: "Cart Guard",
+      status: "completed",
+      task: `Verifying stock and adding ${name(p)}`,
+      detail: "Item verified in cart",
+    });
 
     const line = r.verification.line!;
     // Pip rides along with the item to the cart icon, and celebrates there.

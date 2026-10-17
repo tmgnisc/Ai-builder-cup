@@ -7,9 +7,9 @@ import "@/styles/globals.css";
 const inter = Inter({ subsets: ["latin"], variable: "--font-inter", display: "swap" });
 
 export const metadata: Metadata = {
-  title: { default: "Persona: electronics with a second opinion", template: "%s · Persona" },
+  title: { default: "Persona: Agentic E-Commerce Platform", template: "%s · Persona" },
   description:
-    "An electronics store for shoppers in Nepal, with Pip: a shopping companion that searches the catalog, compares specs and confirms every cart change. Prices in NPR.",
+    "An agentic e-commerce platform for shoppers in Nepal, with Pip: an intelligent shopping companion that searches products, compares options, verifies every cart update, and offers virtual try-on. Prices in NPR.",
 };
 
 export const viewport: Viewport = {

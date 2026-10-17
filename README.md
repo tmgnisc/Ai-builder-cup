@@ -8,7 +8,7 @@
 [![Docker](https://img.shields.io/badge/Docker-Container_Ready-2496ED?logo=docker)](https://www.docker.com/)
 [![WCAG 2.1 AA](https://img.shields.io/badge/Accessibility-WCAG_2.1_AA-success)](https://www.w3.org/WAI/WCAG21/quickref/)
 
-**Persona** is an agentic e-commerce platform that reimagines shopping with an intelligent, grounded companion named **Pip**. Rather than a static chatbot widget in the corner, Pip is an interactive spatial companion that navigates the viewport, choreographs UI animations, searches and compares hardware trade-offs, verifies cart transactions against silent database drops, and coordinates a team of autonomous sub-agents.
+**Persona** is an agentic e-commerce platform that reimagines shopping with an intelligent, grounded companion named **Pip**. Rather than a static chatbot widget in the corner, Pip is an interactive spatial companion that navigates the viewport, choreographs UI animations, searches and compares product options across categories, verifies cart transactions against silent database drops, and coordinates a team of autonomous sub-agents.
 
 ---
 
@@ -16,9 +16,9 @@
 
 ### 1. Multi-Agent Orchestration (Google ADK)
 * **Supervisor Agent (`Pip`)**: Maintains user context, conversational memory, voice interaction, and UI choreography. Powered by `gemini-3.5-flash` with `thinking_budget=0` for immediate sub-second stream latency.
-* **Product Finder Sub-Agent (`Scout`)**: When a shopper requests multiple distinct items (e.g. *"I need a lightweight developer laptop and noise-cancelling headphones"* or bundle requests), Pip delegates to Scout. Scout queries the catalog concurrently across multiple categories, compiles a structured package bundle, computes total NPR package pricing, and emits `bundle` blocks.
-* **Comparison Specialist Sub-Agent (`Analyst`)**: Performs structured side-by-side evaluation across 2–4 products on key hardware dimensions (Price, Battery, Weight, RAM, Storage, Display, Warranty).
-* **Cart & Fulfillment Guard Sub-Agent (`Guard`)**: Executes atomic stock checks, city delivery feasibility, and multi-item cart mutations with verify-after-act semantics.
+* **Product Finder Sub-Agent (`Scout`)**: When a shopper requests multiple distinct items (for example, "I need a lightweight laptop and noise-cancelling headphones" or "find a college outfit and backpack"), Pip delegates to Scout. Scout queries the catalog concurrently across multiple categories, compiles a structured package bundle, computes total NPR package pricing, and emits interactive bundle cards.
+* **Comparison Specialist Sub-Agent (`Analyst`)**: Performs structured side-by-side evaluation across 2 to 4 products on key dimensions (Price, Battery, Weight, RAM, Storage, Materials, Fit, Warranty).
+* **Cart and Fulfillment Guard Sub-Agent (`Guard`)**: Executes atomic stock checks, city delivery feasibility, and multi-item cart mutations with verify-after-act semantics.
 
 ### 2. Transactional "Verify-After-Act" Cart Protection
 In traditional agentic systems, agents hallucinate write successes. Persona introduces **Verify-After-Act**:
@@ -31,16 +31,20 @@ In traditional agentic systems, agents hallucinate write successes. Persona intr
 * **Proactive Guide Engine**: Context-aware check-ins when users hesitate or compare products, offering tips derived strictly from catalog analytics.
 * **Voice Interaction**: Native Web Speech API integration (`lang=en-IN`) with real-time mic loudness envelopes and synchronized TTS speech pulses.
 
-### 4. Comparison Workspace (`/compare`)
+### 4. On-Device Virtual Try-On Studio (`/tryon`)
+* **Live Pose Detection**: Runs client-side using MediaPipe Pose Landmarker without sending user camera frames to any remote server.
+* **Interactive Canvas Fitting**: Real-time virtual try-on for hoodies, t-shirts, jackets, and accessories with customizable fabric colors and garment scaling.
+
+### 5. Comparison Workspace (`/compare`)
 * Dedicated comparison workspace supporting 2 to 4 products.
 * Sticky product cards, mobile 390px scroll-snap columns with pinned attribute labels.
 * **Differences-only toggle** with accessible `aria-live` announcements.
 * Best-value highlights, cross-category guards, and grounded trade-off summaries.
 
-### 5. Merchant Intelligence Dashboard (`/merchant`)
+### 6. Merchant Intelligence Dashboard (`/merchant`)
 * **KPIs & Sparklines**: Real-time tracked metrics for assisted sessions, verified cart additions, and guide engagement.
 * **Drop-off Funnel**: Full visibility from initial greeting to checkout navigation.
-* **Missing Product Information Audit**: Logs shopper queries about specs not listed in the catalog (e.g. keyboard backlighting, RAM upgradeability), allowing store owners to enrich product data.
+* **Missing Product Information Audit**: Logs shopper queries about specs not listed in the catalog (for example, keyboard backlighting or garment wash care), allowing store owners to enrich product data.
 
 ---
 

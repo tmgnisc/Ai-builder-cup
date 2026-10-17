@@ -5,7 +5,7 @@ from typing import Literal
 from pydantic import BaseModel
 
 ChaosFailure = Literal["transient", "silent"]
-MAX_FAILURE_RATE = 0.9
+MAX_FAILURE_RATE = 1.0
 
 
 class ChaosConfig(BaseModel):

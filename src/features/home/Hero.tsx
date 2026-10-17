@@ -10,9 +10,9 @@ import { getAllProducts } from "@/lib/commerce/catalog";
 import { DELIVERY_RULES } from "@/lib/commerce/delivery";
 
 const EXAMPLES = [
-  "Developer laptop with 16 GB RAM",
-  "Active noise cancelling headphones",
-  "MacBook Pro vs ThinkPad comparison",
+  "College bundle: laptop and headphones",
+  "Warm winter fleece hoodie with try-on",
+  "MacBook Air vs Acer Swift comparison",
 ];
 
 const catalog = getAllProducts();
@@ -109,21 +109,21 @@ export function Hero() {
       <div>
         <p data-hero-fade className="mb-6 inline-flex items-center gap-2 rounded-md bg-surface px-2.5 py-1 text-xs font-medium text-muted hairline">
           <span className="size-1.5 rounded-full bg-accent" aria-hidden />
-          Electronics store · Kathmandu
+          Agentic E-Commerce Platform · Nepal
         </p>
         <h1
           data-split
           className="font-display hero-headline max-w-2xl font-semibold tracking-tight [&_.char]:inline-block"
         >
-          Buy hardware with a <span className="text-accent-text">second opinion.</span>
+          Shop anything with an <span className="text-accent-text">intelligent companion.</span>
         </h1>
         <p data-hero-rise className="mt-6 max-w-xl text-lg leading-relaxed text-muted">
-          Tell Pip what you do and what you can spend. It searches the catalog, compares the specs that matter for your work, and only says &ldquo;added&rdquo; once your cart confirms it.
+          Tell Pip what you need and what you want to spend. Pip coordinates autonomous sub-agents to find products, compare options side-by-side, try on outfits virtually, and confirm your cart with zero dropped writes.
         </p>
 
         <form data-hero-fade data-pip-anchor="hero-prompt" data-pip-topic="hero-prompt" className="mt-8 max-w-xl" onSubmit={onSubmit}>
           <label htmlFor="hero-prompt" className="sr-only">
-            Ask about hardware specs, budget, or compare products
+            Ask about products, bundles, outfits, or compare items
           </label>
           <div className="flex items-center gap-2 rounded-2xl bg-surface p-1.5 pl-5 shadow-[inset_0_0_0_1px_var(--border),0_1px_2px_rgb(0_0_0/0.2)] transition-shadow focus-within:shadow-[inset_0_0_0_1px_var(--accent-text),0_0_0_4px_color-mix(in_oklab,var(--accent)_12%,transparent)]">
             <input
@@ -132,7 +132,7 @@ export function Hero() {
               name="prompt"
               value={prompt}
               onChange={(e) => setPrompt(e.target.value)}
-              placeholder="A laptop under 1.2 lakh for Docker and long battery…"
+              placeholder="Find me a college bundle, winter jacket, or compare laptops…"
               autoComplete="off"
               className="h-11 min-w-0 flex-1 bg-transparent text-base placeholder:text-muted focus:outline-none"
             />
