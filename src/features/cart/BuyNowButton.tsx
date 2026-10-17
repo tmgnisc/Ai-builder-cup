@@ -8,21 +8,45 @@ import { cn } from "@/lib/cn";
 import { useCart } from "@/store/useCart";
 
 /**
- * One-tap purchase from anywhere Pip shows a product: adds it (verified against a fresh cart read)
- * and opens checkout, where the shopper still confirms the order themselves. If the item is already
- * in the cart it goes straight to checkout instead of adding a second one.
+ * One-tap purchase from anywhere Pip shows products: adds them (each verified against a fresh cart
+ * read) and opens checkout, where the shopper still confirms the order themselves. Items already in
+ * the cart aren't added twice. Pass several ids (a bundle) for "Buy all".
  */
-export function BuyNowButton({ productId, productName, disabled, className }: { productId: string; productName: string; disabled?: boolean; className?: string }) {
+export function BuyNowButton({
+  productId,
+  productIds,
+  productName,
+  label = "Buy",
+  disabled,
+  className,
+}: {
+  productId?: string;
+  productIds?: string[];
+  productName: string;
+  label?: string;
+  disabled?: boolean;
+  className?: string;
+}) {
   const router = useRouter();
   const addWithFeedback = useCart((s) => s.addWithFeedback);
-  const inCart = useCart((s) => !!s.cart?.lines.some((l) => l.productId === productId));
+  const ids = productIds ?? (productId ? [productId] : []);
+  const missing = useCart((s) => ids.filter((id) => !s.cart?.lines.some((l) => l.productId === id)).join(","));
   const [state, setState] = useState<"idle" | "busy" | "failed">("idle");
 
   async function buy(e: { currentTarget: Element }) {
     if (state === "busy") return;
-    if (inCart) return router.push("/checkout");
+    const toAdd = missing ? missing.split(",") : [];
+    if (toAdd.length === 0) return router.push("/checkout");
     setState("busy");
-    const ok = await addWithFeedback(productId, e.currentTarget.closest("li") ?? e.currentTarget);
+    const source = e.currentTarget.closest("li") ?? e.currentTarget;
+    let ok = true;
+    // Sequential: each add is verified against a fresh cart read before the next one.
+    for (const id of toAdd) {
+      if (!(await addWithFeedback(id, source))) {
+        ok = false;
+        break;
+      }
+    }
     if (ok) {
       setState("idle");
       router.push("/checkout");
@@ -38,7 +62,7 @@ export function BuyNowButton({ productId, productName, disabled, className }: { 
       variant={state === "failed" ? "outline" : "primary"}
       disabled={disabled}
       onClick={(e) => void buy(e)}
-      aria-label={state === "failed" ? `Couldn't add ${productName}. Try again.` : `Buy ${productName} now`}
+      aria-label={state === "failed" ? `Couldn't add ${productName}. Try again.` : `${label} ${productName} now`}
       className={cn("h-7 shrink-0 px-2.5 text-2xs", state === "failed" && "border-danger text-danger", className)}
       iconLeft={
         state === "busy" ? (
@@ -50,7 +74,7 @@ export function BuyNowButton({ productId, productName, disabled, className }: { 
         )
       }
     >
-      {state === "failed" ? "Retry" : "Buy"}
+      {state === "failed" ? "Retry" : label}
     </Button>
   );
 }
