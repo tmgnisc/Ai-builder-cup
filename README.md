@@ -6,8 +6,6 @@
 [![FastAPI](https://img.shields.io/badge/FastAPI-0.141-009688?logo=fastapi)](https://fastapi.tiangolo.com/)
 [![PostgreSQL 16](https://img.shields.io/badge/PostgreSQL-16-336791?logo=postgresql)](https://www.postgresql.org/)
 [![Docker](https://img.shields.io/badge/Docker-Container_Ready-2496ED?logo=docker)](https://www.docker.com/)
-[![Vitest](https://img.shields.io/badge/Frontend_Tests-196_Passed-brightgreen?logo=vitest)](https://vitest.dev/)
-[![Pytest](https://img.shields.io/badge/Backend_Tests-78_Passed_(96%25_cov)-brightgreen?logo=pytest)](https://docs.pytest.org/)
 [![WCAG 2.1 AA](https://img.shields.io/badge/Accessibility-WCAG_2.1_AA-success)](https://www.w3.org/WAI/WCAG21/quickref/)
 
 **Persona** is an agentic e-commerce platform that reimagines shopping with an intelligent, grounded companion named **Pip**. Rather than a static chatbot widget in the corner, Pip is an interactive spatial companion that navigates the viewport, choreographs UI animations, searches and compares hardware trade-offs, verifies cart transactions against silent database drops, and coordinates a team of autonomous sub-agents.
