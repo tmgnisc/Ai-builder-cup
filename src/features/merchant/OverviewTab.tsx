@@ -1,17 +1,27 @@
 "use client";
 
+import { useEffect } from "react";
 import { Database } from "lucide-react";
 import { Badge } from "@/components/ui/Badge";
 import { FRICTION, FUNNEL, KPIS, PERIOD } from "@/data/merchant";
 import { getAllProducts } from "@/lib/commerce/catalog";
+import { useMerchantSession } from "@/store/useMerchantSession";
 import { Funnel } from "./Funnel";
 import { KpiCard } from "./KpiCard";
 import { FrictionList, SessionPanel } from "./Lists";
 
 export function OverviewTab() {
+  const kpis = useMerchantSession((s) => s.kpis);
+  const loadKpisFromApi = useMerchantSession((s) => s.loadKpisFromApi);
+
+  useEffect(() => {
+    loadKpisFromApi();
+  }, [loadKpisFromApi]);
+
   const allProducts = getAllProducts();
-  const inStockCount = allProducts.filter((p) => p.stock > 0).length;
-  const lowStockCount = allProducts.filter((p) => p.stock > 0 && p.stock <= 3).length;
+  const totalProducts = kpis?.totalProducts ?? allProducts.length;
+  const inStockCount = kpis?.inStockCount ?? allProducts.filter((p) => p.stock > 0).length;
+  const lowStockCount = kpis?.lowStockCount ?? allProducts.filter((p) => p.stock > 0 && p.stock <= 3).length;
 
   return (
     <div className="space-y-6">
@@ -32,7 +42,7 @@ export function OverviewTab() {
               </span>
             </div>
             <p className="text-xs text-muted">
-              {allProducts.length} catalog items loaded · {inStockCount} available for immediate fulfillment · {lowStockCount} on low-stock buffer.
+              {totalProducts} catalog items loaded · {inStockCount} available for immediate fulfillment · {lowStockCount} on low-stock buffer.
             </p>
           </div>
         </div>

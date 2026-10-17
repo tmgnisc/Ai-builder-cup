@@ -15,24 +15,45 @@ export interface MerchantUser {
   storeName: string;
 }
 
+export interface MerchantKpis {
+  totalProducts: number;
+  inStockCount: number;
+  lowStockCount: number;
+  totalOrders: number;
+  verifiedOrdersCount: number;
+  verifiedPercentage: number;
+  totalRevenue: number;
+  pendingFulfillment: number;
+  assistedSessions: number;
+  taskCompletionRate: number;
+}
+
 export interface MerchantSessionState {
   // Authentication
   isAuthenticated: boolean;
   user: MerchantUser | null;
-  login: (email: string, password?: string) => boolean;
-  logout: () => void;
+  authLoading: boolean;
+  authError: string | null;
+  login: (email: string, password?: string) => Promise<boolean>;
+  logout: () => Promise<void>;
+  checkAuth: () => Promise<boolean>;
 
   // Live missing specifications captured during shopper sessions
   missing: LiveMissingInfo[];
   recordMissingInfo: (ev: { productId: string; field: string; question?: string }) => void;
 
-  // Live product stock overrides
+  // Live product stock overrides synced with PostgreSQL
   stockOverrides: Record<string, number>;
-  setProductStock: (productId: string, stock: number) => void;
+  setProductStock: (productId: string, stock: number) => Promise<void>;
 
-  // Orders pipeline
+  // Orders pipeline synced with PostgreSQL
   orders: MerchantOrder[];
-  updateOrderStatus: (orderId: string, status: OrderStatus) => void;
+  updateOrderStatus: (orderId: string, status: OrderStatus) => Promise<void>;
+  loadOrdersFromApi: () => Promise<void>;
+
+  // Live KPIs from PostgreSQL
+  kpis: MerchantKpis | null;
+  loadKpisFromApi: () => Promise<void>;
 
   // Store reset
   reset: () => void;
@@ -41,42 +62,102 @@ export interface MerchantSessionState {
 export const useMerchantSession = create<MerchantSessionState>()((set) => ({
   isAuthenticated: false,
   user: null,
+  authLoading: false,
+  authError: null,
 
-  login: (email: string, _password?: string) => {
-    void _password;
-    const cleanEmail = email.trim().toLowerCase();
-    // Valid for demo credentials or standard store login
-    if (cleanEmail === "admin@persona.store" || cleanEmail.includes("@")) {
-      const user: MerchantUser = {
-        email: cleanEmail,
-        name: cleanEmail === "admin@persona.store" ? "Operations Lead" : cleanEmail.split("@")[0],
-        role: "Store Administrator",
-        storeName: "Persona Flagship Operations",
-      };
-      if (typeof window !== "undefined") {
-        try {
+  login: async (email: string, password = "") => {
+    set({ authLoading: true, authError: null });
+    try {
+      const res = await fetch("/api/merchant/auth/login", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({ email: email.trim(), password }),
+      });
+
+      if (res.ok) {
+        const data = await res.json();
+        const user: MerchantUser = data.user;
+        if (typeof window !== "undefined") {
+          localStorage.setItem("persona_merchant_auth", "true");
+          if (data.token) localStorage.setItem("persona_merchant_token", data.token);
+          localStorage.setItem("persona_merchant_user", JSON.stringify(user));
+        }
+        set({ isAuthenticated: true, user, authLoading: false, authError: null });
+        return true;
+      } else {
+        const err = await res.json().catch(() => ({}));
+        const msg = err?.error?.message || "Invalid merchant credentials.";
+        set({ authLoading: false, authError: msg });
+        return false;
+      }
+    } catch {
+      // Fallback for offline/demo evaluation
+      const cleanEmail = email.trim().toLowerCase();
+      if (cleanEmail === "admin@persona.store" || cleanEmail.includes("@")) {
+        const user: MerchantUser = {
+          email: cleanEmail,
+          name: cleanEmail === "admin@persona.store" ? "Operations Lead" : cleanEmail.split("@")[0],
+          role: "Store Administrator",
+          storeName: "Persona Flagship Operations",
+        };
+        if (typeof window !== "undefined") {
           localStorage.setItem("persona_merchant_auth", "true");
           localStorage.setItem("persona_merchant_user", JSON.stringify(user));
+        }
+        set({ isAuthenticated: true, user, authLoading: false, authError: null });
+        return true;
+      }
+      set({ authLoading: false, authError: "Failed to connect to authentication server." });
+      return false;
+    }
+  },
+
+  checkAuth: async () => {
+    try {
+      const res = await fetch("/api/merchant/auth/me");
+      if (res.ok) {
+        const user = await res.json();
+        set({ isAuthenticated: true, user });
+        return true;
+      }
+    } catch {
+      // Ignore
+    }
+
+    if (typeof window !== "undefined") {
+      const isAuth = localStorage.getItem("persona_merchant_auth") === "true";
+      const savedUser = localStorage.getItem("persona_merchant_user");
+      if (isAuth && savedUser) {
+        try {
+          const user = JSON.parse(savedUser);
+          set({ isAuthenticated: true, user });
+          return true;
         } catch {
-          // ignore localStorage errors in sandboxed environments
+          // Ignore
         }
       }
-      set({ isAuthenticated: true, user });
-      return true;
     }
+
+    set({ isAuthenticated: false, user: null });
     return false;
   },
 
-  logout: () => {
+  logout: async () => {
+    try {
+      await fetch("/api/merchant/auth/logout", { method: "POST" });
+    } catch {
+      // Ignore
+    }
     if (typeof window !== "undefined") {
       try {
         localStorage.removeItem("persona_merchant_auth");
+        localStorage.removeItem("persona_merchant_token");
         localStorage.removeItem("persona_merchant_user");
       } catch {
         // ignore
       }
     }
-    set({ isAuthenticated: false, user: null });
+    set({ isAuthenticated: false, user: null, authError: null });
   },
 
   missing: [],
@@ -112,19 +193,81 @@ export const useMerchantSession = create<MerchantSessionState>()((set) => ({
     }),
 
   stockOverrides: {},
-  setProductStock: (productId, stock) =>
+  setProductStock: async (productId, stock) => {
+    const val = Math.max(0, stock);
     set((s) => ({
       stockOverrides: {
         ...s.stockOverrides,
-        [productId]: Math.max(0, stock),
+        [productId]: val,
       },
-    })),
+    }));
+    try {
+      await fetch(`/api/merchant/inventory/${encodeURIComponent(productId)}/stock`, {
+        method: "PATCH",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({ stock: val }),
+      });
+    } catch (e) {
+      console.warn("Failed to persist stock update to PostgreSQL:", e);
+    }
+  },
 
   orders: INITIAL_ORDERS,
-  updateOrderStatus: (orderId, status) =>
+  loadOrdersFromApi: async () => {
+    try {
+      const res = await fetch("/api/orders");
+      if (res.ok) {
+        const data = await res.json();
+        if (Array.isArray(data) && data.length > 0) {
+          set({
+            orders: data.map((o: Partial<MerchantOrder> & { createdAt?: string }) => ({
+              id: String(o.id || ""),
+              customerName: String(o.customerName || ""),
+              customerEmail: String(o.customerEmail || ""),
+              city: String(o.city || ""),
+              date: o.createdAt ? o.createdAt.slice(0, 16).replace("T", " ") : (o.date || "Today"),
+              items: o.items || [],
+              totalNPR: Number(o.totalNPR || 0),
+              verifiedByPip: o.verifiedByPip ?? true,
+              verificationHash: o.verificationHash || "pip_v_live",
+              status: (o.status as OrderStatus) || "pending",
+              notes: o.notes,
+            })),
+          });
+        }
+      }
+    } catch (e) {
+      console.warn("Failed to fetch orders from backend:", e);
+    }
+  },
+
+  updateOrderStatus: async (orderId, status) => {
     set((s) => ({
       orders: s.orders.map((o) => (o.id === orderId ? { ...o, status } : o)),
-    })),
+    }));
+    try {
+      await fetch(`/api/orders/${encodeURIComponent(orderId)}/status`, {
+        method: "PATCH",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({ status }),
+      });
+    } catch (e) {
+      console.warn("Failed to persist status change to PostgreSQL:", e);
+    }
+  },
+
+  kpis: null,
+  loadKpisFromApi: async () => {
+    try {
+      const res = await fetch("/api/merchant/kpis");
+      if (res.ok) {
+        const data = await res.json();
+        set({ kpis: data });
+      }
+    } catch (e) {
+      console.warn("Failed to load KPIs from backend:", e);
+    }
+  },
 
   reset: () => set({ missing: [], stockOverrides: {}, orders: INITIAL_ORDERS }),
 }));

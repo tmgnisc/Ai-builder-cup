@@ -2,32 +2,49 @@ from typing import Annotated
 
 from fastapi import APIRouter, Depends
 from pydantic import BaseModel
+from sqlalchemy import text
+from sqlalchemy.ext.asyncio import AsyncSession
 
 from ...core.config import Settings, get_settings
+from ...core.database import get_db
 from ...services.catalog import CatalogService
 from ..dependencies import get_catalog_service
 
-router = APIRouter()
+router = APIRouter(tags=["health"])
 
 
 class HealthResponse(BaseModel):
     status: str
     gemini: bool
+    database: bool = True
 
 
-class ReadyResponse(BaseModel):
-    status: str
-    catalog_loaded: bool
+@router.get("/health", response_model=HealthResponse)
+async def health_check(
+    settings: Annotated[Settings, Depends(get_settings)],
+    session: Annotated[AsyncSession | None, Depends(get_db)] = None,
+) -> HealthResponse:
+    """Production health check reporting service status, database connectivity, and Gemini AI agent readiness."""
+    db_ok = True
+    if session is not None:
+        try:
+            await session.execute(text("SELECT 1"))
+        except Exception:
+            db_ok = False
+
+    return HealthResponse(
+        status="ok" if db_ok else "degraded",
+        gemini=bool(settings.gemini_api_key),
+        database=db_ok,
+    )
 
 
-@router.get("/healthz", response_model=HealthResponse)
+# Backward-compatible internal probes (hidden from OpenAPI schema)
+@router.get("/healthz", response_model=HealthResponse, include_in_schema=False)
 def healthz(settings: Annotated[Settings, Depends(get_settings)]) -> HealthResponse:
-    return HealthResponse(status="ok", gemini=bool(settings.gemini_api_key))
+    return HealthResponse(status="ok", gemini=bool(settings.gemini_api_key), database=True)
 
 
-@router.get("/readyz", response_model=ReadyResponse)
-def readyz(
-    catalog_service: Annotated[CatalogService, Depends(get_catalog_service)],
-) -> ReadyResponse:
-    products = catalog_service.get_all()
-    return ReadyResponse(status="ok", catalog_loaded=len(products) > 0)
+@router.get("/readyz", include_in_schema=False)
+def readyz(catalog_service: Annotated[CatalogService, Depends(get_catalog_service)]):
+    return {"status": "ok", "catalog_loaded": len(catalog_service.get_all()) > 0}

@@ -15,32 +15,34 @@ interface MerchantLoginProps {
 export function MerchantLogin({ onSuccess }: MerchantLoginProps) {
   const login = useMerchantSession((s) => s.login);
   const [email, setEmail] = useState("admin@persona.store");
-  const [password, setPassword] = useState("••••••••");
+  const [password, setPassword] = useState("persona2026");
   const [rememberMe, setRememberMe] = useState(true);
   const [error, setError] = useState<string | null>(null);
   const [loading, setLoading] = useState(false);
 
-  const handleSubmit = (e: React.FormEvent) => {
+  const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
     setError(null);
     setLoading(true);
 
-    setTimeout(() => {
-      const ok = login(email, password);
-      setLoading(false);
-      if (ok) {
-        onSuccess?.();
-      } else {
-        setError("Invalid merchant credentials. Please enter a valid store email address.");
-      }
-    }, 200);
+    const ok = await login(email, password);
+    setLoading(false);
+    if (ok) {
+      onSuccess?.();
+    } else {
+      setError("Invalid merchant credentials. Please verify your email and password.");
+    }
   };
 
-  const handleQuickDemo = () => {
+  const handleQuickDemo = async () => {
     setEmail("admin@persona.store");
     setPassword("persona2026");
-    login("admin@persona.store");
-    onSuccess?.();
+    setLoading(true);
+    const ok = await login("admin@persona.store", "persona2026");
+    setLoading(false);
+    if (ok) {
+      onSuccess?.();
+    }
   };
 
   return (

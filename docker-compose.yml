@@ -1,0 +1,48 @@
+services:
+  db:
+    image: postgres:16-alpine
+    container_name: persona-db
+    restart: unless-stopped
+    environment:
+      POSTGRES_USER: persona
+      POSTGRES_PASSWORD: persona_dev_password
+      POSTGRES_DB: persona_db
+    ports:
+      # Map host 5433 -> container 5432 to avoid conflict with existing host Postgres on 5432
+      - "5433:5432"
+    volumes:
+      - persona_postgres_data:/var/lib/postgresql/data
+    healthcheck:
+      test: ["CMD-SHELL", "pg_isready -U persona -d persona_db"]
+      interval: 5s
+      timeout: 5s
+      retries: 5
+
+  backend:
+    build:
+      context: ./backend
+      dockerfile: Dockerfile
+      target: prod
+    container_name: persona-api
+    restart: unless-stopped
+    environment:
+      DATABASE_URL: postgresql+asyncpg://persona:persona_dev_password@db:5432/persona_db
+      PORT: "8080"
+      GEMINI_API_KEY: ${GEMINI_API_KEY:-}
+      GEMINI_MODEL: ${GEMINI_MODEL:-gemini-2.5-flash}
+      AGENT_BACKEND: ${AGENT_BACKEND:-gemini}
+      AGENT_SHARED_SECRET: ${AGENT_SHARED_SECRET:-}
+      ENVIRONMENT: development
+      CORS_ORIGINS: http://localhost:3000,http://127.0.0.1:3000
+    command: sh -c "alembic upgrade head && exec uvicorn app.main:app --host 0.0.0.0 --port $$PORT"
+    ports:
+      - "8080:8080"
+    volumes:
+      - ./backend:/app
+    depends_on:
+      db:
+        condition: service_healthy
+
+volumes:
+  persona_postgres_data:
+    name: persona_postgres_data

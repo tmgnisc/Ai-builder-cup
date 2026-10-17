@@ -1,11 +1,22 @@
 from fastapi import FastAPI
 from fastapi.middleware.cors import CORSMiddleware
 
-from .api.routers import agent, cart, health, products
+from .api.routers import agent, cart, health, merchant, merchant_auth, orders, products
 from .core.config import Settings, get_settings
 from .core.errors import register_error_handlers
 from .core.logging import setup_logging
 from .core.middleware import RequestIDMiddleware
+
+
+from contextlib import asynccontextmanager
+from .core.database import init_db
+
+
+@asynccontextmanager
+async def lifespan(app: FastAPI):
+    """Initializes PostgreSQL schema and seeds products if needed."""
+    await init_db()
+    yield
 
 
 def create_app(settings: Settings | None = None) -> FastAPI:
@@ -15,7 +26,7 @@ def create_app(settings: Settings | None = None) -> FastAPI:
         raise RuntimeError("AGENT_SHARED_SECRET must be configured when running in production")
     setup_logging(level=settings.log_level)
 
-    app = FastAPI(title="Persona API", version="0.1.0")
+    app = FastAPI(title="Persona API", version="0.1.0", lifespan=lifespan)
 
     app.add_middleware(RequestIDMiddleware)
     app.add_middleware(
@@ -31,6 +42,9 @@ def create_app(settings: Settings | None = None) -> FastAPI:
     app.include_router(health.router)
     app.include_router(products.router, prefix="/api/products", tags=["products"])
     app.include_router(cart.router, prefix="/api/cart", tags=["cart"])
+    app.include_router(orders.router)
+    app.include_router(merchant.router)
+    app.include_router(merchant_auth.router)
     app.include_router(agent.router)
 
     return app

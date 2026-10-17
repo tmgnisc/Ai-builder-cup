@@ -6,7 +6,7 @@ import {
   Search,
   ShieldCheck,
 } from "lucide-react";
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import { Badge } from "@/components/ui/Badge";
 import { Button } from "@/components/ui/Button";
 import { Card } from "@/components/ui/Card";
@@ -18,6 +18,11 @@ import { useMerchantSession } from "@/store/useMerchantSession";
 export function OrdersTab() {
   const orders = useMerchantSession((s) => s.orders);
   const updateOrderStatus = useMerchantSession((s) => s.updateOrderStatus);
+  const loadOrdersFromApi = useMerchantSession((s) => s.loadOrdersFromApi);
+
+  useEffect(() => {
+    loadOrdersFromApi();
+  }, [loadOrdersFromApi]);
 
   const [statusFilter, setStatusFilter] = useState<string>("all");
   const [search, setSearch] = useState("");

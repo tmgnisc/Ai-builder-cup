@@ -4,18 +4,27 @@ from typing import Annotated
 from fastapi import Depends, Header
 
 from ..core.config import Settings, get_settings
+from ..core.database import get_session_factory
 from ..core.errors import CommerceException
 from ..repositories.cart import CartRepository, InMemoryCartRepository
+from ..repositories.postgres_cart import PostgresCartRepository
 from ..services.cart import CartService
 from ..services.catalog import CatalogService
 from ..services.verified_cart import VerifiedCartService
 
 _cart_repo_instance = InMemoryCartRepository()
+_postgres_cart_repo: CartRepository | None = None
 _catalog_service_instance = CatalogService()
 
 
 def get_cart_repository() -> CartRepository:
-    """Dependency provider for CartRepository; swappable with FirestoreCartRepository."""
+    """Dependency provider for CartRepository; uses PostgreSQL with in-memory fallback."""
+    global _postgres_cart_repo
+    factory = get_session_factory()
+    if factory is not None:
+        if _postgres_cart_repo is None:
+            _postgres_cart_repo = PostgresCartRepository(factory, _cart_repo_instance)
+        return _postgres_cart_repo
     return _cart_repo_instance
 
 

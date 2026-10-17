@@ -21,6 +21,7 @@ class Settings(BaseSettings):
     persona_latency_min_ms: int = 200
     persona_latency_max_ms: int = 600
     log_level: str = "INFO"
+    database_url: str = ""
 
     @property
     def cors_origin_list(self) -> list[str]:

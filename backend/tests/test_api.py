@@ -2,9 +2,14 @@ from fastapi.testclient import TestClient
 
 
 def test_healthz_and_readyz(client: TestClient) -> None:
+    res_health = client.get("/health")
+    assert res_health.status_code == 200
+    assert res_health.json()["status"] == "ok"
+    assert res_health.json()["gemini"] is False
+
     res_h = client.get("/healthz")
     assert res_h.status_code == 200
-    assert res_h.json() == {"status": "ok", "gemini": False}
+    assert res_h.json()["status"] == "ok"
 
     res_r = client.get("/readyz")
     assert res_r.status_code == 200

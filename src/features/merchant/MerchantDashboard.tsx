@@ -7,23 +7,14 @@ import { MerchantOperations } from "./MerchantOperations";
 
 export function MerchantDashboard() {
   const isAuthenticated = useMerchantSession((s) => s.isAuthenticated);
-  const login = useMerchantSession((s) => s.login);
+  const checkAuth = useMerchantSession((s) => s.checkAuth);
   const logout = useMerchantSession((s) => s.logout);
   const [mounted, setMounted] = useState(false);
 
   useEffect(() => {
     setMounted(true);
-    // Check persisted auth or demo flag in query params
-    if (typeof window !== "undefined") {
-      const isSaved = localStorage.getItem("persona_merchant_auth") === "true";
-      const params = new URLSearchParams(window.location.search);
-      const isDemo = params.get("demo") === "true";
-
-      if ((isSaved || isDemo) && !isAuthenticated) {
-        login("admin@persona.store");
-      }
-    }
-  }, [isAuthenticated, login]);
+    checkAuth();
+  }, [checkAuth]);
 
   // Avoid flash during SSR hydration
   if (!mounted) {

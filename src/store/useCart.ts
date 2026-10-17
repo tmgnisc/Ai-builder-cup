@@ -27,6 +27,7 @@ interface CartState {
   add: (productId: string, qty?: number) => Promise<Cart | null>;
   setQty: (productId: string, qty: number) => Promise<Cart | null>;
   remove: (productId: string) => Promise<Cart | null>;
+  clear: () => Promise<Cart | null>;
   setDrawerOpen: (open: boolean) => void;
   peek: (ms?: number) => void;
   holdPeek: () => void;
@@ -79,6 +80,17 @@ export const useCart = create<CartState>()((set, get) => {
     add: (productId, qty = 1) => mutate(productId, () => commerce.addToCart({ productId, qty })),
     setQty: (productId, qty) => mutate(productId, () => commerce.setQty({ productId, qty })),
     remove: (productId) => mutate(productId, () => commerce.removeFromCart(productId)),
+    clear: async () => {
+      set({ status: "loading" });
+      try {
+        const cart = await commerce.clearCart();
+        set({ cart, status: "idle", error: null });
+        return cart;
+      } catch (err) {
+        set({ status: "error", error: message(err) });
+        return null;
+      }
+    },
     setDrawerOpen: (drawerOpen) => {
       if (peekTimer) clearTimeout(peekTimer);
       set({ drawerOpen, peeking: false });
