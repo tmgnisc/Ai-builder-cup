@@ -212,6 +212,9 @@ export const useChat = create<ChatState>()((set, get) => {
       case "missing_info":
         useMerchantSession.getState().recordMissingInfo(ev);
         return;
+      case "subagent":
+        // Sub-agent lifecycle event (scout / analyst / guard activity)
+        return;
       case "memory":
         set({ memory: ev.memory });
         return;

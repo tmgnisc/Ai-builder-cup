@@ -61,8 +61,27 @@ class ClarifyBlock(BaseModel):
     options: list[str]
 
 
+class BundleItem(BaseModel):
+    model_config = ConfigDict(extra="forbid")
+    slot: str
+    productId: str
+    name: str
+    price: float
+    brand: str | None = None
+
+
+class BundleBlock(BaseModel):
+    model_config = ConfigDict(extra="forbid")
+    kind: Literal["bundle"] = "bundle"
+    id: str
+    title: str
+    items: list[BundleItem]
+    totalPrice: float
+    productIds: list[str]
+
+
 Block = Annotated[
-    Union[ProductCarouselBlock, ComparisonBlock, CartActionBlock, ClarifyBlock],
+    Union[ProductCarouselBlock, ComparisonBlock, CartActionBlock, ClarifyBlock, BundleBlock],
     Field(discriminator="kind"),
 ]
 
@@ -213,6 +232,17 @@ class MissingInfoEvent(BaseModel):
     question: str | None = Field(default=None, max_length=200)
 
 
+class SubAgentEvent(BaseModel):
+    model_config = ConfigDict(extra="forbid")
+    type: Literal["subagent"] = "subagent"
+    agent: Literal["scout", "analyst", "guard"]
+    name: str
+    status: Literal["delegated", "searching", "analyzing", "verifying", "completed", "failed"]
+    task: str
+    detail: str | None = None
+    resultsCount: int | None = None
+
+
 class MemoryEvent(BaseModel):
     model_config = ConfigDict(extra="forbid")
     type: Literal["memory"] = "memory"
@@ -240,6 +270,7 @@ AgentEvent = Annotated[
         BlockEvent,
         UiEvent,
         MissingInfoEvent,
+        SubAgentEvent,
         MemoryEvent,
         ErrorEvent,
         DoneEvent,

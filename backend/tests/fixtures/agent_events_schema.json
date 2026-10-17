@@ -9,6 +9,7 @@
     "block",
     "ui",
     "missing_info",
+    "subagent",
     "memory",
     "error",
     "done"
@@ -149,6 +150,25 @@
       ]
     },
     {
+      "type": "subagent",
+      "required": [
+        "type",
+        "agent",
+        "name",
+        "status",
+        "task"
+      ],
+      "properties": [
+        "type",
+        "agent",
+        "name",
+        "status",
+        "task",
+        "detail",
+        "resultsCount"
+      ]
+    },
+    {
       "type": "done",
       "required": [
         "type"
@@ -176,7 +196,8 @@
     "product_carousel",
     "comparison",
     "cart_action",
-    "clarify"
+    "clarify",
+    "bundle"
   ],
   "uiActionTypes": [
     "highlight",

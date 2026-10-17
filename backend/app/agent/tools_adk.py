@@ -45,6 +45,9 @@ ALLOWED_TOOLS = {
     "get_cart",
     "ui_action",
     "record_missing_info",
+    "scout_multiple_products",
+    "analyze_comparison",
+    "batch_cart_with_guard",
 }
 
 ALLOWED_UI_ACTIONS = {
@@ -298,6 +301,10 @@ def record_missing_info(
 
 def get_adk_tools() -> list[Any]:
     """Creates the list of ADK FunctionTools for Pip."""
+    from .subagents.cart_guard import batch_cart_with_guard
+    from .subagents.comparator import analyze_comparison
+    from .subagents.product_finder import scout_multiple_products
+
     return [
         FunctionTool(func=search_products),
         FunctionTool(func=get_product),
@@ -309,4 +316,7 @@ def get_adk_tools() -> list[Any]:
         FunctionTool(func=get_cart),
         FunctionTool(func=ui_action),
         FunctionTool(func=record_missing_info),
+        FunctionTool(func=scout_multiple_products),
+        FunctionTool(func=analyze_comparison),
+        FunctionTool(func=batch_cart_with_guard),
     ]

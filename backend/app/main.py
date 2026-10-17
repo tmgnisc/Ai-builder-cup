@@ -26,9 +26,7 @@ def create_app(settings: Settings | None = None) -> FastAPI:
     """App factory: builds a configured FastAPI app with layered architecture."""
     settings = settings or get_settings()
     if settings.environment.lower() == "production" and not settings.agent_shared_secret:
-        import secrets
-        settings.agent_shared_secret = secrets.token_hex(32)
-        logger.warning("AGENT_SHARED_SECRET was not provided; generated fallback ephemeral secret.")
+        raise RuntimeError("AGENT_SHARED_SECRET must be configured in production")
     setup_logging(level=settings.log_level)
 
     app = FastAPI(title="Persona API", version="0.1.0", lifespan=lifespan)

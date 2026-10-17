@@ -64,11 +64,31 @@ export const ClarifyBlockSchema = z.object({
   options: z.array(z.string()).min(1).max(5),
 });
 
+export const BundleItemSchema = z.object({
+  slot: z.string(),
+  productId: z.string(),
+  name: z.string(),
+  price: z.number(),
+  brand: z.string().optional(),
+});
+export type BundleItem = z.infer<typeof BundleItemSchema>;
+
+export const BundleBlockSchema = z.object({
+  kind: z.literal("bundle"),
+  id: z.string(),
+  title: z.string(),
+  items: z.array(BundleItemSchema),
+  totalPrice: z.number(),
+  productIds: z.array(z.string()),
+});
+export type BundleBlock = z.infer<typeof BundleBlockSchema>;
+
 export const BlockSchema = z.discriminatedUnion("kind", [
   ProductCarouselBlockSchema,
   ComparisonBlockSchema,
   CartActionBlockSchema,
   ClarifyBlockSchema,
+  BundleBlockSchema,
 ]);
 export type Block = z.infer<typeof BlockSchema>;
 
@@ -161,6 +181,17 @@ export const MissingInfoEventSchema = z.object({
   question: z.string().max(200).optional(),
 });
 
+export const SubAgentEventSchema = z.object({
+  type: z.literal("subagent"),
+  agent: z.enum(["scout", "analyst", "guard"]),
+  name: z.string(),
+  status: z.enum(["delegated", "searching", "analyzing", "verifying", "completed", "failed"]),
+  task: z.string(),
+  detail: z.string().optional(),
+  resultsCount: z.number().optional(),
+});
+export type SubAgentEvent = z.infer<typeof SubAgentEventSchema>;
+
 export const AgentEventSchema = z.discriminatedUnion("type", [
   z.object({ type: z.literal("state_change"), state: PipStateSchema, caption: z.string().optional() }),
   z.object({ type: z.literal("message_start"), messageId: z.string() }),
@@ -179,6 +210,7 @@ export const AgentEventSchema = z.discriminatedUnion("type", [
   z.object({ type: z.literal("block"), messageId: z.string(), block: BlockSchema }),
   z.object({ type: z.literal("ui"), action: UIActionSchema }),
   MissingInfoEventSchema,
+  SubAgentEventSchema,
   z.object({ type: z.literal("memory"), memory: AgentMemorySchema }),
   z.object({ type: z.literal("error"), message: z.string() }),
   z.object({ type: z.literal("done") }),

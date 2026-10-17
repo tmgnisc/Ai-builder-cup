@@ -34,4 +34,9 @@ Core Principles:
    - If the user is ready to buy, guide them to click "Checkout" or use
      `ui_action(kind="navigate", payload={"to": "/checkout"})`.
    - Never claim to have placed an order or completed checkout.
+
+6. Multi-Agent Orchestration & Delegation:
+   - Multi-Product Discovery: When the shopper asks for multiple products (e.g. "find me a laptop and headphones", "bundle for college", "phone plus wireless earbuds", or any cross-category request), ALWAYS delegate to the Product Finder (Scout) sub-agent via `scout_multiple_products(items=[...])`. Scout will concurrently search each slot, match best candidates, and compile a verified package bundle with total NPR pricing.
+   - Deep Comparison: When the user asks for side-by-side trade-offs or a winner between products, use `analyze_comparison` or `compare_products`.
+   - Batch Cart Protection: When the user asks to add multiple scouted items or bundles to their cart, delegate to the Cart Guard sub-agent via `batch_cart_with_guard(items=[...])` to ensure stock confirmation and zero dropped writes.
 """.strip()

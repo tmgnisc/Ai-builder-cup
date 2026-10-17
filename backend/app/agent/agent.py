@@ -54,13 +54,16 @@ def create_pip_agent(model: str | BaseLlm) -> LlmAgent:
         turn_ctx.pending_tool_starts[f"{tool.name}_call_id"] = call_id  # type: ignore[assignment]
 
         # 3. Pip state change mapping
-        if tool.name == "search_products":
-            turn_ctx.event_queue.append(StateChangeEvent(state="searching", caption="Searching products…"))
-        elif tool.name == "compare_products":
-            turn_ctx.event_queue.append(StateChangeEvent(state="comparing", caption="Comparing products…"))
-        elif tool.name in ("add_to_cart", "remove_from_cart"):
+        if tool.name in ("search_products", "scout_multiple_products"):
+            caption = "Scouting multiple products…" if tool.name == "scout_multiple_products" else "Searching products…"
+            turn_ctx.event_queue.append(StateChangeEvent(state="searching", caption=caption))
+        elif tool.name in ("compare_products", "analyze_comparison"):
+            caption = "Analyzing comparison…" if tool.name == "analyze_comparison" else "Comparing products…"
+            turn_ctx.event_queue.append(StateChangeEvent(state="comparing", caption=caption))
+        elif tool.name in ("add_to_cart", "remove_from_cart", "batch_cart_with_guard"):
             turn_ctx.is_cart_mutation_turn = True
-            turn_ctx.event_queue.append(StateChangeEvent(state="acting", caption="Updating cart…"))
+            caption = "Verifying & adding to cart…" if tool.name == "batch_cart_with_guard" else "Updating cart…"
+            turn_ctx.event_queue.append(StateChangeEvent(state="acting", caption=caption))
         elif tool.name == "ui_action":
             turn_ctx.event_queue.append(StateChangeEvent(state="presenting", caption="Here's what I found"))
         else:
@@ -315,6 +318,51 @@ def create_pip_agent(model: str | BaseLlm) -> LlmAgent:
                     callId=call_id,
                     name=tool.name,
                     ok=True,
+                    summary=summary,
+                    durationMs=duration_ms,
+                )
+            )
+        elif tool.name == "scout_multiple_products":
+            total = result.get("total_products", 0)
+            bundle = result.get("bundle", {})
+            summary = f"Scouted {total} items · Package: NPR {bundle.get('total_price_npr', 0):,.0f}"
+            turn_ctx.event_queue.append(
+                ToolResultEvent(
+                    messageId=turn_ctx.message_id,
+                    callId=call_id,
+                    name=tool.name,
+                    ok=True,
+                    summary=summary,
+                    durationMs=duration_ms,
+                )
+            )
+
+        elif tool.name == "analyze_comparison":
+            pids = result.get("productIds", [])
+            winner = result.get("winnerId")
+            summary = f"{len(pids)} products · {'winner found' if winner else 'close call'}"
+            turn_ctx.event_queue.append(
+                ToolResultEvent(
+                    messageId=turn_ctx.message_id,
+                    callId=call_id,
+                    name=tool.name,
+                    ok=True,
+                    summary=summary,
+                    durationMs=duration_ms,
+                )
+            )
+
+        elif tool.name == "batch_cart_with_guard":
+            ok = bool(result.get("ok", False))
+            verified_count = len(result.get("verified_items", []))
+            failed_count = len(result.get("failed_items", []))
+            summary = f"{verified_count} verified ✓" + (f" · {failed_count} failed" if failed_count else "")
+            turn_ctx.event_queue.append(
+                ToolResultEvent(
+                    messageId=turn_ctx.message_id,
+                    callId=call_id,
+                    name=tool.name,
+                    ok=ok,
                     summary=summary,
                     durationMs=duration_ms,
                 )
