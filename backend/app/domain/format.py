@@ -87,12 +87,21 @@ def spec_rows(p: Product) -> list[dict[str, str]]:
         rows.append({"key": "battery", "label": "Battery", "value": f"{s.batteryHours} h"})
     if s.anc is not None:
         rows.append({"key": "anc", "label": "Noise cancelling", "value": "Yes" if s.anc else "No"})
+    if s.material:
+        rows.append({"key": "material", "label": "Material", "value": s.material})
+    if s.fit:
+        rows.append({"key": "fit", "label": "Fit", "value": s.fit})
+    if s.sizes:
+        rows.append({"key": "sizes", "label": "Sizes", "value": ", ".join(s.sizes)})
+    if s.colors:
+        rows.append({"key": "colors", "label": "Colours", "value": ", ".join(c.name for c in s.colors)})
     rows.append({"key": "weight", "label": "Weight", "value": format_weight(s.weightGrams)})
     if s.ports:
         rows.append({"key": "ports", "label": "Ports", "value": s.ports})
     if s.connectivity:
         rows.append({"key": "connectivity", "label": "Connectivity", "value": s.connectivity})
-    rows.append({"key": "warranty", "label": "Warranty", "value": format_warranty(s.warrantyMonths)})
+    if p.category != "clothing":
+        rows.append({"key": "warranty", "label": "Warranty", "value": format_warranty(s.warrantyMonths)})
     return rows
 
 
@@ -103,6 +112,7 @@ def key_specs(p: Product) -> list[dict[str, str]]:
         "phones": ["storage", "battery", "screen"],
         "headphones": ["battery", "anc", "weight"],
         "accessories": ["ports", "connectivity", "weight"],
+        "clothing": ["material", "fit", "sizes"],
     }
     wanted = pick_map.get(p.category, [])
     spec_dict = {row["key"]: row for row in all_specs}

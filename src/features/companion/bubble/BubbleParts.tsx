@@ -1,9 +1,11 @@
 "use client";
 
-import { ChevronDown, Loader2, Plus, Wrench } from "lucide-react";
+import { ChevronDown, Loader2, Plus, Sparkles, Wrench } from "lucide-react";
 import Link from "next/link";
 import { useState } from "react";
+import { BuyNowButton } from "@/features/cart";
 import { ProductImage } from "@/features/catalog";
+import { useTryOn } from "@/store/useTryOn";
 import { IconButton } from "@/components/ui/IconButton";
 import { Chip } from "@/components/ui/Chip";
 import { cn } from "@/lib/cn";
@@ -16,9 +18,13 @@ import type { TraceEntry } from "@/store/useChat";
 import { useChat } from "@/store/useChat";
 import { formatToolLabel, formatToolSummary, TOOL_ICONS } from "../chat/agentTraceFormat";
 
-/** 1–3 compact product rows inside Pip's bubble. "Add" goes through Pip so it's verified. */
+/**
+ * 1–3 compact product rows inside Pip's bubble. "Buy" adds (verified) and opens checkout; "+" asks Pip
+ * to add it so the shopper can keep talking; clothing also gets a one-tap try-on.
+ */
 export function MiniCards({ productIds, interactive }: { productIds: string[]; interactive: boolean }) {
   const send = useChat((s) => s.send);
+  const openTryOn = useTryOn((s) => s.openFor);
   const pending = useCart((s) => s.pending);
   const products = productIds.map(getProduct).filter((p): p is Product => !!p).slice(0, 3);
   return (
@@ -47,9 +53,14 @@ export function MiniCards({ productIds, interactive }: { productIds: string[]; i
               )}
             </p>
           </div>
+          {p.category === "clothing" && (
+            <IconButton size="sm" variant="ghost" onClick={() => openTryOn(p.id)} aria-label={`Try on the ${p.name}`} className="size-7 shrink-0">
+              <Sparkles className="size-3.5" />
+            </IconButton>
+          )}
           <IconButton
             size="sm"
-            variant="primary"
+            variant="secondary"
             disabled={!interactive || p.stock === 0}
             onClick={() => send(`Add the ${p.name} to my cart`)}
             aria-label={`Ask Pip to add the ${p.name} to the cart`}
@@ -57,6 +68,7 @@ export function MiniCards({ productIds, interactive }: { productIds: string[]; i
           >
             {pending.includes(p.id) ? <Loader2 className="size-3.5 animate-spin" /> : <Plus className="size-3.5" />}
           </IconButton>
+          <BuyNowButton productId={p.id} productName={p.name} disabled={!interactive || p.stock === 0} />
         </li>
       ))}
     </ul>

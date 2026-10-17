@@ -2,6 +2,7 @@
 
 import { Moon, Sun } from "lucide-react";
 import { usePrefs } from "@/store/usePrefs";
+import { IconButton } from "@/components/ui/IconButton";
 import { Tooltip } from "@/components/ui/Tooltip";
 
 export function ThemeToggle() {
@@ -10,14 +11,9 @@ export function ThemeToggle() {
   const next = theme === "dark" ? "light" : "dark";
   return (
     <Tooltip content={`Switch to ${next} theme`} side="bottom">
-      <button
-        type="button"
-        onClick={toggle}
-        aria-label={`Switch to ${next} theme`}
-        className="grid size-10 place-items-center rounded-full text-muted transition-colors hover:bg-surface-2 hover:text-text"
-      >
+      <IconButton onClick={toggle} aria-label={`Switch to ${next} theme`} className="rounded-full">
         {theme === "dark" ? <Sun className="size-4.5" /> : <Moon className="size-4.5" />}
-      </button>
+      </IconButton>
     </Tooltip>
   );
 }

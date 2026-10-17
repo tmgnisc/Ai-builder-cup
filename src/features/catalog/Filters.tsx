@@ -33,6 +33,7 @@ export function Filters({ className, inSheet = false }: { className?: string; in
   const resetFilters = useCatalogUI((s) => s.resetFilters);
   const brands = useMemo(() => getBrands(filters.category ?? undefined), [filters.category]);
   const showRam = filters.category === null || filters.category === "laptops" || filters.category === "phones";
+  const showBattery = filters.category !== "clothing";
   const count = activeFilterCount(filters);
   const [showAllBrands, setShowAllBrands] = useState(false);
   const visibleBrands = showAllBrands ? brands : brands.slice(0, BRANDS_COLLAPSED);
@@ -94,13 +95,15 @@ export function Filters({ className, inSheet = false }: { className?: string; in
         </Group>
       )}
 
-      <Group label="Battery (at least)" anchor={inSheet ? undefined : "filter-battery"}>
-        <Segmented
-          options={BATTERY_OPTIONS.map((v) => ({ value: v, label: v ? `${v} h` : "Any" }))}
-          value={filters.minBatteryHours}
-          onChange={(v) => setFilter("minBatteryHours", v)}
-        />
-      </Group>
+      {showBattery && (
+        <Group label="Battery (at least)" anchor={inSheet ? undefined : "filter-battery"}>
+          <Segmented
+            options={BATTERY_OPTIONS.map((v) => ({ value: v, label: v ? `${v} h` : "Any" }))}
+            value={filters.minBatteryHours}
+            onChange={(v) => setFilter("minBatteryHours", v)}
+          />
+        </Group>
+      )}
 
       <div className="flex items-center justify-between gap-3 text-sm py-1">
         <span className="font-medium text-text">In stock only</span>

@@ -167,6 +167,14 @@ function generateCSS(): string {
   grid-template-columns: 1fr 300px;
 }
 
+@utility grid-cols-merchant {
+  grid-template-columns: 240px minmax(0, 1fr);
+}
+
+@utility tryon-grid {
+  grid-template-columns: minmax(0, 1fr) 320px;
+}
+
 @utility bubble-width {
   width: min(340px, calc(100vw - 24px));
 }

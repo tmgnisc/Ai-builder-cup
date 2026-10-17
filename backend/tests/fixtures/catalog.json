@@ -939,5 +939,574 @@
       "#c6ff3d",
       "#1a2408"
     ]
+  },
+  {
+    "id": "persona-basics-crew-tee",
+    "name": "Heavyweight Crew Tee",
+    "brand": "Persona Basics",
+    "category": "clothing",
+    "price": 1299,
+    "stock": 24,
+    "rating": 4.5,
+    "reviewCount": 318,
+    "blurb": "A 220 gsm cotton tee that keeps its shape after washing. Ribbed collar, relaxed through the body.",
+    "tags": [
+      "tee",
+      "cotton",
+      "everyday"
+    ],
+    "specs": {
+      "weightGrams": 220,
+      "warrantyMonths": 0,
+      "material": "100% combed cotton, 220 gsm",
+      "fit": "Relaxed",
+      "sizes": [
+        "S",
+        "M",
+        "L",
+        "XL",
+        "XXL"
+      ],
+      "colors": [
+        {
+          "name": "Black",
+          "hex": "#16171b"
+        },
+        {
+          "name": "Off-white",
+          "hex": "#ece8df"
+        },
+        {
+          "name": "Olive",
+          "hex": "#5b6340"
+        }
+      ],
+      "garment": "top",
+      "sleeves": "short",
+      "length": "hip",
+      "pattern": "solid"
+    },
+    "palette": [
+      "#16171b",
+      "#3a3d47"
+    ]
+  },
+  {
+    "id": "persona-basics-pique-polo",
+    "name": "Piqué Polo",
+    "brand": "Persona Basics",
+    "category": "clothing",
+    "price": 2199,
+    "stock": 15,
+    "rating": 4.3,
+    "reviewCount": 142,
+    "blurb": "Breathable cotton piqué with a two-button placket. Smart enough for the office, easy on weekends.",
+    "tags": [
+      "polo",
+      "cotton",
+      "office"
+    ],
+    "specs": {
+      "weightGrams": 240,
+      "warrantyMonths": 0,
+      "material": "100% cotton piqué",
+      "fit": "Regular",
+      "sizes": [
+        "S",
+        "M",
+        "L",
+        "XL",
+        "XXL"
+      ],
+      "colors": [
+        {
+          "name": "Navy",
+          "hex": "#1f2a44"
+        },
+        {
+          "name": "Forest",
+          "hex": "#23412f"
+        },
+        {
+          "name": "White",
+          "hex": "#f2f2ef"
+        }
+      ],
+      "garment": "top",
+      "sleeves": "short",
+      "length": "hip",
+      "pattern": "solid"
+    },
+    "palette": [
+      "#1f2a44",
+      "#c9ccd6"
+    ]
+  },
+  {
+    "id": "himal-threads-linen-shirt",
+    "name": "Linen Shirt",
+    "brand": "Himal Threads",
+    "category": "clothing",
+    "price": 3499,
+    "stock": 11,
+    "rating": 4.6,
+    "reviewCount": 96,
+    "blurb": "Washed linen with a soft hand and a camp collar. Cool in Kathmandu summers, crumples gracefully.",
+    "tags": [
+      "shirt",
+      "linen",
+      "summer"
+    ],
+    "specs": {
+      "weightGrams": 200,
+      "warrantyMonths": 0,
+      "material": "100% linen",
+      "fit": "Regular",
+      "sizes": [
+        "S",
+        "M",
+        "L",
+        "XL"
+      ],
+      "colors": [
+        {
+          "name": "Sand",
+          "hex": "#cbb894"
+        },
+        {
+          "name": "Sky",
+          "hex": "#9cb8d4"
+        },
+        {
+          "name": "White",
+          "hex": "#f4f1ea"
+        }
+      ],
+      "garment": "top",
+      "sleeves": "long",
+      "length": "hip",
+      "pattern": "solid"
+    },
+    "palette": [
+      "#cbb894",
+      "#5c4f37"
+    ]
+  },
+  {
+    "id": "himal-threads-flannel-overshirt",
+    "name": "Flannel Overshirt",
+    "brand": "Himal Threads",
+    "category": "clothing",
+    "price": 3999,
+    "stock": 9,
+    "rating": 4.4,
+    "reviewCount": 121,
+    "blurb": "Brushed cotton flannel in a bold check. Wear it open over a tee or buttoned as a light jacket.",
+    "tags": [
+      "shirt",
+      "flannel",
+      "layering"
+    ],
+    "specs": {
+      "weightGrams": 420,
+      "warrantyMonths": 0,
+      "material": "100% brushed cotton flannel",
+      "fit": "Relaxed",
+      "sizes": [
+        "S",
+        "M",
+        "L",
+        "XL",
+        "XXL"
+      ],
+      "colors": [
+        {
+          "name": "Red check",
+          "hex": "#9e2b25"
+        },
+        {
+          "name": "Green check",
+          "hex": "#2f5a3a"
+        }
+      ],
+      "garment": "outerwear",
+      "sleeves": "long",
+      "length": "hip",
+      "pattern": "check"
+    },
+    "palette": [
+      "#9e2b25",
+      "#1d1d1f"
+    ]
+  },
+  {
+    "id": "persona-basics-zip-hoodie",
+    "name": "Fleece Zip Hoodie",
+    "brand": "Persona Basics",
+    "category": "clothing",
+    "price": 4299,
+    "stock": 14,
+    "rating": 4.5,
+    "reviewCount": 207,
+    "blurb": "Midweight brushed-back fleece with a full zip, lined hood and kangaroo pockets.",
+    "tags": [
+      "hoodie",
+      "fleece",
+      "winter"
+    ],
+    "specs": {
+      "weightGrams": 560,
+      "warrantyMonths": 0,
+      "material": "80% cotton, 20% polyester fleece",
+      "fit": "Regular",
+      "sizes": [
+        "S",
+        "M",
+        "L",
+        "XL",
+        "XXL"
+      ],
+      "colors": [
+        {
+          "name": "Charcoal",
+          "hex": "#3a3c42"
+        },
+        {
+          "name": "Heather grey",
+          "hex": "#9a9ca3"
+        },
+        {
+          "name": "Maroon",
+          "hex": "#5e1f2a"
+        }
+      ],
+      "garment": "outerwear",
+      "sleeves": "long",
+      "length": "hip",
+      "pattern": "solid"
+    },
+    "palette": [
+      "#3a3c42",
+      "#16171b"
+    ]
+  },
+  {
+    "id": "kathmandu-loom-denim-jacket",
+    "name": "Denim Trucker Jacket",
+    "brand": "Kathmandu Loom",
+    "category": "clothing",
+    "price": 6499,
+    "stock": 6,
+    "rating": 4.6,
+    "reviewCount": 88,
+    "blurb": "Rigid 13 oz denim that breaks in to you. Classic trucker cut with chest pockets and copper buttons.",
+    "tags": [
+      "jacket",
+      "denim",
+      "layering"
+    ],
+    "specs": {
+      "weightGrams": 780,
+      "warrantyMonths": 0,
+      "material": "100% cotton denim, 13 oz",
+      "fit": "Regular",
+      "sizes": [
+        "S",
+        "M",
+        "L",
+        "XL",
+        "XXL"
+      ],
+      "colors": [
+        {
+          "name": "Mid wash",
+          "hex": "#4a6a96"
+        },
+        {
+          "name": "Dark rinse",
+          "hex": "#243553"
+        }
+      ],
+      "garment": "outerwear",
+      "sleeves": "long",
+      "length": "waist",
+      "pattern": "solid"
+    },
+    "palette": [
+      "#4a6a96",
+      "#c08a3e"
+    ]
+  },
+  {
+    "id": "himal-threads-down-puffer",
+    "name": "Down Puffer Jacket",
+    "brand": "Himal Threads",
+    "category": "clothing",
+    "price": 11999,
+    "stock": 4,
+    "rating": 4.8,
+    "reviewCount": 164,
+    "blurb": "650-fill duck down for Kathmandu winters and teahouse treks. Packs into its own pocket.",
+    "tags": [
+      "jacket",
+      "down",
+      "winter",
+      "trekking"
+    ],
+    "specs": {
+      "weightGrams": 520,
+      "warrantyMonths": 0,
+      "material": "Nylon shell, 650-fill duck down",
+      "fit": "Regular",
+      "sizes": [
+        "S",
+        "M",
+        "L",
+        "XL",
+        "XXL"
+      ],
+      "colors": [
+        {
+          "name": "Black",
+          "hex": "#17181c"
+        },
+        {
+          "name": "Glacier blue",
+          "hex": "#3d6f9e"
+        },
+        {
+          "name": "Orange",
+          "hex": "#d1602b"
+        }
+      ],
+      "garment": "outerwear",
+      "sleeves": "long",
+      "length": "hip",
+      "pattern": "stripe"
+    },
+    "palette": [
+      "#17181c",
+      "#3a3d47"
+    ]
+  },
+  {
+    "id": "kathmandu-loom-cotton-kurta",
+    "name": "Cotton Kurta",
+    "brand": "Kathmandu Loom",
+    "category": "clothing",
+    "price": 2999,
+    "stock": 12,
+    "rating": 4.5,
+    "reviewCount": 73,
+    "blurb": "Hand-finished cotton kurta with a mandarin collar and side slits. Comfortable from office to festival.",
+    "tags": [
+      "kurta",
+      "cotton",
+      "festive"
+    ],
+    "specs": {
+      "weightGrams": 260,
+      "warrantyMonths": 0,
+      "material": "100% handloom cotton",
+      "fit": "Straight",
+      "sizes": [
+        "S",
+        "M",
+        "L",
+        "XL"
+      ],
+      "colors": [
+        {
+          "name": "Ivory",
+          "hex": "#efe7d6"
+        },
+        {
+          "name": "Indigo",
+          "hex": "#2c3d6b"
+        },
+        {
+          "name": "Saffron",
+          "hex": "#d98a2b"
+        }
+      ],
+      "garment": "top",
+      "sleeves": "long",
+      "length": "thigh",
+      "pattern": "solid"
+    },
+    "palette": [
+      "#efe7d6",
+      "#8a6d3b"
+    ]
+  },
+  {
+    "id": "kathmandu-loom-dhaka-topi",
+    "name": "Dhaka Topi",
+    "brand": "Kathmandu Loom",
+    "category": "clothing",
+    "price": 799,
+    "stock": 30,
+    "rating": 4.7,
+    "reviewCount": 256,
+    "blurb": "The traditional Nepali cap, made from hand-woven Palpali dhaka fabric. One size with a soft structure.",
+    "tags": [
+      "topi",
+      "dhaka",
+      "traditional",
+      "festive"
+    ],
+    "specs": {
+      "weightGrams": 60,
+      "warrantyMonths": 0,
+      "material": "Hand-woven Palpali dhaka cotton",
+      "fit": "One size",
+      "sizes": [
+        "One size"
+      ],
+      "colors": [
+        {
+          "name": "Classic dhaka",
+          "hex": "#7a2a3a"
+        }
+      ],
+      "garment": "headwear",
+      "pattern": "dhaka"
+    },
+    "palette": [
+      "#7a2a3a",
+      "#e0a43a"
+    ]
+  },
+  {
+    "id": "persona-basics-baseball-cap",
+    "name": "Six-Panel Cap",
+    "brand": "Persona Basics",
+    "category": "clothing",
+    "price": 1199,
+    "stock": 18,
+    "rating": 4.2,
+    "reviewCount": 64,
+    "blurb": "Washed cotton twill cap with a curved brim and an adjustable strap.",
+    "tags": [
+      "cap",
+      "cotton",
+      "everyday"
+    ],
+    "specs": {
+      "weightGrams": 90,
+      "warrantyMonths": 0,
+      "material": "100% cotton twill",
+      "fit": "Adjustable",
+      "sizes": [
+        "One size"
+      ],
+      "colors": [
+        {
+          "name": "Black",
+          "hex": "#18191d"
+        },
+        {
+          "name": "Khaki",
+          "hex": "#b9a57c"
+        },
+        {
+          "name": "Navy",
+          "hex": "#1f2a44"
+        }
+      ],
+      "garment": "headwear",
+      "pattern": "solid"
+    },
+    "palette": [
+      "#18191d",
+      "#3a3d47"
+    ]
+  },
+  {
+    "id": "persona-basics-aviator-sunglasses",
+    "name": "Aviator Sunglasses",
+    "brand": "Persona Basics",
+    "category": "clothing",
+    "price": 2499,
+    "stock": 10,
+    "rating": 4.4,
+    "reviewCount": 58,
+    "blurb": "Metal aviator frames with UV400 polarised lenses. Cuts glare on bright mountain days.",
+    "tags": [
+      "sunglasses",
+      "uv400",
+      "travel"
+    ],
+    "specs": {
+      "weightGrams": 30,
+      "warrantyMonths": 0,
+      "material": "Metal frame, polarised UV400 lenses",
+      "fit": "Medium",
+      "sizes": [
+        "One size"
+      ],
+      "colors": [
+        {
+          "name": "Gold / green",
+          "hex": "#b8964a"
+        },
+        {
+          "name": "Silver / grey",
+          "hex": "#a6abb5"
+        }
+      ],
+      "garment": "eyewear",
+      "pattern": "solid"
+    },
+    "palette": [
+      "#b8964a",
+      "#2f3a2c"
+    ]
+  },
+  {
+    "id": "himal-threads-pashmina-shawl",
+    "name": "Pashmina Shawl",
+    "brand": "Himal Threads",
+    "category": "clothing",
+    "price": 8999,
+    "stock": 5,
+    "rating": 4.9,
+    "reviewCount": 47,
+    "blurb": "Hand-loomed Nepali pashmina, light and very warm. Drape it over the shoulders or wrap it as a scarf.",
+    "tags": [
+      "pashmina",
+      "shawl",
+      "winter",
+      "gift"
+    ],
+    "specs": {
+      "weightGrams": 180,
+      "warrantyMonths": 0,
+      "material": "70% pashmina, 30% silk",
+      "fit": "200 × 70 cm",
+      "sizes": [
+        "One size"
+      ],
+      "colors": [
+        {
+          "name": "Rose",
+          "hex": "#b9727c"
+        },
+        {
+          "name": "Charcoal",
+          "hex": "#3b3a40"
+        },
+        {
+          "name": "Cream",
+          "hex": "#e8dfcc"
+        }
+      ],
+      "garment": "shawl",
+      "pattern": "solid"
+    },
+    "palette": [
+      "#b9727c",
+      "#4a2a30"
+    ]
   }
 ]

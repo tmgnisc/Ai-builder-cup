@@ -35,9 +35,13 @@ export function Button({
   return (
     <HeroUIButton
       type={type}
-      isDisabled={disabled || loading}
-      aria-busy={loading}
+      isDisabled={disabled}
+      // React Aria's pending state: blocks presses, keeps focus and announces it (it drops aria-busy).
+      isPending={loading}
       isIconOnly={isIconOnly}
+      // HeroUI supplies behaviour (React Aria press, focus); our token classes own the visuals,
+      // so its neutral "ghost" variant keeps its default primary fill from bleeding through.
+      variant="ghost"
       className={buttonClasses({ variant, size, className })}
       {...props}
     >

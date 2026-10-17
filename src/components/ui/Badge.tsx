@@ -1,3 +1,4 @@
+import { Chip } from "@heroui/react";
 import type { ComponentProps } from "react";
 import { cn } from "@/lib/cn";
 import { stockLabel, stockLevel } from "@/lib/commerce/format";
@@ -13,16 +14,19 @@ const TONE: Record<BadgeTone, string> = {
   info: "bg-searching/12 text-searching",
 };
 
-interface BadgeProps extends ComponentProps<"span"> {
+interface BadgeProps extends Omit<ComponentProps<"span">, "color"> {
   tone?: BadgeTone;
   dot?: boolean;
 }
 
+/** Status label built on HeroUI Chip. Restrained 6px radius per the design brief (no pill proliferation). */
 export function Badge({ tone = "neutral", dot, className, children, ...props }: BadgeProps) {
   return (
-    <span
+    <Chip
+      size="sm"
+      variant="soft"
       className={cn(
-        "inline-flex shrink-0 items-center gap-1.5 whitespace-nowrap rounded-full px-2.5 py-1 text-xs font-medium leading-none tracking-wide",
+        "inline-flex h-auto shrink-0 items-center gap-1.5 whitespace-nowrap rounded-md px-2 py-1 text-xs font-medium leading-none tracking-wide",
         TONE[tone],
         className,
       )}
@@ -30,7 +34,7 @@ export function Badge({ tone = "neutral", dot, className, children, ...props }: 
     >
       {dot && <span aria-hidden className="size-1.5 rounded-full bg-current" />}
       {children}
-    </span>
+    </Chip>
   );
 }
 

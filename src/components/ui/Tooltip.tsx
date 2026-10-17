@@ -1,36 +1,30 @@
 "use client";
 
-import { cloneElement, useId, type ReactElement, type ReactNode } from "react";
+import { Tooltip as HeroUITooltip } from "@heroui/react";
+import type { ReactNode } from "react";
 import { cn } from "@/lib/cn";
 
 interface TooltipProps {
-  id?: string;
   content: ReactNode;
   side?: "top" | "bottom";
-  /** A single focusable element; it receives aria-describedby. */
-  children: ReactElement<{ "aria-describedby"?: string }>;
+  /** A single HeroUI/React Aria focusable (Button, IconButton): it becomes the trigger. */
+  children: ReactNode;
   className?: string;
+  delay?: number;
 }
 
-/** CSS-only tooltip that shows on hover and keyboard focus. */
-export function Tooltip({ id: propId, content, side = "top", children, className }: TooltipProps) {
-  const generatedId = useId();
-  const id = propId ?? generatedId;
+/** HeroUI tooltip on hover and keyboard focus, wired with aria-describedby by React Aria. */
+export function Tooltip({ content, side = "top", children, className, delay = 400 }: TooltipProps) {
   return (
-    <span className="group/tt relative inline-flex">
-      {cloneElement(children, { "aria-describedby": id })}
-      <span
-        role="tooltip"
-        id={id}
-        className={cn(
-          "pointer-events-none absolute left-1/2 z-tooltip w-max max-w-56 -translate-x-1/2 rounded-lg bg-text px-2.5 py-1.5 text-xs font-medium text-bg opacity-0 shadow-lg transition-[opacity,transform] duration-200",
-          "group-hover/tt:opacity-100 group-focus-within/tt:opacity-100",
-          side === "top" ? "bottom-full mb-2 translate-y-1 group-hover/tt:translate-y-0" : "top-full mt-2 -translate-y-1 group-hover/tt:translate-y-0",
-          className,
-        )}
+    <HeroUITooltip.Root delay={delay} closeDelay={80}>
+      {children}
+      <HeroUITooltip.Content
+        placement={side}
+        offset={8}
+        className={cn("z-tooltip max-w-56 rounded-lg bg-text px-2.5 py-1.5 text-xs font-medium text-bg shadow-lg", className)}
       >
         {content}
-      </span>
-    </span>
+      </HeroUITooltip.Content>
+    </HeroUITooltip.Root>
   );
 }

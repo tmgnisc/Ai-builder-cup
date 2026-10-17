@@ -1,6 +1,6 @@
 "use client";
 
-import { Headphones, Laptop, LayoutGrid, Plug, Smartphone, type LucideIcon } from "lucide-react";
+import { Headphones, Laptop, LayoutGrid, Plug, Shirt, Smartphone, type LucideIcon } from "lucide-react";
 import { useRef } from "react";
 import { cn } from "@/lib/cn";
 import { getCategories } from "@/lib/commerce/catalog";
@@ -15,6 +15,7 @@ const ICON: Record<Category | "all", LucideIcon> = {
   phones: Smartphone,
   headphones: Headphones,
   accessories: Plug,
+  clothing: Shirt,
 };
 
 /** Horizontally scrollable category pills with magnetic hover and a sliding active indicator. */

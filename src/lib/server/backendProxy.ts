@@ -7,9 +7,24 @@ export function getBackendUrl(): string | null {
 }
 
 /**
+ * Local fallbacks (in-process cart, mockAgent) are a dev convenience only. In production a configured
+ * backend is the single source of truth: falling back would split carts across two stores.
+ */
+export function allowLocalFallback(): boolean {
+  return process.env.NODE_ENV !== "production";
+}
+
+export function backendUnavailable(): Response {
+  return NextResponse.json(
+    { error: { code: "TRANSIENT", message: "The store service is unavailable. Please try again." } },
+    { status: 503 },
+  );
+}
+
+/**
  * Proxies an incoming Next.js API request to the Python FastAPI backend when BACKEND_URL is configured.
  * Forwards persona_sid cookie, headers, query parameters, body, and returns response with Set-Cookie forwarded.
- * If backend is not configured or fails to respond, returns null to allow fallback.
+ * Returns null when no backend is configured, or (dev only) when it fails to respond, so the caller can fall back.
  */
 export async function proxyToBackend(
   req: Request,
@@ -89,6 +104,6 @@ export async function proxyToBackend(
     });
   } catch (err) {
     console.warn(`[backendProxy] failed to proxy to ${targetPath}:`, err);
-    return null;
+    return allowLocalFallback() ? null : backendUnavailable();
   }
 }

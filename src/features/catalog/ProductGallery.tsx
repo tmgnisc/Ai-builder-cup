@@ -4,6 +4,7 @@ import { useRef, useState } from "react";
 import { cn } from "@/lib/cn";
 import type { Product } from "@/lib/commerce/schemas";
 import { gsap, motion, useGSAP } from "@/lib/motion";
+import { useTryOn } from "@/store/useTryOn";
 import { ProductImage } from "./ProductImage";
 
 const VIEWS = [
@@ -17,6 +18,7 @@ type View = (typeof VIEWS)[number]["id"];
 export function ProductGallery({ product }: { product: Product }) {
   const anchor = { "data-pip-anchor": "gallery", "data-pip-topic": "gallery", "data-pip-product": product.id };
   const [view, setView] = useState<View>("front");
+  const color = useTryOn((s) => s.colors[product.id]);
   const mainRef = useRef<HTMLDivElement>(null);
 
   useGSAP(
@@ -31,7 +33,7 @@ export function ProductGallery({ product }: { product: Product }) {
     <div {...anchor} className="flex flex-col gap-3 lg:sticky lg:top-24 lg:self-start">
       <div className="overflow-hidden rounded-panel hairline">
         <div ref={mainRef} data-gallery-main className="aspect-[4/3]">
-          <ProductImage product={product} variant="hero" view={view} className={product.stock === 0 ? "grayscale-[35%]" : undefined} />
+          <ProductImage product={product} variant="hero" view={view} color={color} className={product.stock === 0 ? "grayscale-[35%]" : undefined} />
         </div>
       </div>
       <div role="tablist" aria-label="Product views" className="grid grid-cols-3 gap-3">
@@ -48,7 +50,7 @@ export function ProductGallery({ product }: { product: Product }) {
               view === v.id ? "shadow-[inset_0_0_0_2px_var(--accent-text)]" : "opacity-60 hairline hover:opacity-100",
             )}
           >
-            <ProductImage product={product} variant="thumb" view={v.id} showInitials={false} className="pointer-events-none" />
+            <ProductImage product={product} variant="thumb" view={v.id} color={color} showInitials={false} className="pointer-events-none" />
           </button>
         ))}
       </div>

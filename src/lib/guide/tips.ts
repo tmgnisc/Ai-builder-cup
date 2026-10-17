@@ -55,7 +55,7 @@ export interface TipCtx {
 
 type Builder = (ctx: TipCtx) => Tip | null;
 
-const CAT_NOUN: Record<Category, string> = { laptops: "laptops", phones: "phones", headphones: "headphones", accessories: "accessories" };
+const CAT_NOUN: Record<Category, string> = { laptops: "laptops", phones: "phones", headphones: "headphones", accessories: "accessories", clothing: "clothes" };
 const NOT_NOW: TipChip = { label: "Not now" };
 const pct = (n: number | null, min = 55) => n !== null && n >= min;
 const id = (topic: string, level: number, ctx: TipCtx) => `${topic}:${level}:${ctx.product?.id ?? ctx.category ?? ""}`;
@@ -106,7 +106,7 @@ export const TIPS: Record<string, { 1?: Builder; 2?: Builder }> = {
   "category-pills": {
     1: (ctx) => {
       const c = countByCategory();
-      return { id: id("category-pills", 1, ctx), text: `${c.laptops} laptops, ${c.phones} phones, ${c.headphones} headphones and ${c.accessories} accessories in the store.` };
+      return { id: id("category-pills", 1, ctx), text: `${c.laptops} laptops, ${c.phones} phones, ${c.headphones} headphones, ${c.accessories} accessories and ${c.clothing} clothing items in the store.` };
     },
     2: (ctx) => ({
       id: id("category-pills", 2, ctx),

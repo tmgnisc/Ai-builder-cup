@@ -1,6 +1,5 @@
-export * from "./MerchantDashboard";
 export * from "./MerchantLogin";
-export * from "./MerchantOperations";
+export * from "./MerchantShell";
 export * from "./OverviewTab";
 export * from "./InventoryTab";
 export * from "./OrdersTab";

@@ -11,10 +11,11 @@ const sampleProduct: Product = {
   category: "headphones",
   price: 54999,
   stock: 12,
-  description: "Industry leading noise canceling headphones",
-  images: ["/images/sony-wh1000xm5.webp"],
+  rating: 4.7,
+  reviewCount: 312,
+  blurb: "Industry leading noise canceling headphones",
+  tags: ["anc", "travel"],
   palette: ["var(--surface-2)", "var(--bg)"],
-  badge: "bestseller",
   specs: {
     weightGrams: 250,
     batteryHours: 30,
@@ -41,11 +42,10 @@ describe("ProductCard & Grid Regression (Equal Height & Compact Spec Line)", () 
     expect(html).not.toContain("<dl");
   });
 
-  it("quick-add button renders with accessible label and tooltip wrapper", () => {
+  it("quick-add renders as a labelled HeroUI button (its tooltip is attached by React Aria on hover/focus)", () => {
     const html = renderToString(React.createElement(ProductCard, { product: sampleProduct }));
     expect(html).toContain('aria-label="Add Sony WH-1000XM5 to cart"');
-    expect(html).toContain('role="tooltip"');
-    expect(html).toContain("Add to cart");
+    expect(html).toContain('data-slot="button"');
   });
 
   it("handles out-of-stock product with disabled state and appropriate label", () => {

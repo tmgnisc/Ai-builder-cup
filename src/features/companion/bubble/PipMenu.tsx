@@ -40,6 +40,7 @@ export function PipMenu({ onOpenChange }: { onOpenChange?: (open: boolean) => vo
       open={open}
       onOpenChange={setOpen}
       side="bottom"
+      label="Pip settings"
       className="w-60 rounded-2xl p-1.5 shadow-2xl"
       trigger={
         <IconButton

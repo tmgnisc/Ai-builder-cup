@@ -14,7 +14,7 @@ import type { AgentMemory, AgentRequest, ParsedQuery } from "./types";
  * runtime's verification says so. All product facts come from tool results / catalog data.
  */
 
-const CATEGORY_LABEL: Record<Category, string> = { laptops: "laptops", phones: "phones", headphones: "headphones", accessories: "accessories" };
+const CATEGORY_LABEL: Record<Category, string> = { laptops: "laptops", phones: "phones", headphones: "headphones", accessories: "accessories", clothing: "clothing" };
 const KEY_LABEL: Record<CompareKey, string> = { price: "price", ram: "RAM", storage: "storage", battery: "battery", weight: "weight", warranty: "warranty", rating: "rating" };
 const DEFAULT_PRIORITIES: CompareKey[] = ["price", "battery", "weight", "ram"];
 

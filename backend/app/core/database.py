@@ -62,7 +62,7 @@ def get_session_factory():
 
 
 async def init_db() -> bool:
-    """Creates database tables and seeds catalog products if table is empty."""
+    """Creates database tables and inserts any catalog products missing from the products table."""
     engine = get_engine()
     if engine is None:
         logger.info("No DATABASE_URL configured; skipping database initialization.")
@@ -76,31 +76,33 @@ async def init_db() -> bool:
         session_factory = get_session_factory()
         if session_factory is not None:
             async with session_factory() as session:
-                # Check if products table already has records
-                result = await session.execute(select(ProductDB.id).limit(1))
-                if result.scalar_one_or_none() is None and DATA_PATH.exists():
-                    logger.info("Seeding products into PostgreSQL database from %s...", DATA_PATH)
+                # Insert catalog products that aren't in the table yet (new products added to
+                # products.json reach an already-seeded database; existing rows and stock are untouched).
+                if DATA_PATH.exists():
                     with open(DATA_PATH, "r", encoding="utf-8") as f:
                         raw = json.load(f)
-
-                    for item in raw:
-                        prod = ProductDB(
-                            id=item["id"],
-                            name=item["name"],
-                            brand=item["brand"],
-                            category=item["category"],
-                            price=item["price"],
-                            stock=item["stock"],
-                            rating=item.get("rating", 0.0),
-                            review_count=item.get("reviewCount", 0),
-                            blurb=item.get("blurb", ""),
-                            tags=item.get("tags", []),
-                            specs=item.get("specs", {}),
-                            palette=item.get("palette", []),
+                    existing = set((await session.execute(select(ProductDB.id))).scalars().all())
+                    missing = [item for item in raw if item["id"] not in existing]
+                    for item in missing:
+                        session.add(
+                            ProductDB(
+                                id=item["id"],
+                                name=item["name"],
+                                brand=item["brand"],
+                                category=item["category"],
+                                price=item["price"],
+                                stock=item["stock"],
+                                rating=item.get("rating", 0.0),
+                                review_count=item.get("reviewCount", 0),
+                                blurb=item.get("blurb", ""),
+                                tags=item.get("tags", []),
+                                specs=item.get("specs", {}),
+                                palette=item.get("palette", []),
+                            )
                         )
-                        session.add(prod)
-                    await session.commit()
-                    logger.info("Successfully seeded %d catalog products into PostgreSQL.", len(raw))
+                    if missing:
+                        await session.commit()
+                        logger.info("Seeded %d new catalog products into PostgreSQL.", len(missing))
 
             # Check if orders table already has records
             from ..models.db import OrderDB

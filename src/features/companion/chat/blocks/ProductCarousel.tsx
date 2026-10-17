@@ -3,6 +3,7 @@
 import { ExternalLink, Plus } from "lucide-react";
 import Link from "next/link";
 import { CompareToggle } from "@/features/compare";
+import { BuyNowButton } from "@/features/cart";
 import { ProductImage } from "@/features/catalog";
 import { StockBadge } from "@/components/ui/Badge";
 import { IconButton } from "@/components/ui/IconButton";
@@ -11,7 +12,7 @@ import { formatNPR, keySpecs } from "@/lib/commerce/format";
 import type { Product } from "@/lib/commerce/schemas";
 import { useChat } from "@/store/useChat";
 
-/** Horizontal strip of mini product cards. "Add" goes through Pip so it's verified like any agent action. */
+/** Horizontal strip of mini product cards. "Buy" adds (verified) and opens checkout; "+" asks Pip to add it. */
 export function ProductCarousel({ productIds, title, interactive }: { productIds: string[]; title?: string; interactive: boolean }) {
   const send = useChat((s) => s.send);
   const products = productIds.map(getProduct).filter((p): p is Product => !!p);
@@ -40,8 +41,9 @@ export function ProductCarousel({ productIds, title, interactive }: { productIds
                   .map((s) => (s.value === "Yes" ? s.label : s.value))
                   .join(" · ")}
               </p>
-              <div className="mt-1.5 flex items-center justify-between">
+              <div className="mt-1.5 flex items-center justify-between gap-2">
                 <span className="font-mono text-sm font-semibold">{formatNPR(p.price)}</span>
+                <BuyNowButton productId={p.id} productName={p.name} disabled={!interactive || p.stock === 0} />
               </div>
               <div className="mt-2 flex items-center justify-between gap-1">
                 <StockBadge stock={p.stock} className="!px-2 !py-0.5 !text-2xs" />
@@ -55,7 +57,7 @@ export function ProductCarousel({ productIds, title, interactive }: { productIds
                   </Link>
                   <IconButton
                     size="sm"
-                    variant="primary"
+                    variant="secondary"
                     disabled={!interactive || p.stock === 0}
                     onClick={() => send(`Add the ${p.name} to my cart`)}
                     aria-label={`Ask Pip to add the ${p.name} to the cart`}

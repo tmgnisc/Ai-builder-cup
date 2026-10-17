@@ -17,6 +17,8 @@ import { useCompanion } from "@/store/useCompanion";
 import { useCompare } from "@/store/useCompare";
 import { findAnchor, usePipPosition } from "@/store/usePipPosition";
 import { useVoice } from "@/store/useVoice";
+import { BundleCard } from "../chat/blocks/BundleCard";
+import { SubAgentStatus } from "../chat/SubAgentStatus";
 import { Chips, MiniCards, TraceLine } from "./BubbleParts";
 import { PipMenu } from "./PipMenu";
 
@@ -313,7 +315,7 @@ function describe(content: BubbleContent, message: ChatMessage | undefined): { t
   if (content.kind === "tip") return { text: content.text, hasActions: !!content.chips?.length || !!content.productIds?.length };
   if (!message) return { text: "", hasActions: false };
   const hasActions = message.blocks.some(
-    (b) => b.kind === "clarify" || b.kind === "product_carousel" || (b.kind === "cart_action" && b.status === "pending"),
+    (b) => b.kind === "clarify" || b.kind === "product_carousel" || b.kind === "bundle" || (b.kind === "cart_action" && b.status === "pending"),
   );
   return { text: message.text, hasActions };
 }
@@ -342,10 +344,13 @@ function AgentBlocks({ message, busy, onPick }: { message: ChatMessage; busy: bo
   const streaming = message.status === "streaming";
   return (
     <>
+      <SubAgentStatus agents={message.agents} />
       {message.blocks.map((b) => {
         switch (b.kind) {
           case "product_carousel":
             return <MiniCards key={b.id} productIds={b.productIds} interactive={!busy} />;
+          case "bundle":
+            return <BundleCard key={b.id} block={b} interactive={!busy} />;
           case "cart_action":
             return <CartActionCard key={b.id} {...b} />;
           case "comparison":

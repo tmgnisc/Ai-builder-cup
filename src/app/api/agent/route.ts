@@ -3,6 +3,7 @@ import { getSessionId } from "@/lib/commerce/http";
 import { createAgent } from "@/lib/agent/geminiAgent";
 import { runAgent } from "@/lib/agent/runAgent";
 import { AgentRequestSchema, type AgentEvent } from "@/lib/agent/types";
+import { allowLocalFallback, backendUnavailable } from "@/lib/server/backendProxy";
 
 export const dynamic = "force-dynamic";
 
@@ -68,8 +69,19 @@ export async function POST(req: Request) {
 
         return new Response(backendResp.body, { headers: respHeaders });
       }
+      if (!allowLocalFallback()) {
+        // Pass 401/429/503 through: falling back would bypass auth and rate limits and split the cart.
+        return new Response(backendResp.body, {
+          status: backendResp.status,
+          headers: { "content-type": backendResp.headers.get("content-type") ?? "application/json" },
+        });
+      }
       console.warn(`[agent proxy] backend returned ${backendResp.status}, falling back to mockAgent`);
     } catch (err) {
+      if (!allowLocalFallback()) {
+        console.error("[agent proxy] backend unreachable", err);
+        return backendUnavailable();
+      }
       console.warn("[agent proxy] backend unreachable, falling back to mockAgent", err);
     }
   }
