@@ -100,3 +100,15 @@ def test_every_event_type_validates_against_agent_event() -> None:
         dumped = sample.model_dump()
         validated = adapter.validate_python(dumped)
         assert validated.model_dump()["type"] == dumped["type"]
+
+
+def test_ui_action_tolerates_snake_case_and_unknown_keys() -> None:
+    from app.agent.agent import ui_action_from
+
+    action = ui_action_from("set_filters", None, {"max_price": 120000, "category": "laptops", "min_battery": 8})
+    assert action is not None
+    assert action.type == "set_filters"
+    assert action.maxPrice == 120000
+    assert action.category == "laptops"
+    # Still-invalid actions are skipped instead of raising (which used to abort the whole turn).
+    assert ui_action_from("not_a_kind", None, {}) is None

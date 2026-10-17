@@ -1,3 +1,5 @@
+import logging
+import re
 import time
 from typing import Any, Literal
 
@@ -7,6 +9,7 @@ from google.adk.models import BaseLlm
 from google.adk.planners import BuiltInPlanner
 from google.adk.tools.base_tool import BaseTool
 from google.genai import types
+from pydantic import ValidationError
 
 from ..core.errors import ToolError
 from .adapter import (
@@ -28,6 +31,28 @@ from .tools_adk import (
     current_turn_context,
     get_adk_tools,
 )
+
+logger = logging.getLogger(__name__)
+_SNAKE = re.compile(r"_([a-z])")
+
+
+def ui_action_from(kind: str, target: str | None, payload: dict[str, Any]) -> UIAction | None:
+    """Builds a UIAction from a model's ui_action call, tolerating snake_case keys (max_price → maxPrice).
+
+    Unknown keys are dropped, and an action that still doesn't validate is skipped: UI choreography is
+    cosmetic and must never abort the shopper's answer.
+    """
+    args: dict[str, Any] = {"type": kind}
+    if target:
+        args["anchorId"] = target
+    for key, value in payload.items():
+        args[_SNAKE.sub(lambda m: m.group(1).upper(), key)] = value
+    known = {k: v for k, v in args.items() if k in UIAction.model_fields}
+    try:
+        return UIAction(**known)
+    except ValidationError as err:
+        logger.warning("Skipping invalid ui_action %s: %s", kind, err.errors()[:1])
+        return None
 
 
 def create_pip_agent(model: str | BaseLlm) -> LlmAgent:
@@ -279,13 +304,9 @@ def create_pip_agent(model: str | BaseLlm) -> LlmAgent:
                     durationMs=duration_ms,
                 )
             )
-            payload = result.get("payload") or {}
-            target = result.get("target")
-            action_args: dict[str, Any] = {"type": kind}
-            if target:
-                action_args["anchorId"] = target
-            action_args.update(payload)
-            turn_ctx.event_queue.append(UiEvent(action=UIAction(**action_args)))
+            ui = ui_action_from(kind, result.get("target"), result.get("payload") or {})
+            if ui is not None:
+                turn_ctx.event_queue.append(UiEvent(action=ui))
 
         elif tool.name == "record_missing_info":
             field_name = result.get("field", "")
@@ -427,9 +448,7 @@ def create_pip_agent(model: str | BaseLlm) -> LlmAgent:
     planner = None
     if isinstance(model, str):
         try:
-            planner = BuiltInPlanner(
-                thinking_config=types.ThinkingConfig(thinking_budget=0)
-            )
+            planner = BuiltInPlanner(thinking_config=types.ThinkingConfig(thinking_budget=0))
         except Exception:
             planner = None
 
