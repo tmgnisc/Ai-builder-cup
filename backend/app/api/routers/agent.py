@@ -89,13 +89,13 @@ async def agent_turn(
                     }
                 },
             )
-        if settings.agent_backend == "gemini" and not settings.gemini_api_key:
+        if settings.agent_backend == "gemini" and not settings.gemini_api_key and not settings.google_genai_use_vertexai:
             return JSONResponse(
                 status_code=503,
                 content={
                     "error": {
                         "code": "SERVICE_UNAVAILABLE",
-                        "message": "GEMINI_API_KEY is not configured on the backend.",
+                        "message": "Neither GEMINI_API_KEY nor Vertex AI is configured on the backend.",
                     }
                 },
             )

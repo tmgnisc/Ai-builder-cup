@@ -9,7 +9,7 @@ class Settings(BaseSettings):
     model_config = SettingsConfigDict(env_file=".env", extra="ignore")
 
     gemini_api_key: str = ""
-    gemini_model: str = "gemini-3.8-flash"
+    gemini_model: str = "gemini-flash-lite-latest"
     agent_backend: str = "gemini"
     agent_shared_secret: str = ""
     environment: str = "development"
@@ -22,6 +22,9 @@ class Settings(BaseSettings):
     persona_latency_max_ms: int = 600
     log_level: str = "INFO"
     database_url: str = ""
+    google_genai_use_vertexai: bool = False
+    google_cloud_project: str = ""
+    google_cloud_location: str = "asia-south1"
 
     @property
     def cors_origin_list(self) -> list[str]:

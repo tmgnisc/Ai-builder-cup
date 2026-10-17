@@ -37,7 +37,7 @@ async def health_check(
 
     return HealthResponse(
         status="ok" if db_ok else "degraded",
-        gemini=bool(settings.gemini_api_key),
+        gemini=bool(settings.gemini_api_key or settings.google_genai_use_vertexai),
         database=db_ok,
         database_error=db_err,
     )
