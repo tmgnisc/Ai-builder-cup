@@ -174,8 +174,20 @@ async function performUI(action: UIAction) {
 }
 
 export const useChat = create<ChatState>()((set, get) => {
-  const patch = (id: string, fn: (m: ChatMessage) => ChatMessage) =>
+  const ERROR_TEXT = "Something went wrong on my side. Please try that again.";
+  /** Starts Pip's reply for `id` if it doesn't exist yet. */
+  const ensure = (id: string) => {
+    if (get().messages.some((m) => m.id === id)) return;
+    set((s) => ({ messages: [...s.messages, { id, role: "assistant", text: "", blocks: [], trace: [], status: "streaming" }] }));
+    // Pip speaks through its bubble: every reply replaces whatever it was saying.
+    useBubble.getState().show({ kind: "agent", messageId: id });
+  };
+  // The Gemini backend can stream tool calls and product blocks before any text (and so before
+  // message_start), so any event for an unseen message starts it rather than being dropped.
+  const patch = (id: string, fn: (m: ChatMessage) => ChatMessage) => {
+    ensure(id);
     set((s) => ({ messages: s.messages.map((m) => (m.id === id ? fn(m) : m)) }));
+  };
 
   async function apply(ev: AgentEvent) {
     switch (ev.type) {
@@ -183,9 +195,7 @@ export const useChat = create<ChatState>()((set, get) => {
         useCompanion.getState().dispatch({ type: "state_change", state: ev.state, caption: ev.caption, source: "agent" });
         return;
       case "message_start":
-        set((s) => ({ messages: [...s.messages, { id: ev.messageId, role: "assistant", text: "", blocks: [], trace: [], status: "streaming" }] }));
-        // Pip speaks through its bubble: every reply replaces whatever it was saying.
-        useBubble.getState().show({ kind: "agent", messageId: ev.messageId });
+        ensure(ev.messageId);
         return;
       case "text_delta":
         patch(ev.messageId, (m) => ({ ...m, text: m.text + ev.delta }));
@@ -220,8 +230,13 @@ export const useChat = create<ChatState>()((set, get) => {
         return;
       case "error":
         set((s) => {
-          const last = [...s.messages].reverse().find((m) => m.role === "assistant");
-          return last ? { messages: s.messages.map((m) => (m.id === last.id ? { ...m, status: "error" } : m)) } : {};
+          const lastUser = s.messages.findLastIndex((m) => m.role === "user");
+          const reply = s.messages.findLastIndex((m) => m.role === "assistant");
+          if (reply > lastUser) {
+            // Keep whatever Pip already showed (e.g. products); just mark the reply as failed.
+            return { messages: s.messages.map((m, i) => (i === reply ? { ...m, status: "error", text: m.text || ERROR_TEXT } : m)) };
+          }
+          return { messages: [...s.messages, { id: `err_${Date.now()}`, role: "assistant", text: ERROR_TEXT, blocks: [], trace: [], status: "error" }] };
         });
         return;
       case "done":
