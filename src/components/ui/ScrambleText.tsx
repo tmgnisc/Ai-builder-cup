@@ -27,11 +27,29 @@ export function ScrambleText({ text, duration = 0.6, className, chars = "▪▫�
         el.textContent = text;
         return;
       }
-      gsap.to(el, {
+      const obj = { progress: 0 };
+      const charsLen = chars.length;
+      gsap.to(obj, {
+        progress: 1,
         duration,
-        ease: "none",
+        ease: "power2.out",
         overwrite: true,
-        scrambleText: { text, chars, speed: 0.6, revealDelay: 0.15 },
+        onUpdate: () => {
+          const p = obj.progress;
+          const revealedLen = Math.floor(p * text.length);
+          let scrambled = text.slice(0, revealedLen);
+          for (let i = revealedLen; i < text.length; i++) {
+            if (text[i] === " ") {
+              scrambled += " ";
+            } else {
+              scrambled += chars[Math.floor(Math.random() * charsLen)];
+            }
+          }
+          el.textContent = scrambled;
+        },
+        onComplete: () => {
+          el.textContent = text;
+        },
       });
     },
     { dependencies: [text], scope: ref },

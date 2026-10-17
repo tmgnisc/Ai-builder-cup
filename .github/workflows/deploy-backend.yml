@@ -70,7 +70,7 @@ jobs:
             --allow-unauthenticated \
             --add-cloudsql-instances=${{ env.PROJECT_ID }}:${{ env.REGION }}:persona-postgres \
             --set-secrets=DATABASE_URL=DATABASE_URL:latest,GEMINI_API_KEY=GEMINI_API_KEY:latest,AGENT_SHARED_SECRET=AGENT_SHARED_SECRET:latest \
-            --set-env-vars=ENVIRONMENT=production,GEMINI_MODEL=gemini-2.5-flash \
+            --set-env-vars=ENVIRONMENT=production,GEMINI_MODEL=gemini-3.8-flash \
             --cpu=1 \
             --memory=512Mi \
             --min-instances=0 \

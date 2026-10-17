@@ -17,6 +17,7 @@ class HealthResponse(BaseModel):
     status: str
     gemini: bool
     database: bool = True
+    database_error: str | None = None
 
 
 @router.get("/health", response_model=HealthResponse)
@@ -26,16 +27,19 @@ async def health_check(
 ) -> HealthResponse:
     """Production health check reporting service status, database connectivity, and Gemini AI agent readiness."""
     db_ok = True
+    db_err = None
     if session is not None:
         try:
             await session.execute(text("SELECT 1"))
-        except Exception:
+        except Exception as e:
             db_ok = False
+            db_err = str(e)
 
     return HealthResponse(
         status="ok" if db_ok else "degraded",
         gemini=bool(settings.gemini_api_key),
         database=db_ok,
+        database_error=db_err,
     )
 
 

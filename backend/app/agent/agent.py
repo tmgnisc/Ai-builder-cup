@@ -4,7 +4,9 @@ from typing import Any, Literal
 from google.adk.agents import LlmAgent
 from google.adk.agents.context import Context
 from google.adk.models import BaseLlm
+from google.adk.planners import BuiltInPlanner
 from google.adk.tools.base_tool import BaseTool
+from google.genai import types
 
 from ..core.errors import ToolError
 from .adapter import (
@@ -374,12 +376,25 @@ def create_pip_agent(model: str | BaseLlm) -> LlmAgent:
 
         return {"error": {"code": code, "message": msg}}
 
-    return LlmAgent(
-        name="pip",
-        model=model,
-        instruction=PIP_SYSTEM_INSTRUCTION,
-        tools=get_adk_tools(),
-        before_tool_callback=before_tool_callback,
-        after_tool_callback=after_tool_callback,
-        on_tool_error_callback=on_tool_error_callback,
-    )
+    planner = None
+    if isinstance(model, str):
+        try:
+            planner = BuiltInPlanner(
+                thinking_config=types.ThinkingConfig(thinking_budget=0)
+            )
+        except Exception:
+            planner = None
+
+    agent_kwargs: dict[str, Any] = {
+        "name": "pip",
+        "model": model,
+        "instruction": PIP_SYSTEM_INSTRUCTION,
+        "tools": get_adk_tools(),
+        "before_tool_callback": before_tool_callback,
+        "after_tool_callback": after_tool_callback,
+        "on_tool_error_callback": on_tool_error_callback,
+    }
+    if planner is not None:
+        agent_kwargs["planner"] = planner
+
+    return LlmAgent(**agent_kwargs)

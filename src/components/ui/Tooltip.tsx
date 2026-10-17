@@ -4,6 +4,7 @@ import { cloneElement, useId, type ReactElement, type ReactNode } from "react";
 import { cn } from "@/lib/cn";
 
 interface TooltipProps {
+  id?: string;
   content: ReactNode;
   side?: "top" | "bottom";
   /** A single focusable element; it receives aria-describedby. */
@@ -12,8 +13,9 @@ interface TooltipProps {
 }
 
 /** CSS-only tooltip that shows on hover and keyboard focus. */
-export function Tooltip({ content, side = "top", children, className }: TooltipProps) {
-  const id = useId();
+export function Tooltip({ id: propId, content, side = "top", children, className }: TooltipProps) {
+  const generatedId = useId();
+  const id = propId ?? generatedId;
   return (
     <span className="group/tt relative inline-flex">
       {cloneElement(children, { "aria-describedby": id })}

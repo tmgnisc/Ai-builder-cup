@@ -14,12 +14,12 @@ export function PipHeaderControls() {
   const btn = "relative grid size-10 place-items-center rounded-full text-muted transition-colors hover:bg-surface-2 hover:text-text";
   return (
     <>
-      <Tooltip content={quiet ? "Pip is quiet: tap to allow tips" : "Quiet mode: Pip stops offering tips"} side="bottom">
+      <Tooltip id="tt-pip-quiet" content={quiet ? "Pip is quiet: tap to allow tips" : "Quiet mode: Pip stops offering tips"} side="bottom">
         <button type="button" onClick={() => setQuiet(!quiet)} aria-pressed={quiet} aria-label={quiet ? "Turn off quiet mode" : "Turn on quiet mode"} className={btn}>
           {quiet ? <BellOff className="size-4.5 text-accent-text" /> : <Bell className="size-4.5" />}
         </button>
       </Tooltip>
-      <Tooltip content="Conversation history" side="bottom">
+      <Tooltip id="tt-pip-history" content="Conversation history" side="bottom">
         <button type="button" onClick={() => setHistoryOpen(true)} aria-label={`Conversation history, ${count} messages`} className={btn}>
           <MessagesSquare className="size-4.5" />
           {count > 0 && <span aria-hidden className="absolute right-1.5 top-1.5 size-2 rounded-full bg-accent" />}
