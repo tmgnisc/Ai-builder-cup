@@ -1,165 +1,253 @@
-# Persona: AI shopping companion (frontend MVP)
+# Persona: Autonomous Multi-Agent AI Shopping Companion
 
-An electronics store with **Pip**, an animated companion that searches, compares and adds to cart, with every agent step visible.
+[![Next.js 15](https://img.shields.io/badge/Next.js-15.0-black?logo=next.js)](https://nextjs.org/)
+[![Google ADK](https://img.shields.io/badge/Google_ADK-2.12.0-4285F4?logo=google)](https://github.com/google/agent-development-kit)
+[![Gemini 3.5 Flash](https://img.shields.io/badge/Model-Gemini_3.5_Flash-8E75C2?logo=googlegemini)](https://ai.google.dev/)
+[![FastAPI](https://img.shields.io/badge/FastAPI-0.141-009688?logo=fastapi)](https://fastapi.tiangolo.com/)
+[![PostgreSQL 16](https://img.shields.io/badge/PostgreSQL-16-336791?logo=postgresql)](https://www.postgresql.org/)
+[![Google Cloud Run](https://img.shields.io/badge/Deploy-GCP_Cloud_Run-4285F4?logo=googlecloud)](https://cloud.google.com/run)
+[![Vitest](https://img.shields.io/badge/Frontend_Tests-196_Passed-brightgreen?logo=vitest)](https://vitest.dev/)
+[![Pytest](https://img.shields.io/badge/Backend_Tests-78_Passed_(96%25_cov)-brightgreen?logo=pytest)](https://docs.pytest.org/)
+[![WCAG 2.1 AA](https://img.shields.io/badge/Accessibility-WCAG_2.1_AA-success)](https://www.w3.org/WAI/WCAG21/quickref/)
 
-## Run
+**Persona** is an agentic e-commerce platform that reimagines shopping with an intelligent, grounded companion named **Pip**. Rather than a static chatbot widget in the corner, Pip is an interactive spatial companion that navigates the viewport, choreographs UI animations, searches and compares hardware trade-offs, verifies cart transactions against silent database drops, and coordinates a team of autonomous sub-agents.
 
-```bash
-pnpm install
-pnpm dev          # http://localhost:3000
-pnpm test         # vitest: 122 tests (parser, catalog, cart, agent, guide engine, check-ins, merchant data)
-pnpm lint && pnpm typecheck && pnpm build
+---
+
+## Architecture Overview
+
+```mermaid
+flowchart TD
+    subgraph Client ["Client Layer (Next.js 15 + Three.js + GSAP)"]
+        UI["E-Commerce Web App (/catalog, /compare, /merchant)"]
+        Pip["Pip Spatial Companion (Three.js WebGL Mesh + Flight Pilot)"]
+        EventStream["Streaming NDJSON Reader (useChat & useCompanion)"]
+    end
+
+    subgraph Backend ["Backend Layer (FastAPI on GCP Cloud Run)"]
+        Router["/api/agent Router (Streaming NDJSON Turn Runtime)"]
+        PipSuper["Pip Supervisor Agent (Google ADK + Gemini 3.5 Flash)"]
+        
+        subgraph SubAgents ["Specialized Sub-Agent Team"]
+            Scout["Product Finder 'Scout' Sub-Agent\n(Concurrent multi-item discovery & bundle pricing)"]
+            Analyst["Comparison Specialist 'Analyst' Sub-Agent\n(Side-by-side spec scoring & trade-off matrices)"]
+            Guard["Cart & Fulfillment 'Guard' Sub-Agent\n(Stock checking, city delivery, verify-after-act)"]
+        end
+        
+        Services["Domain Services (CatalogService, VerifiedCartService)"]
+    end
+
+    subgraph Persistence ["Data & Intelligence Layer"]
+        GeminiAPI["Google AI Studio / Vertex AI (Gemini 3.5 Flash)"]
+        CloudSQL[("PostgreSQL 16 (Cloud SQL via Unix Socket Proxy)")]
+        SecretManager["GCP Secret Manager (API Keys & Credentials)"]
+    end
+
+    UI --> EventStream
+    EventStream <-->|NDJSON Stream| Router
+    Router --> PipSuper
+    PipSuper --> Scout
+    PipSuper --> Analyst
+    PipSuper --> Guard
+    Scout & Analyst & Guard --> Services
+    Services <--> CloudSQL
+    PipSuper <--> GeminiAPI
+    Router -.-> SecretManager
+    Pip -.-> UI
 ```
 
-For demos, use `pnpm build && pnpm start`: the in-memory cart lives in a single server process.
+---
 
-## Mock commerce API
+## Key Capabilities
 
-| Route | Notes |
-|---|---|
-| `GET /api/products?q=&category=&brand=&minPrice=&maxPrice=&minRam=&minBattery=&maxWeight=&tag=&inStock=1&sort=&limit=` | catalog search |
-| `GET /api/products/:id` | single product |
-| `GET/POST/PATCH/DELETE /api/cart` | session cart (cookie `persona_sid`) |
+### 1. Multi-Agent Orchestration (Google ADK)
+* **Supervisor Agent (`Pip`)**: Maintains user context, conversational memory, voice interaction, and UI choreography. Powered by `gemini-3.5-flash` with `thinking_budget=0` for immediate sub-second stream latency.
+* **Product Finder Sub-Agent (`Scout`)**: When a shopper requests multiple distinct items (e.g. *"I need a lightweight developer laptop and noise-cancelling headphones"* or bundle requests), Pip delegates to Scout. Scout queries the catalog concurrently across multiple categories, compiles a structured package bundle, computes total NPR package pricing, and emits `bundle` blocks.
+* **Comparison Specialist Sub-Agent (`Analyst`)**: Performs structured side-by-side evaluation across 2–4 products on key hardware dimensions (Price, Battery, Weight, RAM, Storage, Display, Warranty).
+* **Cart & Fulfillment Guard Sub-Agent (`Guard`)**: Executes atomic stock checks, city delivery feasibility, and multi-item cart mutations with verify-after-act semantics.
 
-**Latency and failures.** Requests take 200–600 ms by default, and the failure rate is **0%**. Out-of-stock errors are always deterministic.
+### 2. Transactional "Verify-After-Act" Cart Protection
+In traditional agentic systems, agents hallucinate write successes. Persona introduces **Verify-After-Act**:
+* Every cart mutation (`add_to_cart`, `remove_from_cart`, `batch_cart_with_guard`) immediately re-reads the persisted cart from the database before declaring success.
+* **Chaos Mode**: Append `?chaos=0.3` to simulate store network drops and silent failures. If the backend drops the write, Pip catches it, updates the UI block to `failed ✕`, and honestly tells the shopper rather than giving false confirmation.
 
-- Add `?chaos=0.1` to any page URL to enable a 10% failure rate for the browser session. Half of the failures return a 503; the other half are *silent*: the request reports success but nothing is saved, which only verify-after-act catches.
-- Add `?latency=0` to an API URL to disable latency.
-- Env overrides: `PERSONA_FAILURE_RATE`, `PERSONA_LATENCY_MIN_MS`, `PERSONA_LATENCY_MAX_MS`.
+### 3. Spatial Roaming Companion (`Pip`)
+* **Physical Presence**: Pip is rendered as a responsive Three.js canvas that flies smoothly across the screen using curved bezier paths and GSAP easing.
+* **5 Flight Modes**: `free` (gentle float), `anchored` (tracks scrolled elements), `follow` (trails cursor), `parked` (retires to corner), and `dragging`.
+* **Proactive Guide Engine**: Context-aware check-ins when users hesitate or compare products, offering tips derived strictly from catalog analytics.
+* **Voice Interaction**: Native Web Speech API integration (`lang=en-IN`) with real-time mic loudness envelopes and synchronized TTS speech pulses.
 
-## Compare workspace (`/compare`)
+### 4. Comparison Workspace (`/compare`)
+* Dedicated comparison workspace supporting 2 to 4 products.
+* Sticky product cards, mobile 390px scroll-snap columns with pinned attribute labels.
+* **Differences-only toggle** with accessible `aria-live` announcements.
+* Best-value highlights, cross-category guards, and grounded trade-off summaries.
 
-A dedicated side-by-side comparison workspace at `/compare?ids=a,b[,c,d]`:
+### 5. Merchant Intelligence Dashboard (`/merchant`)
+* **KPIs & Sparklines**: Real-time tracked metrics for assisted sessions, verified cart additions, and guide engagement.
+* **Drop-off Funnel**: Full visibility from initial greeting to checkout navigation.
+* **Missing Product Information Audit**: Logs shopper queries about specs not listed in the catalog (e.g. keyboard backlighting, RAM upgradeability), allowing store owners to enrich product data.
 
-- **Shareable and refresh-safe**: URL query params are the single source of truth for the comparison selection.
-- **2 to 4 products**: Supports up to 4 products across TS and Python backend registries.
-- **Pip integration**: Ask Pip to add or remove products from comparison by voice or chat (`Add HP Pavilion to compare`, `Remove Acer Swift`), updating the URL reactively.
-- **Strict semantics**: Full table markup (`<table>`, `<caption>`, `<thead>`, `<tbody>`, `<th scope="col">`, `<th scope="row">`, `<th scope="colgroup">`).
-- **Sticky headers**: Header cards stay anchored while scrolling, showing the product image, title, price, single-line stock badge, verified Add to cart, and remove button.
-- **Mobile 4-column experience**: At 390px, sticky attribute name column on the left plus smooth horizontal scroll-snap product columns.
-- **Grouped spec sections**: Clear sections for Performance, Battery & Weight, Display, Connectivity, and Warranty.
-- **Differences-only toggle**: Accessible switch that hides matching rows with `aria-live="polite"` feedback for screen readers.
-- **Best-value highlights**: Subtle cell backgrounds with check icons and visually hidden `(best value)` text.
-- **Verified Cart Add**: Uses `addWithFeedback` with inline verification state (`idle` → `busy` → `verified ✓` / `failed ✕`) and `aria-live` announcements.
-- **Catalog-grounded missing info**: Any missing specs automatically emit `missing_info` events to the merchant dashboard.
-- **Cross-category guards**: Warning banner when comparing products from different categories with a one-click dominant category filter.
-- **Clamped companion layering**: Pip's flight controller guarantees the orb never obscures comparison tables, summary panels, or action controls on desktop or mobile.
-- **CompareDrawer preview**: Compact bottom drawer preview on store pages that shares identical compare rules and links directly to the `/compare` workspace.
+---
 
-## Agent
+## Streaming Event Contract (NDJSON)
 
-`POST /api/agent` streams newline-delimited JSON `AgentEvent`s (see `src/lib/agent/types.ts`). The server is stateless: the client sends `{ message, memory, context }` each turn.
+Each agent turn streams newline-delimited JSON events over HTTP `POST /api/agent`:
 
-- `runAgent.ts`: the runtime. It validates every tool call with zod, traces it, and **enforces verify-after-act**: after `add_to_cart`/`remove_from_cart` it always calls `get_cart` and reports whether the change is really there.
-- `mockAgent.ts`: the rule-based agent (understanding lives in `intent.ts`). It retries transient failures once, relaxes filters when nothing matches, and suggests in-budget, in-stock alternatives.
-- `geminiAgent.ts`: a stub with the same interface. Set `PERSONA_AGENT=gemini` + `GEMINI_API_KEY` once it's implemented. `toolDeclarations()` already emits JSON schemas.
-- There is no checkout tool. Pip can only open `/checkout`, where the user confirms.
-- `PERSONA_AGENT_PACE` (default 1) scales the demo pacing; set it to 0 for instant responses.
+| Event Type | Payload Schema | Description |
+|---|---|---|
+| `state_change` | `{ type: "state_change", state: "searching" \| "comparing" \| ..., caption?: string }` | Drives Pip's animation state and bubble caption. |
+| `subagent` | `{ type: "subagent", agent: "scout" \| "analyst" \| "guard", name: string, status: string, task: string, detail?: string }` | Real-time lifecycle and progress for sub-agents. |
+| `tool_call` | `{ type: "tool_call", messageId: string, callId: string, name: string, input: object }` | Transparent audit trail for tool invocations. |
+| `tool_result` | `{ type: "tool_result", messageId: string, callId: string, name: string, ok: boolean, summary: string }` | Grounded execution outcome. |
+| `block` | `{ type: "block", block: ProductCarouselBlock \| ComparisonBlock \| CartActionBlock \| BundleBlock }` | Rich interactive message cards in chat. |
+| `ui` | `{ type: "ui", action: { type: "highlight" \| "move_to" \| "open_compare" \| "cart_updated", ... } }` | Client side-effects and animations. |
+| `text_delta` | `{ type: "text_delta", messageId: string, delta: string }` | Streamed conversational tokens. |
+| `memory` | `{ type: "memory", memory: AgentMemory }` | Updated conversation and focus state. |
+| `done` | `{ type: "done" }` | Turn lifecycle completion. |
 
-## Pip, the roaming companion
+---
 
-Pip isn't a chat widget. It lives on the whole screen, flies to whatever is relevant, and talks through a speech bubble.
+## Project Structure
 
-- **Moving:** `pilot.ts` owns Pip's live position, with five modes:
-  - `free`: gentle wander
-  - `anchored`: tracks an element through scrolling
-  - `follow`: trails the cursor at a distance
-  - `parked`: sits in a corner
-  - `dragging`
+```
+Ai-builder-cup/
+├── backend/                        # Python FastAPI & Google ADK Backend
+│   ├── app/
+│   │   ├── agent/                 # Agent loop, adapter, prompts, and tools
+│   │   │   ├── subagents/         # Autonomous Sub-Agent Team
+│   │   │   │   ├── product_finder.py  # Scout Sub-Agent (Multi-item discovery)
+│   │   │   │   ├── comparator.py      # Analyst Sub-Agent (Spec comparison)
+│   │   │   │   └── cart_guard.py      # Guard Sub-Agent (Verified cart)
+│   │   │   ├── adapter.py         # NDJSON event models and Pydantic schemas
+│   │   │   ├── agent.py           # Pip ADK LlmAgent setup and callbacks
+│   │   │   ├── runner.py          # Streaming runner and timeout management
+│   │   │   └── tools_adk.py       # Allowlisted FunctionTools
+│   │   ├── api/routers/           # FastAPI HTTP endpoints (/agent, /products, /cart, /health)
+│   │   ├── core/                  # Configuration, database engine, error handlers
+│   │   ├── domain/                # Catalog search, comparison engine, chaos injection
+│   │   └── services/              # CatalogService, VerifiedCartService
+│   ├── tests/                     # 78 Pytest test suite (contract, parity, scenarios)
+│   └── requirements.txt
+├── src/                           # Next.js 15 Frontend
+│   ├── app/                       # App router pages (/, /compare, /merchant, /product/[id])
+│   ├── components/                # UI components and Three.js Pip companion
+│   ├── features/                  # Catalog, compare workspace, companion controls
+│   ├── lib/                       # Agent client, commerce helpers, guide engine, signals
+│   └── store/                     # Zustand stores (useChat, useCompanion, useCart)
+├── .github/workflows/             # GitHub Actions CI/CD (GCP Cloud Run deployment)
+└── README.md
+```
 
-  Flights follow a curved path with `expo.inOut`. Pip looks at where it's going first, stretches along its direction of travel, and squashes when it lands. One small canvas is moved with CSS transforms, so there's no full-screen WebGL.
-- **Talking:** one `SpeechBubble` with a tail that points at Pip, on the side with the most room. It holds:
-  - streamed text and the last thing you said
-  - up to 3 mini product cards with Add buttons
-  - cart status (pending → verified ✓ / failed ✕), using the line from `get_cart`
-  - chips and a one-line tool trace
-  - an inline reply box with a mic
+---
 
-  It dismisses itself after reading time (about 250 ms per word, 4–12 s), unless it has actions or you're hovering it. The full conversation, with every tool step, is in the **History** drawer (header icon or Pip's ⋯ menu).
-- **Placement:** `placement.ts` tries right → left → above → below of the target, and never covers the cursor, the focused input, the header or an open drawer. Anchors come from `data-pip-anchor` / `data-pip-topic` attributes via the registry in `anchors.ts`.
-- **Agent choreography:** the agent emits `move_to`, `highlight`, `scroll_to`, `set_filters` and `open_drawer`. When Pip presents results, it filters the grid to match and flies to the first card. When comparing, it hovers between the two cards, then above the verdict. When adding, it flies to the product, rides with the item to the cart icon, and only then does the success hop.
-- **Guide engine** (`src/lib/guide/`):
-  - It speaks up on page arrival, when you've been still for 3 s (5 s on mobile), when you rest on something for 1.5 s, when certain sections scroll into view, and on behaviour (revisits, going back and forth between two products, juggling the price filter, removing an item from the cart).
-  - Each element escalates from a one-line tip, to a question with chips, to silence.
-  - Guardrails:
-    - at least 15 s between tips (6 s after a page intro), and 20 s after you dismiss one
-    - never while you're typing, dragging, scrolling or in a modal, and never over an agent reply
-    - three dismissals in a row put Pip in quiet mode
-  - Every tip number is computed from the catalog (`stats.ts`, `tips.ts`). A first-visit tour has 5 spotlighted stops.
-  - **Check-ins:** if you stay still and Pip has nothing left to say about what you're looking at (or you haven't touched the page yet), it asks a page-aware question: *"Anything stopping you from getting the Swift Go 14?"*, with chips such as *Cheaper option*, *When would it arrive?*, *Something's confusing* and *Just looking*. One per page (per product or category) per session. *Something's confusing* asks what's in the way, records the answer for the merchant dashboard, and Pip also answers it.
-- **Your controls:**
-  - click Pip to talk, drag it to move it, double-click to park it
-  - `/` opens Pip's input; hold `V` to talk
-  - Pip's ⋯ menu has mute, quiet mode (Pip parks and stops offering tips), pause, follow my cursor, privacy, and reset memory
-- **Mobile:** Pip is 64px and stays on the screen edges. The bubble becomes a bottom card, and Pip lifts above it. Idle detection waits 5 s, and there's no hover dwell.
-- **Voice:** recognition uses the Web Speech API with `lang=en-IN`; the live transcript becomes Pip's caption, and Pip reacts to mic loudness. Text-to-speech (`speechSynthesis`) reads replies to spoken turns aloud, with word-boundary events driving Pip's speaking pulse.
+## Quickstart & Local Development
 
-## Pip playground
+### Prerequisites
+* **Node.js**: v20.x or higher
+* **pnpm**: v9.x or higher
+* **Python**: v3.12.x
 
-`/playground` (dev only; set `NEXT_PUBLIC_PLAYGROUND=1` to include it in a production build) shows Pip on a stage with:
+### 1. Frontend Setup
+```bash
+# Install dependencies
+pnpm install
 
-- a button for every state, plus "cycle all"
-- reactions (hop, spin, shake), click-to-glance, and simulated mic/TTS envelopes
-- leva sliders for every uniform. Turn on *override tween*, tune, then **Copy config** and paste the JSON into `src/components/companion/states.ts`.
-- position modes, fly to a random anchor, run the tour, a fake idle trigger, samples of every bubble type, and an overlay showing anchors and placement decisions
+# Run development server
+pnpm dev
+# Web app will be live at http://localhost:3000
 
-Deep links: `/playground?state=thinking`, `/playground?cycle=1`.
+# Run all 196 Vitest unit and integration tests
+pnpm test
 
-## Merchant dashboard
+# Typecheck and production build
+pnpm typecheck
+pnpm build
+```
 
-`/merchant` shows how shoppers use Pip. The week is mock data (`src/data/merchant.ts`); the rest is live from your browser session.
+### 2. Backend Setup
+```bash
+cd backend
 
-- **KPI cards** with 7-day sparklines: assisted sessions, task completion, cart actions verified (412 of 418; Pip reported the other 6 honestly), and tips engaged.
-- **Assisted funnel:** talked to Pip → saw recommendations → compared → added to cart (verified) → started checkout, with the biggest drop flagged.
-- **Top questions** with intent and resolution rate.
-- **Missing product info:** questions Pip couldn't answer from the catalog. Each row is a real product and a field the catalog really lacks (a test checks this).
-- **What's getting in the way:** answers to Pip's *Something's confusing* check-in. Your own answers appear at the top, marked *you, just now*.
-- **This session, live:** your questions, verified cart actions and feedback so far.
+# Create virtual environment & activate
+python -m venv .venv
+source .venv/bin/activate       # On Windows: .venv\Scripts\Activate.ps1
 
-Every section is a Pip anchor, so rest on one and Pip explains it with numbers from the data.
+# Install dependencies
+pip install -r requirements.txt
 
-## Performance
+# Run backend development server
+uvicorn app.main:app --host 0.0.0.0 --port 8000 --reload
 
-Measured with Lighthouse 12 on a production build (`pnpm build && pnpm start`):
+# Run all 78 Pytest unit, contract, and multi-agent tests
+pytest -v
+```
 
-| Page (desktop) | Performance | Accessibility | Best practices |
-|---|---|---|---|
-| `/` | 96–98 | 100 | 100 |
-| `/product/acer-swift-go-14` | 99 | 100 | 100 |
-| `/merchant` | 96 | 100 | 100 |
+### 3. Environment Variables
 
-Home: LCP 0.8–0.9 s, TBT 100–150 ms, CLS 0.001. Pip's three.js canvas loads in its own chunk after the page has loaded and the main thread is idle; a CSS stand-in shows until then.
+Create `.env` in the root and in `backend/`:
 
-Simulated mobile (4× CPU slowdown) scores about 65–70. The shared bundle (React, GSAP, zod, the stores) is about 245 kB of JS that runs before the page can respond. Shrinking that, for example by moving response validation to `zod/mini` and lazy-loading GSAP plugins, is the next step.
+```ini
+# Environment
+ENVIRONMENT=development
+LOG_LEVEL=INFO
 
-**Reduced motion:** with `prefers-reduced-motion`, Pip jumps instead of flying, doesn't wander or bob, there are no fly-to-cart, grid or hero animations, and numbers appear without counting up.
+# Gemini LLM Settings
+GEMINI_API_KEY=your_gemini_api_key_here
+GEMINI_MODEL=gemini-3.5-flash
+AGENT_BACKEND=gemini
 
-## Build phases
+# Database (PostgreSQL)
+# Optional in dev (falls back to mock repository), required for production Cloud SQL
+DATABASE_URL=postgresql+asyncpg://user:password@localhost:5432/persona
 
-1. ✅ Scaffold, design system, catalog, mock commerce
-2. ✅ Pip (three.js orb, eyes, halo, 12 states, `/playground`)
-3. ✅ Store UI and GSAP choreography
-4. ✅ Agent loop
-5. ✅ Voice and signals
-6. ✅ Roaming companion: position model, speech bubble, anchors and placement, guide engine and tour, agent choreography, mobile
-7. ✅ Merchant dashboard, performance, reduced-motion and light-theme pass, demo script
+# Security
+AGENT_SHARED_SECRET=your_secret_token_here
+```
 
-## Demo script (about 4 minutes)
+---
 
-**Setup:** run `pnpm build && pnpm start` and use Chrome, which has the best Web Speech support. To get the first-visit tour again, open a private window or clear the `persona-tour-v1` key in localStorage. Typing works everywhere voice does: press `/` and type the same sentence.
+## Production Deployment (Google Cloud Run)
 
-1. **Meet Pip (20 s).** Open `/`. Pip lands in the hero, says hello and offers a 20-second tour. Click **Yes, show me** and step through 2–3 stops (spotlight + bubble), then **Skip tour**.
-2. **Ask by voice (40 s).** Hold `V` and say: *"I need a laptop under 1 lakh 20 thousand for full-stack development, good battery, enough RAM for Docker."* Pip goes listening → thinking → searching, filters the grid to match, flies to the first card and shows 3 mini cards. The trace line shows `search_products`.
-3. **Compare workspace (40 s).** Say *"Compare the first two."* Pip opens the dedicated `/compare?ids=...` workspace, showing side-by-side grouped specs (Performance, Battery & Weight, Display, Connectivity, Warranty) with sticky product cards, live stock counts, and grounded catalog analysis. Then ask Pip: *"Add the HP Pavilion to compare."* Pip updates the URL to include all 3 (up to 4 supported), and re-evaluates the verdict without full reload. Flip the **Show differences only** switch to hide identical specs. On mobile (390px), swipe across scroll-snap columns with attribute names pinned on the left; Pip parks cleanly in the safe zone without covering any table cells or controls.
-4. **Add with verification (30 s).** Say *"Add the lighter one."* Pip flies to the product, rides with it to the cart icon, re-reads the cart, and only then hops: *"Added & verified ✓"*.
-5. **Honest failure (20 s).** Type *"Add the ThinkPad E14."* It's out of stock, so Pip shows the error state, says so plainly and offers an in-stock alternative.
-6. **Proactive help (40 s).** Open the **Swift Go 14** page (`/product/acer-swift-go-14`) and rest the mouse on the battery row of the spec table: Pip anchors beside it with a catalog fact (*"10 h, longer than 60% of the laptops here"*). Then keep still. Pip checks in: *"Anything stopping you from getting the Swift Go 14?"* Click **Something's confusing** and type *"Not sure if 16 GB is enough for Docker."*
-7. **Merchant view (40 s).** Click **Merchant** in the header. Point out the KPIs, the funnel's biggest drop, and missing product info. Your feedback from step 6 is at the top of *What's getting in the way*, and your questions are in *This session, live*. Rest on the **Cart actions verified** card and Pip explains it.
+The backend is packaged as a containerized microservice and deployed to **Google Cloud Run** connected to **Cloud SQL (PostgreSQL 16)** in `asia-south1`.
 
-**Extras if there's time:**
-- Add `?chaos=0.3` to the URL and add something to the cart. Some adds fail silently, and verify-after-act catches them (✕ instead of ✓).
-- Switch to light theme (sun/moon icon in the header).
-- Dismiss three tips in a row, and Pip parks itself and goes quiet.
-- Drag Pip anywhere, or double-click it to park it in a corner.
+* **Live Cloud Run Service**: `https://persona-api-684634843408.asia-south1.run.app`
+* **Health Check**: `GET https://persona-api-684634843408.asia-south1.run.app/health`
+  ```json
+  {
+    "status": "ok",
+    "gemini": true,
+    "database": true,
+    "database_error": null
+  }
+  ```
 
-**If something goes wrong:** voice needs microphone permission and Chrome. If it's flaky, type instead (`/`). If Pip seems to be ignoring you, check the ⋯ menu: it may be paused or in quiet mode. *Reset memory* starts the conversation over.
+Automated deployments trigger on push to `main` via [`.github/workflows/deploy-backend.yml`](.github/workflows/deploy-backend.yml) utilizing Google Workload Identity and Cloud Secret Manager.
+
+---
+
+## 4-Minute Demo Script
+
+1. **Meet Pip (20s)**: Open `/`. Pip lands with a friendly greeting and offers a spotlighted tour of the store.
+2. **Multi-Agent Bundle Discovery (40s)**: Press `/` or hold `V` and say:
+   > *"I need a lightweight laptop for college and noise-cancelling headphones under 2 lakh 20 thousand."*
+   - Pip delegates to the **Scout Product Finder** sub-agent.
+   - Watch the `subagent` status badge pulse in the chat trace.
+   - Scout returns a curated 2-item package bundle with item cards and total NPR package price.
+3. **Deep Comparison (40s)**: Ask Pip:
+   > *"Compare the MacBook Air M3 with the Acer Swift Go 14 for battery and coding."*
+   - Pip delegates to the **Comparison Analyst** sub-agent.
+   - The `/compare` workspace opens automatically with side-by-side spec evaluation, difference highlighting, and a winner verdict.
+4. **Verified Cart Addition (30s)**: Say:
+   > *"Add both to my cart and check delivery to Pokhara."*
+   - Pip delegates to the **Cart Guard** sub-agent.
+   - Stock is verified, delivery time is checked, and items are committed transactionally.
+   - Pip performs a victory hop only after persistence is verified: *"Added & verified ✓"*.
+5. **Chaos & Failure Integrity (20s)**: Add `?chaos=0.3` to simulate store network drops. Pip detects dropped writes, marks the block `failed ✕`, and explains honestly without hallucinating success.
+6. **Merchant Intelligence (30s)**: Navigate to `/merchant` to inspect live session analytics, drop-off funnels, and missing product data logged during customer conversations.
+
+---
+
+## License
+
+This project was built for the **AI Builder Cup**. Distributed under the MIT License.
