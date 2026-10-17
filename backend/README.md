@@ -1,175 +1,220 @@
-# Persona backend (FastAPI)
+# Persona Backend (FastAPI & Google ADK)
 
-Production-grade Python API for Pip and the commerce catalog, cart, and tool layer.
+Production-grade Python API for Pip and the autonomous multi-agent shopping team, commerce catalog, cart engine, and tool execution layer.
 
-## Layout
+---
+
+## Directory Layout
 
 ```
 backend/
   app/
-    agent/                 ADK Pip agent, event adapter, runner & choreography
-      adapter.py           AgentEvent schemas (11 types), NDJSON serializer, memory models
-      agent.py             Pip LlmAgent, callbacks (before/after/error), tool allowlist
-      prompts.py           Pip system instructions, tone, grounding & guardrails
-      runner.py            Stateless SessionProvider, event streaming engine
-      tools_adk.py         FunctionTool wrappers around tool registry + ui_action & missing_info
+    agent/                 # Google ADK Pip agent, event adapter, runner & choreography
+      subagents/           # Autonomous Specialized Sub-Agent Team
+        product_finder.py  # Scout Sub-Agent: Concurrent multi-product discovery & bundle pricing
+        comparator.py      # Analyst Sub-Agent: Side-by-side spec scoring & trade-off matrices
+        cart_guard.py      # Guard Sub-Agent: Stock verification & transactional batch cart additions
+      adapter.py           # AgentEvent schemas (12 types), BundleBlock, NDJSON serializer
+      agent.py             # Pip LlmAgent supervisor, callbacks (before/after/error), tool allowlist
+      prompts.py           # Pip system instructions, multi-agent delegation, tone & guardrails
+      runner.py            # Ephemeral session provider & real-time event streaming engine
+      tools_adk.py         # ADK FunctionTool declarations (standard tools + subagent tools)
     api/
-      dependencies.py      FastAPI Depends providers for repos, services, and agent
-      routers/             health (/healthz, /readyz), products, cart, agent (/api/agent)
+      dependencies.py      # FastAPI Depends providers for repos, services, and agent
+      routers/             # health (/health), products, cart, orders, merchant, agent (/api/agent)
     core/
-      config.py            Settings (pydantic-settings, env / .env)
-      errors.py            Uniform JSON error responses ({"error": {"code", "message"}})
-      logging.py           Structured JSON logging with request ID context
-      middleware.py        RequestIDMiddleware for distributed tracing
+      config.py            # Settings (pydantic-settings, environment variables)
+      database.py          # SQLAlchemy AsyncSession & asyncpg connection lifecycle
+      errors.py            # Uniform JSON error handlers ({"error": {"code", "message"}})
+      logging.py           # Structured JSON logging with request ID context
+      middleware.py        # RequestIDMiddleware for distributed tracing
     data/
-      products.json        Catalog single source of truth
+      products.json        # Seed catalog data
     domain/
-      catalog.py           Pure Python catalog search, filtering, and scoring
-      chaos.py             Chaos & latency simulation (transient 503 and silent drop)
-      compare.py           Catalog-grounded product comparisons and verdicts
-      delivery.py          Logistics rules (Express vs Standard delivery)
-      format.py            NPR currency (South Asian commas), weight, and storage formatting
-      models.py            Pydantic v2 schemas for all commerce entities
+      catalog.py           # In-memory tokenized search, filtering, and scoring
+      chaos.py             # Chaos & latency simulation (transient 503 and silent drops)
+      compare.py           # Catalog-grounded product comparisons and weighted scoring
+      delivery.py          # Logistics rules (Express vs Standard delivery per city)
+      format.py            # NPR currency formatting (South Asian commas), weight, storage
+      models.py            # Pydantic v2 schemas for all commerce and cart entities
     repositories/
-      cart.py              CartRepository protocol + thread-safe InMemoryCartRepository
+      cart.py              # CartRepository protocol + thread-safe InMemoryCartRepository
     services/
-      cart.py              CartService orchestrator with stock checks
-      catalog.py           CatalogService orchestrator
-      verified_cart.py     VerifiedCartService enforcing verify-after-act
+      cart.py              # CartService orchestrator with stock checks
+      catalog.py           # CatalogService orchestrator
+      verified_cart.py     # VerifiedCartService enforcing verify-after-act
     tools/
-      executor.py          Tool executor and Gemini function declaration generator
-      models.py            Tool context, definitions, and Pydantic input/output schemas
-      registry.py          Agent tools registry (search, compare, cart, stock, delivery)
-    main.py                FastAPI application factory (`create_app`) & uvicorn entrypoint
+      executor.py          # Tool executor and schema generator
+      models.py            # Tool context, definitions, and schemas
+      registry.py          # Standard agent tools registry
+    main.py                # FastAPI application factory (`create_app`) & uvicorn entrypoint
   tests/
-    fixtures/              Catalog, parity fixtures, and agent_events_schema.json
-    conftest.py            Pytest fixtures and test client setup
-    scripted_llm.py        Scripted LLM stub for deterministic ADK test scenarios
-    test_agent_api.py      Agent API rate limiting, fallback, and streaming tests
-    test_agent_contract.py Schema contract parity tests against TS schema fixture
-    test_agent_scenarios.py 6 end-to-end scripted scenarios (search, compare, cart, chaos, missing info)
-    test_agent_smoke.py    Live Gemini API smoke test (opt-in via GEMINI_API_KEY)
-    test_api.py            HTTP endpoint integration tests
-    test_domain.py         Domain logic unit tests
-    test_parity.py         Parity tests asserting Python matches TS outputs
-    test_services.py       Service orchestration, stock rules, and concurrency tests
-    test_tools.py          Tool registry and execution tests
-  Dockerfile               Multi-stage container (production & test runner)
-  Makefile                 Workflow tasks (install, run, test, lint, typecheck, docker)
-  pyproject.toml           Ruff, mypy strict, and pytest coverage configuration
+    fixtures/              # Catalog, parity fixtures, and agent_events_schema.json
+    conftest.py            # Pytest fixtures and test client setup
+    scripted_llm.py        # Scripted LLM stub for deterministic ADK test scenarios
+    test_agent_api.py      # Agent API rate limiting, fallback, and streaming tests
+    test_agent_contract.py # Schema contract parity tests against TS schema fixture
+    test_agent_scenarios.py# End-to-end scripted scenarios (search, compare, cart, chaos, missing info)
+    test_agent_smoke.py    # Live Gemini API smoke test (opt-in via GEMINI_API_KEY)
+    test_api.py            # HTTP endpoint integration tests
+    test_domain.py         # Domain logic unit tests
+    test_multi_agent.py    # Multi-agent orchestration unit & turn execution tests
+    test_parity.py         # Parity tests asserting Python matches TS outputs
+    test_services.py       # Service orchestration, stock rules, and concurrency tests
+    test_tools.py          # Tool registry and execution tests
+  Dockerfile               # Multi-stage production container
+  pyproject.toml           # Ruff, mypy strict, and pytest coverage configuration
+  requirements.txt         # Production dependencies
 ```
 
-## Run Locally
+---
 
-### 1. Using Python Virtual Environment
-```bash
-cd backend
-python -m venv .venv
-source .venv/bin/activate      # Windows: .venv\Scripts\activate
-pip install -r requirements-dev.txt
-cp .env.example .env          # Set GEMINI_API_KEY if testing live agent
-uvicorn app.main:app --reload --port 8080
-```
+## Multi-Agent Architecture (Google ADK)
 
-### 2. Using Docker
-```bash
-cd backend
-docker build -t persona-api .
-docker run -p 8080:8080 -e GEMINI_API_KEY="your-key" persona-api
-```
+Persona uses Google ADK (`google-adk==2.12.0`) to orchestrate a team of autonomous agents:
 
-Interactive API documentation is available at `http://localhost:8080/docs`.
+### 1. Supervisor Agent (`Pip`)
+* **Role**: Primary conversational interface, tone controller, and UI choreography orchestrator.
+* **LLM Engine**: Powered by Google Gemini Flash (`gemini-3.5-flash`) with `thinking_budget=0` for sub-second reactive streaming latency.
+* **Delegation Logic**:
+  * Single category query &rarr; Direct catalog tools (`search_products`).
+  * Cross-category or multi-item requests (e.g. *"laptop and noise-cancelling headphones"*) &rarr; Delegates to **Product Finder (`Scout`)**.
+  * Deep side-by-side technical evaluations &rarr; Delegates to **Comparison Specialist (`Analyst`)**.
+  * Batch additions with stock verification &rarr; Delegates to **Cart Guard (`Guard`)**.
 
-## Running Next.js Frontend with Python Backend Agent
+### 2. Autonomous Sub-Agents
+* **`scout_multiple_products` (Scout)**:
+  * Accepts structured search specifications for multiple slots (e.g. `[{"label": "Laptop", "category": "laptops", "q": "developer"}, {"label": "Audio", "category": "headphones", "q": "travel"}]`).
+  * Concurrently queries the catalog for each slot with fallback query relaxation.
+  * Constructs a curated package bundle, calculates total package price in NPR, and emits `bundle` blocks.
+* **`analyze_comparison` (Analyst)**:
+  * Evaluates 2–4 products side-by-side across dimensions (Price, Battery, Weight, RAM, Storage, Display, Warranty).
+  * Computes weighted scores based on user priorities and declares a grounded winner.
+* **`batch_cart_with_guard` (Guard)**:
+  * Performs pre-mutation stock checks for each requested item.
+  * Executes atomic cart additions through `VerifiedCartService`.
+  * Guarantees zero dropped writes via verify-after-act.
 
-To proxy the Next.js frontend agent calls to the Python FastAPI backend:
+---
 
-1. In `.env.local` (or root `.env`):
-   ```env
-   PERSONA_AGENT=gemini
-   BACKEND_URL=http://localhost:8080
-   ```
-2. Start the backend:
-   ```bash
-   uvicorn app.main:app --port 8080
-   ```
-3. Start the Next.js dev server:
-   ```bash
-   pnpm dev
-   ```
+## Streaming Event Contract (NDJSON)
 
-When `PERSONA_AGENT=gemini` and `BACKEND_URL` is set, `src/app/api/agent/route.ts` forwards user turns to `POST ${BACKEND_URL}/api/agent` and streams newline-delimited `AgentEvent` JSON directly to Pip. If the backend is unavailable or unconfigured, it transparently falls back to `mockAgent`.
+Each agent turn streams newline-delimited JSON `AgentEvent` objects:
 
-## ADK Agent Design & Event Mapping
-
-Pip is implemented using Google ADK (`google-adk==2.12.0`) with `BaseLlm` and `FunctionTool`.
-
-### Event Mapping Contract
-
-| Google ADK Event / Action | Emitted NDJSON `AgentEvent` | Notes / Payload |
+| Event Type | Model | Description |
 |---|---|---|
-| Turn start | `state_change` | `{state: "thinking", caption: "Thinking…"}` |
-| Model text chunk | `message_start`, `text_delta` | Emitted lazily on first chunk, followed by incremental deltas |
-| Tool invocation (before callback) | `state_change`, `tool_call` | State moves to tool state (`searching`, `comparing`, `acting`) |
-| Read tool completion | `tool_result` | Summarized text, execution duration `durationMs`, `ok: true` |
-| `search_products` result | `block` (`product_carousel`), `ui` (`highlight`) | Adapter generates carousel block with product IDs |
-| `compare_products` result | `block` (`comparison`), `ui` (`open_compare`) | Adapter generates grounded comparison table & verdict |
-| `add_to_cart` / `remove_from_cart` start | `block` (`cart_action`, status=`pending`) | Emitted before mutation acts |
-| `add_to_cart` verified result | `block` (`cart_action`, status=`verified`), `ui` (`cart_updated`) | Re-read cart verification passed |
-| `add_to_cart` failed / silent chaos | `block` (`cart_action`, status=`failed`), correction `text_delta` | Verified outcome honesty guardrail |
-| `record_missing_info` call | `missing_info` | `{field, productId, question?}` for merchant dashboard |
-| `ui_action` call | `ui` | Allowed kinds: `highlight`, `move_to`, `scroll_to`, `set_filters`, etc. |
-| Tool error / retry | `tool_result` (`ok: false`) | Auto-retries read tools 1x on `TRANSIENT`; cart mutations are never retried |
-| Turn finish | `memory`, `state_change`, `done` | `state_change` settles to `success` or `idle`; `done` is always final |
+| `state_change` | `StateChangeEvent` | State transition (`thinking`, `searching`, `comparing`, `acting`, `success`, `error`, `idle`) with caption. |
+| `subagent` | `SubAgentEvent` | Subagent lifecycle (`scout`, `analyst`, `guard`) with status, task description, and result count. |
+| `message_start` | `MessageStartEvent` | Marks beginning of an assistant message stream. |
+| `text_delta` | `TextDeltaEvent` | Streamed text chunk from the language model. |
+| `tool_call` | `ToolCallEvent` | Tool invocation with call ID, tool name, and input arguments. |
+| `tool_result` | `ToolResultEvent` | Execution outcome with `ok` boolean, duration, and human-readable summary. |
+| `block` | `BlockEvent` | Rich interactive message card (`product_carousel`, `comparison`, `cart_action`, `clarify`, `bundle`). |
+| `ui` | `UiEvent` | Client-side visual action (`highlight`, `move_to`, `scroll_to`, `set_filters`, `open_drawer`, `open_compare`, `cart_updated`, `navigate`). |
+| `missing_info` | `MissingInfoEvent` | Records unlisted product specs requested by shoppers for the merchant dashboard. |
+| `memory` | `MemoryEvent` | Updated client-held turn memory (focus product, result IDs, compared IDs). |
+| `error` | `ErrorEvent` | Emitted when an unrecoverable turn exception occurs. |
+| `done` | `DoneEvent` | Concludes the turn stream. |
 
-### Guardrails Enforced in Code
-- **Verify-After-Act**: Add/remove operations pass through `VerifiedCartService` which re-reads persistence. The model cannot hallucinate success if verification fails; code appends a factual correction.
-- **No Checkout Tool**: Explicitly excluded from tool registry and prompt declarations.
-- **Grounded Facts**: All specs and stock come strictly from catalog tools. Unknown facts trigger `record_missing_info` and emit `missing_info` events to the merchant dashboard.
-- **Tool Cap**: Max 8 tool invocations per turn.
-- **Retry Discipline**: Retries apply exclusively to read tools encountering `TRANSIENT` errors.
+---
 
-## Test and Verification
+## Core Guardrails Enforced in Code
 
-All quality checks run cleanly locally or inside Docker:
+1. **Verify-After-Act**: Add and remove mutations pass through `VerifiedCartService` which re-reads database persistence. If a write is dropped or rejected, the model is barred from claiming success, and a factual correction is emitted.
+2. **Strictly No Checkout Tool**: Pip cannot complete purchases or charge money. If the user wants to buy, Pip uses `ui_action(kind="navigate", payload={"to": "/checkout"})`.
+3. **Grounded Spec Integrity**: All hardware specifications, stock levels, and NPR prices come strictly from tools. Unknown facts trigger `record_missing_info` rather than hallucinations.
+4. **Tool-Call Cap**: Hard cap of 8 tool invocations per turn to prevent infinite loops. Subagents execute compound multi-item searches within a single tool call slot.
+5. **Read Retry Discipline**: Automated single retry applies exclusively to read operations on `TRANSIENT` errors; mutating cart writes are never blindly retried.
+
+---
+
+## Running Locally
+
+### 1. Python Environment Setup
+```bash
+cd backend
+
+# Create virtual environment
+python -m venv .venv
+
+# Activate virtual environment
+source .venv/bin/activate       # On Windows: .venv\Scripts\Activate.ps1
+
+# Install dependencies
+pip install -r requirements.txt
+
+# Start local API server
+uvicorn app.main:app --host 0.0.0.0 --port 8000 --reload
+```
+
+Interactive OpenAPI documentation is available at `http://localhost:8000/docs`.
+
+### 2. Environment Variables
+
+Create `.env` in the `backend/` directory:
+
+```ini
+ENVIRONMENT=development
+LOG_LEVEL=INFO
+
+# Gemini Configuration
+GEMINI_API_KEY=your_gemini_api_key_here
+GEMINI_MODEL=gemini-3.5-flash
+AGENT_BACKEND=gemini
+
+# Database (PostgreSQL)
+# Optional in dev (falls back to mock repository), required for production
+DATABASE_URL=postgresql+asyncpg://user:password@localhost:5432/persona
+
+# Security
+AGENT_SHARED_SECRET=your_secret_token_here
+```
+
+### 3. Running with Next.js Frontend
+
+To connect the Next.js frontend to the Python backend:
+
+In your root `.env`:
+```env
+BACKEND_URL=http://localhost:8000
+```
+
+`src/app/api/agent/route.ts` proxies user turns directly to `POST ${BACKEND_URL}/api/agent` and streams newline-delimited events to the browser.
+
+---
+
+## Testing & Quality Assurance
+
+Run the test suite:
 
 ```bash
-# Run full test suite with coverage (90%+ overall)
-pytest --cov=app/agent --cov=app/domain --cov=app/services
+# Run all unit, contract, and multi-agent tests
+pytest -v
 
-# Lint and check formatting with Ruff
-ruff check .
-ruff format --check .
+# Run with test coverage report (96% domain coverage)
+pytest --cov=app/domain --cov=app/services --cov-report=term-missing
 
-# Static type check in strict mode
+# Run specific multi-agent tests
+pytest tests/test_multi_agent.py -v
+
+# Static type checking
 mypy app tests
 
-# Run all checks in Docker
-docker run --rm -v "${pwd}\backend:/app" persona-backend-test pytest
-docker run --rm -v "${pwd}\backend:/app" persona-backend-test ruff check .
-docker run --rm -v "${pwd}\backend:/app" persona-backend-test mypy app tests
+# Linting with Ruff
+ruff check .
 ```
 
-## API Routes
+---
+
+## API Endpoints
 
 | Method | Route | Description | Query / Body | Success Response | Error Codes |
 |---|---|---|---|---|---|
-| `GET` | `/healthz` | Liveness check | None | `{"status": "ok", "gemini": bool}` | - |
-| `GET` | `/readyz` | Readiness check | None | `{"status": "ok", "catalog_loaded": bool}` | - |
-| `GET` | `/api/products` | Catalog search with filters | `?q=&category=&brand=&minPrice=&maxPrice=&minRam=&minBattery=&maxWeight=&tag=&inStock=1&sort=&limit=&chaos=&latency=` | `{"products": [...], "total": int, "tookMs": int}` | `INVALID_INPUT`, `TRANSIENT` |
+| `GET` | `/health` | Health and readiness check | None | `{"status": "ok", "gemini": bool, "database": bool}` | - |
+| `GET` | `/api/products` | Catalog search with filters | `?q=&category=&brand=&minPrice=&maxPrice=&sort=&limit=&chaos=` | `{"products": [...], "total": int, "tookMs": int}` | `INVALID_INPUT`, `TRANSIENT` |
 | `GET` | `/api/products/{id}` | Single product lookup | `?chaos=&latency=` | `{"product": Product}` | `NOT_FOUND`, `TRANSIENT` |
-| `GET` | `/api/cart` | Get session cart | Cookie: `persona_sid` (auto-generated if missing) | `{"cart": Cart}` | `TRANSIENT` |
-| `POST` | `/api/cart` | Add product to cart | `{"productId": str, "qty": int}` | `{"cart": Cart}` | `NOT_FOUND`, `OUT_OF_STOCK`, `INSUFFICIENT_STOCK`, `INVALID_INPUT`, `TRANSIENT` |
-| `PATCH` | `/api/cart` | Update item quantity | `{"productId": str, "qty": int}` (0 removes item) | `{"cart": Cart}` | `NOT_IN_CART`, `INSUFFICIENT_STOCK`, `INVALID_INPUT`, `TRANSIENT` |
-| `DELETE` | `/api/cart` | Remove item or clear cart | `?productId=...` (clears cart if omitted) | `{"cart": Cart}` | `NOT_IN_CART`, `TRANSIENT` |
-| `POST` | `/api/agent` | Pip agent turn (NDJSON stream) | `{"message": str, "memory": AgentMemory, "context": AgentContext}` | NDJSON `AgentEvent` stream | `SERVICE_UNAVAILABLE`, `RATE_LIMIT_EXCEEDED`, `INVALID_INPUT` |
-
-Errors always follow the uniform error structure:
-```json
-{
-  "error": {
-    "code": "NOT_FOUND",
-    "message": "No product with id \"xyz\"."
-  }
-}
-```
+| `GET` | `/api/cart` | Get session cart | Cookie: `persona_sid` | `{"cart": Cart}` | `TRANSIENT` |
+| `POST` | `/api/cart` | Add product to cart | `{"productId": str, "qty": int}` | `{"cart": Cart}` | `NOT_FOUND`, `OUT_OF_STOCK`, `TRANSIENT` |
+| `PATCH` | `/api/cart` | Update item quantity | `{"productId": str, "qty": int}` | `{"cart": Cart}` | `NOT_IN_CART`, `TRANSIENT` |
+| `DELETE` | `/api/cart` | Remove item or clear cart | `?productId=...` | `{"cart": Cart}` | `NOT_IN_CART`, `TRANSIENT` |
+| `POST` | `/api/agent` | Pip agent turn (NDJSON stream) | `{"message": str, "memory": AgentMemory, "context": AgentContext}` | NDJSON `AgentEvent` stream | `RATE_LIMIT_EXCEEDED`, `INVALID_INPUT` |
