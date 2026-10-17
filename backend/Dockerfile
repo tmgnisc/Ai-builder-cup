@@ -20,4 +20,4 @@ CMD ["pytest"]
 
 # Production stage (default if no target specified)
 FROM base AS prod
-CMD ["sh", "-c", "alembic upgrade head && exec uvicorn app.main:app --host 0.0.0.0 --port $PORT"]
+CMD ["sh", "-c", "exec uvicorn app.main:app --host 0.0.0.0 --port ${PORT:-8080}"]
