@@ -28,9 +28,14 @@ const HINT: Record<RigStatus, string> = {
 const svgImage = (svg: string) =>
   new Promise<HTMLImageElement>((resolve, reject) => {
     const img = new Image();
+    img.crossOrigin = "anonymous";
     img.onload = () => resolve(img);
     img.onerror = reject;
-    img.src = `data:image/svg+xml;charset=utf-8,${encodeURIComponent(svg)}`;
+    if (svg.startsWith("<svg") || svg.startsWith("<?xml")) {
+      img.src = `data:image/svg+xml;charset=utf-8,${encodeURIComponent(svg)}`;
+    } else {
+      img.src = svg;
+    }
   });
 
 type PartImages = Partial<Record<Placement["part"], HTMLImageElement>>;

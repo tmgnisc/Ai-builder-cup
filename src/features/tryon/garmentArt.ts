@@ -78,11 +78,11 @@ function fabricDefs(p: GarmentProduct, k: Paint): string {
     const dark = mix(k.base, BLACK, 0.55);
     overlay = `<pattern id="${k.id}-pat" width="28" height="28" patternUnits="userSpaceOnUse">
       <rect width="28" height="28" fill="${k.base}"/>
-      <rect width="12" height="28" fill="${dark}" opacity="0.55"/><rect width="28" height="12" fill="${dark}" opacity="0.55"/>
-      <rect x="20" width="2" height="28" fill="${WHITE}" opacity="0.25"/><rect y="20" width="28" height="2" fill="${WHITE}" opacity="0.25"/></pattern>`;
+      <rect width="12" height="28" fill="${dark}" opacity="0.6"/><rect width="28" height="12" fill="${dark}" opacity="0.6"/>
+      <rect x="20" width="2" height="28" fill="${WHITE}" opacity="0.3"/><rect y="20" width="28" height="2" fill="${WHITE}" opacity="0.3"/></pattern>`;
   } else if (pattern === "stripe") {
     overlay = `<pattern id="${k.id}-pat" width="40" height="30" patternUnits="userSpaceOnUse">
-      <rect width="40" height="30" fill="${k.base}"/><rect width="40" height="10" fill="${k.hi}" opacity="0.55"/>
+      <rect width="40" height="30" fill="${k.base}"/><rect width="40" height="10" fill="${k.hi}" opacity="0.6"/>
       <rect y="28" width="40" height="2" fill="${k.line}" opacity="0.8"/></pattern>`;
   } else if (pattern === "dhaka") {
     const [red, orange] = [k.base, "#e0a43a"];
@@ -92,12 +92,23 @@ function fabricDefs(p: GarmentProduct, k: Paint): string {
       <path d="M12 10 14 12 12 14 10 12Z" fill="${WHITE}"/><path d="M0 0h4v4H0zM20 20h4v4h-4z" fill="#1c1a22"/></pattern>`;
   }
   return `<defs>${overlay}
+    <filter id="${k.id}-weave" x="0%" y="0%" width="100%" height="100%">
+      <feTurbulence type="fractalNoise" baseFrequency="0.75" numOctaves="3" result="noise"/>
+      <feColorMatrix type="matrix" values="0.33 0.33 0.33 0 0  0.33 0.33 0.33 0 0  0.33 0.33 0.33 0 0  0 0 0 0.12 0" result="noiseAlpha"/>
+      <feComposite in="SourceGraphic" in2="noiseAlpha" operator="arithmetic" k1="0" k2="1" k3="0.14" k4="0"/>
+    </filter>
     <linearGradient id="${k.id}-shade" x1="0" y1="0" x2="1" y2="0">
-      <stop offset="0" stop-color="${BLACK}" stop-opacity="0.28"/><stop offset="0.2" stop-color="${BLACK}" stop-opacity="0"/>
-      <stop offset="0.8" stop-color="${BLACK}" stop-opacity="0"/><stop offset="1" stop-color="${BLACK}" stop-opacity="0.28"/>
+      <stop offset="0" stop-color="${BLACK}" stop-opacity="0.32"/><stop offset="0.22" stop-color="${BLACK}" stop-opacity="0.05"/>
+      <stop offset="0.5" stop-color="${WHITE}" stop-opacity="0.08"/><stop offset="0.78" stop-color="${BLACK}" stop-opacity="0.05"/>
+      <stop offset="1" stop-color="${BLACK}" stop-opacity="0.32"/>
     </linearGradient>
     <linearGradient id="${k.id}-light" x1="0" y1="0" x2="0" y2="1">
-      <stop offset="0" stop-color="${WHITE}" stop-opacity="0.16"/><stop offset="1" stop-color="${BLACK}" stop-opacity="0.14"/>
+      <stop offset="0" stop-color="${WHITE}" stop-opacity="0.22"/><stop offset="0.3" stop-color="${WHITE}" stop-opacity="0.05"/>
+      <stop offset="0.7" stop-color="${BLACK}" stop-opacity="0.05"/><stop offset="1" stop-color="${BLACK}" stop-opacity="0.2"/>
+    </linearGradient>
+    <linearGradient id="${k.id}-crease" x1="0" y1="0" x2="0" y2="1">
+      <stop offset="0%" stop-color="${WHITE}" stop-opacity="0.14"/><stop offset="35%" stop-color="${BLACK}" stop-opacity="0.08"/>
+      <stop offset="65%" stop-color="${WHITE}" stop-opacity="0.06"/><stop offset="100%" stop-color="${BLACK}" stop-opacity="0.18"/>
     </linearGradient></defs>`;
 }
 
@@ -151,8 +162,7 @@ function torso(p: GarmentProduct, k: Paint): string {
   return svg(
     200,
     240,
-    `${fabricDefs(p, k)}<path d="${shape}" fill="${fill(p, k)}"/><path d="${shape}" fill="url(#${k.id}-light)"/>
-     <path d="${shape}" fill="url(#${k.id}-shade)"/>${hem}${details}`,
+    `${fabricDefs(p, k)}<g filter="url(#${k.id}-weave)"><path d="${shape}" fill="${fill(p, k)}"/><path d="${shape}" fill="url(#${k.id}-light)"/><path d="${shape}" fill="url(#${k.id}-crease)"/><path d="${shape}" fill="url(#${k.id}-shade)"/>${hem}${details}</g>`,
   );
 }
 
@@ -167,23 +177,23 @@ function sleeve(p: GarmentProduct, k: Paint, part: "upper" | "lower" | "short"):
         ? "M8 0 H92 L84 160 H16 Z"
         : "M2 26 C2 8 24 0 50 0 C76 0 98 8 98 26 L94 160 H6 Z";
   const band = cuff ? `<rect x="${part === "short" ? 6 : 16}" y="140" width="${part === "short" ? 88 : 68}" height="20" fill="${k.lo}" opacity="0.8"/>` : "";
-  return svg(100, 160, `${fabricDefs(p, k)}<path d="${shape}" fill="${fill(p, k)}"/><path d="${shape}" fill="url(#${k.id}-shade)"/>${band}`);
+  return svg(100, 160, `${fabricDefs(p, k)}<g filter="url(#${k.id}-weave)"><path d="${shape}" fill="${fill(p, k)}"/><path d="${shape}" fill="url(#${k.id}-light)"/><path d="${shape}" fill="url(#${k.id}-shade)"/>${band}</g>`);
 }
 
 // ── Headwear ──
 function head(p: GarmentProduct, k: Paint): string {
   if (has(p, "topi")) {
     const shape = "M18 120 L30 34 C40 14 70 6 110 8 C150 10 172 22 178 40 L184 120 Z";
-    return svg(200, 120, `${fabricDefs(p, k)}<path d="${shape}" fill="${fill(p, k)}"/><path d="${shape}" fill="url(#${k.id}-shade)"/>
-      <path d="M18 112 H184" stroke="#1c1a22" stroke-width="10"/>`);
+    return svg(200, 120, `${fabricDefs(p, k)}<g filter="url(#${k.id}-weave)"><path d="${shape}" fill="${fill(p, k)}"/><path d="${shape}" fill="url(#${k.id}-shade)"/>
+      <path d="M18 112 H184" stroke="#1c1a22" stroke-width="10"/></g>`);
   }
   const crown = "M24 106 C24 40 62 8 100 8 C138 8 176 40 176 106 Z";
   return svg(
     200,
     120,
-    `${fabricDefs(p, k)}<path d="${crown}" fill="${fill(p, k)}"/><path d="${crown}" fill="url(#${k.id}-shade)"/>
+    `${fabricDefs(p, k)}<g filter="url(#${k.id}-weave)"><path d="${crown}" fill="${fill(p, k)}"/><path d="${crown}" fill="url(#${k.id}-shade)"/>
      <path d="M100 8 V106 M60 20 C70 50 72 80 70 106 M140 20 C130 50 128 80 130 106" stroke="${k.line}" stroke-width="1.5" fill="none" opacity="0.6"/>
-     <circle cx="100" cy="10" r="5" fill="${k.lo}"/><path d="M14 104 C60 92 140 92 186 104 L190 118 C140 110 60 110 10 118 Z" fill="${k.lo}"/>`,
+     <circle cx="100" cy="10" r="5" fill="${k.lo}"/><path d="M14 104 C60 92 140 92 186 104 L190 118 C140 110 60 110 10 118 Z" fill="${k.lo}"/></g>`,
   );
 }
 
@@ -204,8 +214,8 @@ function eyes(_p: GarmentProduct, k: Paint): string {
 function shawl(p: GarmentProduct, k: Paint): string {
   const drape = "M0 20 C30 6 60 0 80 2 C90 40 130 40 140 2 C160 0 190 6 220 20 L200 260 L150 260 L130 70 C120 90 100 90 90 70 L70 260 L20 260 Z";
   const fringe = [20, 30, 40, 50, 60, 70, 150, 160, 170, 180, 190, 200].map((x) => `<path d="M${x} 252 v8" stroke="${k.lo}" stroke-width="2"/>`).join("");
-  return svg(220, 260, `${fabricDefs(p, k)}<path d="${drape}" fill="${fill(p, k)}"/><path d="${drape}" fill="url(#${k.id}-light)"/>
-    <path d="${drape}" fill="url(#${k.id}-shade)"/>${fringe}`);
+  return svg(220, 260, `${fabricDefs(p, k)}<g filter="url(#${k.id}-weave)"><path d="${drape}" fill="${fill(p, k)}"/><path d="${drape}" fill="url(#${k.id}-light)"/>
+    <path d="${drape}" fill="url(#${k.id}-shade)"/>${fringe}</g>`);
 }
 
 /** Packshot of the shawl folded on a table (the on-body drape shape reads oddly flat). */

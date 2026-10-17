@@ -64,6 +64,7 @@ export const ProductSchema = z.object({
   specs: ProductSpecsSchema,
   /** Two colours for the generated gradient placeholder image. */
   palette: z.tuple([z.string(), z.string()]),
+  image: z.string().optional(),
 });
 export type Product = z.infer<typeof ProductSchema>;
 

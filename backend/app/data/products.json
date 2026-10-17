@@ -30,7 +30,8 @@
     "palette": [
       "#3dd9ff",
       "#1a2a6c"
-    ]
+    ],
+    "image": "https://images.unsplash.com/photo-1588872657578-7efd1f1555ed?auto=format&fit=crop&w=800&q=80"
   },
   {
     "id": "acer-swift-go-14",
@@ -62,7 +63,8 @@
     "palette": [
       "#c6ff3d",
       "#0f5132"
-    ]
+    ],
+    "image": "https://images.unsplash.com/photo-1516321318423-f06f85e504b3?auto=format&fit=crop&w=800&q=80"
   },
   {
     "id": "lenovo-thinkpad-e14-g6",
@@ -94,7 +96,8 @@
     "palette": [
       "#ff5a5a",
       "#1c1c22"
-    ]
+    ],
+    "image": "https://images.unsplash.com/photo-1525547719571-a2d4ac8945e2?auto=format&fit=crop&w=800&q=80"
   },
   {
     "id": "hp-pavilion-plus-14",
@@ -126,7 +129,8 @@
     "palette": [
       "#b48cff",
       "#2a1b4a"
-    ]
+    ],
+    "image": "https://images.unsplash.com/photo-1496181133206-80ce9b88a853?auto=format&fit=crop&w=800&q=80"
   },
   {
     "id": "msi-modern-14",
@@ -157,7 +161,8 @@
     "palette": [
       "#8a8fa3",
       "#1a1d26"
-    ]
+    ],
+    "image": "https://images.unsplash.com/photo-1593642632823-8f785ba67e45?auto=format&fit=crop&w=800&q=80"
   },
   {
     "id": "hp-victus-15",
@@ -187,7 +192,8 @@
     "palette": [
       "#3d7bff",
       "#0a0f2a"
-    ]
+    ],
+    "image": "https://images.unsplash.com/photo-1603302576837-37561b2e2302?auto=format&fit=crop&w=800&q=80"
   },
   {
     "id": "asus-vivobook-15",
@@ -217,7 +223,8 @@
     "palette": [
       "#5ad1c8",
       "#123a3a"
-    ]
+    ],
+    "image": "https://images.unsplash.com/photo-1531297484001-80022131f5a1?auto=format&fit=crop&w=800&q=80"
   },
   {
     "id": "asus-tuf-a15",
@@ -247,7 +254,8 @@
     "palette": [
       "#ffb23d",
       "#2a1a05"
-    ]
+    ],
+    "image": "https://images.unsplash.com/photo-1595327656903-2f54e37ce09b?auto=format&fit=crop&w=800&q=80"
   },
   {
     "id": "lenovo-loq-15",
@@ -278,7 +286,8 @@
     "palette": [
       "#3dffb0",
       "#06281c"
-    ]
+    ],
+    "image": "https://images.unsplash.com/photo-1541807084-5c52b6b3adef?auto=format&fit=crop&w=800&q=80"
   },
   {
     "id": "apple-macbook-air-m3-13",
@@ -311,7 +320,8 @@
     "palette": [
       "#edeef2",
       "#5b6070"
-    ]
+    ],
+    "image": "https://images.unsplash.com/photo-1611186871348-b1ce696e52c9?auto=format&fit=crop&w=800&q=80"
   },
   {
     "id": "apple-macbook-pro-14-m4-pro",
@@ -344,7 +354,8 @@
     "palette": [
       "#c0c4d6",
       "#1a1d26"
-    ]
+    ],
+    "image": "https://images.unsplash.com/photo-1517336714731-489689fd1ca8?auto=format&fit=crop&w=800&q=80"
   },
   {
     "id": "apple-iphone-16",
@@ -374,7 +385,8 @@
     "palette": [
       "#ff8fd1",
       "#3a1030"
-    ]
+    ],
+    "image": "https://images.unsplash.com/photo-1510557880182-3d4d3cba35a5?auto=format&fit=crop&w=800&q=80"
   },
   {
     "id": "apple-iphone-16-pro",
@@ -405,7 +417,8 @@
     "palette": [
       "#d6c7a8",
       "#2b2620"
-    ]
+    ],
+    "image": "https://images.unsplash.com/photo-1695048133142-1a20484d2569?auto=format&fit=crop&w=800&q=80"
   },
   {
     "id": "google-pixel-9",
@@ -436,7 +449,8 @@
     "palette": [
       "#9fd6ff",
       "#13324a"
-    ]
+    ],
+    "image": "https://images.unsplash.com/photo-1598327105666-5b89351aff97?auto=format&fit=crop&w=800&q=80"
   },
   {
     "id": "samsung-galaxy-s24-fe",
@@ -467,7 +481,8 @@
     "palette": [
       "#7ab8ff",
       "#0d2140"
-    ]
+    ],
+    "image": "https://images.unsplash.com/photo-1610945415295-d9bbf067e59c?auto=format&fit=crop&w=800&q=80"
   },
   {
     "id": "oneplus-13r",
@@ -499,7 +514,8 @@
     "palette": [
       "#ff6a3d",
       "#2a0f05"
-    ]
+    ],
+    "image": "https://images.unsplash.com/photo-1574944985070-8f3ebc6b79d2?auto=format&fit=crop&w=800&q=80"
   },
   {
     "id": "samsung-galaxy-a55",
@@ -529,7 +545,8 @@
     "palette": [
       "#c9b8ff",
       "#251c45"
-    ]
+    ],
+    "image": "https://images.unsplash.com/photo-1580910051074-3eb694886505?auto=format&fit=crop&w=800&q=80"
   },
   {
     "id": "xiaomi-redmi-note-14-pro-plus",
@@ -561,7 +578,8 @@
     "palette": [
       "#ffd23d",
       "#3a2a00"
-    ]
+    ],
+    "image": "https://images.unsplash.com/photo-1565849904461-04a58ad377e0?auto=format&fit=crop&w=800&q=80"
   },
   {
     "id": "nothing-phone-3a",
@@ -592,7 +610,8 @@
     "palette": [
       "#f2f2f2",
       "#202020"
-    ]
+    ],
+    "image": "https://images.unsplash.com/photo-1592899677977-9c10ca588bbd?auto=format&fit=crop&w=800&q=80"
   },
   {
     "id": "sony-wh-1000xm5",
@@ -619,7 +638,8 @@
     "palette": [
       "#a8b0c4",
       "#1a1d26"
-    ]
+    ],
+    "image": "https://images.unsplash.com/photo-1505740420928-5e560c06d30e?auto=format&fit=crop&w=800&q=80"
   },
   {
     "id": "bose-qc-ultra-headphones",
@@ -647,7 +667,8 @@
     "palette": [
       "#e8dcc8",
       "#3a3228"
-    ]
+    ],
+    "image": "https://images.unsplash.com/photo-1546435770-a3e426bf472b?auto=format&fit=crop&w=800&q=80"
   },
   {
     "id": "sennheiser-momentum-4",
@@ -675,7 +696,8 @@
     "palette": [
       "#c8c8c8",
       "#151515"
-    ]
+    ],
+    "image": "https://images.unsplash.com/photo-1583394838336-acd977736f90?auto=format&fit=crop&w=800&q=80"
   },
   {
     "id": "apple-airpods-pro-2",
@@ -702,7 +724,8 @@
     "palette": [
       "#ffffff",
       "#9aa0b4"
-    ]
+    ],
+    "image": "https://images.unsplash.com/photo-1600294037681-c80b4cb5b434?auto=format&fit=crop&w=800&q=80"
   },
   {
     "id": "samsung-galaxy-buds3-pro",
@@ -729,7 +752,8 @@
     "palette": [
       "#c0c6d4",
       "#2a2f3a"
-    ]
+    ],
+    "image": "https://images.unsplash.com/photo-1590658268037-6bf12165a8df?auto=format&fit=crop&w=800&q=80"
   },
   {
     "id": "jbl-tune-770nc",
@@ -757,7 +781,8 @@
     "palette": [
       "#3d7bff",
       "#0b1430"
-    ]
+    ],
+    "image": "https://images.unsplash.com/photo-1484704849700-f032a568e944?auto=format&fit=crop&w=800&q=80"
   },
   {
     "id": "soundcore-liberty-4-nc",
@@ -784,7 +809,8 @@
     "palette": [
       "#3dd9ff",
       "#062530"
-    ]
+    ],
+    "image": "https://images.unsplash.com/photo-1572536147248-ac59a8abfa4b?auto=format&fit=crop&w=800&q=80"
   },
   {
     "id": "logitech-mx-master-3s",
@@ -809,7 +835,8 @@
     "palette": [
       "#5b6070",
       "#12141b"
-    ]
+    ],
+    "image": "https://images.unsplash.com/photo-1615663245857-ac93bb7c39e7?auto=format&fit=crop&w=800&q=80"
   },
   {
     "id": "keychron-k2-v2",
@@ -835,7 +862,8 @@
     "palette": [
       "#ff8a3d",
       "#2b1608"
-    ]
+    ],
+    "image": "https://images.unsplash.com/photo-1587829741301-dc798b83add3?auto=format&fit=crop&w=800&q=80"
   },
   {
     "id": "anker-737-power-bank",
@@ -860,7 +888,8 @@
     "palette": [
       "#3dffb0",
       "#0a2a1e"
-    ]
+    ],
+    "image": "https://images.unsplash.com/photo-1609091839311-d5365f9ff1c5?auto=format&fit=crop&w=800&q=80"
   },
   {
     "id": "samsung-t7-1tb",
@@ -887,7 +916,8 @@
     "palette": [
       "#7a8cff",
       "#151a40"
-    ]
+    ],
+    "image": "https://images.unsplash.com/photo-1597872200969-2b65d56bd16b?auto=format&fit=crop&w=800&q=80"
   },
   {
     "id": "dell-s2722qc",
@@ -913,7 +943,8 @@
     "palette": [
       "#9aa0b4",
       "#14161d"
-    ]
+    ],
+    "image": "https://images.unsplash.com/photo-1527443224154-c4a3942d3acf?auto=format&fit=crop&w=800&q=80"
   },
   {
     "id": "ugreen-nexode-100w",
@@ -938,7 +969,8 @@
     "palette": [
       "#c6ff3d",
       "#1a2408"
-    ]
+    ],
+    "image": "https://images.unsplash.com/photo-1583863788434-e58a36330cf0?auto=format&fit=crop&w=800&q=80"
   },
   {
     "id": "persona-basics-crew-tee",
@@ -989,7 +1021,8 @@
     "palette": [
       "#16171b",
       "#3a3d47"
-    ]
+    ],
+    "image": "https://images.unsplash.com/photo-1521572267360-ee0c2909d518?auto=format&fit=crop&w=800&q=80"
   },
   {
     "id": "persona-basics-pique-polo",
@@ -1040,7 +1073,8 @@
     "palette": [
       "#1f2a44",
       "#c9ccd6"
-    ]
+    ],
+    "image": "https://images.unsplash.com/photo-1586363104862-3a5e2ab60d99?auto=format&fit=crop&w=800&q=80"
   },
   {
     "id": "himal-threads-linen-shirt",
@@ -1090,7 +1124,8 @@
     "palette": [
       "#cbb894",
       "#5c4f37"
-    ]
+    ],
+    "image": "https://images.unsplash.com/photo-1596755094514-f87e34085b2c?auto=format&fit=crop&w=800&q=80"
   },
   {
     "id": "himal-threads-flannel-overshirt",
@@ -1137,7 +1172,8 @@
     "palette": [
       "#9e2b25",
       "#1d1d1f"
-    ]
+    ],
+    "image": "https://images.unsplash.com/photo-1602810318383-e386cc2a3ccf?auto=format&fit=crop&w=800&q=80"
   },
   {
     "id": "persona-basics-zip-hoodie",
@@ -1188,7 +1224,8 @@
     "palette": [
       "#3a3c42",
       "#16171b"
-    ]
+    ],
+    "image": "https://images.unsplash.com/photo-1556905055-8f358a7a47b2?auto=format&fit=crop&w=800&q=80"
   },
   {
     "id": "kathmandu-loom-denim-jacket",
@@ -1235,7 +1272,8 @@
     "palette": [
       "#4a6a96",
       "#c08a3e"
-    ]
+    ],
+    "image": "https://images.unsplash.com/photo-1576995853123-5a10305d93c0?auto=format&fit=crop&w=800&q=80"
   },
   {
     "id": "himal-threads-down-puffer",
@@ -1287,7 +1325,8 @@
     "palette": [
       "#17181c",
       "#3a3d47"
-    ]
+    ],
+    "image": "https://images.unsplash.com/photo-1544022613-e87ca75a784a?auto=format&fit=crop&w=800&q=80"
   },
   {
     "id": "kathmandu-loom-cotton-kurta",
@@ -1337,7 +1376,8 @@
     "palette": [
       "#efe7d6",
       "#8a6d3b"
-    ]
+    ],
+    "image": "https://images.unsplash.com/photo-1617127365659-c47fa864d8bc?auto=format&fit=crop&w=800&q=80"
   },
   {
     "id": "kathmandu-loom-dhaka-topi",
@@ -1375,7 +1415,8 @@
     "palette": [
       "#7a2a3a",
       "#e0a43a"
-    ]
+    ],
+    "image": "https://images.unsplash.com/photo-1576871337632-b9aef4c17ab9?auto=format&fit=crop&w=800&q=80"
   },
   {
     "id": "persona-basics-baseball-cap",
@@ -1420,7 +1461,8 @@
     "palette": [
       "#18191d",
       "#3a3d47"
-    ]
+    ],
+    "image": "https://images.unsplash.com/photo-1588850561407-ed78c282e89b?auto=format&fit=crop&w=800&q=80"
   },
   {
     "id": "persona-basics-aviator-sunglasses",
@@ -1461,7 +1503,8 @@
     "palette": [
       "#b8964a",
       "#2f3a2c"
-    ]
+    ],
+    "image": "https://images.unsplash.com/photo-1511499767150-a48a237f0083?auto=format&fit=crop&w=800&q=80"
   },
   {
     "id": "himal-threads-pashmina-shawl",
@@ -1507,6 +1550,7 @@
     "palette": [
       "#b9727c",
       "#4a2a30"
-    ]
+    ],
+    "image": "https://images.unsplash.com/photo-1607522370275-f14206abe5d3?auto=format&fit=crop&w=800&q=80"
   }
 ]

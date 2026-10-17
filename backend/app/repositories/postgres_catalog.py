@@ -26,6 +26,7 @@ def row_to_product(row: ProductDB) -> Product:
         tags=list(row.tags) if row.tags else [],
         specs=ProductSpecs(**raw_specs),
         palette=tuple(row.palette) if row.palette and len(row.palette) == 2 else ("#181716", "#FBFBFA"),
+        image=getattr(row, "image", None),
     )
 
 

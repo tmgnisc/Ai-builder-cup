@@ -37,6 +37,7 @@ class CreateProductInput(BaseModel):
     tags: list[str] = Field(default_factory=list)
     specs: ProductSpecs
     palette: tuple[str, str] = Field(default=("#181716", "#FBFBFA"))
+    image: str | None = None
 
 
 class UpdateProductInput(BaseModel):
@@ -49,6 +50,7 @@ class UpdateProductInput(BaseModel):
     blurb: str | None = None
     tags: list[str] | None = None
     specs: dict | None = None
+    image: str | None = None
 
 
 def _parse_list_param(values: list[str] | None) -> list[str] | None:
@@ -255,6 +257,7 @@ async def create_product_endpoint(
         tags=payload.tags,
         specs=payload.specs.model_dump(),
         palette=list(payload.palette),
+        image=payload.image,
     )
     session.add(new_prod)
     await session.commit()

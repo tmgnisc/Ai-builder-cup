@@ -3,7 +3,7 @@ import logging
 from pathlib import Path
 from typing import AsyncGenerator
 
-from sqlalchemy import select
+from sqlalchemy import select, text, update
 from sqlalchemy.ext.asyncio import AsyncSession, async_sessionmaker, create_async_engine
 
 from ..models.db import Base, ProductDB
@@ -71,6 +71,7 @@ async def init_db() -> bool:
     try:
         async with engine.begin() as conn:
             await conn.run_sync(Base.metadata.create_all)
+            await conn.execute(text("ALTER TABLE products ADD COLUMN IF NOT EXISTS image VARCHAR(500);"))
         logger.info("Database schema verified / created successfully.")
 
         session_factory = get_session_factory()
@@ -98,10 +99,19 @@ async def init_db() -> bool:
                                 tags=item.get("tags", []),
                                 specs=item.get("specs", {}),
                                 palette=item.get("palette", []),
+                                image=item.get("image"),
                             )
                         )
+                    for item in raw:
+                        if item.get("image"):
+                            await session.execute(
+                                update(ProductDB)
+                                .where(ProductDB.id == item["id"])
+                                .where(ProductDB.image.is_(None))
+                                .values(image=item["image"])
+                            )
+                    await session.commit()
                     if missing:
-                        await session.commit()
                         logger.info("Seeded %d new catalog products into PostgreSQL.", len(missing))
 
             # Check if orders table already has records

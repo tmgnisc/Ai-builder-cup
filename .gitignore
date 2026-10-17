@@ -12,6 +12,9 @@
 
 # testing
 /coverage
+/.coverage
+.coverage*
+.pytest_cache/
 /.screenshots
 /.axe-reports
 

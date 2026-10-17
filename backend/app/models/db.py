@@ -27,6 +27,7 @@ class ProductDB(Base):
     tags = Column(JSON, nullable=False, default=list)
     specs = Column(JSON, nullable=False, default=dict)
     palette = Column(JSON, nullable=False, default=list)
+    image = Column(String(500), nullable=True)
     created_at = Column(DateTime(timezone=True), default=lambda: datetime.now(timezone.utc))
     updated_at = Column(
         DateTime(timezone=True),

@@ -61,6 +61,7 @@ class Product(BaseModel):
     tags: list[str]
     specs: ProductSpecs
     palette: tuple[str, str]
+    image: str | None = None
 
 
 Sort = Literal["relevance", "price-asc", "price-desc", "rating", "battery", "weight"]

@@ -5,7 +5,8 @@ import type { Product } from "@/lib/commerce/schemas";
 import { flatLaySvg } from "@/features/tryon";
 
 interface ProductImageProps {
-  product: Pick<Product, "id" | "brand" | "name" | "category" | "palette"> & Partial<Pick<Product, "tags" | "specs">>;
+  product: Pick<Product, "id" | "brand" | "name" | "category" | "palette"> &
+    Partial<Pick<Product, "tags" | "specs">> & { image?: string };
   /** Clothing: which colour option to draw (defaults to the first). */
   color?: string;
   className?: string;
@@ -89,6 +90,8 @@ export function ProductImage({ product, className, variant = "card", showInitial
   const kind = deviceKind(product);
   const g = (name: string) => `url(#${id}-${name})`;
 
+  const imgSrc = product.image || `/images/products/${product.id}.jpg`;
+
   return (
     <div
       role="img"
@@ -98,44 +101,68 @@ export function ProductImage({ product, className, variant = "card", showInitial
         background: `radial-gradient(120% 90% at 50% 18%, color-mix(in oklab, ${f.accent} 16%, var(--surface-2)), var(--surface) 70%)`,
       }}
     >
-      {product.category === "clothing" && product.specs ? (
-        // eslint-disable-next-line @next/next/no-img-element -- generated inline SVG, nothing to optimise
+      {imgSrc ? (
+        // eslint-disable-next-line @next/next/no-img-element
         <img
-          alt=""
-          aria-hidden
+          alt={product.name}
+          src={imgSrc}
+          loading="lazy"
+          decoding="async"
           draggable={false}
-          src={`data:image/svg+xml;charset=utf-8,${encodeURIComponent(flatLaySvg({ ...product, tags: product.tags ?? [], specs: product.specs }, color))}`}
-          className="absolute inset-0 size-full object-contain"
-          style={{ transform: view === "detail" ? "scale(1.8) translate(0, 10%)" : view === "angle" ? "rotate(-6deg) scale(0.94)" : undefined }}
+          className="absolute inset-0 size-full object-contain p-3.5 drop-shadow-md transition-transform duration-300 group-hover:scale-105"
+          style={{
+            transform: view === "detail" ? "scale(1.25)" : view === "angle" ? "rotate(-3deg) scale(0.98)" : undefined,
+          }}
+          onError={(e) => {
+            e.currentTarget.style.display = "none";
+            const fallback = e.currentTarget.parentElement?.querySelector(".product-image-fallback");
+            if (fallback) {
+              (fallback as HTMLElement).style.display = "block";
+            }
+          }}
         />
-      ) : (
-      <svg viewBox="0 0 400 300" preserveAspectRatio="xMidYMid meet" className="absolute inset-0 size-full" aria-hidden>
-        <defs>
-          <linearGradient id={`${id}-body`} x1="0" y1="0" x2="0" y2="1">
-            <stop offset="0" stopColor={f.hi} />
-            <stop offset="1" stopColor={f.body} />
-          </linearGradient>
-          <linearGradient id={`${id}-side`} x1="0" y1="0" x2="1" y2="0">
-            <stop offset="0" stopColor={f.lo} />
-            <stop offset="0.5" stopColor={f.body} />
-            <stop offset="1" stopColor={f.lo} />
-          </linearGradient>
-          <linearGradient id={`${id}-screen`} x1="0" y1="0" x2="1" y2="1">
-            <stop offset="0" stopColor={f.screenA} />
-            <stop offset="1" stopColor={f.screenB} />
-          </linearGradient>
-          <linearGradient id={`${id}-glare`} x1="0" y1="0" x2="1" y2="1">
-            <stop offset="0" stopColor="#ffffff" stopOpacity="0.18" />
-            <stop offset="0.45" stopColor="#ffffff" stopOpacity="0" />
-          </linearGradient>
-          <radialGradient id={`${id}-shadow`}>
-            <stop offset="0" stopColor="#000000" stopOpacity="0.45" />
-            <stop offset="1" stopColor="#000000" stopOpacity="0" />
-          </radialGradient>
-        </defs>
-        <g transform={VIEW[view]}>{DEVICES[kind]({ f, g })}</g>
-      </svg>
-      )}
+      ) : null}
+
+      <div className={cn("product-image-fallback absolute inset-0 size-full", imgSrc && "hidden")} aria-hidden>
+        {product.category === "clothing" && product.specs ? (
+          // eslint-disable-next-line @next/next/no-img-element -- generated inline SVG, nothing to optimise
+          <img
+            alt=""
+            aria-hidden
+            draggable={false}
+            src={`data:image/svg+xml;charset=utf-8,${encodeURIComponent(flatLaySvg({ ...product, tags: product.tags ?? [], specs: product.specs }, color))}`}
+            className="absolute inset-0 size-full object-contain"
+            style={{ transform: view === "detail" ? "scale(1.8) translate(0, 10%)" : view === "angle" ? "rotate(-6deg) scale(0.94)" : undefined }}
+          />
+        ) : (
+          <svg viewBox="0 0 400 300" preserveAspectRatio="xMidYMid meet" className="absolute inset-0 size-full" aria-hidden>
+            <defs>
+              <linearGradient id={`${id}-body`} x1="0" y1="0" x2="0" y2="1">
+                <stop offset="0" stopColor={f.hi} />
+                <stop offset="1" stopColor={f.body} />
+              </linearGradient>
+              <linearGradient id={`${id}-side`} x1="0" y1="0" x2="1" y2="0">
+                <stop offset="0" stopColor={f.lo} />
+                <stop offset="0.5" stopColor={f.body} />
+                <stop offset="1" stopColor={f.lo} />
+              </linearGradient>
+              <linearGradient id={`${id}-screen`} x1="0" y1="0" x2="1" y2="1">
+                <stop offset="0" stopColor={f.screenA} />
+                <stop offset="1" stopColor={f.screenB} />
+              </linearGradient>
+              <linearGradient id={`${id}-glare`} x1="0" y1="0" x2="1" y2="1">
+                <stop offset="0" stopColor="#ffffff" stopOpacity="0.18" />
+                <stop offset="0.45" stopColor="#ffffff" stopOpacity="0" />
+              </linearGradient>
+              <radialGradient id={`${id}-shadow`}>
+                <stop offset="0" stopColor="#000000" stopOpacity="0.45" />
+                <stop offset="1" stopColor="#000000" stopOpacity="0" />
+              </radialGradient>
+            </defs>
+            <g transform={VIEW[view]}>{DEVICES[kind]({ f, g })}</g>
+          </svg>
+        )}
+      </div>
       {showInitials && (
         <span aria-hidden className="absolute bottom-3 right-3 font-display text-2xs font-semibold uppercase tracking-widest text-muted">
           {initials(product)}
