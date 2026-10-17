@@ -14,8 +14,8 @@ This document outlines the voice, tone, and standard copy conventions for **tmgn
    - Base all claims strictly on catalog specifications and live inventory.
    - No assumptions or hallucinations. If a technical spec is not present in the catalog, acknowledge the gap and trigger a `missing_info` event.
 
-3. **Authentic Local Context**
-   - Ground pricing and availability in Nepal's local market: prices formatted in NPR with South Asian digit groupings (e.g., `NPR 1,20,000` or lakhs), Kathmandu Valley delivery (same-day or 1–2 days) vs. outside Valley transit (2–4 days).
+3. **Authentic Logistics & Real Specs**
+   - Ground pricing and availability in real currency: prices formatted in NPR with tabular digit groupings (e.g., `NPR 1,20,000`), Express delivery (1–2 days) vs. Standard transit (3–5 days).
    - Real engineer, student, and creator workflows (e.g., Docker containers, Figma multitasking, lightweight travel).
 
 4. **Cart Honesty & Verification Truth**

@@ -282,7 +282,7 @@ function BubbleBody({ content, contentKey }: { content: BubbleContent; contentKe
         </IconButton>
       </div>
 
-      <div className="pr-14" aria-live="polite">
+      <div className="pr-16" aria-live="polite">
         {userLine && <p className="mb-1 truncate text-xs text-muted">You: {userLine}</p>}
         {content.kind === "prompt" && <p className="text-sm leading-relaxed">What can I help with? Ask me anything about this page, or try:</p>}
         {content.kind === "tip" && <TypedText key={contentKey} text={content.text} />}
@@ -330,7 +330,7 @@ function AgentText({ message }: { message: ChatMessage }) {
     );
   }
   return (
-    <div className={cn("text-sm leading-relaxed", message.status === "error" && "text-danger")}>
+    <div className={cn("text-sm leading-relaxed space-y-1.5", message.status === "error" && "text-danger")}>
       <Markdown text={message.text} />
       {streaming && <span aria-hidden className="caret text-accent-text" />}
     </div>
@@ -373,10 +373,10 @@ function TypedText({ text }: { text: string }) {
     return () => window.clearInterval(id);
   }, [text, reduced]);
   return (
-    <p className="text-sm leading-relaxed break-words">
+    <div className="text-sm leading-relaxed break-words space-y-1">
       <Markdown text={text.slice(0, n)} />
       <span className="sr-only">{text.replace(/\*\*/g, "")}</span>
-    </p>
+    </div>
   );
 }
 

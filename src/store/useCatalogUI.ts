@@ -37,6 +37,7 @@ export const DEFAULT_FILTERS: Filters = {
 export type FilterChange = { [K in keyof Filters]: { key: K; value: Filters[K] } }[keyof Filters];
 
 interface CatalogUIState {
+  catalogProducts: Product[];
   filters: Filters;
   /** Ids Pip is presenting, in rank order. */
   highlighted: string[];
@@ -48,9 +49,12 @@ interface CatalogUIState {
   setFilter: <K extends keyof Filters>(key: K, value: Filters[K]) => void;
   resetFilters: (keep?: Partial<Filters>) => void;
   setHighlighted: (ids: string[]) => void;
+  setCatalogProducts: (products: Product[]) => void;
+  loadCatalogFromApi: () => Promise<void>;
 }
 
 export const useCatalogUI = create<CatalogUIState>()((set) => ({
+  catalogProducts: [...getAllProducts()],
   filters: DEFAULT_FILTERS,
   highlighted: [],
   lastChange: null,
@@ -69,6 +73,20 @@ export const useCatalogUI = create<CatalogUIState>()((set) => ({
     }),
   resetFilters: (keep) => set({ filters: { ...DEFAULT_FILTERS, ...keep } }),
   setHighlighted: (highlighted) => set({ highlighted }),
+  setCatalogProducts: (products) => set({ catalogProducts: products }),
+  loadCatalogFromApi: async () => {
+    try {
+      const res = await fetch("/api/products");
+      if (res.ok) {
+        const data = await res.json();
+        if (Array.isArray(data.products) && data.products.length > 0) {
+          set({ catalogProducts: data.products });
+        }
+      }
+    } catch {
+      // Fallback stays in place
+    }
+  },
 }));
 
 export function activeFilterCount(f: Filters): number {
@@ -81,17 +99,21 @@ export function activeFilterCount(f: Filters): number {
   );
 }
 
-export function applyFilters(f: Filters): Product[] {
-  return searchProducts({
-    category: f.category ?? undefined,
-    brands: f.brands.length ? f.brands : undefined,
-    minPrice: f.priceRange[0] > PRICE_MIN ? f.priceRange[0] : undefined,
-    maxPrice: f.priceRange[1] < PRICE_MAX ? f.priceRange[1] : undefined,
-    minRamGB: f.minRamGB ?? undefined,
-    minBatteryHours: f.minBatteryHours ?? undefined,
-    inStockOnly: f.inStockOnly || undefined,
-    sort: f.sort,
-  }).products;
+export function applyFilters(f: Filters, pool?: Product[]): Product[] {
+  const source = pool ?? useCatalogUI.getState().catalogProducts;
+  return searchProducts(
+    {
+      category: f.category ?? undefined,
+      brands: f.brands.length ? f.brands : undefined,
+      minPrice: f.priceRange[0] > PRICE_MIN ? f.priceRange[0] : undefined,
+      maxPrice: f.priceRange[1] < PRICE_MAX ? f.priceRange[1] : undefined,
+      minRamGB: f.minRamGB ?? undefined,
+      minBatteryHours: f.minBatteryHours ?? undefined,
+      inStockOnly: f.inStockOnly || undefined,
+      sort: f.sort,
+    },
+    source,
+  ).products;
 }
 
 /**

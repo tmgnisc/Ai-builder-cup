@@ -27,7 +27,7 @@ backend/
       catalog.py           Pure Python catalog search, filtering, and scoring
       chaos.py             Chaos & latency simulation (transient 503 and silent drop)
       compare.py           Catalog-grounded product comparisons and verdicts
-      delivery.py          Nepal delivery rules (Kathmandu Valley vs outside)
+      delivery.py          Logistics rules (Express vs Standard delivery)
       format.py            NPR currency (South Asian commas), weight, and storage formatting
       models.py            Pydantic v2 schemas for all commerce entities
     repositories/

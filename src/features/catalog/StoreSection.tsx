@@ -2,9 +2,12 @@
 
 import { SlidersHorizontal } from "lucide-react";
 import { useEffect, useMemo, useState } from "react";
+import { Button } from "@/components/ui/Button";
 import { Drawer } from "@/components/ui/Drawer";
+import { Select } from "@/components/ui/Select";
 import { Ticker } from "@/components/ui/Ticker";
-import { CATEGORIES, type Category, type Sort } from "@/lib/commerce/schemas";
+import { getCategories } from "@/lib/commerce/catalog";
+import type { Category, Sort } from "@/lib/commerce/schemas";
 import { InitialCategoryContext, activeFilterCount, applyFilters, useCatalogUI, useFilters } from "@/store/useCatalogUI";
 import { CategoryStrip } from "./CategoryStrip";
 import { Filters, SORTS } from "./Filters";
@@ -23,13 +26,20 @@ function StoreSectionInner({ initialCategory }: { initialCategory: Category | nu
   const filters = useFilters();
   const syncCategory = useCatalogUI((s) => s.syncCategory);
   const setFilter = useCatalogUI((s) => s.setFilter);
+  const loadCatalogFromApi = useCatalogUI((s) => s.loadCatalogFromApi);
   const total = useMemo(() => applyFilters(filters).length, [filters]);
   const [sheetOpen, setSheetOpen] = useState(false);
 
   // URL → store (header links, back/forward). In-page pill clicks update the store first.
   useEffect(() => syncCategory(initialCategory), [initialCategory, syncCategory]);
 
-  const heading = filters.category ? CATEGORIES.find((c) => c.id === filters.category)?.label : "All products";
+  // Sync catalog dynamically from backend database (/api/products)
+  useEffect(() => {
+    void loadCatalogFromApi();
+  }, [loadCatalogFromApi]);
+
+  const categories = getCategories();
+  const heading = filters.category ? categories.find((c) => c.id === filters.category)?.label : "All products";
   const count = activeFilterCount(filters);
 
   return (
@@ -44,29 +54,30 @@ function StoreSectionInner({ initialCategory }: { initialCategory: Category | nu
           </p>
         </div>
         <div className="flex items-center gap-2">
-          <button
-            type="button"
+          <Button
+            variant="secondary"
             onClick={() => setSheetOpen(true)}
-            className="inline-flex h-10 items-center gap-2 rounded-full bg-surface px-4 text-sm hairline lg:hidden"
+            className="lg:hidden"
+            iconLeft={<SlidersHorizontal className="size-4" aria-hidden />}
           >
-            <SlidersHorizontal className="size-4" aria-hidden /> Filters
-            {count > 0 && <span className="rounded-full bg-accent px-1.5 font-mono text-2xs text-accent-fg">{count}</span>}
-          </button>
+            Filters
+            {count > 0 && <span className="rounded-md bg-accent px-1.5 font-mono text-2xs text-accent-fg">{count}</span>}
+          </Button>
           <label className="sr-only" htmlFor="sort">
             Sort by
           </label>
-          <select
+          <Select
             id="sort"
             value={filters.sort}
             onChange={(e) => setFilter("sort", e.target.value as Sort)}
-            className="h-10 rounded-full bg-surface px-4 text-sm hairline focus-visible:outline-2"
+            className="h-10 rounded-lg bg-surface px-3 text-sm hairline"
           >
             {SORTS.map((s) => (
               <option key={s.id} value={s.id}>
                 {s.label}
               </option>
             ))}
-          </select>
+          </Select>
         </div>
       </div>
 
@@ -74,7 +85,7 @@ function StoreSectionInner({ initialCategory }: { initialCategory: Category | nu
         <CategoryStrip />
       </div>
 
-      <div className="mt-8 grid gap-8 lg:store-grid">
+      <div className="mt-8 grid gap-8 lg:store-grid items-start">
         <aside aria-label="Filters" className="hidden lg:block">
           <div className="sticky top-24">
             <Filters />

@@ -169,10 +169,10 @@ def check_stock(product_id: str) -> dict[str, Any]:
 
 
 def get_delivery_info(city: str) -> dict[str, Any]:
-    """Get delivery time, fee and notes for a city in Nepal.
+    """Get delivery time, fee and notes for a destination city.
 
     Args:
-        city: City name in Nepal (e.g. 'Kathmandu', 'Pokhara', 'Biratnagar')
+        city: Destination city name (e.g. 'Kathmandu', 'Pokhara', 'Biratnagar')
     """
     from ..domain.delivery import delivery_for
 

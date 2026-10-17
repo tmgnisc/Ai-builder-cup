@@ -13,8 +13,8 @@ import "@/styles/globals.css";
 const inter = Inter({ subsets: ["latin"], variable: "--font-inter", display: "swap" });
 
 export const metadata: Metadata = {
-  title: { default: "Persona: shopping, with someone who gets it", template: "%s · Persona" },
-  description: "An electronics store with Pip, an AI shopping companion that searches, compares and adds to cart for you.",
+  title: { default: "Persona: Agentic Commerce Platform", template: "%s · Persona" },
+  description: "An agentic commerce platform with Pip, an AI shopping companion that searches, compares, and verifies cart actions.",
 };
 
 export const viewport: Viewport = {

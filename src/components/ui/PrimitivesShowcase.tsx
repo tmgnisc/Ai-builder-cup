@@ -210,18 +210,18 @@ export function PrimitivesShowcase() {
 
           <div className="space-y-3">
             <span className="font-mono text-xs text-muted">Selects</span>
-            <Select defaultValue="ktm">
-              <option value="ktm">Kathmandu Valley</option>
-              <option value="pok">Pokhara</option>
-              <option value="lal">Lalitpur</option>
+            <Select defaultValue="express">
+              <option value="express">Express Delivery</option>
+              <option value="standard">Standard Shipping</option>
+              <option value="priority">Priority Freight</option>
             </Select>
             <Select disabled defaultValue="disabled">
               <option value="disabled">Disabled Select</option>
             </Select>
-            <Select defaultValue="" error="Please choose a delivery region">
-              <option value="">Select region...</option>
-              <option value="1">Bagmati</option>
-              <option value="2">Gandaki</option>
+            <Select defaultValue="" error="Please choose a delivery method">
+              <option value="">Select method...</option>
+              <option value="1">Ground Transport</option>
+              <option value="2">Air Courier</option>
             </Select>
           </div>
 
@@ -354,7 +354,7 @@ export function PrimitivesShowcase() {
             <span className="font-mono text-xs text-muted mb-2 block">Empty State</span>
             <EmptyState
               title="Cart is empty"
-              description="Explore the catalog to add laptops and gear."
+              description="Explore the catalog to add items."
               action={
                 <Button size="sm" variant="secondary">
                   Browse Catalog

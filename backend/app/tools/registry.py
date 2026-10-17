@@ -149,7 +149,7 @@ TOOLS: dict[str, ToolDefinition[Any, Any]] = {
     ),
     "get_delivery_info": ToolDefinition(
         name="get_delivery_info",
-        description="Delivery time and fee for a city in Nepal.",
+        description="Delivery time and fee for a destination city.",
         input_model=GetDeliveryInfoInput,
         output_model=DeliveryInfo,
         handler=handle_get_delivery_info,

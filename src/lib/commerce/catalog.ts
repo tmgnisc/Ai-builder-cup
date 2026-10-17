@@ -19,6 +19,24 @@ export function getBrands(category?: Category): string[] {
   return [...new Set(list.map((p) => p.brand))].sort((a, b) => a.localeCompare(b));
 }
 
+export interface DynamicCategory {
+  id: Category;
+  label: string;
+  count: number;
+}
+
+export function getCategories(pool: readonly Product[] = products): DynamicCategory[] {
+  const counts = new Map<Category, number>();
+  for (const p of pool) {
+    counts.set(p.category, (counts.get(p.category) ?? 0) + 1);
+  }
+  return Array.from(counts.entries()).map(([id, count]) => ({
+    id,
+    label: id.charAt(0).toUpperCase() + id.slice(1),
+    count,
+  }));
+}
+
 function haystack(p: Product): string {
   const { cpu = "", gpu = "", connectivity = "" } = p.specs;
   return [p.name, p.brand, p.category, p.blurb, cpu, gpu, connectivity, ...p.tags].join(" ").toLowerCase();
@@ -39,12 +57,12 @@ export function tokenize(q: string | undefined): string[] {
 }
 
 /** Pure, deterministic catalog search. Latency/failure simulation lives in the route layer. */
-export function searchProducts(query: ProductQuery): ProductSearchResult {
+export function searchProducts(query: ProductQuery, pool: readonly Product[] = products): ProductSearchResult {
   const tokens = tokenize(query.q);
   const brands = query.brands?.map((b) => b.toLowerCase());
   const tags = query.tags?.map((t) => t.toLowerCase());
 
-  const scored = products
+  const scored = pool
     .filter((p) => {
       const s = p.specs;
       if (query.category && p.category !== query.category) return false;

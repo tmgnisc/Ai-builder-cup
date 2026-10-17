@@ -3,7 +3,7 @@ import AxeBuilder from "@axe-core/playwright";
 import fs from "node:fs";
 import path from "node:path";
 
-const baseUrl = process.env.BASE_URL || "http://localhost:3001";
+const baseUrl = process.env.BASE_URL || "http://localhost:3000";
 const reportsDir = path.resolve(process.cwd(), ".axe-reports");
 fs.mkdirSync(reportsDir, { recursive: true });
 
@@ -88,8 +88,12 @@ const PAGES: PageAudit[] = [
     },
   },
   {
-    name: "Merchant",
+    name: "Merchant Login",
     path: "/merchant",
+  },
+  {
+    name: "Merchant Operations Dashboard",
+    path: "/merchant?demo=true",
   },
 ];
 

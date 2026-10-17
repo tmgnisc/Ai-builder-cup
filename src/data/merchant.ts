@@ -76,7 +76,7 @@ export const TOP_QUESTIONS: TopQuestion[] = [
 export const MISSING_INFO: MissingInfo[] = [
   { productId: "lenovo-ideapad-slim-5-14", field: "Keyboard backlight", asks: 37, example: "Does the IdeaPad Slim 5 have a backlit keyboard?" },
   { productId: "acer-swift-go-14", field: "RAM upgradeable?", asks: 29, example: "Can I upgrade the RAM on the Swift Go 14 later?" },
-  { productId: "google-pixel-9", field: "eSIM support", asks: 22, example: "Does the Pixel 9 sold here support eSIM in Nepal?" },
+  { productId: "google-pixel-9", field: "eSIM support", asks: 22, example: "Does the Pixel 9 sold here support dual eSIM?" },
   { productId: "dell-s2722qc", field: "VESA mount size", asks: 18, example: "Will the Dell S2722QC fit my monitor arm?" },
   { productId: "hp-victus-15", field: "Screen brightness (nits)", asks: 15, example: "How bright is the Victus screen outdoors?" },
 ];
@@ -85,6 +85,6 @@ export const MISSING_INFO: MissingInfo[] = [
 export const FRICTION: FrictionTheme[] = [
   { text: "Hard to tell which laptops have good battery", count: 41, page: "Laptops" },
   { text: "Not sure if 16 GB RAM is enough for Docker", count: 33, page: "Product" },
-  { text: "Delivery cost outside the valley isn't clear", count: 27, page: "Checkout" },
+  { text: "Delivery timeline and cost breakdown isn't clear", count: 27, page: "Checkout" },
   { text: "Too many similar phones to choose from", count: 19, page: "Phones" },
 ];

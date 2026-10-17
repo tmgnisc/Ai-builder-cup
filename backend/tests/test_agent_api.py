@@ -72,7 +72,7 @@ def test_agent_api_streaming_success() -> None:
     llm = ScriptedLlm(
         turns=[
             [
-                [types.Part.from_text(text="Hello! How can I assist you with electronics today?")],
+                [types.Part.from_text(text="Hello! How can I assist your shopping today?")],
             ]
         ]
     )

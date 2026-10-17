@@ -20,7 +20,8 @@ const CLEAR = "transform,translate,rotate,scale,opacity,visibility";
 export function ProductGrid() {
   const filters = useFilters();
   const resetFilters = useCatalogUI((s) => s.resetFilters);
-  const products = useMemo(() => applyFilters(filters), [filters]);
+  const catalogProducts = useCatalogUI((s) => s.catalogProducts);
+  const products = useMemo(() => applyFilters(filters, catalogProducts), [filters, catalogProducts]);
   const gridRef = useRef<HTMLDivElement>(null);
   const flipState = useRef<Flip.FlipState | null>(null);
   const batchTriggers = useRef<ScrollTrigger[]>([]);
@@ -95,7 +96,7 @@ export function ProductGrid() {
   }
 
   return (
-    <div ref={gridRef} className="grid grid-cols-1 gap-4 sm:grid-cols-2 xl:grid-cols-3 2xl:grid-cols-4" aria-live="polite" aria-busy={false}>
+    <div ref={gridRef} className="grid grid-cols-1 gap-4 sm:grid-cols-2 xl:grid-cols-3 2xl:grid-cols-4 content-start" aria-live="polite" aria-busy={false}>
       {products.map((p) => (
         <ProductCard key={p.id} product={p} />
       ))}

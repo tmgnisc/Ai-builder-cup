@@ -129,7 +129,7 @@ export const TOOLS = {
   }),
 
   get_delivery_info: tool({
-    description: "Delivery time and fee for a city in Nepal.",
+    description: "Delivery time and fee for a destination city.",
     input: z.object({ city: z.string().default("Kathmandu"), productId: z.string().optional() }),
     output: DeliverySchema,
     handler: ({ city }) => deliveryFor(city),

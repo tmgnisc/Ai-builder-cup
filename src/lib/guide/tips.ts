@@ -152,7 +152,7 @@ export const TIPS: Record<string, { 1?: Builder; 2?: Builder }> = {
     },
   },
   "product-card": {
-    1: (ctx) => (ctx.product ? { id: id("product-card", 1, ctx), text: `**${ctx.product.name}:** ${standoutFact(ctx.product)}` } : null),
+    1: (ctx) => (ctx.product ? { id: id("product-card", 1, ctx), text: `**${ctx.product.name}**\n${standoutFact(ctx.product)}` } : null),
     2: (ctx) =>
       ctx.product
         ? {
@@ -195,9 +195,9 @@ export const TIPS: Record<string, { 1?: Builder; 2?: Builder }> = {
     1: (ctx) => {
       const v = DELIVERY_RULES.valley;
       const qualifies = ctx.product && ctx.product.price >= v.freeOver;
-      return { id: id("delivery", 1, ctx), text: `Valley delivery takes ${v.days}${qualifies ? ", and this one ships free" : `, free over ${formatNPR(v.freeOver)}`}.` };
+      return { id: id("delivery", 1, ctx), text: `Express delivery takes ${v.days}${qualifies ? ", and this item ships free" : `, free over ${formatNPR(v.freeOver)}`}.` };
     },
-    2: (ctx) => ({ id: id("delivery", 2, ctx), text: "Outside the valley? Tell me your city and I'll check.", chips: [{ label: "Pokhara", message: "Delivery to Pokhara?" }, { label: "Biratnagar", message: "Delivery to Biratnagar?" }, NOT_NOW] }),
+    2: (ctx) => ({ id: id("delivery", 2, ctx), text: "Want to check shipping to your destination? Tell me your city and I'll verify.", chips: [{ label: "Check delivery", message: "Check delivery time" }, NOT_NOW] }),
   },
   "spec-table": {
     1: (ctx) => (ctx.product ? { id: id("spec-table", 1, ctx), text: "Every number here comes straight from the catalog. Hover a row and I'll put it in context." } : null),
@@ -273,7 +273,7 @@ export const TIPS: Record<string, { 1?: Builder; 2?: Builder }> = {
   "cart-drawer": {
     1: (ctx) => ({
       id: id("cart-drawer", 1, ctx),
-      text: `Subtotal ${formatNPR(ctx.cart.subtotal)}. Valley delivery is free over ${formatNPR(DELIVERY_RULES.valley.freeOver)}.`,
+      text: `Subtotal ${formatNPR(ctx.cart.subtotal)}. Express delivery is free over ${formatNPR(DELIVERY_RULES.valley.freeOver)}.`,
     }),
   },
   "checkout-button": {
@@ -281,7 +281,7 @@ export const TIPS: Record<string, { 1?: Builder; 2?: Builder }> = {
   },
   checkout: {
     1: (ctx) => ({ id: id("checkout", 1, ctx), text: "Review everything here. Placing the order is your call; I can't do it for you." }),
-    2: (ctx) => ({ id: id("checkout", 2, ctx), text: "Want me to check delivery to your city?", chips: [{ label: "Kathmandu", message: "Delivery to Kathmandu?" }, { label: "Pokhara", message: "Delivery to Pokhara?" }, NOT_NOW] }),
+    2: (ctx) => ({ id: id("checkout", 2, ctx), text: "Want me to check delivery estimates for your order?", chips: [{ label: "Check delivery", message: "Check delivery estimates" }, NOT_NOW] }),
   },
   "compare-verdict": {
     1: (ctx) => ({ id: id("compare-verdict", 1, ctx), text: "Every value in this table is from the catalog; the lime cells are the winners." }),
@@ -378,18 +378,18 @@ export const CHECKINS: Partial<Record<PageType, Builder>> = {
         ? [{ label: "Find one in stock", message: `Find something similar to the ${p.name} that's in stock` }]
         : [
             { label: "Cheaper option", message: `Find a cheaper alternative to the ${p.name}` },
-            { label: "When would it arrive?", message: "When would it arrive in Kathmandu?" },
+            { label: "When would it arrive?", message: "When would my order arrive?" },
           ];
     return { id: `checkin:product:${p.id}`, text: `Anything stopping you from getting the **${p.name}**?`, chips: [...help, CONFUSING, { label: "Just looking" }] };
   },
   cart: (ctx) =>
     ctx.cart.count
-      ? { id: "checkin:cart", text: "Anything holding you back? I can check delivery or look for a better price.", chips: [{ label: "Delivery time?", message: "When would my order arrive in Kathmandu?" }, CONFUSING, { label: "All good" }] }
+      ? { id: "checkin:cart", text: "Anything holding you back? I can check delivery or look for a better price.", chips: [{ label: "Delivery time?", message: "When would my order arrive?" }, CONFUSING, { label: "All good" }] }
       : null,
   checkout: () => ({
     id: "checkin:checkout",
     text: "Stuck on anything here? Tell me and I'll help.",
-    chips: [{ label: "Delivery cost?", message: "How much is delivery to Kathmandu?" }, CONFUSING, { label: "All good" }],
+    chips: [{ label: "Delivery cost?", message: "How much is delivery for this order?" }, CONFUSING, { label: "All good" }],
   }),
 };
 

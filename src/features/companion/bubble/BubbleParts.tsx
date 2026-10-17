@@ -1,6 +1,6 @@
 "use client";
 
-import { ChevronDown, Loader2, Plus } from "lucide-react";
+import { ChevronDown, Loader2, Plus, Wrench } from "lucide-react";
 import Link from "next/link";
 import { useState } from "react";
 import { ProductImage } from "@/features/catalog";
@@ -14,6 +14,7 @@ import type { BubbleChip } from "@/store/useBubble";
 import { useCart } from "@/store/useCart";
 import type { TraceEntry } from "@/store/useChat";
 import { useChat } from "@/store/useChat";
+import { formatToolLabel, formatToolSummary, TOOL_ICONS } from "../chat/agentTraceFormat";
 
 /** 1–3 compact product rows inside Pip's bubble. "Add" goes through Pip so it's verified. */
 export function MiniCards({ productIds, interactive }: { productIds: string[]; interactive: boolean }) {
@@ -78,35 +79,71 @@ export function Chips({ chips, onPick }: { chips: BubbleChip[]; onPick: (c: Bubb
   );
 }
 
-/** One tiny line: the agent's main step, expandable to the full trace. */
+/** One compact activity indicator: the agent's main step, expandable without duplication. */
 export function TraceLine({ trace }: { trace: TraceEntry[] }) {
   const [open, setOpen] = useState(false);
   if (!trace.length) return null;
+
   const running = trace.find((t) => t.status === "running");
   const main = running ?? trace.find((t) => t.name !== "get_cart") ?? trace[0];
-  const verify = trace.find((t) => t.name === "get_cart" && t.summary?.includes("verified"));
+  const MainIcon = TOOL_ICONS[main.name] ?? Wrench;
+
+  const mainLabel = formatToolLabel(main.name, main.status);
+  const mainSummary = formatToolSummary(main.summary);
+
   return (
-    <div className="mt-2 font-mono text-2xs text-muted">
-      <button type="button" onClick={() => setOpen((o) => !o)} aria-expanded={open} className="flex max-w-full items-center gap-1 hover:text-text">
-        {running && <Loader2 className="size-3 shrink-0 animate-spin" aria-hidden />}
+    <div className="mt-2 text-2xs text-muted">
+      <button
+        type="button"
+        onClick={() => setOpen((o) => !o)}
+        aria-expanded={open}
+        className="flex max-w-full items-center gap-1.5 transition-colors hover:text-text"
+      >
+        {running ? (
+          <Loader2 className="size-3 shrink-0 animate-spin" aria-hidden />
+        ) : (
+          <MainIcon className="size-3 shrink-0 text-muted" aria-hidden />
+        )}
         <span className="truncate">
-          {main.name}
-          {main.summary && ` · ${main.summary}`}
-          {main.durationMs !== undefined && ` · ${main.durationMs}ms`}
-          {verify && !open && ` · ${verify.summary?.split(" · ")[0]}`}
-          {trace.length > 1 && !open && ` · +${trace.length - 1}`}
+          {open ? (
+            `Activity (${trace.length} step${trace.length === 1 ? "" : "s"})`
+          ) : (
+            <>
+              <span>{mainLabel}</span>
+              {mainSummary && <span className="opacity-80"> · {mainSummary}</span>}
+              {trace.length > 1 && (
+                <span className="opacity-60"> · +{trace.length - 1} more</span>
+              )}
+            </>
+          )}
         </span>
         <ChevronDown className={cn("size-3 shrink-0 transition-transform", open && "rotate-180")} aria-hidden />
       </button>
+
       {open && (
-        <ol className="mt-1 space-y-0.5 border-l border-border pl-2">
-          {trace.map((t) => (
-            <li key={t.callId} className={cn("truncate", t.status === "error" && "text-danger")}>
-              {t.name}
-              {t.summary && ` · ${t.summary}`}
-              {t.durationMs !== undefined && ` · ${t.durationMs}ms`}
-            </li>
-          ))}
+        <ol className="mt-1.5 space-y-1 border-l border-border pl-2.5" aria-label="Activity steps">
+          {trace.map((t) => {
+            const Icon = TOOL_ICONS[t.name] ?? Wrench;
+            const label = formatToolLabel(t.name, t.status);
+            const summary = formatToolSummary(t.summary);
+            return (
+              <li
+                key={t.callId}
+                className={cn(
+                  "flex items-center gap-1.5 truncate",
+                  t.status === "error" && "text-state-error"
+                )}
+              >
+                {t.status === "running" ? (
+                  <Loader2 className="size-3 shrink-0 animate-spin" aria-hidden />
+                ) : (
+                  <Icon className="size-3 shrink-0 opacity-70" aria-hidden />
+                )}
+                <span className="text-text/80">{label}</span>
+                {summary && <span className="opacity-70"> · {summary}</span>}
+              </li>
+            );
+          })}
         </ol>
       )}
     </div>

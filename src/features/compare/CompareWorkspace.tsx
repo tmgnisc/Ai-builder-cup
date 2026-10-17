@@ -8,7 +8,7 @@ import {
   GitCompareArrows,
   Loader2,
   Plus,
-  Sparkles,
+  Scale,
   Trophy,
   X,
 } from "lucide-react";
@@ -20,6 +20,7 @@ import { Button, buttonClasses } from "@/components/ui/Button";
 import { EmptyState } from "@/components/ui/EmptyState";
 import { ErrorState } from "@/components/ui/ErrorState";
 import { IconButton } from "@/components/ui/IconButton";
+import { Select } from "@/components/ui/Select";
 import { ProductImage } from "@/features/catalog";
 import { cn } from "@/lib/cn";
 import { getAllProducts, getProduct } from "@/lib/commerce/catalog";
@@ -39,6 +40,13 @@ const CATEGORY_NAMES: Record<string, string> = {
   phones: "Phones",
   headphones: "Headphones",
   accessories: "Accessories",
+};
+
+const CATEGORY_APPLICABLE_SPECS: Record<Product["category"], Set<string>> = {
+  laptops: new Set(["price", "rating", "cpu", "gpu", "ram", "storage", "battery", "weight", "screen", "camera", "ports", "connectivity", "warranty"]),
+  phones: new Set(["price", "rating", "cpu", "ram", "storage", "battery", "weight", "screen", "camera", "connectivity", "warranty"]),
+  headphones: new Set(["price", "rating", "battery", "weight", "connectivity", "warranty"]),
+  accessories: new Set(["price", "rating", "battery", "weight", "connectivity", "warranty"]),
 };
 
 export interface CompareWorkspaceProps {
@@ -122,13 +130,6 @@ export function CompareWorkspace({
     [allRows, onlyDifferences],
   );
   const sections = useMemo(() => groupRowsBySection(visibleRows), [visibleRows]);
-
-const CATEGORY_APPLICABLE_SPECS: Record<Product["category"], Set<string>> = {
-  laptops: new Set(["price", "rating", "cpu", "gpu", "ram", "storage", "battery", "weight", "screen", "camera", "ports", "connectivity", "warranty"]),
-  phones: new Set(["price", "rating", "cpu", "ram", "storage", "battery", "weight", "screen", "camera", "connectivity", "warranty"]),
-  headphones: new Set(["price", "rating", "battery", "weight", "connectivity", "warranty"]),
-  accessories: new Set(["price", "rating", "battery", "weight", "connectivity", "warranty"]),
-};
 
   const [replacingCategory, setReplacingCategory] = useState<Product["category"] | null>(null);
   const recordedMissingRef = useRef<Set<string>>(new Set());
@@ -405,9 +406,8 @@ const CATEGORY_APPLICABLE_SPECS: Record<Product["category"], Set<string>> = {
                   variant="secondary"
                   onClick={() => handleFilterToCategory(cat)}
                   className="whitespace-nowrap"
-                  aria-label={`Compare only ${catName} products`}
                 >
-                  Filter to {catName} ({count})
+                  {`Filter to ${catName} (${count})`}
                 </Button>
               );
             })}
@@ -428,7 +428,6 @@ const CATEGORY_APPLICABLE_SPECS: Record<Product["category"], Set<string>> = {
                       variant="secondary"
                       onClick={() => handlePickReplacement(cand.id)}
                       className="text-xs"
-                      aria-label={`Compare with ${cand.name}`}
                     >
                       <Plus className="mr-1 size-3" aria-hidden="true" />
                       {cand.brand} {cand.name} ({formatNPR(cand.price)})
@@ -460,9 +459,9 @@ const CATEGORY_APPLICABLE_SPECS: Record<Product["category"], Set<string>> = {
           <div className="flex items-start gap-3">
             <span
               aria-hidden="true"
-              className="mt-0.5 grid size-7 shrink-0 place-items-center rounded-full bg-bg shadow-[inset_0_0_0_1.5px_var(--accent),0_0_16px_-4px_var(--accent)]"
+              className="mt-0.5 grid size-7 shrink-0 place-items-center rounded-lg bg-bg shadow-[inset_0_0_0_1.5px_var(--accent)]"
             >
-              <Sparkles className="size-3.5 text-accent-text" />
+              <Scale className="size-3.5 text-accent-text" />
             </span>
             <div className="flex-1">
               <p className="text-xs font-semibold uppercase tracking-wider text-accent-text">
@@ -540,14 +539,15 @@ const CATEGORY_APPLICABLE_SPECS: Record<Product["category"], Set<string>> = {
         {/* Quick-add slot when under max limit */}
         {products.length < MAX_COMPARE && availableToAdd.length > 0 && (
           <div className="flex items-center gap-2">
-            <select
+            <Select
               aria-label="Add another product to compare"
               value={addingProductId}
               onChange={(e) => {
                 const val = e.target.value;
                 if (val) handleQuickAdd(val);
               }}
-              className="h-8 rounded-full border border-border-strong bg-surface px-3 text-xs text-text focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-accent"
+              selectSize="sm"
+              className="h-8 rounded-lg border border-border-strong bg-surface text-xs text-text"
             >
               <option value="">+ Add product ({products.length}/{MAX_COMPARE})</option>
               {availableToAdd.map((p) => (
@@ -555,7 +555,7 @@ const CATEGORY_APPLICABLE_SPECS: Record<Product["category"], Set<string>> = {
                   {p.brand} {p.name} ({formatNPR(p.price)})
                 </option>
               ))}
-            </select>
+            </Select>
           </div>
         )}
       </div>

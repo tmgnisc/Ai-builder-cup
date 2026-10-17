@@ -1,29 +1,29 @@
 # Design Brief & System Specification: tmgnisc / Ai-builder-cup
 
-**Version:** 2.1.0  
-**Status:** Stage 1 Deliverable — Amended per Design Review  
-**Target:** Engineering, Product, and Design teams  
+**Version:** 3.0.0 (Brief v3)  
+**Status:** Stage 1 Approved & Refined Baseline  
+**Product Name:** Persona (defined in `src/config/brand.ts`)  
 
 ---
 
 ## 1. Brand Identity, Audience & Principles
 
 ### 1.1 Brand Statement (Two Plain Sentences, No Superlatives)
-> **Persona is an electronics catalog and shopping companion built for shoppers in Nepal. It presents product specifications in Nepalese Rupees and verifies cart changes against backend inventory before checkout.**
+> **Persona is an agentic ecommerce platform powered by an autonomous shopping companion. It provides transparent hardware comparisons, grounds all product recommendations in verified catalog data, and validates cart mutations directly against live inventory.**
 
 ### 1.2 Target Audience
-- **Primary Audience:** Electronics shoppers, students, developers, and tech buyers in Nepal (Kathmandu, Pokhara, Lalitpur, Bhaktapur, and outside Valley hubs).
+- **Primary Audience:** Modern technology buyers, developers, creators, and hardware shoppers seeking an intelligent, agent-guided commerce experience.
 - **Core Buyer Needs:**
-  - Clear hardware specifications without promotional noise.
-  - Transparent pricing in Nepalese Rupees (NPR) with standard Lakh notation where natural.
-  - Realistic delivery estimates (Kathmandu Valley vs. Outside Valley).
-  - Reliable inventory confirmation so an order is not canceled after purchase.
+  - Clear, objective specifications without promotional fluff or sponsored bias.
+  - Transparent pricing with tabular figures that do not jitter or obscure total costs.
+  - Granular multi-product comparisons with objective trade-off analysis.
+  - Grounded inventory verification ensuring every item added to cart is genuinely available.
 
 ### 1.3 Implementation Status vs. Target Goals
 To maintain factual honesty, the system distinguishes between current implementation and future roadmap goals:
-- **Product Inventory:** Currently backed by an in-memory / database catalog with simulated stock counts and deterministic chaos failure modes. *Goal:* Live synchronization with Kathmandu warehouse management systems (WMS).
-- **Warranties:** Currently displays catalog spec fields. *Goal:* Official manufacturer warranty verification with authorized Nepal distributors.
-- **Payment Methods:** Currently provides demo checkout handoff. *Goal:* Native integration with Fonepay, Esewa, Khalti, and Cash on Delivery (COD) services.
+- **Product Inventory:** Backed by database catalog with live inventory verification and deterministic chaos testing. *Goal:* Live synchronization with distributed warehouse management systems (WMS).
+- **Specification Engine:** Grounded attribute extraction and side-by-side spec normalization across multi-device categories. *Goal:* Dynamic user-submitted spec benchmarks and community hardware verification.
+- **Checkout & Payment:** Demo checkout handoff with order summary and lock state. *Goal:* Multi-gateway payment integration and one-click tokenized checkout.
 
 ### 1.4 Five Core Design Principles
 1. **Clarity:** Visual hierarchy is immediate. Specifications are structured into standard, comparable tables. Typography guides the eye directly to critical hardware metrics without distracting decoration.
@@ -58,11 +58,11 @@ To maintain typographic cohesion and eliminate visual discord, **a single font f
 | `text-mono-sm` | Single Font (`tnum`) | 12px / 16px (0.75rem) | 400 / 500 | `tnum` | Compact specs, stock counts, delivery day metrics |
 | `text-mono-lg` | Single Font (`tnum`) | 20px / 24px (1.25rem) | 600 | `tnum` | Prominent price tags on Product Detail and Cart total |
 
-### 2.3 Devanagari Fallback Plan
-While the primary catalog and interface use English for international technical standard terms (RAM, GPU, Thunderbolt), bilingual support and Nepali locale rendering require a robust Devanagari typographic fallback:
-- **Fallback Stack:** `Inter, "Noto Sans Devanagari", "Kohinoor Devanagari", system-ui, -apple-system, sans-serif`.
-- **Metrics Normalization:** Noto Sans Devanagari matches Inter in x-height and ascender/descender ratios when set to `size-adjust: 104%` in `@font-face`.
-- **Tabular Numerals:** Devanagari numerals (`० १२३४५६७८९`) fallback with tabular metric feature tags enabled (`font-feature-settings: "tnum" 1`).
+### 2.3 Multilingual & System Typographic Fallbacks
+While the primary catalog and interface use English for international technical standard terms (RAM, GPU, Thunderbolt), typography incorporates robust system and Unicode fallbacks:
+- **Fallback Stack:** `Inter, system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif`.
+- **Metrics Normalization:** Cross-platform metrics ensure zero cumulative layout shift (CLS).
+- **Tabular Numerals:** Tabular figures (`tnum`) are enforced on all prices, specifications, and telemetry.
 
 ---
 
@@ -197,11 +197,11 @@ Hairlines (`1px` borders in `border-subtle` and `border-strong`) replace heavy s
 #### Desktop (>= 1024px)
 ```text
 +--------------------------------------------------------------------------------------------------+
-| [Logo: Ai-builder-cup]   [Search: "laptop under 1.5 lakh"...]      [Theme]   [Compare (2)]  [Cart (1)]|
+| [Logo: Persona]          [Search: "developer laptop with 16GB"...] [Theme]   [Compare (2)]  [Cart (1)]|
 +--------------------------------------------------------------------------------------------------+
 | HERO (Single Font Inter):                                                                        |
-| "Hardware chosen with precision, backed by genuine Kathmandu stock."                             |
-| [Category Pills: All | Laptops (14) | Phones (8) | Audio (12) | Monitors (6) | Accessories (9)]  |
+| "Autonomous shopping with verified catalog specs and real-time inventory."                       |
+| [Category Pills: All | Laptops (11) | Phones (8) | Headphones (7) | Accessories (6)]               |
 +--------------------------------------------------------------------------------------------------+
 | PRODUCT CATALOG GRID (4 columns)                                          [Filters] [Sort: Price]|
 | +-------------------------+ +-------------------------+ +-------------------------+ +------------+ |
@@ -371,13 +371,13 @@ Hairlines (`1px` borders in `border-subtle` and `border-strong`) replace heavy s
 | Order Confirmation & Delivery Details                                                            |
 | +-------------------------------------------------------+ +------------------------------------+ |
 | | 1. Delivery Address                                   | | ORDER SUMMARY                      | |
-| | Full Name: Sudip Sharma                               | | 2 items · Subtotal: NPR 1,38,500   | |
-| | Phone: 9841XXXXXX                                     | | Delivery: NPR 0 (Kathmandu Valley) | |
-| | City: Kathmandu Valley (Bagmati)                      | | Total: NPR 1,38,500                | |
+| | Full Name: Alex Morgan                                | | 2 items · Subtotal: NPR 1,38,500   | |
+| | Phone: +1 555-0199                                     | | Delivery: NPR 0 (Express Delivery) | |
+| | City: Express Delivery Zone                            | | Total: NPR 1,38,500                | |
 | | Estimated Delivery: 1–2 business days                 | |                                    | |
 | |                                                       | | Planned Payment Integrations:      | |
 | | 2. Payment Method (Demo Mode)                         | | • Cash on Delivery (COD)           | |
-| | (•) Simulated Store Checkout                          | | • Fonepay / Esewa / Khalti         | |
+| | (•) Simulated Store Checkout                          | | • Direct Card / Digital Wallet     | |
 | | [Confirm & Complete Order]                            | |                                    | |
 +--------------------------------------------------------------------------------------------------+
 ```

@@ -22,7 +22,7 @@
     },
     {
       "name": "get_delivery_info",
-      "description": "Delivery time and fee for a city in Nepal.",
+      "description": "Delivery time and fee for a destination city.",
       "mutation": false
     },
     {

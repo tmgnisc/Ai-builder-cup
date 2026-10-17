@@ -1,4 +1,3 @@
-import { tokenDefinitions } from "../src/tokens/definitions";
 
 interface ColorPair {
   name: string;

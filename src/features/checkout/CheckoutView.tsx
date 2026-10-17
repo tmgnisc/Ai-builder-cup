@@ -63,7 +63,7 @@ export function CheckoutView() {
                 <dd className="font-mono">{formatNPR(subtotal)}</dd>
               </div>
               <div className="flex justify-between">
-                <dt className="text-muted">Delivery (Kathmandu valley)</dt>
+                <dt className="text-muted">Delivery</dt>
                 <dd className="font-mono">{delivery ? formatNPR(delivery) : "Free"}</dd>
               </div>
               <div className="flex justify-between border-t border-border pt-3 text-base font-semibold">

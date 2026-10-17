@@ -1,76 +1,42 @@
 "use client";
 
-import {
-  ChevronDown,
-  Loader2,
-  PackageCheck,
-  PackageSearch,
-  Scale,
-  Search,
-  ShoppingCart,
-  Trash2,
-  Truck,
-  Wrench,
-  type LucideIcon,
-} from "lucide-react";
+import { ChevronDown, Loader2, Wrench } from "lucide-react";
 import { useState } from "react";
 import { cn } from "@/lib/cn";
 import type { TraceEntry } from "@/store/useChat";
+import { formatToolLabel, formatToolSummary, TOOL_ICONS } from "./agentTraceFormat";
 
-const ICON: Record<string, LucideIcon> = {
-  search_products: Search,
-  get_product: PackageSearch,
-  compare_products: Scale,
-  check_stock: PackageCheck,
-  get_delivery_info: Truck,
-  add_to_cart: ShoppingCart,
-  remove_from_cart: Trash2,
-  get_cart: ShoppingCart,
-};
-
-const TOOL_LABELS: Record<string, string> = {
-  search_products: "Searching catalog",
-  get_product: "Checking product specs",
-  compare_products: "Comparing trade-offs",
-  check_stock: "Checking shelf stock",
-  get_delivery_info: "Checking valley delivery",
-  add_to_cart: "Adding to cart",
-  remove_from_cart: "Updating cart",
-  get_cart: "Verifying cart",
-};
-
-/** Compact, collapsible list of the agent's tool calls, so its steps are visible. */
+/** Compact, collapsible list of the agent's activity steps. */
 export function ToolTrace({ trace, defaultOpen }: { trace: TraceEntry[]; defaultOpen: boolean }) {
   const [open, setOpen] = useState(defaultOpen);
   if (!trace.length) return null;
-  const total = trace.reduce((s, t) => s + (t.durationMs ?? 0), 0);
   const running = trace.some((t) => t.status === "running");
   const failed = trace.some((t) => t.status === "error");
 
   return (
-    <div className="mt-2 font-mono text-2xs text-muted">
+    <div className="mt-2 text-2xs text-muted">
       <button
         type="button"
         onClick={() => setOpen((o) => !o)}
         aria-expanded={open}
-        className="inline-flex items-center gap-1.5 rounded-full px-1.5 py-0.5 hover:text-text"
+        className="inline-flex items-center gap-1.5 rounded-md px-1.5 py-0.5 transition-colors hover:text-text"
       >
         {running ? <Loader2 className="size-3 animate-spin" aria-hidden /> : <Wrench className="size-3" aria-hidden />}
-        {trace.length} step{trace.length === 1 ? "" : "s"}
-        {!running && ` · ${total}ms`}
-        {failed && <span className="text-danger">· issue</span>}
+        {trace.length} action{trace.length === 1 ? "" : "s"} taken
+        {failed && <span className="text-state-error">· notice</span>}
         <ChevronDown className={cn("size-3 transition-transform", open && "rotate-180")} aria-hidden />
       </button>
       {open && (
-        <ol className="mt-1 space-y-0.5 border-l border-border pl-2.5" aria-label="Agent steps">
+        <ol className="mt-1 space-y-1 border-l border-border pl-2.5" aria-label="Agent steps">
           {trace.map((t) => {
-            const Icon = ICON[t.name] ?? Wrench;
+            const Icon = TOOL_ICONS[t.name] ?? Wrench;
+            const label = formatToolLabel(t.name, t.status);
+            const summary = formatToolSummary(t.summary);
             return (
-              <li key={t.callId} className={cn("flex items-center gap-1.5", t.status === "error" && "text-danger")}>
-                {t.status === "running" ? <Loader2 className="size-3 shrink-0 animate-spin" aria-hidden /> : <Icon className="size-3 shrink-0" aria-hidden />}
-                <span className="text-text/80">{TOOL_LABELS[t.name] ?? t.name}</span>
-                {t.summary && <span>· {t.summary}</span>}
-                {t.durationMs !== undefined && <span className="opacity-70">· {t.durationMs}ms</span>}
+              <li key={t.callId} className={cn("flex items-center gap-1.5", t.status === "error" && "text-state-error")}>
+                {t.status === "running" ? <Loader2 className="size-3 shrink-0 animate-spin" aria-hidden /> : <Icon className="size-3 shrink-0 opacity-70" aria-hidden />}
+                <span className="text-text/80">{label}</span>
+                {summary && <span className="opacity-70">· {summary}</span>}
               </li>
             );
           })}

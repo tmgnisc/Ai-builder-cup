@@ -59,8 +59,8 @@ export function ProductDetailView({ product }: { product: Product }) {
           </div>
 
           <p data-pip-anchor="delivery" data-pip-topic="delivery" data-pip-product={product.id} className="mt-5 w-fit rounded-xl bg-surface px-3.5 py-2.5 text-xs text-muted hairline">
-            <span className="text-text">Delivery:</span> Kathmandu valley {DELIVERY_RULES.valley.days} ({formatNPR(DELIVERY_RULES.valley.fee)}, free over{" "}
-            {formatNPR(DELIVERY_RULES.valley.freeOver)}) · rest of Nepal {DELIVERY_RULES.outside.days}
+            <span className="text-text">Delivery:</span> Express ({DELIVERY_RULES.valley.days}, {formatNPR(DELIVERY_RULES.valley.fee)}, free over{" "}
+            {formatNPR(DELIVERY_RULES.valley.freeOver)}) · Standard ({DELIVERY_RULES.outside.days})
           </p>
 
           <section aria-labelledby="specs-heading" className="mt-10" data-pip-anchor="specs" data-pip-topic="spec-table" data-pip-product={product.id}>

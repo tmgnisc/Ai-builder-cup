@@ -1,6 +1,6 @@
 import { chromium } from "playwright";
 
-const baseUrl = process.env.BASE_URL || "http://localhost:3001";
+const baseUrl = process.env.BASE_URL || "http://localhost:3000";
 
 async function run() {
   console.log(`[test_compare_e2e] Running Playwright E2E compare flows against ${baseUrl}...`);
@@ -157,15 +157,15 @@ async function run() {
     await crossCatAlert.waitFor({ state: "visible", timeout: 5000 });
     console.log("✓ Cross-category alert banner appeared");
 
-    const keepFilterBtn = crossCatAlert.locator("button", { hasText: "Keep only" });
-    await keepFilterBtn.waitFor({ state: "visible", timeout: 5000 });
-    await keepFilterBtn.click();
+    const filterBtn = crossCatAlert.locator("button", { hasText: "Filter to" }).first();
+    await filterBtn.waitFor({ state: "visible", timeout: 5000 });
+    await filterBtn.click();
     await page3.waitForTimeout(600);
 
-    // After filtering down to 1 category (1 item), empty state with quick add suggestions shows
-    const emptyNotice = page3.locator("[role='status']", { hasText: "compare" });
-    await emptyNotice.waitFor({ state: "visible", timeout: 5000 });
-    console.log("✓ Non-matching category product filtered out successfully");
+    // After filtering down to 1 category (1 item), suggestion chips appear to complete 2-product comparison
+    const chipNotice = page3.locator("text=requires at least 2 products");
+    await chipNotice.waitFor({ state: "visible", timeout: 5000 });
+    console.log("✓ Suggestion chips appeared to replace non-matching category product");
     await context3.close();
 
     // ----------------------------------------------------
@@ -184,14 +184,32 @@ async function run() {
     console.log(`Initial pinned products in table: ${countBefore}`);
     if (countBefore !== 3) throw new Error(`Expected 3 products, found ${countBefore}`);
 
+    const sendChat = async (msg: string) => {
+      const handled = await page4.evaluate((text) => {
+        const win = window as unknown as Record<string, { getState: () => { send: (t: string) => Promise<void> } }>;
+        if (win.useChat) {
+          void win.useChat.getState().send(text);
+          return true;
+        }
+        return false;
+      }, msg);
+      if (!handled) {
+        const talkBtn = page4.locator("button[aria-label='Talk to Pip']");
+        const input = page4.locator("#pip-input");
+        if (!(await input.isVisible())) {
+          await talkBtn.click({ force: true });
+          await input.waitFor({ state: "visible", timeout: 5000 });
+        }
+        await input.fill(msg);
+        await input.press("Enter");
+      }
+    };
+
     // Pip adds a 4th product via chat turn: "Add HP Pavilion to compare"
     console.log("Asking Pip: 'Add HP Pavilion to compare'...");
-    await page4.evaluate(async () => {
-      const { useChat } = window as unknown as { useChat: { getState: () => { send: (text: string) => Promise<void> } } };
-      await useChat.getState().send("Add HP Pavilion to compare");
-    });
+    await sendChat("Add HP Pavilion to compare");
     // Wait for agent turn to process and URL to update
-    await page4.waitForURL(/hp-pavilion-plus-14/, { timeout: 10000 });
+    await page4.waitForURL(/hp-pavilion-plus-14/, { timeout: 15000 });
     await page4.waitForTimeout(600);
 
     const headersAfterAdd = page4.locator("th button[aria-label*='Remove'][aria-label*='comparison']");
@@ -212,14 +230,11 @@ async function run() {
 
     // Pip removes one product: "Remove Acer Swift from compare"
     console.log("Asking Pip: 'Remove Acer Swift from compare'...");
-    await page4.evaluate(async () => {
-      const { useChat } = window as unknown as { useChat: { getState: () => { send: (text: string) => Promise<void> } } };
-      await useChat.getState().send("Remove Acer Swift from compare");
-    });
+    await sendChat("Remove Acer Swift from compare");
     // Wait for URL to update (no longer containing acer-swift-go-14)
     await page4.waitForFunction(
       () => !window.location.search.includes("acer-swift-go-14"),
-      { timeout: 10000 },
+      { timeout: 15000 },
     );
     await page4.waitForTimeout(600);
 

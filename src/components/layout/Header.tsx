@@ -1,5 +1,5 @@
 import Link from "next/link";
-import { CATEGORIES } from "@/lib/commerce/schemas";
+import { getCategories } from "@/lib/commerce/catalog";
 import { CartButton } from "@/features/cart";
 import { PipHeaderControls } from "@/features/companion";
 import { ThemeToggle } from "./ThemeToggle";
@@ -19,6 +19,7 @@ export function Logo() {
 }
 
 export function Header() {
+  const categories = getCategories();
   return (
     <header className="sticky top-0 z-40 border-b border-border bg-bg">
       <a
@@ -30,7 +31,7 @@ export function Header() {
       <div className="mx-auto flex h-16 max-w-page items-center gap-6 px-4 sm:px-6">
         <Logo />
         <nav aria-label="Primary" className="hidden flex-1 items-center gap-1 md:flex">
-          {CATEGORIES.map((c) => (
+          {categories.map((c) => (
             <Link
               key={c.id}
               href={`/?category=${c.id}#store`}

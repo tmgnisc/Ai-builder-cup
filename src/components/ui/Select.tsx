@@ -1,7 +1,12 @@
+"use client";
+
+import { Select as HeroUISelect, ListBox } from "@heroui/react";
 import { ChevronDown } from "lucide-react";
 import { forwardRef, type ComponentProps } from "react";
 import { cn } from "@/lib/cn";
 import { focusRing } from "./focusRing";
+
+export { HeroUISelect, ListBox };
 
 export interface SelectProps extends ComponentProps<"select"> {
   error?: string;
@@ -10,8 +15,8 @@ export interface SelectProps extends ComponentProps<"select"> {
 
 const SIZE = {
   sm: "h-8 pl-3 pr-8 text-xs rounded-lg",
-  md: "h-10 pl-4 pr-10 text-sm rounded-full",
-  lg: "h-12 pl-5 pr-12 text-base rounded-full",
+  md: "h-10 pl-4 pr-10 text-sm rounded-lg",
+  lg: "h-12 pl-5 pr-12 text-base rounded-lg",
 };
 
 export const Select = forwardRef<HTMLSelectElement, SelectProps>(function Select(
@@ -47,3 +52,4 @@ export const Select = forwardRef<HTMLSelectElement, SelectProps>(function Select
     </div>
   );
 });
+

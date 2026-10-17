@@ -1,15 +1,18 @@
+"use client";
+
+import { Card as HeroUICard } from "@heroui/react";
 import { forwardRef, type ComponentProps } from "react";
 import { cn } from "@/lib/cn";
 
 export interface CardProps extends ComponentProps<"div"> {
-  variant?: "default" | "surface-2" | "glass";
+  variant?: "default" | "surface-2" | "surface";
   interactive?: boolean;
 }
 
 const VARIANTS = {
   default: "bg-surface hairline",
+  surface: "bg-surface hairline",
   "surface-2": "bg-surface-2 hairline",
-  glass: "glass",
 };
 
 export const Card = forwardRef<HTMLDivElement, CardProps>(function Card(
@@ -17,18 +20,18 @@ export const Card = forwardRef<HTMLDivElement, CardProps>(function Card(
   ref,
 ) {
   return (
-    <div
+    <HeroUICard
       ref={ref}
       className={cn(
         "relative overflow-hidden rounded-card transition-[transform,box-shadow] duration-300 ease-[var(--ease-out-expo)]",
-        VARIANTS[variant],
+        VARIANTS[variant as keyof typeof VARIANTS] ?? VARIANTS.default,
         interactive && "hover:-translate-y-1 hover:shadow-card cursor-pointer",
         className,
       )}
       {...props}
     >
       {children}
-    </div>
+    </HeroUICard>
   );
 });
 
@@ -43,3 +46,4 @@ export function CardContent({ className, ...props }: ComponentProps<"div">) {
 export function CardFooter({ className, ...props }: ComponentProps<"div">) {
   return <div className={cn("p-5 pt-3 border-t border-border flex items-center gap-3", className)} {...props} />;
 }
+

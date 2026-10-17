@@ -1,7 +1,9 @@
 "use client";
 
+import { Checkbox, Switch } from "@heroui/react";
 import { RotateCcw } from "lucide-react";
 import { useEffect, useId, useMemo, useRef, useState } from "react";
+import { Button } from "@/components/ui/Button";
 import { cn } from "@/lib/cn";
 import { getBrands } from "@/lib/commerce/catalog";
 import { formatNPR } from "@/lib/commerce/format";
@@ -41,14 +43,15 @@ export function Filters({ className, inSheet = false }: { className?: string; in
         <h2 className={cn("font-display text-sm font-semibold tracking-tight", inSheet && "sr-only")}>
           Filters{count > 0 && <span className="ml-2 rounded-full bg-accent px-1.5 py-0.5 font-mono text-2xs text-accent-fg">{count}</span>}
         </h2>
-        <button
-          type="button"
+        <Button
+          variant="ghost"
+          size="sm"
           onClick={() => resetFilters({ category: filters.category, sort: filters.sort })}
           disabled={count === 0}
-          className="inline-flex items-center gap-1 rounded-full px-2 py-1 text-xs text-muted transition-colors hover:text-text disabled:opacity-40"
+          iconLeft={<RotateCcw className="size-3" aria-hidden />}
         >
-          <RotateCcw className="size-3" aria-hidden /> Reset
-        </button>
+          Reset
+        </Button>
       </div>
 
       <PriceRange anchor={inSheet ? undefined : "filter-price"} />
@@ -58,15 +61,14 @@ export function Filters({ className, inSheet = false }: { className?: string; in
           {visibleBrands.map((b) => {
             const checked = filters.brands.includes(b);
             return (
-              <label key={b} className="flex cursor-pointer items-center gap-2.5 rounded-lg px-1 py-1 text-sm text-muted hover:text-text">
-                <input
-                  type="checkbox"
-                  checked={checked}
-                  onChange={() => setFilter("brands", checked ? filters.brands.filter((x) => x !== b) : [...filters.brands, b])}
-                  className="size-4 rounded accent-[var(--accent)]"
-                />
-                <span className={checked ? "text-text" : undefined}>{b}</span>
-              </label>
+              <Checkbox
+                key={b}
+                isSelected={checked}
+                onChange={() => setFilter("brands", checked ? filters.brands.filter((x) => x !== b) : [...filters.brands, b])}
+                className="py-1 cursor-pointer"
+              >
+                <span className={cn("text-sm", checked ? "text-text font-medium" : "text-muted hover:text-text")}>{b}</span>
+              </Checkbox>
             );
           })}
           {brands.length > BRANDS_COLLAPSED && (
@@ -74,7 +76,7 @@ export function Filters({ className, inSheet = false }: { className?: string; in
               type="button"
               onClick={() => setShowAllBrands((v) => !v)}
               aria-expanded={showAllBrands}
-              className="mt-1 self-start rounded-full px-1 text-xs text-accent-text hover:underline"
+              className="mt-1 self-start rounded-md px-1 text-xs text-accent-text hover:underline"
             >
               {showAllBrands ? "Show fewer" : `Show all ${brands.length}`}
             </button>
@@ -100,20 +102,15 @@ export function Filters({ className, inSheet = false }: { className?: string; in
         />
       </Group>
 
-      <label className="flex cursor-pointer items-center justify-between gap-3 text-sm">
-        <span>In stock only</span>
-        <input
-          type="checkbox"
-          role="switch"
-          checked={filters.inStockOnly}
-          onChange={(e) => setFilter("inStockOnly", e.target.checked)}
-          className="peer sr-only"
+      <div className="flex items-center justify-between gap-3 text-sm py-1">
+        <span className="font-medium text-text">In stock only</span>
+        <Switch
+          isSelected={filters.inStockOnly}
+          onChange={(selected) => setFilter("inStockOnly", selected)}
+          aria-label="In stock only"
+          size="sm"
         />
-        <span
-          aria-hidden
-          className="relative h-6 w-10 rounded-full bg-surface-2 hairline transition-colors peer-checked:bg-accent peer-focus-visible:outline peer-focus-visible:outline-2 peer-focus-visible:outline-accent-text after:absolute after:left-1 after:top-1 after:size-4 after:rounded-full after:bg-muted after:transition-transform after:duration-300 peer-checked:after:translate-x-4 peer-checked:after:bg-accent-fg"
-        />
-      </label>
+      </div>
     </div>
   );
 }

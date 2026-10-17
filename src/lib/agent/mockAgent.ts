@@ -657,7 +657,7 @@ class Handlers {
       msg,
       `Done: the **${name(p)}** is in your cart (${line.qty} × ${formatNPR(line.unitPrice)}). I re-checked the cart to confirm. Checkout is up to you, whenever you're ready.`,
     );
-    this.chips(["Show my cart", "Go to checkout", "Delivery to Kathmandu?"]);
+    this.chips(["Show my cart", "Go to checkout", "Check delivery"]);
   }
 
   private async outOfStock(p: Product, blockId: string) {
@@ -775,7 +775,7 @@ class Handlers {
     const d = r.output;
     await io.say(
       msg,
-      `Delivery to **${d.city}** takes ${d.days}. The fee is ${formatNPR(d.fee)}, free on orders over ${formatNPR(d.freeOver)}.${city ? "" : " (I assumed Kathmandu; tell me your city if it's elsewhere.)"}`,
+      `Delivery to **${d.city}** takes ${d.days}. The fee is ${formatNPR(d.fee)}, free on orders over ${formatNPR(d.freeOver)}.${city ? "" : " (Tell me your destination city if you'd like to check elsewhere.)"}`,
     );
   }
 

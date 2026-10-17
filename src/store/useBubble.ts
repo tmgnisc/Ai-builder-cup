@@ -89,8 +89,8 @@ if (typeof window !== "undefined") {
 
 /** Contextual suggestions when the user opens Pip on a given page. */
 export function suggestionsFor(pathname: string): string[] {
-  if (pathname.startsWith("/product/")) return ["Is this good for coding?", "Compare specs with similar models", "Check Valley delivery & stock"];
-  if (pathname.startsWith("/checkout")) return ["What's the Kathmandu delivery time?", "Verify my cart items", "Remove the last item"];
-  if (pathname.startsWith("/merchant")) return ["What can Pip do for shoppers?", "Show me laptops under 1.5 lakh", "Help"];
-  return ["Coding laptop under 1.5 lakh with 16GB", "ANC headphones for noisy commutes", "Lightweight ultrabook for TU engineering"];
+  if (pathname.startsWith("/product/")) return ["Is this good for coding?", "Compare specs with similar models", "Check delivery time & stock"];
+  if (pathname.startsWith("/checkout")) return ["What is the delivery time?", "Verify my cart items", "Remove the last item"];
+  if (pathname.startsWith("/merchant")) return ["What can Pip do for shoppers?", "Show high-rated developer laptops", "Help"];
+  return ["Developer laptop with 16 GB RAM", "ANC headphones for focused work", "Compare lightweight ultrabooks"];
 }

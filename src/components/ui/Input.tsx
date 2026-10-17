@@ -1,16 +1,19 @@
+"use client";
+
+import { Input as HeroUIInput } from "@heroui/react";
 import { forwardRef, type ComponentProps } from "react";
 import { cn } from "@/lib/cn";
 import { focusRing } from "./focusRing";
 
-export interface InputProps extends ComponentProps<"input"> {
+export interface InputProps extends Omit<ComponentProps<"input">, "size"> {
   error?: string;
   inputSize?: "sm" | "md" | "lg";
 }
 
 const SIZE = {
   sm: "h-8 px-2.5 text-xs rounded-lg",
-  md: "h-10 px-3.5 text-sm rounded-xl",
-  lg: "h-12 px-4 text-base rounded-2xl",
+  md: "h-10 px-3.5 text-sm rounded-lg",
+  lg: "h-12 px-4 text-base rounded-lg",
 };
 
 export const Input = forwardRef<HTMLInputElement, InputProps>(function Input(
@@ -19,7 +22,7 @@ export const Input = forwardRef<HTMLInputElement, InputProps>(function Input(
 ) {
   return (
     <div className="w-full">
-      <input
+      <HeroUIInput
         ref={ref}
         disabled={disabled}
         aria-invalid={Boolean(error)}
@@ -40,3 +43,4 @@ export const Input = forwardRef<HTMLInputElement, InputProps>(function Input(
     </div>
   );
 });
+

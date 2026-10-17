@@ -502,3 +502,59 @@ async def test_scenario_15_product_lookup_and_context_prompt() -> None:
     ui_events = [e for e in events if e["type"] == "ui"]
     assert any(u["action"]["type"] == "move_to" for u in ui_events)
     assert events[-1]["type"] == "done"
+
+
+@pytest.mark.asyncio
+async def test_scenario_16_flow_6_compare_add_remove() -> None:
+    """Flow 6: Pip on /compare: pin 3, Pip adds a 4th, Pip removes one."""
+    initial_pids = ["apple-macbook-pro-14-m4-pro", "lenovo-ideapad-slim-5-14", "acer-swift-go-14"]
+    four_pids = [*initial_pids, "hp-pavilion-plus-14"]
+    three_pids = ["apple-macbook-pro-14-m4-pro", "lenovo-ideapad-slim-5-14", "hp-pavilion-plus-14"]
+
+    # Turn 1: Add 4th product to comparison
+    llm_turn1 = ScriptedLlm(
+        turns=[
+            [
+                [
+                    types.Part.from_function_call(
+                        name="ui_action",
+                        args={"kind": "open_compare", "payload": {"productIds": four_pids}},
+                    )
+                ],
+                [types.Part.from_text(text="Added the HP Pavilion Plus 14 to your comparison.")],
+            ]
+        ]
+    )
+    req1 = AgentRequest(
+        message="Add HP Pavilion to compare",
+        context={"compareIds": initial_pids, "path": "/compare"},
+    )
+    events1 = await collect_events(req1, llm_turn1)
+    ui_event1 = next(e for e in events1 if e["type"] == "ui")
+    assert ui_event1["action"]["type"] == "open_compare"
+    assert ui_event1["action"]["productIds"] == four_pids
+
+    # Turn 2: Remove a product from comparison
+    llm_turn2 = ScriptedLlm(
+        turns=[
+            [
+                [
+                    types.Part.from_function_call(
+                        name="ui_action",
+                        args={"kind": "open_compare", "payload": {"productIds": three_pids}},
+                    )
+                ],
+                [types.Part.from_text(text="Removed the Acer Swift Go 14 from your comparison.")],
+            ]
+        ]
+    )
+    req2 = AgentRequest(
+        message="Remove Acer Swift from compare",
+        context={"compareIds": four_pids, "path": "/compare"},
+    )
+    events2 = await collect_events(req2, llm_turn2)
+    ui_event2 = next(e for e in events2 if e["type"] == "ui")
+    assert ui_event2["action"]["type"] == "open_compare"
+    assert ui_event2["action"]["productIds"] == three_pids
+    assert events2[-1]["type"] == "done"
+

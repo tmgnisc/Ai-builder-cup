@@ -3,7 +3,8 @@
 import { Headphones, Laptop, LayoutGrid, Plug, Smartphone, type LucideIcon } from "lucide-react";
 import { useRef } from "react";
 import { cn } from "@/lib/cn";
-import { CATEGORIES, type Category } from "@/lib/commerce/schemas";
+import { getCategories } from "@/lib/commerce/catalog";
+import type { Category } from "@/lib/commerce/schemas";
 import { gsap, motion, useGSAP } from "@/lib/motion";
 import { useMagnetic } from "@/lib/useMagnetic";
 import { useCatalogUI, useFilters } from "@/store/useCatalogUI";
@@ -22,6 +23,7 @@ export function CategoryStrip() {
   const setFilter = useCatalogUI((s) => s.setFilter);
   const navRef = useRef<HTMLDivElement>(null);
   const indicatorRef = useRef<HTMLSpanElement>(null);
+  const categories = getCategories();
 
   useGSAP(
     () => {
@@ -52,8 +54,8 @@ export function CategoryStrip() {
       <Pill active={category === null} onClick={() => select(null)} icon={ICON.all}>
         All
       </Pill>
-      {CATEGORIES.map((c) => (
-        <Pill key={c.id} active={category === c.id} onClick={() => select(c.id)} icon={ICON[c.id]}>
+      {categories.map((c) => (
+        <Pill key={c.id} active={category === c.id} onClick={() => select(c.id)} icon={ICON[c.id] ?? LayoutGrid}>
           {c.label}
         </Pill>
       ))}

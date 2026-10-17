@@ -1,3 +1,6 @@
+"use client";
+
+import { Chip as HeroUIChip } from "@heroui/react";
 import { X } from "lucide-react";
 import type { ComponentProps, ReactNode } from "react";
 import { cn } from "@/lib/cn";
@@ -22,9 +25,10 @@ export function Chip({
 }: ChipProps) {
   if (onRemove) {
     return (
-      <span
+      <HeroUIChip
+        variant="soft"
         className={cn(
-          "inline-flex items-center gap-1.5 rounded-full bg-surface-2 px-3 py-1 text-xs text-text hairline",
+          "inline-flex items-center gap-1.5 rounded-md bg-surface-2 px-2.5 py-1 text-xs text-text hairline",
           className,
         )}
       >
@@ -35,13 +39,13 @@ export function Chip({
           onClick={onRemove}
           aria-label={removeLabel}
           className={cn(
-            "grid size-4 place-items-center rounded-full text-muted hover:text-text",
+            "grid size-4 place-items-center rounded text-muted hover:text-text",
             focusRing,
           )}
         >
           <X className="size-3" aria-hidden />
         </button>
-      </span>
+      </HeroUIChip>
     );
   }
 
@@ -50,10 +54,10 @@ export function Chip({
       type={type}
       aria-pressed={active}
       className={cn(
-        "inline-flex items-center gap-1.5 rounded-full px-3 py-1.5 text-xs font-medium transition-colors duration-150",
+        "inline-flex items-center gap-1.5 rounded-md px-2.5 py-1 text-xs font-medium transition-colors duration-150",
         focusRing,
         active
-          ? "bg-accent text-accent-fg shadow-[0_0_12px_-2px_var(--accent)]"
+          ? "bg-accent text-accent-fg shadow-[0_0_0_1px_var(--border-strong)]"
           : "bg-surface-2 text-muted hairline hover:bg-surface-2/80 hover:text-text",
         className,
       )}
@@ -64,3 +68,4 @@ export function Chip({
     </button>
   );
 }
+

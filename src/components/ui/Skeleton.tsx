@@ -1,3 +1,6 @@
+"use client";
+
+import { Skeleton as HeroUISkeleton } from "@heroui/react";
 import type { ComponentProps } from "react";
 import { cn } from "@/lib/cn";
 
@@ -11,7 +14,7 @@ export function Skeleton({
   ...props
 }: SkeletonProps) {
   return (
-    <div
+    <HeroUISkeleton
       aria-hidden="true"
       className={cn(
         "animate-pulse bg-surface-2 motion-reduce:animate-none",
@@ -24,3 +27,4 @@ export function Skeleton({
     />
   );
 }
+

@@ -1,7 +1,7 @@
 import { describe, expect, it } from "vitest";
 import React from "react";
 import { renderToString } from "react-dom/server";
-import { buttonClasses } from "./Button";
+import { Button, buttonClasses } from "./Button";
 import { IconButton } from "./IconButton";
 import { Price } from "./Price";
 import { Card } from "./Card";
@@ -9,6 +9,7 @@ import { Badge } from "./Badge";
 import { focusRing, withFocusRing } from "./focusRing";
 import { EmptyState } from "./EmptyState";
 import { ErrorState } from "./ErrorState";
+import { buttonVariants } from "@heroui/styles";
 
 describe("UI Kit Primitives", () => {
   it("Button includes shared focusRing class and respects variant/size", () => {
@@ -16,6 +17,32 @@ describe("UI Kit Primitives", () => {
     expect(cls).toContain("focus-visible:outline-accent-text");
     expect(cls).toContain("bg-accent");
     expect(cls).toContain("h-10");
+  });
+
+  it("HeroUI v3 style helper buttonVariants generates BEM classes while buttonClasses enforces Persona tokens", () => {
+    // HeroUI's style helper outputs BEM classes
+    const heroOutput = buttonVariants({ variant: "primary", size: "md" });
+    expect(heroOutput).toContain("button");
+    expect(heroOutput).toContain("button--primary");
+    expect(heroOutput).toContain("button--md");
+
+    // Persona's buttonClasses enforces the 8px radius scale and custom accent token
+    const personaOutput = buttonClasses({ variant: "primary", size: "md" });
+    expect(personaOutput).toContain("rounded-lg");
+    expect(personaOutput).toContain("bg-accent");
+    expect(personaOutput).toContain("text-accent-fg");
+  });
+
+  it("HeroUI Button component renders with data-slot='button' and matches buttonClasses", () => {
+    const html = renderToString(
+      React.createElement(Button, { variant: "secondary", size: "sm" }, "Action"),
+    );
+    expect(html).toContain('data-slot="button"');
+    expect(html).toContain('data-rac=""');
+    expect(html).toContain("button");
+    expect(html).toContain("bg-surface-2");
+    expect(html).toContain("rounded-lg");
+    expect(html).toContain("h-8");
   });
 
   it("IconButton renders with required aria-label and accessible title", () => {
