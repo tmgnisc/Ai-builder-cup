@@ -27,7 +27,16 @@ def create_app(settings: Settings | None = None) -> FastAPI:
     settings = settings or get_settings()
     if settings.environment.lower() == "production" and not settings.agent_shared_secret:
         raise RuntimeError("AGENT_SHARED_SECRET must be configured in production")
-    setup_logging(level=settings.log_level)
+    import os
+
+    if settings.gemini_api_key:
+        os.environ.setdefault("GEMINI_API_KEY", settings.gemini_api_key)
+    if settings.google_genai_use_vertexai:
+        os.environ["GOOGLE_GENAI_USE_VERTEXAI"] = "true"
+        if settings.google_cloud_project:
+            os.environ["GOOGLE_CLOUD_PROJECT"] = settings.google_cloud_project
+        if settings.google_cloud_location:
+            os.environ["GOOGLE_CLOUD_LOCATION"] = settings.google_cloud_location
 
     app = FastAPI(title="Persona API", version="0.1.0", lifespan=lifespan)
 
