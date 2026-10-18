@@ -12,6 +12,8 @@ const ratio = (a: number, b: number) => (b > 0 ? a / b : 0);
 export function Funnel({ steps, period }: { steps: FunnelStep[]; period: string }) {
   const [visits, ...rest] = steps;
   const top = rest[0]?.value ?? 0;
+  // Bars scale to the biggest step so they stay readable even before anyone has talked to Pip.
+  const scale = Math.max(1, ...rest.map((s) => s.value));
   // The biggest step-to-step drop (lowest conversion) is where to look first; needs real traffic.
   let worst = -1;
   if (top > 0)
@@ -44,7 +46,7 @@ export function Funnel({ steps, period }: { steps: FunnelStep[]; period: string 
               <span className="relative flex h-9 items-center justify-center">
                 <span
                   className={cn("block h-full rounded-lg", isWorst ? "bg-thinking/30 shadow-[inset_0_0_0_1px_var(--state-thinking)]" : "bg-accent/25 shadow-[inset_0_0_0_1px_color-mix(in_oklab,var(--accent)_45%,transparent)]")}
-                  style={{ width: `${Math.max(4, ratio(s.value, top) * 100)}%` }}
+                  style={{ width: `${Math.max(8, ratio(s.value, scale) * 100)}%` }}
                 />
                 <span className="absolute text-sm font-semibold tabular">{fmt(s.value)}</span>
               </span>
