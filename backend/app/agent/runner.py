@@ -229,6 +229,26 @@ async def run_pip_stream(
                     turn_ctx.last_cart_verified = None
                     buffered_text_parts.clear()
                     continue
+
+                logger.error("All candidate models failed. Final error on %s: %s", cand_name, err_str)
+                if not message_started:
+                    message_started = True
+                    yield serialize_event(MessageStartEvent(messageId=message_id)) + "\n"
+                    if "429" in err_str or "RESOURCE_EXHAUSTED" in err_str or "quota" in err_str.lower():
+                        friendly_msg = (
+                            "The Gemini API free-tier request quota has been reached on this key. "
+                            "To unlock continuous agent requests using your $300 GCP credit, link your Google Cloud project (lucky-leaf-480606-t6) "
+                            "in Google AI Studio billing, or enable Vertex AI."
+                        )
+                    else:
+                        friendly_msg = (
+                            "I encountered a temporary connection issue reaching the AI model. "
+                            "Please try again in a few moments."
+                        )
+                    yield serialize_event(TextDeltaEvent(messageId=message_id, delta=friendly_msg)) + "\n"
+                    yield serialize_event(StateChangeEvent(state="idle", caption="")) + "\n"
+                    yield serialize_event(DoneEvent()) + "\n"
+                    return
                 raise
 
         # Drain any remaining queued events
