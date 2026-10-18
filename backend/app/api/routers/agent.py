@@ -120,6 +120,7 @@ async def agent_turn(
     )
 
     agent = create_pip_agent(model=model)
+    fallback_models = settings.fallback_models_list if isinstance(model, str) else None
 
     generator = run_pip_stream(
         request=request_body,
@@ -127,6 +128,7 @@ async def agent_turn(
         agent=agent,
         session_provider=_session_provider_instance,
         turn_timeout_seconds=settings.agent_turn_timeout_seconds,
+        fallback_models=fallback_models,
     )
 
     return StreamingResponse(

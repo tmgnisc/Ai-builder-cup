@@ -1,4 +1,5 @@
 import asyncio
+import logging
 import time
 import uuid
 from typing import Any, AsyncGenerator, Protocol
@@ -7,6 +8,8 @@ from google.adk.agents import LlmAgent
 from google.adk.runners import Runner
 from google.adk.sessions import InMemorySessionService
 from google.genai import types
+
+logger = logging.getLogger(__name__)
 
 from .adapter import (
     AgentContext,
@@ -86,12 +89,13 @@ def build_turn_prompt(message: str, memory: AgentMemory, context: AgentContext) 
 async def run_pip_stream(
     request: AgentRequest,
     turn_ctx: AgentTurnContext,
-    agent: LlmAgent,
+    agent: LlmAgent | None = None,
     session_provider: SessionProvider | None = None,
     app_name: str = "persona_pip",
     turn_timeout_seconds: float = 30.0,
+    fallback_models: list[str] | None = None,
 ) -> AsyncGenerator[str, None]:
-    """Runs a single Pip agent turn and yields NDJSON lines matching the AgentEvent contract."""
+    """Runs a single Pip agent turn with multi-model fallback cascade matching the AgentEvent contract."""
     provider = session_provider or InMemorySessionProvider()
     token = current_turn_context.set(turn_ctx)
     message_id = f"msg_{time.time_ns()}"
@@ -103,86 +107,130 @@ async def run_pip_stream(
     collected_text = ""
     buffered_text_parts: list[str] = []
 
+    models_to_try: list[Any] = []
+    if agent is not None:
+        models_to_try.append(agent)
+    if fallback_models:
+        for m in fallback_models:
+            agent_model = getattr(agent, "model", None) if agent else None
+            if m != agent_model and m not in models_to_try:
+                models_to_try.append(m)
+    if not models_to_try:
+        models_to_try.append("gemini-3.5-flash")
+
     try:
         # Initial state: thinking
         yield serialize_event(StateChangeEvent(state="thinking", caption="Thinking…")) + "\n"
 
-        # Ephemeral session seeded per request
-        ephemeral_session_id = f"{turn_ctx.session_id}_{uuid.uuid4().hex[:8]}"
-        await provider.create_session(
-            app_name=app_name,
-            user_id=turn_ctx.session_id,
-            session_id=ephemeral_session_id,
-        )
-
-        runner = Runner(
-            agent=agent,
-            session_service=provider.get_session_service(),
-            app_name=app_name,
-        )
-
         turn_prompt = build_turn_prompt(request.message, request.memory, request.context)
         user_msg = types.Content(role="user", parts=[types.Part.from_text(text=turn_prompt)])
 
-        try:
-            async with asyncio.timeout(turn_timeout_seconds):
-                async for event in runner.run_async(
-                    user_id=turn_ctx.session_id,
-                    session_id=ephemeral_session_id,
-                    new_message=user_msg,
-                ):
-                    # Drain tool and UI events that were queued by callbacks
-                    while turn_ctx.event_queue:
-                        ev = turn_ctx.event_queue.pop(0)
-                        yield serialize_event(ev) + "\n"
+        for idx, candidate in enumerate(models_to_try):
+            if isinstance(candidate, LlmAgent):
+                current_agent = candidate
+                cand_name = getattr(candidate, "model", "primary-agent")
+            else:
+                from .agent import create_pip_agent
 
-                    # Stream model text deltas (buffered during cart mutations)
-                    if event.content and event.content.parts:
-                        for part in event.content.parts:
-                            if part.text:
-                                if turn_ctx.is_cart_mutation_turn:
-                                    if turn_ctx.last_cart_verified is None:
-                                        # Hold back text deltas until verification outcome is known
-                                        buffered_text_parts.append(part.text)
-                                    elif turn_ctx.last_cart_verified is True:
-                                        # Released after verification
-                                        if not message_started:
-                                            message_started = True
-                                            yield serialize_event(MessageStartEvent(messageId=message_id)) + "\n"
-                                        while buffered_text_parts:
-                                            b = buffered_text_parts.pop(0)
-                                            collected_text += b
-                                            yield serialize_event(TextDeltaEvent(messageId=message_id, delta=b)) + "\n"
-                                        collected_text += part.text
-                                        yield serialize_event(TextDeltaEvent(messageId=message_id, delta=part.text)) + "\n"
-                                    else:
-                                        # Verification failed: discard false success text
-                                        buffered_text_parts.clear()
-                                        if not any(
-                                            w in part.text.lower()
-                                            for w in ["added", "placed", "updated", "success", "in your cart", "to your cart"]
-                                        ):
+                cand_name = str(candidate)
+                current_agent = create_pip_agent(model=candidate)
+
+            ephemeral_session_id = f"{turn_ctx.session_id}_{uuid.uuid4().hex[:8]}"
+            await provider.create_session(
+                app_name=app_name,
+                user_id=turn_ctx.session_id,
+                session_id=ephemeral_session_id,
+            )
+
+            runner = Runner(
+                agent=current_agent,
+                session_service=provider.get_session_service(),
+                app_name=app_name,
+            )
+
+            try:
+                async with asyncio.timeout(turn_timeout_seconds):
+                    async for event in runner.run_async(
+                        user_id=turn_ctx.session_id,
+                        session_id=ephemeral_session_id,
+                        new_message=user_msg,
+                    ):
+                        # Drain tool and UI events that were queued by callbacks
+                        while turn_ctx.event_queue:
+                            ev = turn_ctx.event_queue.pop(0)
+                            yield serialize_event(ev) + "\n"
+
+                        # Stream model text deltas (buffered during cart mutations)
+                        if event.content and event.content.parts:
+                            for part in event.content.parts:
+                                if part.text:
+                                    if turn_ctx.is_cart_mutation_turn:
+                                        if turn_ctx.last_cart_verified is None:
+                                            # Hold back text deltas until verification outcome is known
+                                            buffered_text_parts.append(part.text)
+                                        elif turn_ctx.last_cart_verified is True:
+                                            # Released after verification
                                             if not message_started:
                                                 message_started = True
                                                 yield serialize_event(MessageStartEvent(messageId=message_id)) + "\n"
+                                            while buffered_text_parts:
+                                                b = buffered_text_parts.pop(0)
+                                                collected_text += b
+                                                yield serialize_event(TextDeltaEvent(messageId=message_id, delta=b)) + "\n"
                                             collected_text += part.text
                                             yield serialize_event(TextDeltaEvent(messageId=message_id, delta=part.text)) + "\n"
-                                else:
-                                    if not message_started:
-                                        message_started = True
-                                        yield serialize_event(MessageStartEvent(messageId=message_id)) + "\n"
-                                    collected_text += part.text
-                                    yield serialize_event(TextDeltaEvent(messageId=message_id, delta=part.text)) + "\n"
-        except TimeoutError:
-            if not message_started:
-                message_started = True
-                yield serialize_event(MessageStartEvent(messageId=message_id)) + "\n"
-            timeout_msg = "I took too long to complete that request. Please try again with a simpler query."
-            yield serialize_event(TextDeltaEvent(messageId=message_id, delta=timeout_msg)) + "\n"
-            yield serialize_event(StateChangeEvent(state="error", caption="Turn timed out")) + "\n"
-            yield serialize_event(ErrorEvent(message="Turn timed out.")) + "\n"
-            yield serialize_event(DoneEvent()) + "\n"
-            return
+                                        else:
+                                            # Verification failed: discard false success text
+                                            buffered_text_parts.clear()
+                                            if not any(
+                                                w in part.text.lower()
+                                                for w in ["added", "placed", "updated", "success", "in your cart", "to your cart"]
+                                            ):
+                                                if not message_started:
+                                                    message_started = True
+                                                    yield serialize_event(MessageStartEvent(messageId=message_id)) + "\n"
+                                                collected_text += part.text
+                                                yield serialize_event(TextDeltaEvent(messageId=message_id, delta=part.text)) + "\n"
+                                    else:
+                                        if not message_started:
+                                            message_started = True
+                                            yield serialize_event(MessageStartEvent(messageId=message_id)) + "\n"
+                                        collected_text += part.text
+                                        yield serialize_event(TextDeltaEvent(messageId=message_id, delta=part.text)) + "\n"
+                # Completed turn without exception: break out of candidate cascade
+                break
+            except TimeoutError:
+                if not message_started:
+                    message_started = True
+                    yield serialize_event(MessageStartEvent(messageId=message_id)) + "\n"
+                timeout_msg = "I took too long to complete that request. Please try again with a simpler query."
+                yield serialize_event(TextDeltaEvent(messageId=message_id, delta=timeout_msg)) + "\n"
+                yield serialize_event(StateChangeEvent(state="error", caption="Turn timed out")) + "\n"
+                yield serialize_event(ErrorEvent(message="Turn timed out.")) + "\n"
+                yield serialize_event(DoneEvent()) + "\n"
+                return
+            except Exception as err:
+                err_str = str(err)
+                is_rate_limit = "429" in err_str or "ResourceExhausted" in err_str or "quota" in err_str.lower()
+                has_fallback = idx + 1 < len(models_to_try)
+                if (is_rate_limit or "503" in err_str) and has_fallback and not message_started:
+                    next_cand = models_to_try[idx + 1]
+                    next_name = getattr(next_cand, "model", str(next_cand))
+                    logger.warning(
+                        "Model %s failed with %s. Cascading to fallback model %s (%d/%d)...",
+                        cand_name,
+                        err_str,
+                        next_name,
+                        idx + 2,
+                        len(models_to_try),
+                    )
+                    turn_ctx.event_queue.clear()
+                    turn_ctx.tool_call_count = 0
+                    turn_ctx.is_cart_mutation_turn = False
+                    turn_ctx.last_cart_verified = None
+                    buffered_text_parts.clear()
+                    continue
+                raise
 
         # Drain any remaining queued events
         while turn_ctx.event_queue:

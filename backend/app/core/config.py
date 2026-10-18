@@ -9,7 +9,10 @@ class Settings(BaseSettings):
     model_config = SettingsConfigDict(env_file=".env", extra="ignore")
 
     gemini_api_key: str = ""
-    gemini_model: str = "gemini-2.5-flash"
+    gemini_model: str = "gemini-3.5-flash"
+    gemini_fallback_models: str = (
+        "gemini-2.5-flash,gemini-2.5-flash-lite,gemini-2.0-flash,gemini-2.0-flash-lite,gemini-1.5-flash,gemini-1.5-flash-8b"
+    )
     agent_backend: str = "gemini"
     agent_shared_secret: str = ""
     environment: str = "development"
@@ -25,6 +28,17 @@ class Settings(BaseSettings):
     google_genai_use_vertexai: bool = False
     google_cloud_project: str = ""
     google_cloud_location: str = "us-central1"
+
+    @property
+    def fallback_models_list(self) -> list[str]:
+        """Ordered list of Gemini models to cascade through if rate limits or quota errors occur."""
+        models = [self.gemini_model]
+        if self.gemini_fallback_models:
+            for m in self.gemini_fallback_models.split(","):
+                m = m.strip()
+                if m and m not in models:
+                    models.append(m)
+        return models
 
     @property
     def cors_origin_list(self) -> list[str]:
