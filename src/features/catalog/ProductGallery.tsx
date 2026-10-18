@@ -4,7 +4,7 @@ import { useRef, useState } from "react";
 import { cn } from "@/lib/cn";
 import type { Product } from "@/lib/commerce/schemas";
 import { gsap, motion, useGSAP } from "@/lib/motion";
-import { useTryOn } from "@/store/useTryOn";
+import { useGarmentColor } from "@/store/useGarmentColor";
 import { ProductImage } from "./ProductImage";
 
 const VIEWS = [
@@ -18,7 +18,7 @@ type View = (typeof VIEWS)[number]["id"];
 export function ProductGallery({ product }: { product: Product }) {
   const anchor = { "data-pip-anchor": "gallery", "data-pip-topic": "gallery", "data-pip-product": product.id };
   const [view, setView] = useState<View>("front");
-  const color = useTryOn((s) => s.colors[product.id]);
+  const color = useGarmentColor((s) => s.colors[product.id]);
   const mainRef = useRef<HTMLDivElement>(null);
 
   useGSAP(

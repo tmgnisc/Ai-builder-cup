@@ -1,11 +1,11 @@
 "use client";
 
 import Link from "next/link";
-import { ArrowLeft, Star } from "lucide-react";
+import { ArrowLeft, Star, Truck } from "lucide-react";
 import { AddToCartButton } from "./AddToCartButton";
 import { AskPipButton } from "./AskPipButton";
 import { ProductGallery } from "./ProductGallery";
-import { ColorPicker, TryOnButton } from "@/features/tryon";
+import { ColorPicker } from "./ColorPicker";
 import { CompareToggle } from "@/features/compare";
 import { ProductViewTracker } from "@/components/signals/ProductViewTracker";
 import { Badge, StockBadge } from "@/components/ui/Badge";
@@ -37,7 +37,7 @@ export function ProductDetailView({ product }: { product: Product }) {
             ))}
           </div>
           <p className="mt-5 text-sm text-muted">{product.brand}</p>
-          <h1 className="mt-1 font-display product-detail-title font-semibold leading-tight">
+          <h1 className="mt-1 page-title">
             {product.name}
           </h1>
           <p className="mt-3 flex items-center gap-1.5 text-sm text-muted">
@@ -58,24 +58,41 @@ export function ProductDetailView({ product }: { product: Product }) {
             </div>
           )}
 
-          <div className="mt-6 flex flex-wrap items-start gap-3">
+          <div className="mt-6 flex max-w-md flex-col gap-3">
             <div data-pip-anchor="add-to-cart" data-pip-topic="add-to-cart" data-pip-product={product.id}>
-              <AddToCartButton productId={product.id} disabled={product.stock === 0} />
+              <AddToCartButton productId={product.id} disabled={product.stock === 0} className="w-full" />
             </div>
-            <div data-pip-anchor="compare" data-pip-topic="compare-toggle" data-pip-product={product.id}>
-              <CompareToggle productId={product.id} productName={`${product.brand} ${product.name}`} variant="pill" />
+            <div className="grid grid-cols-2 gap-3">
+              <div data-pip-anchor="compare" data-pip-topic="compare-toggle" data-pip-product={product.id}>
+                <CompareToggle productId={product.id} productName={`${product.brand} ${product.name}`} variant="pill" className="w-full" />
+              </div>
+              <AskPipButton productName={product.name} className="w-full" />
             </div>
-            {isClothing && <TryOnButton productId={product.id} />}
-            <AskPipButton productName={product.name} />
           </div>
 
-          <p data-pip-anchor="delivery" data-pip-topic="delivery" data-pip-product={product.id} className="mt-5 w-fit rounded-xl bg-surface px-3.5 py-2.5 text-xs text-muted hairline">
-            <span className="text-text">Delivery:</span> Express ({DELIVERY_RULES.valley.days}, {formatNPR(DELIVERY_RULES.valley.fee)}, free over{" "}
-            {formatNPR(DELIVERY_RULES.valley.freeOver)}) · Standard ({DELIVERY_RULES.outside.days})
-          </p>
+          <dl data-pip-anchor="delivery" data-pip-topic="delivery" data-pip-product={product.id} className="mt-6 grid max-w-md gap-2 rounded-card bg-surface p-4 text-sm hairline">
+            <div className="flex items-start gap-3">
+              <Truck className="mt-0.5 size-4 shrink-0 text-muted" aria-hidden />
+              <div className="flex-1">
+                <dt className="font-medium">Kathmandu Valley · {DELIVERY_RULES.valley.days}</dt>
+                <dd className="text-xs text-muted">
+                  {formatNPR(DELIVERY_RULES.valley.fee)}, free over {formatNPR(DELIVERY_RULES.valley.freeOver)}
+                </dd>
+              </div>
+            </div>
+            <div className="flex items-start gap-3">
+              <Truck className="mt-0.5 size-4 shrink-0 text-muted" aria-hidden />
+              <div className="flex-1">
+                <dt className="font-medium">Rest of Nepal · {DELIVERY_RULES.outside.days}</dt>
+                <dd className="text-xs text-muted">
+                  {formatNPR(DELIVERY_RULES.outside.fee)}, free over {formatNPR(DELIVERY_RULES.outside.freeOver)}
+                </dd>
+              </div>
+            </div>
+          </dl>
 
           <section aria-labelledby="specs-heading" className="mt-10" data-pip-anchor="specs" data-pip-topic="spec-table" data-pip-product={product.id}>
-            <h2 id="specs-heading" className="font-display text-lg font-semibold tracking-tight">
+            <h2 id="specs-heading" className="panel-title">
               {isClothing ? "Details" : "Specifications"}
             </h2>
             <table className="mt-4 w-full overflow-hidden rounded-card text-sm hairline">

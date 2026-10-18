@@ -25,7 +25,8 @@ import { PipMenu } from "./PipMenu";
 type Side = "right" | "left" | "top" | "bottom";
 
 const GAP = 14;
-const EDGE = 12;
+/** Gutter between the bubble and the viewport edge (matches the 16px page gutter). */
+const EDGE = pilot.MARGIN;
 const HEADER = pilot.HEADER_H;
 
 /** Reading time: ≈250 ms per word, clamped to 4–12 s. */
@@ -100,7 +101,7 @@ export function SpeechBubble() {
         aria-modal="false"
         aria-label="Pip"
         onKeyDown={(e) => e.key === "Escape" && close("user")}
-        className="bubble-panel surface-solid pointer-events-auto relative bubble-width rounded-panel p-3.5 pr-3"
+        className="bubble-panel surface-solid pointer-events-auto relative bubble-w rounded-panel p-3.5 pr-3"
       >
         <span ref={tailRef} aria-hidden className="bubble-tail absolute size-3.5 rotate-45 rounded-xs" />
         <BubbleBody content={rendered.content} contentKey={rendered.key} />
@@ -201,6 +202,11 @@ function position(root: HTMLDivElement | null, panel: HTMLDivElement | null, tai
 
     [x, y] = spot[side];
   }
+  // Hard guarantee: whatever side won, the panel stays fully inside the viewport (16px gutter,
+  // below the header). Its height is capped by CSS (bubble-scroll), so this always has room.
+  x = Math.max(EDGE, Math.min(vw - W - EDGE, x));
+  // offsetHeight is rounded, so keep 1px in hand against sub-pixel heights.
+  y = Math.max(HEADER + EDGE, Math.min(vh - H - EDGE - 1, y));
   sideRef.current = side;
   root.style.transform = `translate3d(${Math.round(x)}px, ${Math.round(y)}px, 0)`;
 
@@ -271,7 +277,7 @@ function BubbleBody({ content, contentKey }: { content: BubbleContent; contentKe
       onPointerLeave={() => setHover(false)}
       onFocus={() => setFocused(true)}
       onBlur={() => setFocused(false)}
-      className="max-md:bubble-max-h max-md:overflow-y-auto max-md:overscroll-contain"
+      className="bubble-scroll max-md:bubble-scroll-mobile min-w-0 overflow-y-auto overflow-x-hidden overscroll-contain wrap-anywhere"
       data-hover={hover}
       data-focused={focused}
       data-actions={view.hasActions}
@@ -332,7 +338,7 @@ function AgentText({ message }: { message: ChatMessage }) {
     );
   }
   return (
-    <div className={cn("text-sm leading-relaxed space-y-1.5", message.status === "error" && "text-danger")}>
+    <div className={cn("min-w-0 text-sm leading-relaxed space-y-1.5 wrap-anywhere", message.status === "error" && "text-danger")}>
       <Markdown text={message.text} />
       {streaming && <span aria-hidden className="caret text-accent-text" />}
     </div>
@@ -378,7 +384,7 @@ function TypedText({ text }: { text: string }) {
     return () => window.clearInterval(id);
   }, [text, reduced]);
   return (
-    <div className="text-sm leading-relaxed break-words space-y-1">
+    <div className="min-w-0 text-sm leading-relaxed wrap-anywhere space-y-1">
       <Markdown text={text.slice(0, n)} />
       <span className="sr-only">{text.replace(/\*\*/g, "")}</span>
     </div>

@@ -103,7 +103,7 @@ const RELAXATIONS: { label: (q: ParsedQuery) => string; apply: (q: ParsedQuery) 
 
 const EXAMPLES = [
   "Coding laptop under 1.5 lakh with 16GB",
-  "Warm winter fleece hoodie with 3D try-on",
+  "Warm winter fleece hoodie under NPR 5,000",
   "Nepali Dhaka Kurtha and traditional wear",
   "ANC headphones for noisy commutes",
 ];
@@ -183,7 +183,7 @@ class Handlers {
     this.io.state("greeting", "What are we shopping for?");
     await this.io.say(
       this.msg,
-      "Tell me what you need, your budget in NPR, or an outfit to try on. I coordinate specialized sub-agents to discover products, compare trade-offs, and verify every cart update. You will see every tool step I take.",
+      "Tell me what you need, your budget in NPR. I coordinate specialized sub-agents to discover products, compare trade-offs, and verify every cart update. You will see every tool step I take.",
     );
     this.chips(EXAMPLES);
   }
@@ -226,8 +226,8 @@ class Handlers {
     const { io, msg } = this;
     if (!query.category && !query.tags?.length && !hasConstraints(query)) {
       io.state("speaking");
-      await io.say(msg, "What are we shopping for today? Tell me what you need, your budget, or an outfit to try on.");
-      this.chips(["Laptops", "Clothing & Try-On", "Headphones", "Accessories"]);
+      await io.say(msg, "What are we shopping for today? Tell me what you need, or your budget.");
+      this.chips(["Laptops", "Clothing", "Headphones", "Accessories"]);
       return;
     }
 

@@ -29,7 +29,7 @@ export function ErrorState({
       <div className="grid size-12 place-items-center rounded-full bg-danger/15 text-danger mb-3">
         <AlertTriangle className="size-6" aria-hidden />
       </div>
-      <h3 className="font-display text-base font-semibold text-text">{title}</h3>
+      <h3 className="panel-title text-text">{title}</h3>
       <p className="mt-1 max-w-sm text-sm text-muted">{message}</p>
       {onRetry && (
         <Button variant="secondary" size="sm" onClick={onRetry} className="mt-4">

@@ -9,7 +9,7 @@ const inter = Inter({ subsets: ["latin"], variable: "--font-inter", display: "sw
 export const metadata: Metadata = {
   title: { default: "Persona: Agentic E-Commerce Platform", template: "%s · Persona" },
   description:
-    "An agentic e-commerce platform for shoppers in Nepal, with Pip: an intelligent shopping companion that searches products, compares options, verifies every cart update, and offers virtual try-on. Prices in NPR.",
+    "An agentic e-commerce platform for shoppers in Nepal, with Pip: an intelligent shopping companion that searches products, compares options, and verifies every cart update. Prices in NPR.",
 };
 
 export const viewport: Viewport = {

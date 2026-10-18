@@ -1,5 +1,3 @@
-import { CART_ACTIONS, FRICTION, FUNNEL, KPIS, MISSING_INFO, TOP_QUESTIONS } from "@/data/merchant";
-import { getProduct } from "@/lib/commerce/catalog";
 import { DELIVERY_RULES } from "@/lib/commerce/delivery";
 import { formatNPR, formatStorage, formatWarranty, formatWeight } from "@/lib/commerce/format";
 import type { Category, Product } from "@/lib/commerce/schemas";
@@ -99,7 +97,7 @@ export const TIPS: Record<string, { 1?: Builder; 2?: Builder }> = {
       chips: [
         { label: "Laptop for coding", message: "A laptop under 1.2 lakh for coding" },
         { label: "Nepali traditional wear", message: "Show me Nepali Dhaka Kurtha and traditional wear" },
-        { label: "Winter fleece hoodie", message: "Warm winter fleece hoodie with virtual try-on" },
+        { label: "Winter fleece hoodie", message: "A warm winter fleece hoodie" },
         { label: "Travel headphones", message: "Noise-cancelling headphones for flights" },
         NOT_NOW,
       ],
@@ -292,47 +290,6 @@ export const TIPS: Record<string, { 1?: Builder; 2?: Builder }> = {
   },
   "compare-verdict": {
     1: (ctx) => ({ id: id("compare-verdict", 1, ctx), text: "Every value in this table is from the catalog; the lime cells are the winners." }),
-  },
-  // ── Merchant dashboard (numbers from src/data/merchant.ts) ──
-  "merchant-kpi": {
-    1: (ctx) => {
-      const key = ctx.anchor?.id.replace(/^kpi:/, "");
-      const k = KPIS.find((x) => x.key === key);
-      if (!k) return null;
-      const text: Record<typeof k.key, string> = {
-        assisted: `${k.value.toLocaleString("en-IN")} sessions used me this week, up ${k.delta}% on last week.`,
-        completion: `${k.value}% of conversations ended with the shopper's task done. The rest mostly hit missing product info.`,
-        verified: `I re-check the cart after every change. ${CART_ACTIONS.caught} of ${CART_ACTIONS.total} didn't stick this week, and I told the shopper instead of claiming success.`,
-        tips: `${k.value}% of my tips got a click or a reply. I go quiet after three dismissals, so this stays honest.`,
-      };
-      return { id: `merchant-kpi:1:${k.key}`, text: text[k.key] };
-    },
-  },
-  "merchant-funnel": {
-    1: () => {
-      const steps = FUNNEL.slice(1);
-      let worst = 1;
-      for (let i = 2; i < steps.length; i++) if (steps[i].value / steps[i - 1].value < steps[worst].value / steps[worst - 1].value) worst = i;
-      const conv = Math.round((steps[worst].value / steps[worst - 1].value) * 100);
-      return { id: "merchant-funnel:1", text: `The biggest drop is ${steps[worst - 1].label.toLowerCase()} → ${steps[worst].label.toLowerCase()}: only ${conv}% make it. Clearer specs would help most there.` };
-    },
-  },
-  "merchant-questions": {
-    1: () => {
-      const low = [...TOP_QUESTIONS].sort((a, b) => a.resolved - b.resolved)[0];
-      return { id: "merchant-questions:1", text: `“${low.text}” is the one I resolve least (${Math.round(low.resolved * 100)}%). Worth a look at that product.` };
-    },
-  },
-  "merchant-missing": {
-    1: () => {
-      const m = MISSING_INFO[0];
-      const p = getProduct(m.productId);
-      const total = MISSING_INFO.reduce((s, x) => s + x.asks, 0);
-      return { id: "merchant-missing:1", text: `${total} questions I couldn't answer from the catalog. Top gap: **${m.field.toLowerCase()}** on the ${p?.name ?? m.productId} (${m.asks} asks).` };
-    },
-  },
-  "merchant-friction": {
-    1: () => ({ id: "merchant-friction:1", text: `These come from my “Something's confusing” check-in. Top one: “${FRICTION[0].text}” (${FRICTION[0].count}).` }),
   },
 };
 

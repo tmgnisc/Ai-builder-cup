@@ -1,16 +1,26 @@
-from typing import Annotated
+from datetime import datetime, timedelta, timezone
+from typing import Annotated, Any
 
-from fastapi import APIRouter, Depends, Header, Query, status
+from fastapi import APIRouter, Depends, status
 from pydantic import BaseModel, Field
-from sqlalchemy import desc, func, select, update
+from sqlalchemy import select, update
 from sqlalchemy.ext.asyncio import AsyncSession
 
 from ...core.database import get_db
 from ...core.errors import CommerceException
 from ...models.db import OrderDB, ProductDB
-from ...repositories.postgres_catalog import row_to_product
+from ...services.analytics import (
+    PERIOD_DAYS,
+    AnalyticsEvent,
+    AnalyticsRepository,
+    aggregate,
+    analytics_window_start,
+    missing_info,
+)
 from ...services.catalog import CatalogService
-from ..dependencies import get_catalog_service, verify_shared_secret
+from ..dependencies import get_analytics_repository, get_catalog_service, verify_shared_secret
+from .merchant_auth import MerchantUserResponse, get_current_merchant
+from .orders import memory_orders
 
 router = APIRouter(prefix="/api/merchant", tags=["merchant"])
 
@@ -20,9 +30,10 @@ class StockUpdateInput(BaseModel):
 
 
 class MissingInfoInput(BaseModel):
-    productId: str
-    field: str
-    question: str | None = None
+    productId: str = Field(min_length=1, max_length=100)
+    field: str = Field(min_length=1, max_length=100)
+    question: str | None = Field(default=None, max_length=500)
+    sessionId: str | None = Field(default=None, max_length=64)
 
 
 class MerchantKpisResponse(BaseModel):
@@ -36,32 +47,10 @@ class MerchantKpisResponse(BaseModel):
     pendingFulfillment: int
     assistedSessions: int
     taskCompletionRate: float
-
-
-class FunnelStepSchema(BaseModel):
-    key: str
-    label: str
-    value: int
-
-
-class TopQuestionSchema(BaseModel):
-    text: str
-    count: int
-    intent: str
-    resolved: float
-
-
-class FrictionThemeSchema(BaseModel):
-    text: str
-    count: int
-    page: str
-
-
-class MerchantAnalyticsResponse(BaseModel):
-    period: str
-    funnel: list[FunnelStepSchema]
-    topQuestions: list[TopQuestionSchema]
-    frictionThemes: list[FrictionThemeSchema]
+    # Last 7 days of orders, oldest day first, plus % change vs the 7 days before.
+    revenueTrend: list[int]
+    revenueDelta: int
+    ordersTrend: list[int]
 
 
 class InventoryItemResponse(BaseModel):
@@ -77,75 +66,69 @@ class InventoryItemResponse(BaseModel):
     isOutOfStock: bool
 
 
-# In-memory tracking for dynamically recorded missing specs
-_DYNAMIC_MISSING_SPECS: list[dict] = [
-    {"productId": "lenovo-ideapad-slim-5-14", "field": "Keyboard backlight", "asks": 37, "example": "Does the IdeaPad Slim 5 have a backlit keyboard?"},
-    {"productId": "acer-swift-go-14", "field": "RAM upgradeable?", "asks": 29, "example": "Can I upgrade the RAM on the Swift Go 14 later?"},
-    {"productId": "google-pixel-9", "field": "eSIM support", "asks": 22, "example": "Does the Pixel 9 support dual eSIM?"},
-    {"productId": "dell-s2722qc", "field": "VESA mount size", "asks": 18, "example": "Will the monitor fit my desk arm?"},
-    {"productId": "hp-victus-15", "field": "Screen brightness (nits)", "asks": 15, "example": "How bright is the Victus screen outdoors?"},
-]
+MerchantAuth = Annotated[MerchantUserResponse, Depends(get_current_merchant)]
+
+
+def _order_trends(orders: list[tuple[datetime, int, str]], now: datetime) -> tuple[list[int], list[int], int]:
+    """Daily revenue and order counts for the last PERIOD_DAYS (oldest first) and revenue % change."""
+    revenue = [0] * PERIOD_DAYS
+    counts = [0] * PERIOD_DAYS
+    prev_revenue = 0
+    for created_at, total, status_ in orders:
+        if status_ == "cancelled":
+            continue
+        age_days = int((now - created_at).total_seconds() // 86_400)
+        if 0 <= age_days < PERIOD_DAYS:
+            revenue[PERIOD_DAYS - 1 - age_days] += total
+            counts[PERIOD_DAYS - 1 - age_days] += 1
+        elif PERIOD_DAYS <= age_days < PERIOD_DAYS * 2:
+            prev_revenue += total
+    cur = sum(revenue)
+    delta = round((cur - prev_revenue) / prev_revenue * 100) if prev_revenue else 0
+    return revenue, counts, delta
 
 
 @router.get("/kpis", response_model=MerchantKpisResponse)
 async def get_merchant_kpis(
+    _auth: MerchantAuth,
+    repo: Annotated[AnalyticsRepository, Depends(get_analytics_repository)],
     session: Annotated[AsyncSession | None, Depends(get_db)] = None,
-    catalog_service: Annotated[CatalogService, Depends(get_catalog_service)] = None,
+    catalog_service: Annotated[CatalogService, Depends(get_catalog_service)] = None,  # type: ignore[assignment]
     _: Annotated[None, Depends(verify_shared_secret)] = None,
 ) -> MerchantKpisResponse:
-    """Calculates operational store KPIs live from PostgreSQL database."""
+    """Store KPIs: stock and orders straight from the database, shopper KPIs from telemetry."""
+    now = datetime.now(timezone.utc)
+    stats = aggregate(await repo.since(analytics_window_start(now)), now)
+    kpi = {k["key"]: k for k in stats["kpis"]}
+
     if session is not None:
-        total_p = (await session.execute(select(func.count(ProductDB.id)))).scalar() or 0
-        in_stock_p = (await session.execute(select(func.count(ProductDB.id)).where(ProductDB.stock > 0))).scalar() or 0
-        low_stock_p = (
-            await session.execute(select(func.count(ProductDB.id)).where(ProductDB.stock > 0, ProductDB.stock <= 3))
-        ).scalar() or 0
-
-        total_o = (await session.execute(select(func.count(OrderDB.id)))).scalar() or 0
-        verified_o = (
-            await session.execute(select(func.count(OrderDB.id)).where(OrderDB.verified_by_pip.is_(True)))
-        ).scalar() or 0
-        verified_pct = round((verified_o / max(1, total_o)) * 100, 1)
-
-        revenue = (
-            await session.execute(select(func.sum(OrderDB.total_npr)).where(OrderDB.status != "cancelled"))
-        ).scalar() or 0
-
-        pending = (
+        stocks = list((await session.execute(select(ProductDB.stock))).scalars().all())
+        rows = (
             await session.execute(
-                select(func.count(OrderDB.id)).where(OrderDB.status.in_(["pending", "processing"]))
+                select(OrderDB.created_at, OrderDB.total_npr, OrderDB.status, OrderDB.verified_by_pip)
             )
-        ).scalar() or 0
+        ).all()
+        orders = [(r[0] or now, int(r[1]), str(r[2]), bool(r[3])) for r in rows]
+    else:
+        stocks = [p.stock for p in catalog_service.get_all()]
+        orders = [(datetime.fromisoformat(o.createdAt), o.totalNPR, o.status, o.verifiedByPip) for o in memory_orders()]
 
-        return MerchantKpisResponse(
-            totalProducts=total_p,
-            inStockCount=in_stock_p,
-            lowStockCount=low_stock_p,
-            totalOrders=total_o,
-            verifiedOrdersCount=verified_o,
-            verifiedPercentage=verified_pct,
-            totalRevenue=int(revenue),
-            pendingFulfillment=pending,
-            assistedSessions=1284,
-            taskCompletionRate=71.0,
-        )
-
-    # Fallback to catalog service in-memory
-    products = catalog_service.get_all() if catalog_service else []
-    in_stock = len([p for p in products if p.stock > 0])
-    low_stock = len([p for p in products if 0 < p.stock <= 3])
-
+    verified = sum(1 for o in orders if o[3])
+    revenue_trend, orders_trend, revenue_delta = _order_trends([(o[0], o[1], o[2]) for o in orders], now)
     return MerchantKpisResponse(
-        totalProducts=len(products),
-        inStockCount=in_stock,
-        lowStockCount=low_stock,
-        totalOrders=6,
-        verifiedOrdersCount=5,
-        verifiedPercentage=83.3,
-        totalRevenue=654000,
-        pendingFulfillment=2,
-        assistedSessions=1284,
-        taskCompletionRate=71.0,
+        totalProducts=len(stocks),
+        inStockCount=sum(1 for s in stocks if s > 0),
+        lowStockCount=sum(1 for s in stocks if 0 < s <= 3),
+        totalOrders=len(orders),
+        verifiedOrdersCount=verified,
+        verifiedPercentage=round(verified / len(orders) * 100, 1) if orders else 0.0,
+        totalRevenue=sum(o[1] for o in orders if o[2] != "cancelled"),
+        pendingFulfillment=sum(1 for o in orders if o[2] in ("pending", "processing")),
+        assistedSessions=int(kpi["assisted"]["value"]),
+        taskCompletionRate=float(kpi["completion"]["value"]),
+        revenueTrend=revenue_trend,
+        revenueDelta=revenue_delta,
+        ordersTrend=orders_trend,
     )
 
 
@@ -155,6 +138,7 @@ async def get_merchant_inventory(
     session: Annotated[AsyncSession | None, Depends(get_db)] = None,
     catalog_service: Annotated[CatalogService, Depends(get_catalog_service)] = None,
     _: Annotated[None, Depends(verify_shared_secret)] = None,
+    __: Annotated[MerchantUserResponse, Depends(get_current_merchant)] = None,  # type: ignore[assignment]
 ) -> list[InventoryItemResponse]:
     """Returns inventory status with live stock levels and alerts from PostgreSQL."""
     if session is not None:
@@ -205,14 +189,11 @@ async def update_product_stock_endpoint(
     session: Annotated[AsyncSession | None, Depends(get_db)] = None,
     catalog_service: Annotated[CatalogService, Depends(get_catalog_service)] = None,
     _: Annotated[None, Depends(verify_shared_secret)] = None,
+    __: Annotated[MerchantUserResponse, Depends(get_current_merchant)] = None,  # type: ignore[assignment]
 ):
     """Updates live stock quantity for a product in PostgreSQL."""
     if session is not None:
-        stmt = (
-            update(ProductDB)
-            .where(ProductDB.id == product_id)
-            .values(stock=payload.stock)
-        )
+        stmt = update(ProductDB).where(ProductDB.id == product_id).values(stock=payload.stock)
         res = await session.execute(stmt)
         await session.commit()
         if res.rowcount == 0:
@@ -222,66 +203,44 @@ async def update_product_stock_endpoint(
     return {"productId": product_id, "stock": payload.stock, "status": "updated_in_memory"}
 
 
-@router.get("/analytics", response_model=MerchantAnalyticsResponse)
+@router.get("/analytics")
 async def get_merchant_analytics(
+    _auth: MerchantAuth,
+    repo: Annotated[AnalyticsRepository, Depends(get_analytics_repository)],
     _: Annotated[None, Depends(verify_shared_secret)] = None,
-) -> MerchantAnalyticsResponse:
-    """Returns store funnel progression, inquiries, and friction analytics."""
-    return MerchantAnalyticsResponse(
-        period="Last 7 days",
-        funnel=[
-            FunnelStepSchema(key="visited", label="Visited the store", value=9820),
-            FunnelStepSchema(key="talked", label="Engaged Pip Agent", value=1284),
-            FunnelStepSchema(key="recommended", label="Saw Recommendations", value=1031),
-            FunnelStepSchema(key="compared", label="Compared Products", value=486),
-            FunnelStepSchema(key="added", label="Added to Cart (Verified)", value=412),
-            FunnelStepSchema(key="checkout", label="Completed Checkout", value=268),
-        ],
-        topQuestions=[
-            TopQuestionSchema(text="Best portable ultrabook for coding", count=212, intent="search", resolved=0.84),
-            TopQuestionSchema(text="Compare Swift Go 14 and IdeaPad Slim 5", count=147, intent="compare", resolved=0.90),
-            TopQuestionSchema(text="Noise-cancelling headphones for travel", count=118, intent="search", resolved=0.81),
-            TopQuestionSchema(text="Estimated shipping and delivery timeframe", count=96, intent="delivery", resolved=0.97),
-            TopQuestionSchema(text="Is Lenovo ThinkPad back in stock?", count=74, intent="question", resolved=0.62),
-            TopQuestionSchema(text="Phone with longest battery life", count=69, intent="search", resolved=0.74),
-        ],
-        frictionThemes=[
-            FrictionThemeSchema(text="Battery life comparison could be clearer", count=41, page="Laptops"),
-            FrictionThemeSchema(text="RAM requirements for heavy workloads", count=33, page="Product"),
-            FrictionThemeSchema(text="Shipping timeframe breakdown isn't visible", count=27, page="Checkout"),
-            FrictionThemeSchema(text="Too many similar models to differentiate", count=19, page="Phones"),
-        ],
-    )
+) -> dict[str, Any]:
+    """Shopper KPIs, assisted funnel, top questions, friction and catalog gaps, computed from telemetry."""
+    now = datetime.now(timezone.utc)
+    return aggregate(await repo.since(analytics_window_start(now)), now)
 
 
 @router.get("/missing-info")
 async def get_missing_info(
+    _auth: MerchantAuth,
+    repo: Annotated[AnalyticsRepository, Depends(get_analytics_repository)],
     _: Annotated[None, Depends(verify_shared_secret)] = None,
-):
-    """Returns missing product specifications identified during customer conversations."""
-    return _DYNAMIC_MISSING_SPECS
+) -> list[dict[str, Any]]:
+    """Specs shoppers asked Pip for that the catalog doesn't list, most asked first."""
+    since = datetime.now(timezone.utc) - timedelta(days=PERIOD_DAYS)
+    return missing_info(await repo.since(since))
 
 
 @router.post("/missing-info", status_code=status.HTTP_201_CREATED)
 async def record_missing_info(
     payload: MissingInfoInput,
+    repo: Annotated[AnalyticsRepository, Depends(get_analytics_repository)],
     _: Annotated[None, Depends(verify_shared_secret)] = None,
-):
-    """Logs a specification gap reported by a shopper."""
-    clean_field = payload.field.strip()
-    clean_pid = payload.productId.strip()
-    for item in _DYNAMIC_MISSING_SPECS:
-        if item["productId"] == clean_pid and item["field"].lower() == clean_field.lower():
-            item["asks"] += 1
-            if payload.question:
-                item["example"] = payload.question[:200]
-            return item
-
-    new_item = {
-        "productId": clean_pid,
-        "field": clean_field,
-        "asks": 1,
-        "example": payload.question[:200] if payload.question else f"What about {clean_field}?",
-    }
-    _DYNAMIC_MISSING_SPECS.append(new_item)
-    return new_item
+) -> dict[str, bool]:
+    """Logs a specification gap reported during a shopper conversation."""
+    await repo.record(
+        AnalyticsEvent(
+            session_id=payload.sessionId or "server",
+            kind="missing_info",
+            data={
+                "productId": payload.productId.strip(),
+                "field": payload.field.strip(),
+                "question": (payload.question or "")[:200],
+            },
+        )
+    )
+    return {"recorded": True}

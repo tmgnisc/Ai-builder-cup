@@ -1,11 +1,9 @@
 "use client";
 
-import { LogOut, Save } from "lucide-react";
+import { LogOut } from "lucide-react";
 import { useState } from "react";
 import { Button } from "@/components/ui/Button";
-import { Card } from "@/components/ui/Card";
 import { Input } from "@/components/ui/Input";
-import { BRAND } from "@/config/brand";
 import { useMerchantSession } from "@/store/useMerchantSession";
 
 interface SettingsTabProps {
@@ -13,133 +11,111 @@ interface SettingsTabProps {
   onLogout?: () => void;
 }
 
+function Section({ title, description, children }: { title: string; description: string; children: React.ReactNode }) {
+  return (
+    <section className="rounded-card bg-surface p-5 hairline">
+      <h2 className="font-display text-base font-semibold tracking-tight">{title}</h2>
+      <p className="mt-0.5 text-sm text-muted">{description}</p>
+      <div className="mt-5">{children}</div>
+    </section>
+  );
+}
+
 export function SettingsTab({ onLogout: onLogoutProp }: SettingsTabProps) {
+  const user = useMerchantSession((s) => s.user);
   const logout = useMerchantSession((s) => s.logout);
   const onLogout = onLogoutProp ?? (() => void logout());
-  const [pipAutonomous, setPipAutonomous] = useState(true);
-  const [strictVerification, setStrictVerification] = useState(true);
-  const [lowStockThreshold, setLowStockThreshold] = useState("3");
-  const [saved, setSaved] = useState(false);
 
-  const handleSave = () => {
-    setSaved(true);
-    setTimeout(() => setSaved(false), 2000);
+  const [current, setCurrent] = useState("");
+  const [next, setNext] = useState("");
+  const [confirm, setConfirm] = useState("");
+  const [saving, setSaving] = useState(false);
+  const [result, setResult] = useState<{ ok: boolean; text: string } | null>(null);
+
+  const changePassword = async (e: React.FormEvent) => {
+    e.preventDefault();
+    setResult(null);
+    if (next.length < 6) return setResult({ ok: false, text: "Use at least 6 characters." });
+    if (next !== confirm) return setResult({ ok: false, text: "The new passwords don't match." });
+    setSaving(true);
+    try {
+      const res = await fetch("/api/merchant/auth/password", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({ currentPassword: current, newPassword: next }),
+      });
+      if (res.ok) {
+        setResult({ ok: true, text: "Password changed." });
+        setCurrent("");
+        setNext("");
+        setConfirm("");
+      } else {
+        const err = await res.json().catch(() => ({}));
+        setResult({ ok: false, text: err?.error?.message || "Couldn't change the password." });
+      }
+    } catch {
+      setResult({ ok: false, text: "Couldn't reach the store backend." });
+    } finally {
+      setSaving(false);
+    }
   };
+
+  const details: [string, string | undefined][] = [
+    ["Name", user?.name],
+    ["Email", user?.email],
+    ["Role", user?.role],
+    ["Store", user?.storeName],
+  ];
 
   return (
     <div className="max-w-2xl space-y-6">
-      {/* Store Identity */}
-      <Card className="p-5">
-        <h3 className="font-display text-sm font-semibold text-text">Store Identity & Configuration</h3>
-        <p className="mt-0.5 text-xs text-muted">
-          Operational metadata for this merchant portal instance.
-        </p>
-
-        <div className="mt-4 space-y-3 text-xs">
-          <div>
-            <label className="block text-2xs font-semibold uppercase tracking-wider text-muted mb-1">
-              Store Brand
-            </label>
-            <Input value={BRAND.name} readOnly disabled className="bg-surface-2 text-text font-medium" />
-          </div>
-
-          <div>
-            <label className="block text-2xs font-semibold uppercase tracking-wider text-muted mb-1">
-              Store Facility Name
-            </label>
-            <Input defaultValue="Persona Flagship Operations" className="text-text font-medium" />
-          </div>
-
-          <div>
-            <label className="block text-2xs font-semibold uppercase tracking-wider text-muted mb-1">
-              Administrator Email
-            </label>
-            <Input defaultValue="admin@persona.store" readOnly disabled className="bg-surface-2 text-text font-medium" />
-          </div>
-        </div>
-      </Card>
-
-      {/* Pip Agent Policies */}
-      <Card className="p-5">
-        <h3 className="font-display text-sm font-semibold text-text">Pip Agent & Cart Integrity Rules</h3>
-        <p className="mt-0.5 text-xs text-muted">
-          Configure how Pip validates stock before cart mutations.
-        </p>
-
-        <div className="mt-4 space-y-4 text-xs">
-          <div className="flex items-center justify-between">
-            <div>
-              <p className="font-medium text-text">Mandatory Live Stock Verification</p>
-              <p className="text-2xs text-muted">
-                Pip calls get_cart and backend stock API before confirming cart additions to shoppers.
-              </p>
+      <Section title="Account" description="The signed-in merchant account.">
+        <dl className="divide-y divide-border">
+          {details.map(([k, v]) => (
+            <div key={k} className="flex items-center justify-between gap-4 py-2.5 first:pt-0 last:pb-0">
+              <dt className="text-sm text-muted">{k}</dt>
+              <dd className="min-w-0 truncate text-sm font-medium">{v || "–"}</dd>
             </div>
-            <input
-              type="checkbox"
-              checked={strictVerification}
-              onChange={(e) => setStrictVerification(e.target.checked)}
-              className="size-4 rounded border-border-strong text-accent focus:ring-accent"
-              aria-label="Toggle Mandatory Live Stock Verification"
-            />
-          </div>
+          ))}
+        </dl>
+      </Section>
 
-          <div className="flex items-center justify-between border-t border-border/40 pt-3">
-            <div>
-              <p className="font-medium text-text">Proactive Shopper Guidance</p>
-              <p className="text-2xs text-muted">
-                Allows Pip to offer comparative context and low-stock alerts on product cards.
-              </p>
-            </div>
-            <input
-              type="checkbox"
-              checked={pipAutonomous}
-              onChange={(e) => setPipAutonomous(e.target.checked)}
-              className="size-4 rounded border-border-strong text-accent focus:ring-accent"
-              aria-label="Toggle Proactive Shopper Guidance"
-            />
-          </div>
-
-          <div className="border-t border-border/40 pt-3">
-            <label htmlFor="low-stock-threshold" className="block text-2xs font-semibold uppercase tracking-wider text-muted mb-1">
-              Low-Stock Alert Threshold (Units)
+      <Section title="Password" description="Change the password for this account.">
+        <form onSubmit={changePassword} className="grid gap-4 sm:max-w-sm">
+          <div>
+            <label htmlFor="pw-current" className="mb-1.5 block text-sm text-muted">
+              Current password
             </label>
-            <div className="max-w-xs">
-              <Input
-                id="low-stock-threshold"
-                type="number"
-                min="1"
-                max="20"
-                value={lowStockThreshold}
-                onChange={(e) => setLowStockThreshold(e.target.value)}
-                className="font-mono text-sm"
-              />
-            </div>
-            <p className="mt-1 text-2xs text-muted">
-              Products with stock at or below this number show an amber &ldquo;Low Stock&rdquo; indicator to shoppers and merchants.
+            <Input id="pw-current" type="password" autoComplete="current-password" required value={current} onChange={(e) => setCurrent(e.target.value)} />
+          </div>
+          <div>
+            <label htmlFor="pw-new" className="mb-1.5 block text-sm text-muted">
+              New password
+            </label>
+            <Input id="pw-new" type="password" autoComplete="new-password" required minLength={6} value={next} onChange={(e) => setNext(e.target.value)} />
+          </div>
+          <div>
+            <label htmlFor="pw-confirm" className="mb-1.5 block text-sm text-muted">
+              Confirm new password
+            </label>
+            <Input id="pw-confirm" type="password" autoComplete="new-password" required value={confirm} onChange={(e) => setConfirm(e.target.value)} />
+          </div>
+          {result && (
+            <p role={result.ok ? "status" : "alert"} className={result.ok ? "text-sm text-listening" : "text-sm text-danger"}>
+              {result.text}
             </p>
+          )}
+          <div>
+            <Button type="submit" variant="primary" loading={saving}>
+              Change password
+            </Button>
           </div>
-        </div>
-      </Card>
+        </form>
+      </Section>
 
-      {/* Save Settings */}
-      <div className="flex items-center justify-between">
-        <Button
-          variant="secondary"
-          onClick={onLogout}
-          iconLeft={<LogOut className="size-4 text-danger" aria-hidden="true" />}
-          className="text-xs text-danger hover:bg-danger/10"
-        >
-          Sign Out of Store
-        </Button>
-
-        <Button
-          variant="primary"
-          onClick={handleSave}
-          iconLeft={<Save className="size-4" aria-hidden="true" />}
-        >
-          {saved ? "Saved Successfully" : "Save Changes"}
-        </Button>
-      </div>
+      <Button variant="ghost" onClick={onLogout} iconLeft={<LogOut className="size-4" aria-hidden />} className="text-danger">
+        Sign out
+      </Button>
     </div>
   );
 }

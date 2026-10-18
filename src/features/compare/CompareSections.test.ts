@@ -43,7 +43,7 @@ describe("CompareSections", () => {
 
     const grouped = groupRowsBySection(mockRows);
     expect(grouped.length).toBe(2);
-    expect(grouped[1].title).toBe("Other Specs");
+    expect(grouped[1].title).toBe("Other specs");
     expect(grouped[1].rows[0].label).toBe("Custom Spec");
   });
 

@@ -3,6 +3,7 @@
 import { SearchX } from "lucide-react";
 import { useLayoutEffect, useMemo, useRef } from "react";
 import { Button } from "@/components/ui/Button";
+import { EmptyState } from "@/components/ui/EmptyState";
 import { Flip, gsap, motion, ScrollTrigger, useGSAP } from "@/lib/motion";
 import { applyFilters, useCatalogUI, useFilters } from "@/store/useCatalogUI";
 import { ProductCard } from "./ProductCard";
@@ -84,14 +85,17 @@ export function ProductGrid() {
 
   if (products.length === 0) {
     return (
-      <div className="grid place-items-center rounded-panel bg-surface px-6 py-20 text-center hairline">
-        <SearchX className="size-8 text-muted" aria-hidden />
-        <p className="mt-3 font-display text-lg font-semibold">No products match these filters</p>
-        <p className="mt-1 max-w-sm text-sm text-muted">Try widening the price range, clearing filters, or ask Pip to search alternative products.</p>
-        <Button variant="secondary" className="mt-5" onClick={() => resetFilters({ category: filters.category })}>
-          Reset filters
-        </Button>
-      </div>
+      <EmptyState
+        className="bg-surface py-20 hairline"
+        icon={<SearchX className="size-6" aria-hidden />}
+        title="No products match these filters"
+        description="Try widening the price range or clearing a spec filter. Pip can also suggest alternatives."
+        action={
+          <Button variant="secondary" onClick={() => resetFilters({ category: filters.category })}>
+            Reset filters
+          </Button>
+        }
+      />
     );
   }
 

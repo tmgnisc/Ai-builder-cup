@@ -61,14 +61,13 @@ export function MerchantShell({ children }: { children: ReactNode }) {
   const user = useMerchantSession((s) => s.user);
   const checkAuth = useMerchantSession((s) => s.checkAuth);
   const logout = useMerchantSession((s) => s.logout);
-  const [mounted, setMounted] = useState(false);
+  const [checked, setChecked] = useState(false);
 
   useEffect(() => {
-    setMounted(true);
-    void checkAuth();
+    void checkAuth().finally(() => setChecked(true));
   }, [checkAuth]);
 
-  if (!mounted) {
+  if (!checked) {
     return <div className="grid min-h-dvh place-items-center text-xs text-muted">Loading merchant portal…</div>;
   }
 
@@ -140,10 +139,6 @@ export function MerchantShell({ children }: { children: ReactNode }) {
               <h1 className="truncate font-display text-base font-semibold tracking-tight">{current.label}</h1>
             </div>
             <div className="flex items-center gap-1">
-              <span className="hidden items-center gap-1.5 text-xs text-muted sm:inline-flex">
-                <span className="size-1.5 rounded-full bg-listening" aria-hidden />
-                Connected
-              </span>
               <ThemeToggle />
               <Button size="sm" variant="ghost" className="lg:hidden" onClick={() => void logout()} aria-label="Sign out">
                 <LogOut className="size-4" aria-hidden />

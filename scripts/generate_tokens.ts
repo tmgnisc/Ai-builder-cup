@@ -171,10 +171,6 @@ function generateCSS(): string {
   grid-template-columns: 240px minmax(0, 1fr);
 }
 
-@utility tryon-grid {
-  grid-template-columns: minmax(0, 1fr) 320px;
-}
-
 @utility bubble-width {
   width: min(340px, calc(100vw - 24px));
 }
@@ -189,6 +185,14 @@ function generateCSS(): string {
 
 @utility drawer-bottom-h {
   max-height: min(80dvh, 720px);
+}
+
+@utility modal-max-h {
+  max-height: 92dvh;
+}
+
+@utility min-w-table {
+  min-width: 780px;
 }
 
 @utility drawer-closed-right {

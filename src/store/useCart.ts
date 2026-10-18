@@ -3,6 +3,7 @@
 import { create } from "zustand";
 import { CommerceError, commerce } from "@/lib/commerce/client";
 import { flyToCart } from "@/lib/flyToCart";
+import { track } from "@/lib/telemetry";
 import type { Cart } from "@/lib/commerce/schemas";
 
 /**
@@ -107,14 +108,19 @@ export const useCart = create<CartState>()((set, get) => {
     addWithFeedback: async (productId, source) => {
       const before = get().cart?.lines.find((l) => l.productId === productId)?.qty ?? 0;
       const added = await get().add(productId, 1);
-      if (!added) return false;
+      if (!added) {
+        track("cart_failed", { productId, source: "button" });
+        return false;
+      }
       // Verify against a fresh read: the add response alone can't be trusted (chaos "silent" failures).
       const fresh = await get().refresh();
       const after = fresh?.lines.find((l) => l.productId === productId)?.qty ?? 0;
       if (!fresh || after <= before) {
+        track("cart_failed", { productId, source: "button" });
         set({ error: "The store said yes, but the item isn't in your cart. Please try again." });
         return false;
       }
+      track("cart_verified", { productId, source: "button" });
       set({ lastAddedId: productId });
       await flyToCart(source);
       get().peek();

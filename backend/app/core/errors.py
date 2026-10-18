@@ -16,6 +16,8 @@ CommerceErrorCode = Literal[
     "INVALID_INPUT",
     "TRANSIENT",
     "UNAUTHORIZED",
+    "CONFLICT",
+    "DATABASE_UNAVAILABLE",
 ]
 
 COMMERCE_STATUS_CODES: dict[str, int] = {
@@ -26,6 +28,8 @@ COMMERCE_STATUS_CODES: dict[str, int] = {
     "INVALID_INPUT": 400,
     "TRANSIENT": 503,
     "UNAUTHORIZED": 401,
+    "CONFLICT": 409,
+    "DATABASE_UNAVAILABLE": 503,
 }
 
 

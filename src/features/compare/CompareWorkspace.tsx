@@ -32,6 +32,7 @@ import type { Product } from "@/lib/commerce/schemas";
 import { useCart } from "@/store/useCart";
 import { useCatalogUI } from "@/store/useCatalogUI";
 import { MAX_COMPARE, useCompare } from "@/store/useCompare";
+import { track } from "@/lib/telemetry";
 import { useMerchantSession } from "@/store/useMerchantSession";
 import { groupRowsBySection } from "./CompareSections";
 
@@ -78,6 +79,7 @@ export function CompareWorkspace({
   useEffect(() => {
     setIds(initialValidIds);
     useCompare.setState({ ids: initialValidIds.slice(0, MAX_COMPARE), open: false });
+    if (initialValidIds.length >= 2) track("compare", { productIds: initialValidIds.slice(0, MAX_COMPARE) });
   }, [initialValidIds]);
 
   // Subscribe to external changes (e.g. CompareTray)
@@ -259,8 +261,8 @@ export function CompareWorkspace({
         </nav>
 
         <div className="mb-8">
-          <h1 className="font-display text-2xl font-bold tracking-tight text-text sm:text-3xl">
-            Product Comparison
+          <h1 className="page-title text-text">
+            Compare products
           </h1>
           <p className="mt-1 text-sm text-muted">
             Side-by-side spec comparison and live inventory
@@ -282,14 +284,14 @@ export function CompareWorkspace({
             }
             action={
               <Link href={catalogHref} className={buttonClasses({ variant: "primary", size: "md" })}>
-                Browse Catalog
+                Browse catalog
               </Link>
             }
           />
 
           {/* Quick-add suggestions from catalog */}
           <div className="mt-8 border-t border-border/40 pt-6">
-            <h2 className="font-display text-xs font-semibold uppercase tracking-wider text-muted">
+            <h2 className="eyebrow text-muted">
               Suggested products to compare
             </h2>
             <div className="mt-4 grid grid-cols-1 gap-4 sm:grid-cols-2 lg:grid-cols-4">
@@ -346,8 +348,8 @@ export function CompareWorkspace({
       {/* Page Title */}
       <div className="mb-6 flex flex-col gap-2 sm:flex-row sm:items-center sm:justify-between">
         <div>
-          <h1 className="font-display text-2xl font-bold tracking-tight text-text sm:text-3xl">
-            Product Comparison
+          <h1 className="page-title text-text">
+            Compare products
           </h1>
           <p className="mt-1 text-sm text-muted">
             Side-by-side spec comparison and live inventory
@@ -387,8 +389,8 @@ export function CompareWorkspace({
               <Filter className="size-4" />
             </span>
             <div>
-              <p className="text-xs font-semibold uppercase tracking-wider text-searching">
-                Cross-Category Comparison
+              <p className="eyebrow text-searching">
+                Cross-category comparison
               </p>
               <p className="mt-0.5 text-sm text-muted">
                 Comparing across different categories (
@@ -466,7 +468,7 @@ export function CompareWorkspace({
               <Scale className="size-3.5 text-accent-text" />
             </span>
             <div className="flex-1">
-              <p className="text-xs font-semibold uppercase tracking-wider text-accent-text">
+              <p className="eyebrow text-accent-text">
                 Pip&apos;s analysis
               </p>
               <p className="mt-1 text-sm leading-relaxed text-text">
@@ -475,8 +477,8 @@ export function CompareWorkspace({
 
               {/* Live stock status per product */}
               <div className="mt-4 flex flex-wrap items-center gap-3 border-t border-border/40 pt-3 text-xs text-muted">
-                <span className="font-semibold uppercase tracking-wider text-2xs text-muted">
-                  Live Stock:
+                <span className="eyebrow text-muted">
+                  Live stock
                 </span>
                 {products.map((p) => {
                   const stockText = p.stock > 0 ? `In stock (${p.stock} units)` : "Out of stock";
@@ -582,7 +584,7 @@ export function CompareWorkspace({
                 scope="col"
                 className="sticky left-0 z-20 w-36 min-w-32 bg-surface/95 backdrop-blur hairline-r p-4 align-bottom sm:w-48 sm:min-w-44"
               >
-                <span className="text-xs font-semibold uppercase tracking-wider text-muted">
+                <span className="eyebrow text-muted">
                   Specification
                 </span>
               </th>
@@ -619,7 +621,7 @@ export function CompareWorkspace({
 
                       {/* Brand & Wrapping Product Title */}
                       <div className="min-w-0">
-                        <p className="text-2xs uppercase tracking-wider text-muted">{p.brand}</p>
+                        <p className="text-xs text-muted">{p.brand}</p>
                         <Link
                           href={`/product/${p.id}`}
                           className="font-display text-sm font-semibold text-text hover:underline break-words"
@@ -678,7 +680,7 @@ export function CompareWorkspace({
                     <th
                       scope="colgroup"
                       colSpan={products.length + (products.length < MAX_COMPARE && availableToAdd.length > 0 ? 2 : 1)}
-                      className="sticky left-0 z-10 bg-surface-2/95 backdrop-blur hairline-r px-4 py-2 font-display text-xs font-bold uppercase tracking-wider text-muted"
+                      className="sticky left-0 z-10 bg-surface-2/95 backdrop-blur hairline-r px-4 py-2 eyebrow text-muted"
                     >
                       {section.title}
                     </th>

@@ -85,7 +85,7 @@ describe("CompareWorkspace Component Tests", () => {
     );
 
     expect(html).toContain('role="alert"');
-    expect(html).toContain("Cross-Category Comparison");
+    expect(html).toContain("Cross-category comparison");
     expect(html).toContain("Comparing across different categories");
     expect(html).toContain("Filter to");
   });
@@ -100,7 +100,7 @@ describe("CompareWorkspace Component Tests", () => {
     expect(html).toContain('role="status"');
     expect(html).toContain("Pick one more product to compare");
     expect(html).toContain("Suggested products to compare");
-    expect(html).toContain("Browse Catalog");
+    expect(html).toContain("Browse catalog");
   });
 
   it("renders error state when unknown products provided and 0 remain", () => {
@@ -127,7 +127,7 @@ describe("CompareWorkspace Component Tests", () => {
       React.createElement(CompareWorkspace, { initialValidIds: validIds }),
     );
 
-    expect(html).toContain("Live Stock:");
+    expect(html).toContain("Live stock");
     expect(html).toContain("Out of stock");
     expect(html).toContain("In stock");
   });

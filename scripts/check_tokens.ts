@@ -17,8 +17,8 @@ const ALLOWLIST = [
   "src/features/companion/states.ts",
   // Generated product art: device colours are computed from each product's catalog palette, not theme tokens
   "src/features/catalog/ProductImage.tsx",
-  // Generated garment art for packshots and the virtual try-on (colours from catalog colour options)
-  "src/features/tryon/garmentArt.ts",
+  // Generated garment art for clothing packshots (colours from catalog colour options)
+  "src/features/catalog/garmentArt.ts",
   // Single source of truth & generated files
   "src/tokens/definitions.ts",
   "src/styles/tokens.css",

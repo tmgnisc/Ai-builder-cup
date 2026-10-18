@@ -43,7 +43,7 @@ export function BundleCard({ block, interactive }: { block: BundleBlock; interac
                   {p && <ProductImage product={p} variant={`bundle-${block.id}-${item.productId}`} showInitials={false} />}
                 </span>
                 <span className="min-w-0 flex-1">
-                  <span className="block text-2xs uppercase tracking-wide text-muted">{item.slot}</span>
+                  <span className="eyebrow block text-muted">{item.slot}</span>
                   <span className="block truncate text-xs font-medium">{item.name}</span>
                 </span>
                 <span className="shrink-0 font-mono text-xs tabular text-muted">{formatNPR(item.price)}</span>

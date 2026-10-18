@@ -177,3 +177,23 @@ async def merchant_logout_endpoint(response: Response):
     """Clears merchant session cookie."""
     response.delete_cookie(key=MERCHANT_COOKIE, path="/")
     return {"status": "ok", "message": "Successfully logged out of merchant session."}
+
+
+@router.post("/password")
+async def merchant_change_password_endpoint(
+    body: ChangePasswordInput,
+    current_user: Annotated[MerchantUserResponse, Depends(get_current_merchant)],
+    session: Annotated[AsyncSession | None, Depends(get_db)] = None,
+) -> dict[str, str]:
+    """Changes the signed-in merchant's password (requires the database)."""
+    if session is None:
+        raise CommerceException("DATABASE_UNAVAILABLE", "Changing passwords needs the store database.")
+    stmt = select(MerchantUserDB).where(MerchantUserDB.id == current_user.id)
+    user = (await session.execute(stmt)).scalar_one_or_none()
+    if not user or not verify_password(body.currentPassword, user.password_hash):
+        raise CommerceException("UNAUTHORIZED", "Your current password is incorrect.")
+    await session.execute(
+        update(MerchantUserDB).where(MerchantUserDB.id == user.id).values(password_hash=hash_password(body.newPassword))
+    )
+    await session.commit()
+    return {"status": "ok"}

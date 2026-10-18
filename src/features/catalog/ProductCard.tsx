@@ -115,7 +115,10 @@ export function ProductCard({ product }: { product: Product }) {
 
       <div className="absolute inset-x-3 top-3 z-10 flex items-start justify-between gap-2">
         <div className="flex flex-col items-start gap-1.5">
-          <StockBadge stock={product.stock} />
+          {/* Solid backing keeps the tinted badge legible over light product photos. */}
+          <span className="rounded-md bg-surface/90 backdrop-blur-sm">
+            <StockBadge stock={product.stock} />
+          </span>
           {rank >= 0 && (
             <span className="inline-flex items-center gap-1 rounded-md bg-accent px-2 py-0.5 text-2xs font-semibold text-accent-fg">
               Pip&apos;s pick #{rank + 1}

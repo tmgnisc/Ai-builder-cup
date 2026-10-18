@@ -1,6 +1,5 @@
 import { NextResponse } from "next/server";
 import { proxyToBackend } from "@/lib/server/backendProxy";
-import { MISSING_INFO } from "@/data/merchant";
 
 /**
  * GET /api/merchant/missing-info
@@ -10,7 +9,10 @@ export async function GET(req: Request) {
   const proxied = await proxyToBackend(req, "/api/merchant/missing-info");
   if (proxied) return proxied;
 
-  return NextResponse.json(MISSING_INFO);
+  return NextResponse.json(
+    { error: { code: "SERVICE_UNAVAILABLE", message: "The store backend is unavailable." } },
+    { status: 503 },
+  );
 }
 
 /**

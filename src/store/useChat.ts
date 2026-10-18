@@ -12,6 +12,8 @@ import { PRICE_MAX, PRICE_MIN, useCatalogUI } from "./useCatalogUI";
 import { useCompanion } from "./useCompanion";
 import { useCompare } from "./useCompare";
 import { buildCompareUrl } from "@/lib/commerce/compareUrl";
+import { parseIntent } from "@/lib/agent/intent";
+import { track } from "@/lib/telemetry";
 import { findAnchor, usePipPosition } from "./usePipPosition";
 import { useFeedback } from "./useFeedback";
 import { useGuide } from "./useGuide";
@@ -175,6 +177,26 @@ async function performUI(action: UIAction) {
   }
 }
 
+/** Coarse intent for the merchant's "top questions" (search / compare / add / delivery / question). */
+function intentLabel(text: string): string {
+  const kind = parseIntent(text).kind;
+  if (kind === "search" || kind === "similar") return "search";
+  if (kind === "compare" || kind === "add_compare") return "compare";
+  if (kind === "add" || kind === "cart" || kind === "checkout") return "add";
+  if (kind === "delivery") return "delivery";
+  return "question";
+}
+
+/** Telemetry for blocks: recommendations once per block, cart writes once they settle. */
+function trackBlock(prev: Block | undefined, block: Block) {
+  if (block.kind === "product_carousel" || block.kind === "bundle") {
+    if (!prev) track("recommendation", { productIds: block.productIds });
+  } else if (block.kind === "cart_action" && block.action === "add" && block.status !== "pending") {
+    if (prev?.kind === "cart_action" && prev.status === block.status) return;
+    track(block.status === "verified" ? "cart_verified" : "cart_failed", { productId: block.productId, source: "pip" });
+  }
+}
+
 export const useChat = create<ChatState>()((set, get) => {
   const ERROR_TEXT = "Something went wrong on my side. Please try that again.";
   // Sub-agent events carry no message id; ones that arrive before Pip's reply exists wait here.
@@ -231,6 +253,7 @@ export const useChat = create<ChatState>()((set, get) => {
         }));
         return;
       case "block":
+        trackBlock(get().messages.find((m) => m.id === ev.messageId)?.blocks.find((b) => b.id === ev.block.id), ev.block);
         patch(ev.messageId, (m) => {
           const i = m.blocks.findIndex((b) => b.id === ev.block.id);
           const blocks = i === -1 ? [...m.blocks, ev.block] : m.blocks.map((b, j) => (j === i ? ev.block : b));
@@ -336,6 +359,8 @@ export const useChat = create<ChatState>()((set, get) => {
       controller?.abort();
       const ctrl = new AbortController();
       controller = ctrl;
+
+      track("pip_message", { text: text.slice(0, 200), intent: intentLabel(text) });
 
       const userMsgId = `user_${++userSeq}`;
       const placeholderId = `pending_${Date.now()}`;

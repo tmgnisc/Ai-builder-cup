@@ -1,6 +1,5 @@
 import { NextResponse } from "next/server";
 import { proxyToBackend } from "@/lib/server/backendProxy";
-import { INITIAL_ORDERS } from "@/data/merchantOrders";
 
 /**
  * GET /api/orders/:id
@@ -11,11 +10,10 @@ export async function GET(req: Request, { params }: { params: Promise<{ id: stri
   const proxied = await proxyToBackend(req, `/api/orders/${encodeURIComponent(id)}`);
   if (proxied) return proxied;
 
-  const found = INITIAL_ORDERS.find((o) => o.id === id);
-  if (!found) {
-    return NextResponse.json({ error: { code: "NOT_FOUND", message: `Order ${id} not found.` } }, { status: 404 });
-  }
-  return NextResponse.json(found);
+  return NextResponse.json(
+    { error: { code: "SERVICE_UNAVAILABLE", message: "The store backend is unavailable." } },
+    { status: 503 },
+  );
 }
 
 /**

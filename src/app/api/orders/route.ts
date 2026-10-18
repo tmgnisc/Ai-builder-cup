@@ -1,6 +1,5 @@
 import { NextResponse } from "next/server";
 import { proxyToBackend } from "@/lib/server/backendProxy";
-import { INITIAL_ORDERS } from "@/data/merchantOrders";
 
 /**
  * GET /api/orders
@@ -11,12 +10,10 @@ export async function GET(req: Request) {
   const proxied = await proxyToBackend(req, `/api/orders${url.search}`);
   if (proxied) return proxied;
 
-  // Fallback if backend is temporarily unreachable
-  const status = url.searchParams.get("status");
-  const filtered = status && status !== "all" 
-    ? INITIAL_ORDERS.filter((o) => o.status === status) 
-    : INITIAL_ORDERS;
-  return NextResponse.json(filtered);
+  return NextResponse.json(
+    { error: { code: "SERVICE_UNAVAILABLE", message: "The store backend is unavailable." } },
+    { status: 503 },
+  );
 }
 
 /**

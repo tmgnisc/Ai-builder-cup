@@ -1,8 +1,10 @@
-import type { ReactNode } from "react";
+"use client";
+
+import { useEffect, useRef, useState, type ReactNode } from "react";
 import { cn } from "@/lib/cn";
 import { initials } from "@/lib/commerce/format";
 import type { Product } from "@/lib/commerce/schemas";
-import { flatLaySvg } from "@/features/tryon";
+import { flatLaySvg } from "./garmentArt";
 
 interface ProductImageProps {
   product: Pick<Product, "id" | "brand" | "name" | "category" | "palette"> &
@@ -90,7 +92,18 @@ export function ProductImage({ product, className, variant = "card", showInitial
   const kind = deviceKind(product);
   const g = (name: string) => `url(#${id}-${name})`;
 
-  const imgSrc = product.image || `/images/products/${product.id}.jpg`;
+  // Bundled photo first (works offline and never hotlinks), then the catalog URL, then generated art.
+  const sources = [`/images/products/${product.id}.jpg`, product.image].filter((s, i, all): s is string => !!s && all.indexOf(s) === i);
+  const [attempt, setAttempt] = useState(0);
+  const imgRef = useRef<HTMLImageElement>(null);
+  const imgSrc = sources[attempt];
+  const next = () => setAttempt((a) => a + 1);
+
+  // An error that fires before hydration never reaches onError; catch it here.
+  useEffect(() => {
+    const img = imgRef.current;
+    if (img?.complete && img.naturalWidth === 0) setAttempt((a) => a + 1);
+  }, [imgSrc]);
 
   return (
     <div
@@ -104,26 +117,24 @@ export function ProductImage({ product, className, variant = "card", showInitial
       {imgSrc ? (
         // eslint-disable-next-line @next/next/no-img-element
         <img
-          alt={product.name}
+          key={imgSrc}
+          ref={imgRef}
+          alt=""
           src={imgSrc}
           loading="lazy"
           decoding="async"
           draggable={false}
-          className="absolute inset-0 size-full object-contain p-3.5 drop-shadow-md transition-transform duration-300 group-hover:scale-105"
+          className="absolute inset-0 size-full object-cover"
           style={{
-            transform: view === "detail" ? "scale(1.25)" : view === "angle" ? "rotate(-3deg) scale(0.98)" : undefined,
+            // Photos: same shot, different crop (no rotation, which reads as a tilted print).
+            transform: view === "detail" ? "scale(1.7)" : view === "angle" ? "scale(1.25)" : undefined,
+            transformOrigin: view === "angle" ? "30% 60%" : "center",
           }}
-          onError={(e) => {
-            e.currentTarget.style.display = "none";
-            const fallback = e.currentTarget.parentElement?.querySelector(".product-image-fallback");
-            if (fallback) {
-              (fallback as HTMLElement).style.display = "block";
-            }
-          }}
+          onError={next}
         />
       ) : null}
 
-      <div className={cn("product-image-fallback absolute inset-0 size-full", imgSrc && "hidden")} aria-hidden>
+      <div className={cn("absolute inset-0 size-full", imgSrc && "hidden")} aria-hidden>
         {product.category === "clothing" && product.specs ? (
           // eslint-disable-next-line @next/next/no-img-element -- generated inline SVG, nothing to optimise
           <img
@@ -164,7 +175,8 @@ export function ProductImage({ product, className, variant = "card", showInitial
         )}
       </div>
       {showInitials && (
-        <span aria-hidden className="absolute bottom-3 right-3 font-display text-2xs font-semibold uppercase tracking-widest text-muted">
+        // Only labels the generated art; a photo speaks for itself.
+        <span aria-hidden className={cn("eyebrow absolute bottom-3 right-3 text-muted", imgSrc && "hidden")}>
           {initials(product)}
         </span>
       )}

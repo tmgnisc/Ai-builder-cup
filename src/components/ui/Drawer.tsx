@@ -123,7 +123,7 @@ export function Drawer({
       >
         <div className="flex items-start gap-3 border-b border-border px-5 py-4">
           <div className="min-w-0 flex-1">
-            <h2 id={titleId} className="font-display text-base font-semibold tracking-tight">
+            <h2 id={titleId} className="panel-title">
               {title}
             </h2>
             {description && (

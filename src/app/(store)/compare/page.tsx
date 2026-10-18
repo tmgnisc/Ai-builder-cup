@@ -3,7 +3,7 @@ import { parseAndValidateCompareIds } from "@/lib/commerce/compareUrl";
 import { CompareWorkspace } from "@/features/compare";
 
 export const metadata: Metadata = {
-  title: "Product Comparison | Persona Shop",
+  title: "Compare products",
   description: "Side-by-side spec comparison and live inventory for tech products.",
 };
 

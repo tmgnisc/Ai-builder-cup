@@ -16,6 +16,7 @@ from ...models.db import ProductDB
 from ...repositories.postgres_catalog import row_to_product
 from ...services.catalog import CatalogService
 from ..dependencies import get_catalog_service, verify_shared_secret
+from .merchant_auth import MerchantUserResponse, get_current_merchant
 
 router = APIRouter()
 
@@ -233,6 +234,7 @@ async def get_product_endpoint(
 @router.post("", response_model=ProductDetailResponse, status_code=status.HTTP_201_CREATED)
 async def create_product_endpoint(
     payload: CreateProductInput,
+    _auth: Annotated[MerchantUserResponse, Depends(get_current_merchant)],
     session: Annotated[AsyncSession | None, Depends(get_db)] = None,
     catalog_service: Annotated[CatalogService, Depends(get_catalog_service)] = None,
     _: Annotated[None, Depends(verify_shared_secret)] = None,
@@ -288,6 +290,7 @@ async def create_product_endpoint(
 async def update_product_endpoint(
     product_id: str,
     payload: UpdateProductInput,
+    _auth: Annotated[MerchantUserResponse, Depends(get_current_merchant)],
     session: Annotated[AsyncSession | None, Depends(get_db)] = None,
     _: Annotated[None, Depends(verify_shared_secret)] = None,
 ) -> ProductDetailResponse:
@@ -316,6 +319,7 @@ async def update_product_endpoint(
 @router.delete("/{product_id}", status_code=status.HTTP_200_OK)
 async def delete_product_endpoint(
     product_id: str,
+    _auth: Annotated[MerchantUserResponse, Depends(get_current_merchant)],
     session: Annotated[AsyncSession | None, Depends(get_db)] = None,
     _: Annotated[None, Depends(verify_shared_secret)] = None,
 ):
