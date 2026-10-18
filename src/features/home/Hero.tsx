@@ -1,26 +1,16 @@
 "use client";
 
-import { ArrowUp, Check } from "lucide-react";
+import { ArrowUp } from "lucide-react";
 import { useRef, useState } from "react";
 import { MicButton } from "@/features/companion";
 import { useChat } from "@/store/useChat";
 import { gsap, motion, SplitText, useGSAP } from "@/lib/motion";
 import { useMagnetic } from "@/lib/useMagnetic";
-import { getAllProducts } from "@/lib/commerce/catalog";
-import { DELIVERY_RULES } from "@/lib/commerce/delivery";
 
 const EXAMPLES = [
   "College bundle: laptop and headphones",
   "Warm winter fleece hoodie with try-on",
   "MacBook Air vs Acer Swift comparison",
-];
-
-const catalog = getAllProducts();
-/** Every claim here is computed from the catalog and delivery rules, never hard-coded. */
-const TRUST = [
-  `${catalog.length} products, ${catalog.filter((p) => p.stock > 0).length} in stock`,
-  "Cart checked after every add",
-  `Kathmandu Valley delivery in ${DELIVERY_RULES.valley.days}`,
 ];
 
 /**
@@ -107,10 +97,6 @@ export function Hero() {
   return (
     <section ref={root} className="relative mx-auto grid max-w-page items-center gap-10 px-4 pb-16 pt-12 sm:px-6 md:pt-20 lg:grid-cols-hero">
       <div>
-        <p data-hero-fade className="mb-6 inline-flex items-center gap-2 rounded-md bg-surface px-2.5 py-1 text-xs font-medium text-muted hairline">
-          <span className="size-1.5 rounded-full bg-accent" aria-hidden />
-          Agentic E-Commerce Platform · Nepal
-        </p>
         <h1
           data-split
           className="font-display hero-headline max-w-2xl font-semibold tracking-tight [&_.char]:inline-block"
@@ -170,15 +156,6 @@ export function Hero() {
                   </span>
                 </span>
               </button>
-            </li>
-          ))}
-        </ul>
-
-        <ul data-hero-fade className="mt-10 flex max-w-xl flex-wrap gap-x-6 gap-y-2 border-t border-border pt-6 text-sm text-muted" aria-label="How this store works">
-          {TRUST.map((t) => (
-            <li key={t} className="inline-flex items-center gap-2">
-              <Check className="size-3.5 text-accent-text" aria-hidden />
-              {t}
             </li>
           ))}
         </ul>
