@@ -234,17 +234,37 @@ async def get_product_endpoint(
 async def create_product_endpoint(
     payload: CreateProductInput,
     session: Annotated[AsyncSession | None, Depends(get_db)] = None,
+    catalog_service: Annotated[CatalogService, Depends(get_catalog_service)] = None,
     _: Annotated[None, Depends(verify_shared_secret)] = None,
 ) -> ProductDetailResponse:
-    """Adds a new product to PostgreSQL database."""
-    if session is None:
-        raise CommerceException("DATABASE_UNAVAILABLE", "PostgreSQL database is required to create products.")
+    """Adds a new product to PostgreSQL database or in-memory catalog."""
+    if session is not None:
+        existing = (await session.execute(select(ProductDB).where(ProductDB.id == payload.id))).scalar_one_or_none()
+        if existing:
+            raise CommerceException("CONFLICT", f"Product with ID '{payload.id}' already exists.")
 
-    existing = (await session.execute(select(ProductDB).where(ProductDB.id == payload.id))).scalar_one_or_none()
-    if existing:
-        raise CommerceException("CONFLICT", f"Product with ID '{payload.id}' already exists.")
+        new_prod = ProductDB(
+            id=payload.id,
+            name=payload.name,
+            brand=payload.brand,
+            category=payload.category,
+            price=payload.price,
+            stock=payload.stock,
+            rating=payload.rating,
+            review_count=payload.reviewCount,
+            blurb=payload.blurb,
+            tags=payload.tags,
+            specs=payload.specs.model_dump(),
+            palette=list(payload.palette),
+            image=payload.image,
+        )
+        session.add(new_prod)
+        await session.commit()
+        await session.refresh(new_prod)
+        return ProductDetailResponse(product=row_to_product(new_prod))
 
-    new_prod = ProductDB(
+    # In-memory fallback
+    prod = Product(
         id=payload.id,
         name=payload.name,
         brand=payload.brand,
@@ -252,17 +272,16 @@ async def create_product_endpoint(
         price=payload.price,
         stock=payload.stock,
         rating=payload.rating,
-        review_count=payload.reviewCount,
+        reviewCount=payload.reviewCount,
         blurb=payload.blurb,
         tags=payload.tags,
-        specs=payload.specs.model_dump(),
-        palette=list(payload.palette),
+        specs=payload.specs,
+        palette=payload.palette,
         image=payload.image,
     )
-    session.add(new_prod)
-    await session.commit()
-    await session.refresh(new_prod)
-    return ProductDetailResponse(product=row_to_product(new_prod))
+    if catalog_service is not None:
+        catalog_service.add_product(prod)
+    return ProductDetailResponse(product=prod)
 
 
 @router.patch("/{product_id}", response_model=ProductDetailResponse)

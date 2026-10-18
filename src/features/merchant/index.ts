@@ -8,3 +8,4 @@ export * from "./SettingsTab";
 export * from "./Funnel";
 export * from "./KpiCard";
 export * from "./Lists";
+export * from "./AddProductModal";

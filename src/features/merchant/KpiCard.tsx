@@ -2,7 +2,10 @@ import { ArrowDownRight, ArrowUpRight } from "lucide-react";
 import { cn } from "@/lib/cn";
 import type { Kpi } from "@/data/merchant";
 
-export function formatKpi(value: number, format: Kpi["format"]): string {
+export function formatKpi(value: number, format: Kpi["format"] | "npr" | "currency"): string {
+  if (format === "npr" || format === "currency") {
+    return `NPR ${Math.round(value).toLocaleString("en-IN")}`;
+  }
   return format === "pct" ? `${value % 1 ? value.toFixed(1) : value}%` : Math.round(value).toLocaleString("en-IN");
 }
 

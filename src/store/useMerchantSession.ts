@@ -49,6 +49,7 @@ export interface MerchantSessionState {
   // Orders pipeline synced with PostgreSQL
   orders: MerchantOrder[];
   updateOrderStatus: (orderId: string, status: OrderStatus) => Promise<void>;
+  createOrder: (newOrder: MerchantOrder) => Promise<void>;
   loadOrdersFromApi: () => Promise<void>;
 
   // Live KPIs from PostgreSQL
@@ -253,6 +254,30 @@ export const useMerchantSession = create<MerchantSessionState>()((set) => ({
       });
     } catch (e) {
       console.warn("Failed to persist status change to PostgreSQL:", e);
+    }
+  },
+
+  createOrder: async (newOrder) => {
+    set((s) => ({
+      orders: [newOrder, ...s.orders],
+      kpis: s.kpis
+        ? {
+            ...s.kpis,
+            totalOrders: s.kpis.totalOrders + 1,
+            verifiedOrdersCount: newOrder.verifiedByPip ? s.kpis.verifiedOrdersCount + 1 : s.kpis.verifiedOrdersCount,
+            totalRevenue: s.kpis.totalRevenue + newOrder.totalNPR,
+            pendingFulfillment: s.kpis.pendingFulfillment + 1,
+          }
+        : null,
+    }));
+    try {
+      await fetch("/api/orders", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify(newOrder),
+      });
+    } catch (e) {
+      console.warn("Failed to persist new order to backend:", e);
     }
   },
 

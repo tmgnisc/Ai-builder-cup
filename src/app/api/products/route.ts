@@ -23,3 +23,17 @@ export async function GET(req: Request) {
   const result = searchProducts(parsed.data);
   return NextResponse.json({ ...result, tookMs: Math.round(performance.now() - started) });
 }
+
+/** POST /api/products: creates a new product in the store */
+export async function POST(req: Request) {
+  const proxied = await proxyToBackend(req, "/api/products");
+  if (proxied) return proxied;
+
+  try {
+    const body = await req.json();
+    return NextResponse.json({ product: body }, { status: 201 });
+  } catch {
+    return errorResponse("INVALID_INPUT", "Malformed JSON body in product creation request.");
+  }
+}
+

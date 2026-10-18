@@ -211,9 +211,8 @@ async def run_pip_stream(
                 return
             except Exception as err:
                 err_str = str(err)
-                is_rate_limit = "429" in err_str or "ResourceExhausted" in err_str or "quota" in err_str.lower()
                 has_fallback = idx + 1 < len(models_to_try)
-                if (is_rate_limit or "503" in err_str) and has_fallback and not message_started:
+                if has_fallback and not message_started:
                     next_cand = models_to_try[idx + 1]
                     next_name = getattr(next_cand, "model", str(next_cand))
                     logger.warning(

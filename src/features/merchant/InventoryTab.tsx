@@ -6,6 +6,7 @@ import {
   Minus,
   Plus,
   Search,
+  Trash2,
 } from "lucide-react";
 import { useMemo, useState } from "react";
 import { StockBadge } from "@/components/ui/Badge";
@@ -16,19 +17,25 @@ import { ProductImage } from "@/features/catalog";
 import { getAllProducts } from "@/lib/commerce/catalog";
 import { formatNPR } from "@/lib/commerce/format";
 import type { Product } from "@/lib/commerce/schemas";
+import { useCatalogUI } from "@/store/useCatalogUI";
 import { useMerchantSession } from "@/store/useMerchantSession";
+import { AddProductModal } from "./AddProductModal";
 
 export function InventoryTab() {
   const stockOverrides = useMerchantSession((s) => s.stockOverrides);
   const setProductStock = useMerchantSession((s) => s.setProductStock);
   const liveMissing = useMerchantSession((s) => s.missing);
 
+  const catalogProducts = useCatalogUI((s) => s.catalogProducts);
+  const setCatalogProducts = useCatalogUI((s) => s.setCatalogProducts);
+
   const [search, setSearch] = useState("");
   const [selectedCategory, setSelectedCategory] = useState<string>("all");
   const [editingProduct, setEditingProduct] = useState<Product | null>(null);
   const [modalStockInput, setModalStockInput] = useState<number>(0);
+  const [isAddModalOpen, setIsAddModalOpen] = useState(false);
 
-  const allProducts = getAllProducts();
+  const allProducts = catalogProducts.length > 0 ? catalogProducts : getAllProducts();
 
   // Compute live missing spec map
   const missingMap = useMemo(() => {
@@ -81,6 +88,17 @@ export function InventoryTab() {
     }
   };
 
+  const handleDeleteProduct = async (productId: string) => {
+    if (!window.confirm("Are you sure you want to remove this product from the store catalog?")) return;
+    const updated = allProducts.filter((p) => p.id !== productId);
+    setCatalogProducts(updated);
+    try {
+      await fetch(`/api/products/${encodeURIComponent(productId)}`, { method: "DELETE" });
+    } catch {
+      // Keep optimistic update in place
+    }
+  };
+
   const categories = [
     { id: "all", label: "All Items" },
     { id: "laptops", label: "Laptops" },
@@ -92,7 +110,7 @@ export function InventoryTab() {
 
   return (
     <div className="space-y-4">
-      {/* Search and Category Filters */}
+      {/* Search, Category Filters and Add Product Action */}
       <div className="flex flex-col gap-3 sm:flex-row sm:items-center sm:justify-between">
         <div className="relative w-full sm:max-w-xs">
           <span className="pointer-events-none absolute left-3 top-1/2 -translate-y-1/2 text-muted">
@@ -108,18 +126,30 @@ export function InventoryTab() {
           />
         </div>
 
-        <div className="flex flex-wrap items-center gap-1.5" role="group" aria-label="Category filter">
-          {categories.map((c) => (
-            <Button
-              key={c.id}
-              size="sm"
-              variant={selectedCategory === c.id ? "primary" : "secondary"}
-              onClick={() => setSelectedCategory(c.id)}
-              className="text-xs"
-            >
-              {c.label}
-            </Button>
-          ))}
+        <div className="flex flex-wrap items-center gap-2">
+          <div className="flex flex-wrap items-center gap-1.5" role="group" aria-label="Category filter">
+            {categories.map((c) => (
+              <Button
+                key={c.id}
+                size="sm"
+                variant={selectedCategory === c.id ? "primary" : "secondary"}
+                onClick={() => setSelectedCategory(c.id)}
+                className="text-xs"
+              >
+                {c.label}
+              </Button>
+            ))}
+          </div>
+
+          <Button
+            size="sm"
+            variant="primary"
+            onClick={() => setIsAddModalOpen(true)}
+            className="inline-flex items-center gap-1.5 text-xs font-semibold shadow-sm ml-auto sm:ml-0"
+          >
+            <Plus className="size-3.5" aria-hidden="true" />
+            Add Product
+          </Button>
         </div>
       </div>
 
@@ -232,14 +262,25 @@ export function InventoryTab() {
                       )}
                     </td>
                     <td className="p-3.5 text-right whitespace-nowrap">
-                      <Button
-                        size="sm"
-                        variant="secondary"
-                        onClick={() => handleOpenRestockModal(p)}
-                        className="text-xs"
-                      >
-                        Adjust Stock
-                      </Button>
+                      <div className="flex items-center justify-end gap-1.5">
+                        <Button
+                          size="sm"
+                          variant="secondary"
+                          onClick={() => handleOpenRestockModal(p)}
+                          className="text-xs"
+                        >
+                          Adjust Stock
+                        </Button>
+                        <button
+                          type="button"
+                          onClick={() => handleDeleteProduct(p.id)}
+                          className="grid size-7 place-items-center rounded-lg text-muted hover:bg-danger/15 hover:text-danger transition-colors hairline"
+                          aria-label={`Delete ${p.name}`}
+                          title="Remove product"
+                        >
+                          <Trash2 className="size-3.5" />
+                        </button>
+                      </div>
                     </td>
                   </tr>
                 );
@@ -298,6 +339,12 @@ export function InventoryTab() {
           </div>
         </div>
       )}
+
+      {/* Feature-Rich Add Product Modal */}
+      <AddProductModal
+        isOpen={isAddModalOpen}
+        onClose={() => setIsAddModalOpen(false)}
+      />
     </div>
   );
 }

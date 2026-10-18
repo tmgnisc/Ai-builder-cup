@@ -3,6 +3,7 @@
 import {
   CheckCircle2,
   MapPin,
+  Plus,
   Search,
   ShieldCheck,
 } from "lucide-react";
@@ -18,6 +19,7 @@ import { useMerchantSession } from "@/store/useMerchantSession";
 export function OrdersTab() {
   const orders = useMerchantSession((s) => s.orders);
   const updateOrderStatus = useMerchantSession((s) => s.updateOrderStatus);
+  const createOrder = useMerchantSession((s) => s.createOrder);
   const loadOrdersFromApi = useMerchantSession((s) => s.loadOrdersFromApi);
 
   useEffect(() => {
@@ -27,6 +29,31 @@ export function OrdersTab() {
   const [statusFilter, setStatusFilter] = useState<string>("all");
   const [search, setSearch] = useState("");
   const [selectedOrder, setSelectedOrder] = useState<MerchantOrder | null>(null);
+
+  const handleCreateTestOrder = () => {
+    const orderNum = Math.floor(1000 + Math.random() * 9000);
+    const newOrd: MerchantOrder = {
+      id: `ORD-${orderNum}`,
+      customerName: "Sujan Dangol",
+      customerEmail: "sujan.dangol@example.np",
+      city: "Kathmandu (New Baneshwor)",
+      date: new Date().toISOString().slice(0, 16).replace("T", " "),
+      items: [
+        {
+          productId: "apple-macbook-pro-14-m4-pro",
+          productName: "MacBook Pro 14 (M4 Pro)",
+          quantity: 1,
+          unitPrice: 289000,
+        },
+      ],
+      totalNPR: 289000,
+      verifiedByPip: true,
+      verificationHash: `pip_v_${Math.random().toString(16).slice(2, 10)}`,
+      status: "pending",
+      notes: "Verified against live stock buffer (immediate Valley dispatch).",
+    };
+    void createOrder(newOrd);
+  };
 
   const filteredOrders = orders.filter((o) => {
     if (statusFilter !== "all" && o.status !== statusFilter) return false;
@@ -149,18 +176,30 @@ export function OrdersTab() {
           />
         </div>
 
-        <div className="flex flex-wrap items-center gap-1.5" role="group" aria-label="Order status filter">
-          {["all", "pending", "processing", "dispatched", "delivered"].map((st) => (
-            <Button
-              key={st}
-              size="sm"
-              variant={statusFilter === st ? "primary" : "secondary"}
-              onClick={() => setStatusFilter(st)}
-              className="capitalize text-xs"
-            >
-              {st}
-            </Button>
-          ))}
+        <div className="flex flex-wrap items-center gap-2">
+          <div className="flex flex-wrap items-center gap-1.5" role="group" aria-label="Order status filter">
+            {["all", "pending", "processing", "dispatched", "delivered"].map((st) => (
+              <Button
+                key={st}
+                size="sm"
+                variant={statusFilter === st ? "primary" : "secondary"}
+                onClick={() => setStatusFilter(st)}
+                className="capitalize text-xs"
+              >
+                {st}
+              </Button>
+            ))}
+          </div>
+
+          <Button
+            size="sm"
+            variant="primary"
+            onClick={handleCreateTestOrder}
+            className="inline-flex items-center gap-1.5 text-xs font-semibold shadow-sm ml-auto sm:ml-0"
+          >
+            <Plus className="size-3.5" aria-hidden="true" />
+            Record Order
+          </Button>
         </div>
       </div>
 

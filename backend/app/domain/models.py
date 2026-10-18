@@ -30,9 +30,9 @@ class ProductSpecs(BaseModel):
     storageGB: int | None = None
     gpu: str | None = None
     batteryHours: float | None = None
-    weightGrams: int = Field(gt=0)
+    weightGrams: int = Field(default=350, gt=0)
     screen: str | None = None
-    warrantyMonths: int = Field(ge=0)
+    warrantyMonths: int = Field(default=12, ge=0)
     ports: str | None = None
     connectivity: str | None = None
     anc: bool | None = None
