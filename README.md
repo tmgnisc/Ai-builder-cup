@@ -2,7 +2,7 @@
 
 [![Next.js 15](https://img.shields.io/badge/Next.js-15.0-black?logo=next.js)](https://nextjs.org/)
 [![Google ADK](https://img.shields.io/badge/Google_ADK-2.12.0-4285F4?logo=google)](https://github.com/google/agent-development-kit)
-[![Gemini 3.5 Flash](https://img.shields.io/badge/Model-Gemini_3.5_Flash-8E75C2?logo=googlegemini)](https://ai.google.dev/)
+[![Gemini 2.5 Flash](https://img.shields.io/badge/Model-Gemini_2.5_Flash-8E75C2?logo=googlegemini)](https://ai.google.dev/)
 [![FastAPI](https://img.shields.io/badge/FastAPI-0.141-009688?logo=fastapi)](https://fastapi.tiangolo.com/)
 [![PostgreSQL 16](https://img.shields.io/badge/PostgreSQL-16-336791?logo=postgresql)](https://www.postgresql.org/)
 [![Docker](https://img.shields.io/badge/Docker-Container_Ready-2496ED?logo=docker)](https://www.docker.com/)
@@ -15,7 +15,7 @@
 ## Key Capabilities
 
 ### 1. Multi-Agent Orchestration (Google ADK)
-* **Supervisor Agent (`Pip`)**: Maintains user context, conversational memory, voice interaction, and UI choreography. Powered by `gemini-3.5-flash` with `thinking_budget=0` for immediate sub-second stream latency.
+* **Supervisor Agent (`Pip`)**: Maintains user context, conversational memory, voice interaction, and UI choreography. Powered by `gemini-2.5-flash` with `thinking_budget=0` for immediate sub-second stream latency.
 * **Product Finder Sub-Agent (`Scout`)**: When a shopper requests multiple distinct items (for example, "I need a lightweight laptop and noise-cancelling headphones" or "find a college outfit and backpack"), Pip delegates to Scout. Scout queries the catalog concurrently across multiple categories, compiles a structured package bundle, computes total NPR package pricing, and emits interactive bundle cards.
 * **Comparison Specialist Sub-Agent (`Analyst`)**: Performs structured side-by-side evaluation across 2 to 4 products on key dimensions (Price, Battery, Weight, RAM, Storage, Materials, Fit, Warranty).
 * **Cart and Fulfillment Guard Sub-Agent (`Guard`)**: Executes atomic stock checks, city delivery feasibility, and multi-item cart mutations with verify-after-act semantics.
@@ -152,7 +152,7 @@ LOG_LEVEL=INFO
 
 # Gemini LLM Settings
 GEMINI_API_KEY=your_gemini_api_key_here
-GEMINI_MODEL=gemini-3.5-flash
+GEMINI_MODEL=gemini-2.5-flash
 AGENT_BACKEND=gemini
 
 # Database (PostgreSQL)

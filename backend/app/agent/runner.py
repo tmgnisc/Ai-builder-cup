@@ -242,8 +242,20 @@ async def run_pip_stream(
         # Client disconnect or generator closed
         return
     except Exception as err:
-        yield serialize_event(StateChangeEvent(state="error", caption="Something went wrong")) + "\n"
-        yield serialize_event(ErrorEvent(message=str(err))) + "\n"
+        err_str = str(err)
+        is_rate_limit = "429" in err_str or "ResourceExhausted" in err_str or "quota" in err_str.lower()
+        caption = "Rate limit reached" if is_rate_limit else "Something went wrong"
+        user_msg = (
+            "Google Gemini API rate limit or quota exceeded (429). Please wait a moment or check your API key quota."
+            if is_rate_limit
+            else "I ran into an issue connecting to the AI service. Please try your request again."
+        )
+        if not message_started:
+            message_started = True
+            yield serialize_event(MessageStartEvent(messageId=message_id)) + "\n"
+            yield serialize_event(TextDeltaEvent(messageId=message_id, delta=user_msg)) + "\n"
+        yield serialize_event(StateChangeEvent(state="error", caption=caption)) + "\n"
+        yield serialize_event(ErrorEvent(message=err_str)) + "\n"
         yield serialize_event(DoneEvent()) + "\n"
     finally:
         current_turn_context.reset(token)

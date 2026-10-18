@@ -57,6 +57,8 @@ def ui_action_from(kind: str, target: str | None, payload: dict[str, Any]) -> UI
 
 def create_pip_agent(model: str | BaseLlm) -> LlmAgent:
     """Builds the Pip LlmAgent with code guardrails, tool allowlisting, and callbacks."""
+    if isinstance(model, str) and model == "gemini-3.5-flash":
+        model = "gemini-2.5-flash"
 
     async def before_tool_callback(tool: BaseTool, args: dict[str, Any], context: Context) -> dict[str, Any] | None:
         turn_ctx = current_turn_context.get()

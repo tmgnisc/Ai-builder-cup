@@ -75,7 +75,7 @@ Persona uses Google ADK (`google-adk==2.12.0`) to orchestrate a team of autonomo
 
 ### 1. Supervisor Agent (`Pip`)
 * **Role**: Primary conversational interface, tone controller, and UI choreography orchestrator.
-* **LLM Engine**: Powered by Google Gemini Flash (`gemini-3.5-flash`) with `thinking_budget=0` for sub-second reactive streaming latency.
+* **LLM Engine**: Powered by Google Gemini Flash (`gemini-2.5-flash`) with `thinking_budget=0` for sub-second reactive streaming latency.
 * **Delegation Logic**:
   * Single category query &rarr; Direct catalog tools (`search_products`).
   * Cross-category or multi-item requests (e.g. *"laptop and noise-cancelling headphones"*) &rarr; Delegates to **Product Finder (`Scout`)**.
@@ -159,7 +159,7 @@ LOG_LEVEL=INFO
 
 # Gemini Configuration
 GEMINI_API_KEY=your_gemini_api_key_here
-GEMINI_MODEL=gemini-3.5-flash
+GEMINI_MODEL=gemini-2.5-flash
 AGENT_BACKEND=gemini
 
 # Database (PostgreSQL)
