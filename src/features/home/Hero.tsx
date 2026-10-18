@@ -9,7 +9,7 @@ import { useMagnetic } from "@/lib/useMagnetic";
 
 const EXAMPLES = [
   "College bundle: laptop and headphones",
-  "Warm winter fleece hoodie with try-on",
+  "Warm winter jacket under NPR 8,000",
   "MacBook Air vs Acer Swift comparison",
 ];
 
@@ -99,12 +99,12 @@ export function Hero() {
       <div>
         <h1
           data-split
-          className="font-display hero-headline max-w-2xl font-semibold tracking-tight [&_.char]:inline-block"
+          className="font-display hero-headline max-w-2xl font-semibold [&_.char]:inline-block"
         >
           Shop anything with an <span className="text-accent-text">intelligent companion.</span>
         </h1>
         <p data-hero-rise className="mt-6 max-w-xl text-lg leading-relaxed text-muted">
-          Tell Pip what you need and what you want to spend. Pip coordinates autonomous sub-agents to find products, compare options side-by-side, try on outfits virtually, and confirm your cart with zero dropped writes.
+          Tell Pip what you need and what you want to spend. Pip finds products, compares them side by side, and checks your cart after every change.
         </p>
 
         <form data-hero-fade data-pip-anchor="hero-prompt" data-pip-topic="hero-prompt" className="mt-8 max-w-xl" onSubmit={onSubmit}>

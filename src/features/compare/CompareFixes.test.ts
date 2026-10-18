@@ -32,7 +32,7 @@ describe("Phase 4 Fixes & Regressions Verification", () => {
     );
 
     // Initial cross-category alert banner with category filter buttons
-    expect(html).toContain("Cross-Category Comparison");
+    expect(html).toContain("Cross-category comparison");
     expect(html).toContain("Filter to Laptops (1)");
     expect(html).toContain("Filter to Headphones (1)");
   });

@@ -6,7 +6,7 @@ import { Button } from "@/components/ui/Button";
 import { useCart } from "@/store/useCart";
 
 /** Product-page add button: verified add, then fly the gallery image into the cart. */
-export function AddToCartButton({ productId, disabled, sourceSelector = "[data-gallery-main]" }: { productId: string; disabled?: boolean; sourceSelector?: string }) {
+export function AddToCartButton({ productId, disabled, sourceSelector = "[data-gallery-main]", className }: { productId: string; disabled?: boolean; sourceSelector?: string; className?: string }) {
   const addWithFeedback = useCart((s) => s.addWithFeedback);
   const busy = useCart((s) => s.pending.includes(productId));
   const error = useCart((s) => s.error);
@@ -22,7 +22,7 @@ export function AddToCartButton({ productId, disabled, sourceSelector = "[data-g
 
   return (
     <div className="flex flex-col gap-2">
-      <Button size="lg" variant={disabled ? "secondary" : "primary"} onClick={onClick} disabled={disabled || busy}>
+      <Button size="lg" variant={disabled ? "secondary" : "primary"} onClick={onClick} disabled={disabled || busy} className={className}>
         {busy ? (
           <Loader2 className="size-4 animate-spin" aria-hidden />
         ) : justAdded ? (

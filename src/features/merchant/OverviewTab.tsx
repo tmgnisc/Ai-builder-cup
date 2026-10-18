@@ -1,119 +1,109 @@
 "use client";
 
+import { RefreshCw } from "lucide-react";
 import { useEffect } from "react";
-import { Database } from "lucide-react";
-import { Badge } from "@/components/ui/Badge";
-import { FRICTION, FUNNEL, KPIS, PERIOD } from "@/data/merchant";
-import { getAllProducts } from "@/lib/commerce/catalog";
+import { Button } from "@/components/ui/Button";
+import { ErrorState } from "@/components/ui/ErrorState";
+import { Skeleton } from "@/components/ui/Skeleton";
+import type { Kpi } from "@/data/merchant";
 import { useMerchantSession } from "@/store/useMerchantSession";
 import { Funnel } from "./Funnel";
 import { KpiCard } from "./KpiCard";
-import { FrictionList, SessionPanel } from "./Lists";
+import { FrictionList, StoreHealthPanel } from "./Lists";
+
+const REFRESH_MS = 30_000;
+
+/** Loads KPIs + analytics now and every 30s while the page is open and visible. */
+export function useLiveMerchantData() {
+  const loadKpis = useMerchantSession((s) => s.loadKpisFromApi);
+  const loadAnalytics = useMerchantSession((s) => s.loadAnalytics);
+  useEffect(() => {
+    const load = () => {
+      if (document.visibilityState === "visible") {
+        void loadKpis();
+        void loadAnalytics();
+      }
+    };
+    load();
+    const t = setInterval(load, REFRESH_MS);
+    document.addEventListener("visibilitychange", load);
+    return () => {
+      clearInterval(t);
+      document.removeEventListener("visibilitychange", load);
+    };
+  }, [loadKpis, loadAnalytics]);
+  return () => {
+    void loadKpis();
+    void loadAnalytics();
+  };
+}
 
 export function OverviewTab() {
   const kpis = useMerchantSession((s) => s.kpis);
-  const loadKpisFromApi = useMerchantSession((s) => s.loadKpisFromApi);
+  const kpisState = useMerchantSession((s) => s.kpisState);
+  const analytics = useMerchantSession((s) => s.analytics);
+  const analyticsState = useMerchantSession((s) => s.analyticsState);
+  const refresh = useLiveMerchantData();
 
-  useEffect(() => {
-    loadKpisFromApi();
-  }, [loadKpisFromApi]);
+  if ((kpisState === "error" && !kpis) || (analyticsState === "error" && !analytics)) {
+    return <ErrorState title="Couldn't load the dashboard" message="The store backend didn't respond. Check that it's running, then try again." onRetry={refresh} />;
+  }
 
-  const allProducts = getAllProducts();
-  const totalProducts = kpis?.totalProducts ?? allProducts.length;
-  const inStockCount = kpis?.inStockCount ?? allProducts.filter((p) => p.stock > 0).length;
-  const lowStockCount = kpis?.lowStockCount ?? allProducts.filter((p) => p.stock > 0 && p.stock <= 3).length;
-
-  const liveKpiItems = [
-    {
-      key: "verified" as const,
-      label: "Total Store Revenue",
-      value: kpis?.totalRevenue ?? 654000,
-      format: "npr" as const,
-      delta: 14,
-      hint: `${kpis?.totalOrders ?? 6} customer orders recorded across Kathmandu Valley`,
-      trend: [78000, 94000, 112000, 105000, 128000, 142000, 155000],
-    },
-    {
-      key: "verified" as const,
-      label: "Cart Actions Verified",
-      value: kpis?.verifiedPercentage ?? 98.6,
-      format: "pct" as const,
-      delta: 0.8,
-      hint: `${kpis?.verifiedOrdersCount ?? 5} of ${kpis?.totalOrders ?? 6} orders confirmed by Pip live stock check`,
-      trend: [97, 98, 97, 99, 98, 100, 99],
-    },
-    {
-      key: "completion" as const,
-      label: "Catalog In-Stock Health",
-      value: Math.round(((kpis?.inStockCount ?? inStockCount) / Math.max(1, (kpis?.totalProducts ?? totalProducts))) * 100),
-      format: "pct" as const,
-      delta: 4,
-      hint: `${kpis?.inStockCount ?? inStockCount} of ${kpis?.totalProducts ?? totalProducts} products ready for dispatch`,
-      trend: [86, 88, 89, 91, 90, 92, 93],
-    },
-    {
-      key: "assisted" as const,
-      label: "Assisted Shopper Sessions",
-      value: kpis?.assistedSessions ?? 1284,
-      format: "int" as const,
-      delta: 18,
-      hint: `${kpis?.taskCompletionRate ?? 71}% conversation task completion rate`,
-      trend: [142, 158, 171, 166, 189, 214, 244],
-    },
-  ];
+  const byKey = Object.fromEntries((analytics?.kpis ?? []).map((k) => [k.key, k]));
+  const orders7d = kpis?.ordersTrend.reduce((a, b) => a + b, 0) ?? 0;
+  const cards: Kpi[] =
+    kpis && analytics
+      ? [
+          {
+            key: "revenue",
+            label: "Revenue",
+            value: kpis.revenueTrend.reduce((a, b) => a + b, 0),
+            format: "npr" as const,
+            delta: kpis.revenueDelta,
+            hint: `${orders7d} ${orders7d === 1 ? "order" : "orders"} this week, cancellations excluded`,
+            trend: kpis.revenueTrend,
+          },
+          byKey.assisted,
+          byKey.completion,
+          byKey.verified,
+        ].filter((k): k is Kpi => !!k)
+      : [];
+  const quiet = analytics?.totalEvents === 0;
 
   return (
-    <div className="space-y-6">
-      {/* Store Real-Time Status Banner */}
-      <div className="flex flex-wrap items-center justify-between gap-3 rounded-xl bg-surface-2/60 p-4 hairline">
-        <div className="flex items-center gap-3">
-          <span className="grid size-8 shrink-0 place-items-center rounded-lg bg-listening/15 text-listening">
-            <Database className="size-4" aria-hidden="true" />
-          </span>
-          <div>
-            <div className="flex items-center gap-2">
-              <span className="text-xs font-semibold uppercase tracking-wider text-text">
-                Live Store Synchronization
-              </span>
-              <span className="inline-flex items-center gap-1 text-2xs text-listening font-medium">
-                <span className="size-1.5 rounded-full bg-listening animate-pulse" aria-hidden="true" />
-                Active (Port 8080)
-              </span>
-            </div>
-            <p className="text-xs text-muted">
-              {totalProducts} catalog items loaded · {inStockCount} available for immediate fulfillment · {lowStockCount} on low-stock buffer.
-            </p>
-          </div>
-        </div>
-        <div className="flex items-center gap-2">
-          <Badge>{PERIOD}</Badge>
-          <Badge tone="success">Verified Pip Telemetry</Badge>
-        </div>
+    <div className="space-y-8">
+      <div className="flex flex-wrap items-center justify-between gap-3">
+        <p className="text-sm text-muted">
+          {analytics?.period ?? "Last 7 days"} · compared with the 7 days before · refreshes every 30 seconds
+        </p>
+        <Button size="sm" variant="ghost" onClick={refresh} iconLeft={<RefreshCw className="size-3.5" aria-hidden />}>
+          Refresh
+        </Button>
       </div>
 
-      {/* KPI Cards */}
-      <div>
-        <h2 className="text-sm font-semibold tracking-tight text-text">Operational Key Performance Indicators</h2>
-        <div className="mt-3 grid grid-cols-1 gap-4 sm:grid-cols-2 xl:grid-cols-4">
-          {liveKpiItems.map((k, idx) => (
-            <KpiCard key={idx} kpi={k as any} />
-          ))}
-        </div>
-      </div>
+      {quiet && (
+        <p className="rounded-card bg-surface-2/60 px-5 py-4 text-sm text-muted hairline">
+          No shopper activity in the last 7 days yet. These numbers fill in as people browse the store and talk to Pip.
+        </p>
+      )}
 
-      {/* Conversion Funnel and Live Browser Session Telemetry */}
+      <section aria-labelledby="kpi-h">
+        <h2 id="kpi-h" className="sr-only">
+          Key numbers
+        </h2>
+        <div className="grid grid-cols-1 gap-4 sm:grid-cols-2 xl:grid-cols-4">
+          {cards.length
+            ? cards.map((k) => <KpiCard key={k.key} kpi={k} />)
+            : Array.from({ length: 4 }, (_, i) => <Skeleton key={i} className="h-44 rounded-card" />)}
+        </div>
+      </section>
+
       <div className="grid grid-cols-1 gap-4 lg:merchant-dashboard-grid">
-        <Funnel steps={FUNNEL} />
-        <SessionPanel />
+        {analytics ? <Funnel steps={analytics.funnel} period={analytics.period} /> : <Skeleton className="h-96 rounded-card" />}
+        <StoreHealthPanel kpis={kpis} loading={!kpis} />
       </div>
 
-      {/* Friction Theme Analysis */}
-      <div>
-        <h2 className="text-sm font-semibold tracking-tight text-text">Shopper Friction & Clarity Feedback</h2>
-        <div className="mt-3">
-          <FrictionList items={FRICTION} />
-        </div>
-      </div>
+      <FrictionList items={analytics?.frictionThemes ?? []} loading={!analytics} />
     </div>
   );
 }

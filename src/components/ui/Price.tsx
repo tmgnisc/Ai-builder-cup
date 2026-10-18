@@ -12,8 +12,8 @@ const SIZE_CLASSES = {
   sm: "text-sm font-medium",
   md: "text-base font-semibold",
   lg: "text-lg font-semibold",
-  xl: "text-xl font-bold",
-  "2xl": "text-2xl font-bold tracking-tight",
+  xl: "text-xl font-semibold",
+  "2xl": "text-2xl font-semibold tracking-tight",
 };
 
 /**

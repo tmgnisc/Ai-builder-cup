@@ -70,6 +70,51 @@
   font-variant-numeric: tabular-nums;
 }
 
+/* ───────────────────────── Type scale ─────────────────────────
+   One Inter family; hierarchy comes from size, weight and tracking only.
+   page-title  → one per page (product, checkout, compare, 404)
+   section-title → section headings inside a page
+   panel-title → drawers, cards, panels
+   eyebrow     → small overline labels above content */
+
+@utility page-title {
+  font-family: var(--font-display);
+  font-size: clamp(1.75rem, 1.2rem + 1.6vw, 2.25rem);
+  line-height: 1.15;
+  font-weight: 600;
+  letter-spacing: -0.025em;
+  text-wrap: balance;
+}
+
+@utility section-title {
+  font-family: var(--font-display);
+  font-size: 24px;
+  line-height: 32px;
+  font-weight: 600;
+  letter-spacing: -0.02em;
+}
+
+@utility panel-title {
+  font-family: var(--font-display);
+  font-size: 16px;
+  line-height: 24px;
+  font-weight: 600;
+  letter-spacing: -0.01em;
+}
+
+@utility eyebrow {
+  font-size: 11px;
+  line-height: 16px;
+  font-weight: 600;
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+}
+
+/* `font-mono` is Inter too (single-family rule), so it marks numeric/data text: give it tabular figures. */
+@utility font-mono {
+  font-variant-numeric: tabular-nums;
+}
+
 @utility no-scrollbar {
   scrollbar-width: none;
   &::-webkit-scrollbar {
@@ -155,6 +200,18 @@
 }
 
 /* ───────────────────────── Pip's speech bubble ───────────────────────── */
+
+/* Sized against the viewport so a long reply can never spill past it: 16px gutters on each side,
+   and the body scrolls inside once it reaches the tallest height that fits under the 64px header. */
+@utility bubble-w {
+  width: min(360px, calc(100vw - 32px));
+}
+@utility bubble-scroll {
+  max-height: min(70dvh, calc(100dvh - 64px - 32px - 28px));
+}
+@utility bubble-scroll-mobile {
+  max-height: min(62dvh, calc(100dvh - 64px - 32px - 96px));
+}
 
 /* Hairline tinted by Pip's state colour; depth from shadow, not glow (design brief: restraint). */
 .bubble-panel {

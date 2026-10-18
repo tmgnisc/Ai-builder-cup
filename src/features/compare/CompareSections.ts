@@ -72,7 +72,7 @@ export function groupRowsBySection(rows: CompareRow[]): GroupedCompareSection[] 
   if (leftoverRows.length > 0) {
     grouped.push({
       id: "other",
-      title: "Other Specs",
+      title: "Other specs",
       rows: leftoverRows,
     });
   }

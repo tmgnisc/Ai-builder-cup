@@ -31,17 +31,13 @@ In traditional agentic systems, agents hallucinate write successes. Persona intr
 * **Proactive Guide Engine**: Context-aware check-ins when users hesitate or compare products, offering tips derived strictly from catalog analytics.
 * **Voice Interaction**: Native Web Speech API integration (`lang=en-IN`) with real-time mic loudness envelopes and synchronized TTS speech pulses.
 
-### 4. On-Device Virtual Try-On Studio (`/tryon`)
-* **Live Pose Detection**: Runs client-side using MediaPipe Pose Landmarker without sending user camera frames to any remote server.
-* **Interactive Canvas Fitting**: Real-time virtual try-on for hoodies, t-shirts, jackets, and accessories with customizable fabric colors and garment scaling.
-
-### 5. Comparison Workspace (`/compare`)
+### 4. Comparison Workspace (`/compare`)
 * Dedicated comparison workspace supporting 2 to 4 products.
 * Sticky product cards, mobile 390px scroll-snap columns with pinned attribute labels.
 * **Differences-only toggle** with accessible `aria-live` announcements.
 * Best-value highlights, cross-category guards, and grounded trade-off summaries.
 
-### 6. Merchant Intelligence Dashboard (`/merchant`)
+### 5. Merchant Intelligence Dashboard (`/merchant`)
 * **KPIs & Sparklines**: Real-time tracked metrics for assisted sessions, verified cart additions, and guide engagement.
 * **Drop-off Funnel**: Full visibility from initial greeting to checkout navigation.
 * **Missing Product Information Audit**: Logs shopper queries about specs not listed in the catalog (for example, keyboard backlighting or garment wash care), allowing store owners to enrich product data.

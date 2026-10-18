@@ -18,6 +18,7 @@ import { useFeedback } from "@/store/useFeedback";
 import { tourDone, useGuide } from "@/store/useGuide";
 import { usePipPosition } from "@/store/usePipPosition";
 import { useSignals } from "@/store/useSignals";
+import { track } from "@/lib/telemetry";
 import { useSpotlight } from "./Spotlight";
 import { offerTour } from "./tour";
 
@@ -120,6 +121,7 @@ export function GuideLayer() {
         return d;
       }
       store.update((s) => afterShow(s, d, trigger, Date.now()));
+      track("tip_shown", { topic: d.show.id });
       void speak(d);
       return d;
     };
@@ -148,7 +150,9 @@ export function GuideLayer() {
           run: c.action === "feedback" ? askFeedback : c.message ? undefined : () => useBubble.getState().close("user"),
         })),
         onClose: (reason) => {
-          const r = afterClose(useGuide.getState().state, reason === "replaced" ? "engaged" : reason, Date.now());
+          const outcome = reason === "replaced" ? "engaged" : reason;
+          if (outcome === "engaged") track("tip_engaged", { topic: tipId });
+          const r = afterClose(useGuide.getState().state, outcome, Date.now());
           useGuide.getState().update(() => r.state);
           if (r.goQuiet) {
             useSignals.getState().setQuiet(true);

@@ -5,7 +5,7 @@ export function Footer() {
         <p>
           <span className="font-display text-text">Persona</span>: agentic e-commerce platform with Pip.
         </p>
-        <p className="font-mono text-xs">Prices in NPR · cart checked after every add · on-device virtual try-on · you confirm checkout</p>
+        <p className="font-mono text-xs">Prices in NPR · cart checked after every add · you confirm checkout</p>
       </div>
     </footer>
   );

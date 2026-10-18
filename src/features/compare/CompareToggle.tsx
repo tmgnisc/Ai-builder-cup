@@ -1,6 +1,7 @@
 "use client";
 
 import { Check, GitCompareArrows } from "lucide-react";
+import { buttonClasses } from "@/components/ui/buttonClasses";
 import { cn } from "@/lib/cn";
 import { useCompare } from "@/store/useCompare";
 
@@ -22,8 +23,9 @@ export function CompareToggle({ productId, productName, variant = "icon", classN
         aria-pressed={active}
         onClick={() => toggle(productId)}
         className={cn(
-          "inline-flex h-12 items-center gap-2 rounded-full px-5 text-sm font-medium transition-colors",
-          active ? "bg-searching/15 text-searching shadow-[inset_0_0_0_1px_var(--state-searching)]" : "text-text shadow-[inset_0_0_0_1px_var(--border-strong)] hover:shadow-[inset_0_0_0_1px_var(--text)]",
+          buttonClasses({ variant: "secondary", size: "lg" }),
+          "text-sm",
+          active && "bg-searching/15 text-searching shadow-[inset_0_0_0_1px_var(--state-searching)] hover:bg-searching/20",
           className,
         )}
       >

@@ -31,7 +31,7 @@ export function Modal({ open, onOpenChange, title, description, children, footer
           >
             <HeroUIModal.Header className="flex items-start gap-3 border-b border-border px-6 py-4">
               <div className="min-w-0 flex-1">
-                <HeroUIModal.Heading className="font-display text-lg font-semibold tracking-tight">{title}</HeroUIModal.Heading>
+                <HeroUIModal.Heading className="panel-title">{title}</HeroUIModal.Heading>
                 {description && <p className="mt-1 text-sm text-muted">{description}</p>}
               </div>
               <HeroUIModal.CloseTrigger

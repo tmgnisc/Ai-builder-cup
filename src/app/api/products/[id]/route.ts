@@ -18,3 +18,19 @@ export async function GET(req: Request, { params }: { params: Promise<{ id: stri
   if (!product) return errorResponse("NOT_FOUND", `No product with id "${id}".`);
   return NextResponse.json({ product });
 }
+
+/** PATCH /api/products/:id (merchant only; needs the backend database) */
+export async function PATCH(req: Request, { params }: { params: Promise<{ id: string }> }) {
+  const { id } = await params;
+  const proxied = await proxyToBackend(req, `/api/products/${encodeURIComponent(id)}`);
+  if (proxied) return proxied;
+  return NextResponse.json({ error: { code: "SERVICE_UNAVAILABLE", message: "The store backend is unavailable." } }, { status: 503 });
+}
+
+/** DELETE /api/products/:id (merchant only; needs the backend database) */
+export async function DELETE(req: Request, { params }: { params: Promise<{ id: string }> }) {
+  const { id } = await params;
+  const proxied = await proxyToBackend(req, `/api/products/${encodeURIComponent(id)}`);
+  if (proxied) return proxied;
+  return NextResponse.json({ error: { code: "SERVICE_UNAVAILABLE", message: "The store backend is unavailable." } }, { status: 503 });
+}

@@ -2,13 +2,13 @@
 
 import { cn } from "@/lib/cn";
 import type { Product } from "@/lib/commerce/schemas";
-import { useTryOn } from "@/store/useTryOn";
+import { useGarmentColor } from "@/store/useGarmentColor";
 
-/** Colour options for a clothing product; the choice drives the gallery, the try-on and Pip. */
+/** Colour options for a clothing product; the choice drives the gallery packshot. */
 export function ColorPicker({ product }: { product: Product }) {
   const options = product.specs.colors ?? [];
-  const chosen = useTryOn((s) => s.colors[product.id]) ?? options[0]?.hex;
-  const setColor = useTryOn((s) => s.setColor);
+  const chosen = useGarmentColor((s) => s.colors[product.id]) ?? options[0]?.hex;
+  const setColor = useGarmentColor((s) => s.setColor);
   if (options.length === 0) return null;
   return (
     <fieldset>

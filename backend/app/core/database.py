@@ -114,38 +114,15 @@ async def init_db() -> bool:
                     if missing:
                         logger.info("Seeded %d new catalog products into PostgreSQL.", len(missing))
 
-            # Check if orders table already has records
-            from ..models.db import OrderDB
-            from ..data.orders import INITIAL_ORDERS
-            res_orders = await session.execute(select(OrderDB.id).limit(1))
-            if res_orders.scalar_one_or_none() is None:
-                logger.info("Seeding initial orders into PostgreSQL...")
-                from datetime import datetime, timezone
-                for o in INITIAL_ORDERS:
-                    order_row = OrderDB(
-                        id=o["id"],
-                        customer_name=o["customerName"],
-                        customer_email=o["customerEmail"],
-                        city=o["city"],
-                        items=o["items"],
-                        total_npr=o["totalNPR"],
-                        verified_by_pip=o.get("verifiedByPip", True),
-                        verification_hash=o.get("verificationHash", "pip_init"),
-                        status=o["status"],
-                        notes=o.get("notes"),
-                        created_at=datetime.now(timezone.utc),
-                    )
-                    session.add(order_row)
-                await session.commit()
-                logger.info("Successfully seeded %d orders into PostgreSQL.", len(INITIAL_ORDERS))
-
             # Check if merchant user exists
             from ..models.db import MerchantUserDB
             from .security import hash_password
+
             res_merchant = await session.execute(select(MerchantUserDB.id).limit(1))
             if res_merchant.scalar_one_or_none() is None:
                 logger.info("Seeding default merchant user into PostgreSQL...")
                 from datetime import datetime, timezone
+
                 admin_user = MerchantUserDB(
                     id="usr_admin_01",
                     email="admin@persona.store",

@@ -1,10 +1,8 @@
 import type { Product } from "@/lib/commerce/schemas";
 
 /**
- * Garment art as SVG parts, shared by the product packshot (flat-lay) and the live try-on rig.
- *
- * Every part is drawn in its own fixed coordinate box with known attachment points, so the try-on can
- * map it onto body landmarks:
+ * Garment art as SVG parts, composed into the clothing flat-lay packshot (the fallback when a product
+ * has no photo). Every part is drawn in its own fixed coordinate box with known attachment points:
  *  - torso   200×240: top edge = shoulder line (outer shoulders at x 0 / 200), bottom edge = hem
  *  - sleeve  100×160: top-centre (50,0) attaches to the start joint, bottom-centre (50,160) to the end joint
  *  - head    200×120: bottom-centre (100,120) sits on the brow line, width = head width
@@ -252,7 +250,7 @@ export function garmentParts(p: GarmentProduct, color = defaultColor(p), uid = "
 
 const inner = (s: string) => s.replace(/^<svg[^>]*>/, "").replace(/<\/svg>$/, "");
 
-/** Flat-lay packshot (400×300 box) composed from the same parts the try-on uses. */
+/** Flat-lay packshot (400×300 box) composed from the garment parts. */
 export function flatLaySvg(p: GarmentProduct, color = defaultColor(p), uid = "flat"): string {
   const g = garmentParts(p, color, uid);
   const place = (part: string, w: number, h: number, x: number, y: number, s: number, rot = 0, ox = 0, oy = 0) =>

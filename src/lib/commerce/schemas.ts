@@ -16,7 +16,7 @@ export const CATEGORIES: readonly { id: Category; label: string }[] = [
   { id: "clothing", label: "Clothing" },
 ];
 
-/** Clothing: how a garment is worn. Drives the virtual try-on rig (which body landmarks it follows). */
+/** Clothing: how a garment is worn. Drives the flat-lay packshot art. */
 export const GarmentSchema = z.enum(["top", "outerwear", "headwear", "eyewear", "shawl"]);
 export type Garment = z.infer<typeof GarmentSchema>;
 

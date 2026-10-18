@@ -12,7 +12,7 @@ CATEGORIES: list[dict[str, str]] = [
     {"id": "clothing", "label": "Clothing"},
 ]
 
-# Clothing: how a garment is worn. Drives the virtual try-on rig (which body landmarks it follows).
+# Clothing: how a garment is worn. Drives the flat-lay packshot art.
 Garment = Literal["top", "outerwear", "headwear", "eyewear", "shawl"]
 Sleeves = Literal["none", "short", "long"]
 GarmentLength = Literal["waist", "hip", "thigh"]

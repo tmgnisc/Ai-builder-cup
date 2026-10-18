@@ -83,7 +83,7 @@ export function CompareDrawer() {
               </span>
             </span>
             <div>
-              <p className="text-xs font-semibold uppercase tracking-wider text-accent-text">Pip&apos;s verdict</p>
+              <p className="eyebrow text-accent-text">Pip&apos;s verdict</p>
               <p className="mt-1 text-sm leading-relaxed">{verdict}</p>
             </div>
           </div>

@@ -46,7 +46,7 @@ function StoreSectionInner({ initialCategory }: { initialCategory: Category | nu
     <section id="store" className="mx-auto max-w-page scroll-mt-20 px-4 sm:px-6" aria-labelledby="store-heading">
       <div className="flex flex-wrap items-end justify-between gap-4">
         <div>
-          <h2 id="store-heading" className="font-display text-2xl font-semibold tracking-tight">
+          <h2 id="store-heading" className="section-title">
             {heading}
           </h2>
           <p className="mt-1 font-mono text-xs text-muted">

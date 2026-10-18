@@ -19,7 +19,7 @@ export function ProductCarousel({ productIds, title, interactive }: { productIds
 
   return (
     <div className="mt-2.5">
-      {title && <p className="mb-1.5 font-mono text-2xs uppercase tracking-wider text-muted">{title}</p>}
+      {title && <p className="eyebrow mb-1.5 text-muted">{title}</p>}
       <ul className="no-scrollbar -mx-1 flex snap-x gap-2 overflow-x-auto px-1 pb-1">
         {products.map((p, i) => (
           <li key={p.id} className="w-44 shrink-0 snap-start overflow-hidden rounded-2xl bg-surface hairline">

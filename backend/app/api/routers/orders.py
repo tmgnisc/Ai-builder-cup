@@ -2,17 +2,17 @@ import uuid
 from datetime import datetime, timezone
 from typing import Annotated
 
-from fastapi import APIRouter, Depends, Header, Query
+from fastapi import APIRouter, Depends
 from pydantic import BaseModel, Field
 from sqlalchemy import desc, select, update
 from sqlalchemy.ext.asyncio import AsyncSession
 
-from ...core.config import Settings, get_settings
-from ...core.database import get_db, get_session_factory
+from ...core.database import get_db
 from ...core.errors import CommerceException
 from ...models.db import OrderDB, ProductDB
 from ...services.catalog import CatalogService
 from ..dependencies import get_catalog_service, verify_shared_secret
+from .merchant_auth import MerchantUserResponse, get_current_merchant
 
 router = APIRouter(prefix="/api/orders", tags=["orders"])
 
@@ -52,8 +52,27 @@ class OrderResponse(BaseModel):
     createdAt: str
 
 
+MerchantAuth = Annotated[MerchantUserResponse, Depends(get_current_merchant)]
+
+# Orders placed while no DATABASE_URL is configured (local dev); newest first, bounded.
+_MEMORY_ORDERS: list[OrderResponse] = []
+_MEMORY_LIMIT = 500
+
+
+def memory_orders() -> list[OrderResponse]:
+    return list(_MEMORY_ORDERS)
+
+
+def _memory_find(order_id: str) -> OrderResponse:
+    for o in _MEMORY_ORDERS:
+        if o.id == order_id:
+            return o
+    raise CommerceException("NOT_FOUND", f"Order {order_id} not found.")
+
+
 @router.get("", response_model=list[OrderResponse])
 async def list_orders(
+    _auth: MerchantAuth,
     status: str | None = None,
     search: str | None = None,
     limit: int = 50,
@@ -62,33 +81,13 @@ async def list_orders(
 ) -> list[OrderResponse]:
     """Retrieves customer orders from PostgreSQL database with optional status and search filter."""
     if session is None:
-        # Return fallback orders if DB is not active
-        from ...data.orders import INITIAL_ORDERS
-        filtered = INITIAL_ORDERS
+        orders = _MEMORY_ORDERS
         if status and status != "all":
-            filtered = [o for o in filtered if o["status"] == status]
+            orders = [o for o in orders if o.status == status]
         if search:
             q = search.lower()
-            filtered = [
-                o for o in filtered
-                if q in o["id"].lower() or q in o["customerName"].lower() or q in o["city"].lower()
-            ]
-        return [
-            OrderResponse(
-                id=o["id"],
-                customerName=o["customerName"],
-                customerEmail=o["customerEmail"],
-                city=o["city"],
-                items=[OrderItemSchema(**it) for it in o["items"]],
-                totalNPR=o["totalNPR"],
-                verifiedByPip=o.get("verifiedByPip", True),
-                verificationHash=o.get("verificationHash", "pip_v_fallback"),
-                status=o["status"],
-                notes=o.get("notes"),
-                createdAt=o.get("date", datetime.now(timezone.utc).isoformat()),
-            )
-            for o in filtered[:limit]
-        ]
+            orders = [o for o in orders if q in o.id.lower() or q in o.customerName.lower() or q in o.city.lower()]
+        return orders[:limit]
 
     stmt = select(OrderDB).order_by(desc(OrderDB.created_at)).limit(limit)
     if status and status != "all":
@@ -125,12 +124,13 @@ async def list_orders(
 @router.get("/{order_id}", response_model=OrderResponse)
 async def get_order_by_id(
     order_id: str,
+    _auth: MerchantAuth,
     session: Annotated[AsyncSession | None, Depends(get_db)] = None,
     _: Annotated[None, Depends(verify_shared_secret)] = None,
 ) -> OrderResponse:
     """Fetches full order details by ID."""
     if session is None:
-        raise CommerceException("NOT_FOUND", f"Order {order_id} not found.")
+        return _memory_find(order_id)
 
     stmt = select(OrderDB).where(OrderDB.id == order_id)
     result = await session.execute(stmt)
@@ -205,7 +205,7 @@ async def create_order(
 
         await session.commit()
 
-    return OrderResponse(
+    created = OrderResponse(
         id=order_id,
         customerName=payload.customerName,
         customerEmail=payload.customerEmail,
@@ -218,18 +218,26 @@ async def create_order(
         notes=payload.notes,
         createdAt=now.isoformat(),
     )
+    if session is None:
+        _MEMORY_ORDERS.insert(0, created)
+        del _MEMORY_ORDERS[_MEMORY_LIMIT:]
+    return created
 
 
 @router.patch("/{order_id}/status", response_model=OrderResponse)
 async def update_order_status(
     order_id: str,
     payload: UpdateOrderStatusInput,
+    _auth: MerchantAuth,
     session: Annotated[AsyncSession | None, Depends(get_db)] = None,
     _: Annotated[None, Depends(verify_shared_secret)] = None,
 ) -> OrderResponse:
     """Updates order fulfillment status (dispatched, delivered, processing)."""
     if session is None:
-        raise CommerceException("DATABASE_UNAVAILABLE", "PostgreSQL database is not connected.")
+        order_ = _memory_find(order_id)
+        updated = order_.model_copy(update={"status": payload.status})
+        _MEMORY_ORDERS[_MEMORY_ORDERS.index(order_)] = updated
+        return updated
 
     stmt = select(OrderDB).where(OrderDB.id == order_id)
     result = await session.execute(stmt)
@@ -258,12 +266,14 @@ async def update_order_status(
 @router.delete("/{order_id}")
 async def delete_order(
     order_id: str,
+    _auth: MerchantAuth,
     session: Annotated[AsyncSession | None, Depends(get_db)] = None,
     _: Annotated[None, Depends(verify_shared_secret)] = None,
 ):
     """Deletes or cancels an order from PostgreSQL."""
     if session is None:
-        raise CommerceException("DATABASE_UNAVAILABLE", "PostgreSQL database is not connected.")
+        _MEMORY_ORDERS.remove(_memory_find(order_id))
+        return {"id": order_id, "deleted": True}
 
     stmt = select(OrderDB).where(OrderDB.id == order_id)
     result = await session.execute(stmt)

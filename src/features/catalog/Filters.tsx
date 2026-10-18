@@ -41,7 +41,7 @@ export function Filters({ className, inSheet = false }: { className?: string; in
   return (
     <div className={cn("flex flex-col gap-7", className)}>
       <div className="flex items-center justify-between">
-        <h2 className={cn("font-display text-sm font-semibold tracking-tight", inSheet && "sr-only")}>
+        <h2 className={cn("panel-title", inSheet && "sr-only")}>
           Filters{count > 0 && <span className="ml-2 rounded-full bg-accent px-1.5 py-0.5 font-mono text-2xs text-accent-fg">{count}</span>}
         </h2>
         <Button
@@ -121,7 +121,7 @@ export function Filters({ className, inSheet = false }: { className?: string; in
 function Group({ label, anchor, children }: { label: string; anchor?: string; children: React.ReactNode }) {
   return (
     <fieldset data-pip-anchor={anchor} data-pip-topic={anchor}>
-      <legend className="mb-2.5 text-2xs font-medium uppercase tracking-wider text-muted">{label}</legend>
+      <legend className="eyebrow mb-2.5 text-muted">{label}</legend>
       {children}
     </fieldset>
   );

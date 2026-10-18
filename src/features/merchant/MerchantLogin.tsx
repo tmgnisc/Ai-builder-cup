@@ -1,9 +1,8 @@
 "use client";
 
-import { AlertTriangle, ArrowRight, CheckCircle2, Lock, ShieldCheck, Store, User } from "lucide-react";
+import { AlertTriangle, ArrowRight, Lock, Store, User } from "lucide-react";
 import { useState } from "react";
 import { Button } from "@/components/ui/Button";
-import { Card } from "@/components/ui/Card";
 import { Input } from "@/components/ui/Input";
 import { BRAND } from "@/config/brand";
 import { useMerchantSession } from "@/store/useMerchantSession";
@@ -12,157 +11,77 @@ interface MerchantLoginProps {
   onSuccess?: () => void;
 }
 
+/** Demo account seeded by the backend on first start (backend/app/core/database.py). */
+const DEMO = { email: "admin@persona.store", password: "persona2026" };
+
 export function MerchantLogin({ onSuccess }: MerchantLoginProps) {
   const login = useMerchantSession((s) => s.login);
-  const [email, setEmail] = useState("admin@persona.store");
-  const [password, setPassword] = useState("persona2026");
-  const [rememberMe, setRememberMe] = useState(true);
-  const [error, setError] = useState<string | null>(null);
-  const [loading, setLoading] = useState(false);
+  const authError = useMerchantSession((s) => s.authError);
+  const loading = useMerchantSession((s) => s.authLoading);
+  const [email, setEmail] = useState("");
+  const [password, setPassword] = useState("");
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
-    setError(null);
-    setLoading(true);
-
-    const ok = await login(email, password);
-    setLoading(false);
-    if (ok) {
-      onSuccess?.();
-    } else {
-      setError("Invalid merchant credentials. Please verify your email and password.");
-    }
-  };
-
-  const handleQuickDemo = async () => {
-    setEmail("admin@persona.store");
-    setPassword("persona2026");
-    setLoading(true);
-    const ok = await login("admin@persona.store", "persona2026");
-    setLoading(false);
-    if (ok) {
-      onSuccess?.();
-    }
+    if (await login(email, password)) onSuccess?.();
   };
 
   return (
-    <div className="mx-auto flex min-h-96 max-w-md flex-col justify-center px-4 py-16">
-      <div className="mb-6 text-center">
-        <div className="mx-auto mb-3 flex size-12 items-center justify-center rounded-xl bg-surface-2 text-accent-text hairline">
-          <Store className="size-6" aria-hidden="true" />
+    <div className="mx-auto w-full max-w-sm px-4 py-16">
+      <div className="mb-8 text-center">
+        <span className="mx-auto mb-4 grid size-11 place-items-center rounded-xl bg-surface-2 text-accent-text hairline">
+          <Store className="size-5" aria-hidden />
+        </span>
+        <h1 className="font-display text-2xl font-semibold tracking-tight">Sign in to {BRAND.name} Merchant</h1>
+        <p className="mt-2 text-sm text-muted">Manage inventory, fulfil orders and see what shoppers ask Pip.</p>
+      </div>
+
+      <form onSubmit={handleSubmit} className="flex flex-col gap-4 rounded-card bg-surface p-6 hairline">
+        {authError && (
+          <p role="alert" className="flex items-start gap-2 rounded-lg bg-danger/10 p-3 text-sm text-danger">
+            <AlertTriangle className="mt-0.5 size-4 shrink-0" aria-hidden />
+            {authError}
+          </p>
+        )}
+
+        <div>
+          <label htmlFor="merchant-email" className="mb-1.5 block text-sm text-muted">
+            Email
+          </label>
+          <div className="relative">
+            <User className="pointer-events-none absolute left-3 top-1/2 size-4 -translate-y-1/2 text-muted" aria-hidden />
+            <Input id="merchant-email" type="email" autoComplete="username" required value={email} onChange={(e) => setEmail(e.target.value)} className="pl-9" />
+          </div>
         </div>
-        <p className="text-xs font-semibold uppercase tracking-wider text-accent-text">
-          {BRAND.name} Operations
-        </p>
-        <h1 className="mt-1 font-display text-2xl font-bold tracking-tight text-text sm:text-3xl">
-          Merchant Portal
-        </h1>
-        <p className="mt-2 text-xs sm:text-sm text-muted">
-          Sign in to manage inventory, fulfill verified customer orders, and inspect Pip agent telemetry.
-        </p>
-      </div>
 
-      <Card className="p-6">
-        <form onSubmit={handleSubmit} className="flex flex-col gap-4">
-          {error && (
-            <div
-              role="alert"
-              className="flex items-center gap-2 rounded-lg bg-danger/10 p-3 text-xs text-danger hairline"
-            >
-              <AlertTriangle className="size-4 shrink-0" aria-hidden="true" />
-              <span>{error}</span>
-            </div>
-          )}
-
-          <div>
-            <label htmlFor="merchant-email" className="mb-1.5 block text-xs font-medium text-text">
-              Store Email / Merchant ID
-            </label>
-            <div className="relative">
-              <span className="pointer-events-none absolute left-3 top-1/2 -translate-y-1/2 text-muted">
-                <User className="size-4" aria-hidden="true" />
-              </span>
-              <Input
-                id="merchant-email"
-                type="email"
-                required
-                value={email}
-                onChange={(e) => setEmail(e.target.value)}
-                placeholder="admin@persona.store"
-                className="pl-9"
-              />
-            </div>
-            <p className="mt-1 text-2xs text-muted">
-              Demo store login: <span className="font-mono text-text">admin@persona.store</span>
-            </p>
+        <div>
+          <label htmlFor="merchant-password" className="mb-1.5 block text-sm text-muted">
+            Password
+          </label>
+          <div className="relative">
+            <Lock className="pointer-events-none absolute left-3 top-1/2 size-4 -translate-y-1/2 text-muted" aria-hidden />
+            <Input id="merchant-password" type="password" autoComplete="current-password" required value={password} onChange={(e) => setPassword(e.target.value)} className="pl-9" />
           </div>
+        </div>
 
-          <div>
-            <label htmlFor="merchant-password" className="mb-1.5 block text-xs font-medium text-text">
-              Security Key / Password
-            </label>
-            <div className="relative">
-              <span className="pointer-events-none absolute left-3 top-1/2 -translate-y-1/2 text-muted">
-                <Lock className="size-4" aria-hidden="true" />
-              </span>
-              <Input
-                id="merchant-password"
-                type="password"
-                required
-                value={password}
-                onChange={(e) => setPassword(e.target.value)}
-                placeholder="Enter password"
-                className="pl-9"
-              />
-            </div>
-          </div>
+        <Button type="submit" variant="primary" loading={loading} className="mt-1 w-full justify-center" iconRight={<ArrowRight className="size-4" aria-hidden />}>
+          Sign in
+        </Button>
+      </form>
 
-          <div className="flex items-center justify-between text-xs">
-            <label className="flex cursor-pointer select-none items-center gap-2 text-muted hover:text-text">
-              <input
-                type="checkbox"
-                checked={rememberMe}
-                onChange={(e) => setRememberMe(e.target.checked)}
-                className="size-4 rounded border-border-strong text-accent focus:ring-accent"
-              />
-              <span>Remember this session</span>
-            </label>
-            <span className="text-2xs text-muted">256-bit State Integrity</span>
-          </div>
-
-          <Button
-            type="submit"
-            variant="primary"
-            loading={loading}
-            className="mt-2 w-full justify-center"
-            iconRight={<ArrowRight className="size-4" aria-hidden="true" />}
-          >
-            Sign In to Store Operations
-          </Button>
-
-          <div className="relative my-2 flex items-center justify-center">
-            <span className="absolute inset-x-0 h-px bg-border/60" aria-hidden="true" />
-            <span className="relative bg-surface px-2 text-2xs uppercase tracking-wider text-muted">
-              Or Instant Evaluation
-            </span>
-          </div>
-
-          <Button
-            type="button"
-            variant="secondary"
-            onClick={handleQuickDemo}
-            className="w-full justify-center text-xs"
-            iconLeft={<ShieldCheck className="size-4 text-accent-text" aria-hidden="true" />}
-          >
-            Quick Demo Access (One-Click)
-          </Button>
-        </form>
-      </Card>
-
-      <div className="mt-6 flex items-center justify-center gap-2 text-2xs text-muted">
-        <CheckCircle2 className="size-3.5 text-listening" aria-hidden="true" />
-        <span>Live verification active · Catalog synchronized with database</span>
-      </div>
+      <p className="mt-5 text-center text-xs text-muted">
+        Demo account: <span className="text-text">{DEMO.email}</span> / <span className="text-text">{DEMO.password}</span>{" "}
+        <button
+          type="button"
+          className="ml-1 underline underline-offset-2 hover:text-text"
+          onClick={() => {
+            setEmail(DEMO.email);
+            setPassword(DEMO.password);
+          }}
+        >
+          Fill in
+        </button>
+      </p>
     </div>
   );
 }
