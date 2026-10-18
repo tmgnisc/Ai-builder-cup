@@ -1,0 +1,28 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 32 32" width="32" height="32">
+  <defs>
+    <style>
+      @keyframes pip-blink {
+        0%, 88%, 100% {
+          transform: scaleY(1);
+        }
+        94% {
+          transform: scaleY(0.18);
+        }
+      }
+      .pip-eye {
+        transform-box: fill-box;
+        transform-origin: center;
+        animation: pip-blink 3.8s ease-in-out infinite;
+      }
+      .pip-eye-right {
+        animation-delay: 0.04s;
+      }
+    </style>
+  </defs>
+  <!-- Persona Signature Rounded Canvas -->
+  <rect width="32" height="32" rx="8" fill="#c6ff3d" />
+  
+  <!-- Persona Animated Pip Eyes -->
+  <rect class="pip-eye pip-eye-left" x="11.5" y="11" width="3.2" height="10" rx="1.6" fill="#0a0b0f" />
+  <rect class="pip-eye pip-eye-right" x="17.3" y="11" width="3.2" height="10" rx="1.6" fill="#0a0b0f" />
+</svg>

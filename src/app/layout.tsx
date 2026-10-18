@@ -10,6 +10,13 @@ export const metadata: Metadata = {
   title: { default: "Persona: Agentic E-Commerce Platform", template: "%s · Persona" },
   description:
     "An agentic e-commerce platform for shoppers in Nepal, with Pip: an intelligent shopping companion that searches products, compares options, and verifies every cart update. Prices in NPR.",
+  icons: {
+    icon: [
+      { url: "/icon.svg", type: "image/svg+xml" },
+      { url: "/favicon.ico", sizes: "any" },
+    ],
+    apple: "/icon.svg",
+  },
 };
 
 export const viewport: Viewport = {
