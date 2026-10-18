@@ -9,8 +9,18 @@ export function formatKpi(value: number, format: Kpi["format"] | "npr" | "curren
   return format === "pct" ? `${value % 1 ? value.toFixed(1) : value}%` : Math.round(value).toLocaleString("en-IN");
 }
 
+export interface KpiDisplayItem {
+  key: string;
+  label: string;
+  value: number;
+  format: Kpi["format"] | "npr" | "currency";
+  delta: number;
+  hint: string;
+  trend: number[];
+}
+
 /** One headline number with its weekly change and a 7-day sparkline. */
-export function KpiCard({ kpi }: { kpi: Kpi }) {
+export function KpiCard({ kpi }: { kpi: Kpi | KpiDisplayItem }) {
   const up = kpi.delta >= 0;
   const unit = kpi.format === "pct" ? " pts" : "%";
   return (

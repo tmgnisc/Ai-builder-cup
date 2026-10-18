@@ -19,7 +19,7 @@ class Settings(BaseSettings):
     agent_max_message_length: int = 500
     agent_rate_limit_per_minute: int = 60
     agent_turn_timeout_seconds: float = 60.0
-    cors_origins: str = "http://localhost:3000"
+    cors_origins: str = "http://localhost:3000,*"
     persona_failure_rate: float = 0.0
     persona_latency_min_ms: int = 200
     persona_latency_max_ms: int = 600

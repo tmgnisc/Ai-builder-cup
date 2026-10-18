@@ -220,7 +220,7 @@ export function AddProductModal({ isOpen, onClose }: AddProductModalProps) {
         setSuccess(false);
         onClose();
       }, 1200);
-    } catch (err) {
+    } catch {
       // If backend was offline, still update in memory for seamless demonstration
       const updated = [newProduct, ...catalogProducts.filter((p) => p.id !== newProduct.id)];
       setCatalogProducts(updated);
@@ -515,7 +515,7 @@ export function AddProductModal({ isOpen, onClose }: AddProductModalProps) {
                         <label className="block text-2xs text-muted mb-1">Garment Type</label>
                         <select
                           value={garment}
-                          onChange={(e) => setGarment(e.target.value as any)}
+                          onChange={(e) => setGarment(e.target.value as "top" | "outerwear" | "headwear" | "shawl")}
                           className="w-full rounded-lg border border-border bg-surface px-2.5 py-1.5 text-xs text-text"
                         >
                           <option value="top">Top / Shirt</option>
@@ -603,6 +603,7 @@ export function AddProductModal({ isOpen, onClose }: AddProductModalProps) {
                   {/* Photo container */}
                   <div className="relative aspect-[4/3] w-full overflow-hidden rounded-xl bg-surface hairline flex items-center justify-center">
                     {image ? (
+                      /* eslint-disable-next-line @next/next/no-img-element */
                       <img
                         src={image}
                         alt={name || "Product preview"}

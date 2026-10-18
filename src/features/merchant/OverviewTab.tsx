@@ -3,7 +3,7 @@
 import { useEffect } from "react";
 import { Database } from "lucide-react";
 import { Badge } from "@/components/ui/Badge";
-import { FRICTION, FUNNEL, KPIS, PERIOD } from "@/data/merchant";
+import { FRICTION, FUNNEL, PERIOD } from "@/data/merchant";
 import { getAllProducts } from "@/lib/commerce/catalog";
 import { useMerchantSession } from "@/store/useMerchantSession";
 import { Funnel } from "./Funnel";
@@ -96,7 +96,7 @@ export function OverviewTab() {
         <h2 className="text-sm font-semibold tracking-tight text-text">Operational Key Performance Indicators</h2>
         <div className="mt-3 grid grid-cols-1 gap-4 sm:grid-cols-2 xl:grid-cols-4">
           {liveKpiItems.map((k, idx) => (
-            <KpiCard key={idx} kpi={k as any} />
+            <KpiCard key={idx} kpi={k} />
           ))}
         </div>
       </div>
