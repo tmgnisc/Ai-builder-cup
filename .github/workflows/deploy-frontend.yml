@@ -1,0 +1,70 @@
+name: Build and Deploy Frontend to Google Cloud Run
+
+on:
+  push:
+    branches:
+      - main
+    paths:
+      - "src/**"
+      - "public/**"
+      - "scripts/**"
+      - "Dockerfile"
+      - ".dockerignore"
+      - "package.json"
+      - "pnpm-lock.yaml"
+      - "next.config.ts"
+      - "tsconfig.json"
+      - ".github/workflows/deploy-frontend.yml"
+  workflow_dispatch:
+
+env:
+  PROJECT_ID: lucky-leaf-480606-t6
+  REGION: asia-south1
+  SERVICE_NAME: persona-web
+  REPO_NAME: persona-repo
+  IMAGE_NAME: persona-web
+  BACKEND_URL: https://persona-api-684634843408.asia-south1.run.app
+
+jobs:
+  test-and-deploy:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout Code
+        uses: actions/checkout@v4
+
+      - name: Authenticate to Google Cloud
+        uses: google-github-actions/auth@v2
+        with:
+          credentials_json: ${{ secrets.GCP_SA_KEY }}
+
+      - name: Set up Cloud SDK
+        uses: google-github-actions/setup-gcloud@v2
+
+      - name: Configure Docker for Artifact Registry
+        run: |
+          gcloud auth configure-docker ${{ env.REGION }}-docker.pkg.dev --quiet
+
+      - name: Build and Push Docker Image
+        run: |
+          IMAGE_TAG="${{ env.REGION }}-docker.pkg.dev/${{ env.PROJECT_ID }}/${{ env.REPO_NAME }}/${{ env.IMAGE_NAME }}:${{ github.sha }}"
+          LATEST_TAG="${{ env.REGION }}-docker.pkg.dev/${{ env.PROJECT_ID }}/${{ env.REPO_NAME }}/${{ env.IMAGE_NAME }}:latest"
+          
+          docker build -t "$IMAGE_TAG" -t "$LATEST_TAG" .
+          docker push "$IMAGE_TAG"
+          docker push "$LATEST_TAG"
+
+      - name: Deploy to Cloud Run
+        run: |
+          gcloud run deploy ${{ env.SERVICE_NAME }} \
+            --image="${{ env.REGION }}-docker.pkg.dev/${{ env.PROJECT_ID }}/${{ env.REPO_NAME }}/${{ env.IMAGE_NAME }}:${{ github.sha }}" \
+            --region=${{ env.REGION }} \
+            --platform=managed \
+            --allow-unauthenticated \
+            --set-secrets=AGENT_SHARED_SECRET=AGENT_SHARED_SECRET:latest \
+            --set-env-vars=NODE_ENV=production,PERSONA_AGENT=gemini,BACKEND_URL=${{ env.BACKEND_URL }} \
+            --port=8080 \
+            --cpu=1 \
+            --memory=512Mi \
+            --min-instances=0 \
+            --max-instances=3 \
+            --timeout=300

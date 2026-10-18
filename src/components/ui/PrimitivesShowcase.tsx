@@ -471,7 +471,7 @@ export function PrimitivesShowcase() {
           <div className="font-mono text-sm tracking-widest text-accent">
             <ScrambleText
               key={scrambleKey}
-              text="PIP IS OPTIMIZING HARDWARE SPECIFICATIONS"
+              text="PIP IS CURATING STORE RECOMMENDATIONS"
             />
           </div>
           <IconButton

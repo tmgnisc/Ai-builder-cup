@@ -212,7 +212,7 @@ const CATEGORY_WORDS: [RegExp, Category][] = [
   [/\b(laptops?|notebooks?|macbooks?|ultrabooks?|thinkpads?|computers?|pc)\b/, "laptops"],
   [/\b(phones?|smartphones?|mobiles?|iphones?|android|handsets?)\b/, "phones"],
   [/\b(headphones?|earbuds?|earphones?|airpods|headsets?|buds|over-ear|iems?)\b/, "headphones"],
-  [/\b(cloth(es|ing)|outfits?|wear|t-?shirts?|tees?|shirts?|polos?|hoodies?|jackets?|puffers?|denim|kurtas?|topis?|caps?|hats?|sunglasses|shades|shawls?|pashminas?|scarf|scarves)\b/, "clothing"],
+  [/\b(cloth(es|ing)|outfits?|wear|apparel|garments?|t-?shirts?|tees?|shirts?|polos?|hoodies?|fleece|jackets?|puffers?|denim|kurth?as?|daura|suruwal|dhaka|topis?|caps?|hats?|sunglasses|shades|shawls?|pashminas?|scarf|scarves)\b/, "clothing"],
   [/\b(mouse|mice|keyboards?|chargers?|power ?banks?|ssd|drives?|monitors?|accessor(y|ies)|adapters?|cables?)\b/, "accessories"],
 ];
 

@@ -15,7 +15,7 @@ def analyze_comparison(
 ) -> dict[str, Any]:
     """Autonomous Comparison Analyst Sub-Agent.
 
-    Conducts deep side-by-side technical specification analysis, evaluates hardware trade-offs,
+    Conducts deep side-by-side technical and product specification analysis, evaluates trade-offs across tech and apparel,
     and identifies the clear winner or optimal choice based on user priorities.
 
     Args:

@@ -266,7 +266,7 @@ export default function HeroUIPlaygroundPage() {
                 <Button variant="outline" size="sm">Hover for spec info</Button>
               </Tooltip.Trigger>
               <Tooltip.Content className="p-2 text-xs bg-surface-2 border border-border rounded">
-                Verified against official hardware specifications.
+                Verified against official catalog specifications.
               </Tooltip.Content>
             </Tooltip.Root>
           </Card.Content>
@@ -286,7 +286,7 @@ export default function HeroUIPlaygroundPage() {
               <Popover.Content className="p-3 bg-surface border border-border rounded space-y-2">
                 <Popover.Dialog>
                   <p className="text-xs font-semibold">Filter Specifications</p>
-                  <p className="text-xs text-muted">Toggle hardware constraints.</p>
+                  <p className="text-xs text-muted">Toggle catalog constraints.</p>
                 </Popover.Dialog>
               </Popover.Content>
             </Popover.Root>
