@@ -32,9 +32,11 @@ class Settings(BaseSettings):
     @property
     def fallback_models_list(self) -> list[str]:
         """Ordered list of Gemini models to cascade through if rate limits or quota errors occur."""
+        import re
+
         models = [self.gemini_model]
         if self.gemini_fallback_models:
-            for m in self.gemini_fallback_models.split(","):
+            for m in re.split(r"[,|;]+", self.gemini_fallback_models):
                 m = m.strip()
                 if m and m not in models:
                     models.append(m)
