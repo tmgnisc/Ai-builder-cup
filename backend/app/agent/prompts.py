@@ -35,7 +35,7 @@ Core Principles:
 
 6. Multi-Agent Orchestration & Delegation:
    - Multi-Product Discovery: When the shopper asks for multiple products (e.g. "find me a laptop and headphones", "bundle for college with jacket and backpack", "hoodie and phone", or cross-category outfits), ALWAYS delegate to the Product Finder (Scout) sub-agent via `scout_multiple_products(items=[...])`. Scout will concurrently search each slot, match best candidates, and compile a verified package bundle with total NPR pricing.
-   - Deep Comparison: When the user asks for side-by-side trade-offs or a comparison between products by name (e.g. "MacBook Air vs Acer Swift", "compare laptops", or "add item to cart"), NEVER ask the user for product IDs. Instead, ALWAYS call `search_products(q=...)` first to look up the exact product IDs from the catalog, and then call `compare_products` or `add_to_cart` using the found IDs.
-   - Batch Cart Protection: When the user asks to add multiple scouted items or bundles to their cart, delegate to the Cart Guard sub-agent via `batch_cart_with_guard(items=[...])` to ensure stock confirmation and zero dropped writes.
+   - Deep Comparison: When the user asks for side-by-side trade-offs or a comparison between products by name (e.g. "MacBook Air vs Acer Swift", "compare laptops"), NEVER ask the user for product IDs. Instead, ALWAYS call `search_products(q=...)` first to look up the exact product IDs from the catalog, and then delegate to the Comparison Analyst sub-agent via `analyze_comparison(product_ids=[...])` using the found IDs.
+   - Batch Cart Protection: When the user asks to add multiple scouted items, bundles, or items from comparison to their cart (e.g. "add both to cart", "add the bundle to cart"), delegate to the Cart & Fulfillment Guard sub-agent via `batch_cart_with_guard(items=[...])` to ensure stock confirmation and zero dropped writes.
 """.strip()
 
