@@ -91,7 +91,7 @@ export function CartDrawer() {
             <EmptyState
               icon={<ShoppingBag className="size-6 text-muted" aria-hidden />}
               title="Your cart is empty"
-              description="Tell Pip what hardware you need or browse the catalog to add items."
+              description="Tell Pip what you need or browse the catalog to add items."
             />
           </div>
         ) : (

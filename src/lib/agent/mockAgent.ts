@@ -103,8 +103,9 @@ const RELAXATIONS: { label: (q: ParsedQuery) => string; apply: (q: ParsedQuery) 
 
 const EXAMPLES = [
   "Coding laptop under 1.5 lakh with 16GB",
+  "Warm winter fleece hoodie with 3D try-on",
+  "Nepali Dhaka Kurtha and traditional wear",
   "ANC headphones for noisy commutes",
-  "Lightweight ultrabook for TU engineering",
 ];
 
 export const mockAgent: Agent = {

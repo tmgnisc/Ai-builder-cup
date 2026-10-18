@@ -98,7 +98,9 @@ export const TIPS: Record<string, { 1?: Builder; 2?: Builder }> = {
       text: "Not sure how to phrase it? Pick one and I'll take it from there.",
       chips: [
         { label: "Laptop for coding", message: "A laptop under 1.2 lakh for coding" },
-        { label: "Headphones for flights", message: "Noise-cancelling headphones for flights" },
+        { label: "Nepali traditional wear", message: "Show me Nepali Dhaka Kurtha and traditional wear" },
+        { label: "Winter fleece hoodie", message: "Warm winter fleece hoodie with virtual try-on" },
+        { label: "Travel headphones", message: "Noise-cancelling headphones for flights" },
         NOT_NOW,
       ],
     }),
@@ -111,7 +113,12 @@ export const TIPS: Record<string, { 1?: Builder; 2?: Builder }> = {
     2: (ctx) => ({
       id: id("category-pills", 2, ctx),
       text: "Tell me what it's for and I'll narrow it down for you.",
-      chips: [{ label: "Laptops for coding", message: "A laptop for coding with good battery" }, { label: "Travel headphones", message: "Noise-cancelling headphones for flights" }, NOT_NOW],
+      chips: [
+        { label: "Laptops for coding", message: "A laptop for coding with good battery" },
+        { label: "Traditional clothing", message: "Show me Nepali Dhaka Kurtha and traditional attire" },
+        { label: "Travel headphones", message: "Noise-cancelling headphones for flights" },
+        NOT_NOW,
+      ],
     }),
   },
   "filter-price": {

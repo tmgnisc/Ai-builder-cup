@@ -148,7 +148,7 @@ export const STATES: Record<PipState, StateDef> = {
     duration: 0.6,
   },
   greeting: {
-    caption: "What hardware are we looking at?",
+    caption: "What are you looking for today?",
     color: PIP_COLORS.accent,
     params: {
       eyes: { happy: 1 },
@@ -245,7 +245,7 @@ export const STATES: Record<PipState, StateDef> = {
     duration: 0.55,
   },
   comparing: {
-    caption: "Weighing hardware trade-offs…",
+    caption: "Weighing product trade-offs...",
     color: PIP_COLORS.searching,
     params: {
       split: 1,

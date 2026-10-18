@@ -22,7 +22,7 @@ def scout_multiple_products(
         items: List of search specifications for each product the user wants.
                Each entry is a dictionary with optional keys:
                - "label": Slot name (e.g. "Laptop", "Headphones", "Mouse")
-               - "category": Category string ("laptops", "phones", "headphones", "accessories")
+               - "category": Category string ("laptops", "phones", "headphones", "accessories", "clothing")
                - "q": Keyword search query text (e.g. "lightweight", "noise cancelling")
                - "max_price": Maximum price in NPR for this slot
                - "min_price": Minimum price in NPR for this slot

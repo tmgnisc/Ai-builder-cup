@@ -131,7 +131,7 @@ def compare_products(
     priorities: list[str] | None = None,
     context: str | None = None,
 ) -> dict[str, Any]:
-    """Compare 2–4 products attribute by attribute using catalog values only, with a grounded verdict.
+    """Compare 2 to 4 products attribute by attribute using catalog values only, with a grounded verdict.
 
     Args:
         product_ids: List of 2 to 4 product IDs to compare
