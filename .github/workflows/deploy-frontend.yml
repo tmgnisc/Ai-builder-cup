@@ -60,8 +60,8 @@ jobs:
             --region=${{ env.REGION }} \
             --platform=managed \
             --allow-unauthenticated \
-            --set-secrets=AGENT_SHARED_SECRET=AGENT_SHARED_SECRET:latest \
-            --set-env-vars=NODE_ENV=production,PERSONA_AGENT=gemini,BACKEND_URL=${{ env.BACKEND_URL }} \
+            --clear-secrets \
+            --set-env-vars="NODE_ENV=production,PERSONA_AGENT=gemini,BACKEND_URL=${{ env.BACKEND_URL }},AGENT_SHARED_SECRET=839d96ad29153eb5913857b72652fd66d9145a10bbb5139372289dc12e1c53be" \
             --port=8080 \
             --cpu=1 \
             --memory=512Mi \
